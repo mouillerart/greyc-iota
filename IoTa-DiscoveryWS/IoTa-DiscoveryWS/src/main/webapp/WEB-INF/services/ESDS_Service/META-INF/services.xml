@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serviceGroup>
+    <service name="ESDS_Service">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="fr.unicaen.iota.discovery.server.repository.soap.ESDS_ServiceMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">fr.unicaen.iota.discovery.server.repository.soap.ESDS_Service</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="multipleEventCreate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:multipleEventCreateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:multipleEventCreateRsp</outputActionMapping>
+        </operation>
+        <operation name="supplyChainInfo" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainInfoReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainInfoRsp</outputActionMapping>
+        </operation>
+        <operation name="userCreate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userCreateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userCreateRsp</outputActionMapping>
+        </operation>
+        <operation name="partnerCreate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerCreateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerCreateRsp</outputActionMapping>
+        </operation>
+        <operation name="supplyChainUpdate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainUpdateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainUpdateRsp</outputActionMapping>
+        </operation>
+        <operation name="hello" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:helloReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:helloRsp</outputActionMapping>
+        </operation>
+        <operation name="supplyChainDelete" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainDeleteReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainDeleteRsp</outputActionMapping>
+        </operation>
+        <operation name="eventLookup" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:eventLookupReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:eventLookupRsp</outputActionMapping>
+        </operation>
+        <operation name="roleCreate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleCreateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleCreateRsp</outputActionMapping>
+        </operation>
+        <operation name="userLogout" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userLogoutReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userLogoutRsp</outputActionMapping>
+        </operation>
+        <operation name="userUpdate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userUpdateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userUpdateRsp</outputActionMapping>
+        </operation>
+        <operation name="partnerLookup" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerLookupReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerLookupRsp</outputActionMapping>
+        </operation>
+        <operation name="partnerUpdate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerUpdateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerUpdateRsp</outputActionMapping>
+        </operation>
+        <operation name="lookup" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:lookupReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:lookupRsp</outputActionMapping>
+        </operation>
+        <operation name="userInfo" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userInfoReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userInfoRsp</outputActionMapping>
+        </operation>
+        <operation name="partnerInfo" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerInfoReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerInfoRsp</outputActionMapping>
+        </operation>
+        <operation name="userDelete" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userDeleteReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userDeleteRsp</outputActionMapping>
+        </operation>
+        <operation name="roleUpdate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleUpdateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleUpdateRsp</outputActionMapping>
+        </operation>
+        <operation name="eventCreate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:eventCreateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:eventCreateRsp</outputActionMapping>
+        </operation>
+        <operation name="partnerDelete" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerDeleteReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:partnerDeleteRsp</outputActionMapping>
+        </operation>
+        <operation name="roleLookup" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleLookupReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleLookupRsp</outputActionMapping>
+        </operation>
+        <operation name="roleInfo" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleInfoReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleInfoRsp</outputActionMapping>
+        </operation>
+        <operation name="userLookup" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userLookupReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userLookupRsp</outputActionMapping>
+        </operation>
+        <operation name="supplyChainLookup" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainLookupReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainLookupRsp</outputActionMapping>
+        </operation>
+        <operation name="roleDelete" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleDeleteReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:roleDeleteRsp</outputActionMapping>
+        </operation>
+        <operation name="eventInfo" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:eventInfoReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:eventInfoRsp</outputActionMapping>
+        </operation>
+        <operation name="supplyChainCreate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainCreateReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:supplyChainCreateRsp</outputActionMapping>
+        </operation>
+        <operation name="userLogin" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:ietf:params:wsdl:ns:esds-1.0">
+            <actionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userLoginReq</actionMapping>
+            <outputActionMapping>urn:ietf:params:wsdl:ns:esds-1.0:ESDSServicePortType:userLoginRsp</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>

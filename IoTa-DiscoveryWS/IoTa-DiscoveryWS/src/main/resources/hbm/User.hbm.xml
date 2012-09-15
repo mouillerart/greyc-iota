@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="fr.unicaen.iota.discovery.server.hibernate"
+                   default-lazy="false">
+  <class name="User"
+         table="user">
+    <id column="ID"
+        name="Id"
+        type="integer">
+      <generator class="increment" />
+    </id>
+    <property column="passwd"
+              length="30"
+              name="Passwd"
+              not-null="true"
+              type="string" />
+    <property column="userID"
+              length="30"
+              name="UserID"
+              not-null="true"
+              type="string" />
+    <property column="login"
+              length="30"
+              name="Login"
+              not-null="true"
+              type="string" />
+    <property column="date"
+              length="10"
+              name="Date"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <many-to-one class="Partner"
+                 name="Partner"
+                 not-null="true">
+      <column name="partner_ID" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

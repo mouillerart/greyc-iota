@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context reloadable="true">
+
+  <!--
+     Parameters defined here are 'initial parameters' which are loaded at
+     startup. Changes to these parameters have no effect on the running
+     application! If parameter changes should be recognized on reloading the
+     context, then put them in application.properties file.
+   -->
+
+</Context>

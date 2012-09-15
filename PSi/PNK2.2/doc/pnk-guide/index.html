@@ -1,0 +1,1411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+  <HEAD>
+    <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+    <TITLE>PNK User's Manual</TITLE>
+    <META NAME="GENERATOR" CONTENT="StarOffice/5.2 (Linux)">
+    <META NAME="CREATED" CONTENT="20010908;12154100">
+    <META NAME="CHANGEDBY" CONTENT="Alexander Gruenewald">
+    <META NAME="CHANGED" CONTENT="20010908;12364400">
+  </HEAD>
+  <BODY BGCOLOR="#ffffff">
+    <P>The Petri Net Kernel (PNK) version 2.0 provides an infrastrucure
+      for building Petri net tools. 
+    </P>
+    <P STYLE="margin-bottom: 0cm">Copyright (C) 2001 Petri Net Kernel
+      Team (Humboldt-University Berlin, Germany) 
+    </P>
+    <ADDRESS STYLE="margin-bottom: 0.5cm"><A HREF="mailto:pnk@informatik.hu-berlin.de">pnk@informatik.hu-berlin.de</A></ADDRESS>
+    <H3>PNK User's Manual</H3>
+    <HR>
+    <H3>Table of Contents</H3>
+    <UL>
+      <LI><P STYLE="margin-bottom: 0cm"><A HREF="#License Agreement">License Agreement 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Quick Start">Quick Start</A>
+        </P>
+	<UL>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Quick Start">Download
+		and Run</A> 
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#First steps - Open, Edit and Save Nets">First
+		steps - Open, Edit and Save Nets</A> 
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Start a first Simulator Session">Start
+		a first Simulator Session</A> 
+            </P>
+	</UL>
+      <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Some Basics">Some Basics
+          </A>
+	</P>
+	<UL>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#The Kernel">The Kernel</A>
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#The ApplicationControl">The
+		ApplicationControl</A> 
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#The Editor">The Editor</A>
+            </P>
+	</UL>
+      <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Write Applications">Write
+            Applications</A> 
+	</P>
+	<UL>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Example Simulator">Example
+		Simulator</A> 
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#The FiringRule interface">The
+		FiringRule Interface</A> 
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Communication between Applications">Communication
+		between Applications</A> 
+            </P>
+          <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Application with Menu">Application
+		with Menu</A> 
+            </P>
+          <LI><P><A HREF="#Load Applications">Load Applications</A> 
+            </P>
+	</UL>
+      <LI><P STYLE="margin-bottom: 0cm"><A HREF="#Write Nettypes">Write
+            Nettypes</A> 
+	</P>
+	<UL>
+          <LI><P><A HREF="#Marking">Marking</A> 
+            </P>
+          <LI><P><A HREF="#Inscription">Inscription</A> 
+            </P>
+          <LI><P><A HREF="#FiringRule">FiringRule</A> 
+            </P>
+        </UL>
+    </UL>
+    <HR>
+    <A NAME="Quick Start"></A>
+    <H3>License Agreement</H3>
+    <P>The PNK version 2.0 is free software; you can redistribute it
+      and/or modify it under the terms of the GNU Library General Public
+      License (see file LICENSE.GNU-LGPL) as published by the Free Software
+      Foundation; version 2 of the license. (Note, that some PNK
+      applications are developed under GNU General Public License---see
+      file <A HREF="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</A>
+      ) The PNK is distributed in the hope that it will be useful, but
+      WITHOUT ANY WARRANTY.</P>
+    <P><A NAME="Quick Start"></A>You are NOT ALLOWED to CHANGE THE
+      ORIGINAL COPYRIGHT NOTICE. See the GNU Library General Public License
+      for more details. You should have received a copy of the GNU Library
+      General Public License along with the PNK; if not see
+      http://www.gnu.org/. An application using the Petri Net Kernel MUST
+      GIVE NOTICE OF THIS USE. Please contact pnk@informatik.hu-berlin.de
+      to notify this application. 
+    </P>
+    <H3>Quick Start</H3>
+    <HR>
+    <P>This is just a crash course to get the Petrinet Kernel running. It
+      should give you an overview how to use the Petrinet Kernel. I'm
+      leaving out some important details which will be added soon ... 
+    </P>
+    <P>NOTE: It is important that you have installed the jdk1.2.2 to use
+      the Petrinet Kernel. Otherwise download it from <A HREF="http://java.sun.com/">java.sun.com</A>.
+      If you don't know which jdk version is installed on your system, you
+      may check this by calling the Java interpreter's <CODE>-version</CODE>
+      option. 
+    </P>
+    <P><CODE>java -version</CODE> 
+    </P>
+    <H4><A NAME="Download and Run"></A>Download and Run</H4>
+    <P>Download the latest <A HREF="http://SP-berlin2001.glia.mdc-berlin.de/">PNK2alpha.jar</A>
+      file. Extract the archive on the command line by typing 
+    </P>
+    <P><CODE>jar xvf PNK2alpha.jar</CODE> 
+    </P>
+    <P>This creates a new directory <EM>PNK2/</EM> containing the source
+      and class files of the Petrinet Kernel. Now you may change to <EM>PNK2/</EM>
+      directory 
+    </P>
+    <P><CODE>cd PNK2</CODE> 
+    </P>
+    <P>and take a look at it's contents. You should find something like
+      this ... 
+    </P>
+    <UL>
+      <LI><P STYLE="margin-bottom: 0cm">jaxp.jar - api for reading and
+          writing <EM>xml</EM> files 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">crimson.jar - api for reading and
+          writing <EM>xml</EM> files 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">PNK2.jar - archive of the Petrinet
+          Kernel's class files 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">PNK2sources.jar - archive of the
+          Petrinet Kernel's source files 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Makefile - with this you may
+          compile sources by hand 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">sampleNets - contains some saved
+          netexamples 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">netTypeSpecifications - contains
+          examples for a net's specification 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">toolSpecification - contains some
+          toolspecification examples 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">icons - icons used by applications
+        </P>
+      <LI><P>license 
+	</P>
+    </UL>
+    <P>Then start up Petrinet Kernel using the <CODE>-jar</CODE> option
+      of the java interpreter. 
+    </P>
+    <P><CODE>java -jar PNK2.jar</CODE> 
+    </P>
+    <P>You may also compile sources by hand. Therefore you possibly have
+      to extract a source file archive. 
+    </P>
+    <P><CODE>jar xvf PNK2sources.jar</CODE> 
+    </P>
+    <P>This command installs a directory tree of source files. Now take
+      notice of the <EM>makefile</EM> in the <EM>PNK2/</EM> root directory.
+      Modify it to your requirements and enter 
+    </P>
+    <P><CODE>make run</CODE> 
+    </P>
+    <P>This command should compile all files and run the Petrinet Kernel.
+      If it does not, please check the path to your java2 interpreter and
+      java2 compiler. You may edit the path in the headline of the
+      <EM>makefile</EM>. Verify also the correctness of the CLASSPATH
+      variable. It should at least point to the <EM>crimson.jar</EM> and
+      <EM>jaxp.jar</EM> archives distributed with the <EM>pnk.jar</EM>
+      archive. These two file archives are necessary for loading and
+      writing xml and pnml files. 
+    </P>
+    <P>At first change into the directory where you placed the downloaded
+      <EM>PNK2alpha.jar</EM> file. Extract the file and examine the
+      contents of the new directory. Finally run the Petrinet Kernel using
+      the <CODE>-jar</CODE> option supported by the java2 interpreter. 
+    </P>
+    <P>If the makefile doesn't work you may generally start the Petrinet
+      Kernel by typing a commandline like this: 
+    </P>
+    <P><CODE>java -classpath .:jaxp.jar:crimson.jar
+        de.huberlin.informatik.pnk.appControl.ApplicationControl</CODE> 
+    </P>
+    <P>In this case it is important that you are currently in the root
+      directory of the Petrinet Kernel. First steps - Open, Edit and Save
+      Nets 
+    </P>
+    <A NAME="First steps - Open, Edit and Save Nets"></A>
+    <H4>First steps - Open, Edit and Save Nets</H4>
+    <P>Now I will give you a short tutorial how you can play around with
+      the Petrinet Kernel. In this section I tell you how you may open or
+      edit nets and how you may invoke applications to work on your net.
+      When launching the Petrinet Kernel the ApplicationControl's window
+      should appear. 
+    </P>
+    <P><IMG SRC="ApplicationControlFrame.png" NAME="Grafik1" ALIGN=BOTTOM WIDTH=450 HEIGHT=85 BORDER=0>
+    </P>
+    <P>In the ApplicationControl's menubar you find a <EM>File</EM> menu
+      for opening existing nets, creating new nets and saving nets. There
+      should also be a <EM>Net</EM> menu to launch applications related to
+      a specific net and switch between them. At first you have to choose
+      your nettype. You may open the <EM>File</EM> menu. If you select the
+      <EM>File -&gt; new Net</EM> menuentry a submenu with a list of
+      different nettypes appears. Click on one of these menuitems. You can
+      also select the <EM>File -&gt; Open</EM> menuentry to open an
+      existing net. Some interesting netexamples are stored in the
+      <CODE>sampleNets/</CODE> directory. 
+    </P>
+    <P><IMG SRC="ApplicationControlOpenDialog.png" NAME="Grafik2" ALIGN=BOTTOM WIDTH=451 HEIGHT=254 BORDER=0>
+    </P>
+    <P>By default a editor start's to display the net. Everytime you
+      invoke an application it's menu is shown in the ApplicationControl's
+      menubar. So now you should find there the editor's menu.
+      Alternatively you may use the popupmenu of the editor. 
+    </P>
+    <P><IMG SRC="EditorFrame.png" NAME="Grafik3" ALIGN=BOTTOM WIDTH=603 HEIGHT=379 BORDER=0>
+    </P>
+    <P>Probable you ask: 'How can I add objects like places, transitions
+      and arcs to the net?' In the editor's menu you select the <EM>Place</EM>
+      checkbox or the <EM>Transition</EM> checkbox. Then click on an open
+      editorpage. Every mouseclick should create a new object. Then choose
+      the <EM>Arc</EM> checkbox and mouseclick on a place. The place should
+      change it's color indicating that it is selected as an arc's
+      initialnode. Now mouseclick a transition and a new arc appears. You
+      may want to drag around some places and transitions to make your net
+      look lovely. You achieve this by mouseclicking in an object and hold
+      the mousebutton pressed while moving your mouse. After this you
+      usually want edit the extensions of some objects. For example set the
+      <CODE>name</CODE> and <CODE>marking</CODE> of places, the
+      <CODE>inscriptions</CODE> of several arcs or the <CODE>guards</CODE>
+      of transition. Which of these extensions exists depends on the
+      nettype. To edit an extension you choose the <EM>Edit</EM> checkbox
+      in editor's popupmenu. Now a mouseclick on a place, transition or arc
+      will open a dialog frame where you may set new values for the objects
+      extensions. 
+    </P>
+    <P><IMG SRC="EditorFrameWithMenu.png" NAME="Grafik4" ALIGN=BOTTOM WIDTH=531 HEIGHT=355 BORDER=0>
+    </P>
+    <P><A NAME="Start a first Simulator Session"></A>You can open a
+      second page using the editor's menu in the ApplicationControl's
+      menubar. If you enable the <EM>join</EM> checkbox you may join two
+      different nodes as one node. That's the way you merge the pages.
+      Therefore you click in a place and it should change it's color than
+      click into another place. Now these places represent both the same
+      place of the net. You can undo this with the help of the <EM>split</EM>
+      operation. Then it is recommended that you save your net with the
+      <EM>File -&gt; save</EM> or <EM>File -&gt; save as</EM> menu and
+      choose ApplicationControl's <EM>Net</EM> menu to start a further
+      application for example a simulator. 
+    </P>
+    <H4>Start a first Simulator Session</H4>
+    <P><A NAME="Some Basics"></A>Choose <EM>Net -&gt; Start Application
+        -&gt; Simulator</EM>. This creates a new instance of the simulator.
+      Now the simulator's menu should appear in the ApplicationControl's
+      menubar. Please pay attention to the fact that some applications (for
+      example the simulator) are not automatically launched when they were
+      invoked. To run the simulator choose the <EM>Simulator -&gt; Start</EM>
+      menu from ApplicationControl's menubar. You should now see a dialog
+      frame with a <EM>CANCEL</EM> button, pushing this button will abort
+      the simulator application. If there is any concessioned transition in
+      the net the simulator will emphasize it in the editor. You may fire a
+      concessioned transition by mouseclicking into it. Continue these
+      steps until you are tired or there is no concessioned transition
+      anymore. In the first case press the <EM>CANCEL</EM> button in the
+      simulator's dialog frame. (It is recommended that you don't choose
+      <EM>Simulator -&gt; Stop</EM> from ApplicationControl's menubar,
+      because it's not yet correctly implemented.) In the last case the
+      simulator stops automatically. 
+    </P>
+    <H3>Some Basics</H3>
+    <HR>
+    <P>Now I want to introduce you in some details so that you are able
+      to develop your own petrinet application using the Petrinet Kernel.
+      The Petrinet Kernel's sources are a bunch of packages. These are ... 
+    </P>
+    <UL>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.kernel 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.kernel.base
+        </P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.app 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.app.base
+        </P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.appControl
+        </P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.appControl.base
+        </P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.netElementExtensions
+        </P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.netElementExtensions.base
+        </P>
+      <LI><P STYLE="margin-bottom: 0cm">de.huberlin.informatik.pnk.editor 
+	</P>
+      <LI><P>de.huberlin.informatik.pnk.exceptions 
+	</P>
+    </UL>
+    <P>The idea of the Petrinet Kernel project is to make a petrinet data
+      structure available for developers and scientists. We decided to add
+      an editor to the project to remove this task from developers. And
+      finally we created the ApplicationControl with should make it easy to
+      compose nets and applications to one large application. 
+    </P>
+    <P><A NAME="The Kernel"></A>In the following I will say something
+      about the mainpackages and mainclasses. 
+    </P>
+    <H4>The Kernel</H4>
+    <P>The <CODE>de.huberlin.informatik.pnk.kernel</CODE>'s package
+      contains especially the following important classes: 
+    </P>
+    <UL>
+      <LI><P STYLE="margin-bottom: 0cm">Net 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Arc 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Place 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Transition 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Extension 
+	</P>
+      <LI><P>Specification 
+	</P>
+    </UL>
+    <P>A petrinet is a bipartitioned, directed graph with nodes called
+      places and transitions. 
+    </P>
+    <P>For the beginning I list the methods of these classes and try to
+      explain their meaning. Then I will discuss their use by an example. 
+    </P>
+    <P>The <CODE>Net</CODE> class describes a petrinet. It has methods to
+      access their arcs, places and transitions. Or you may ask a net for
+      it's <CODE>FiringRule</CODE> object that describes when a transition
+      is concessioned and how you does it fire. How do you may profite from
+      these methods you will see in the <EM>Example Simulator</EM> chapter.
+    </P>
+    <PRE>
+ 
+public final class Net extends Graph {
+
+        public Vector getArcs()
+ 
+        public Vector getPlaces() 
+
+        public Vector getTransitions()
+ 
+        public FiringRule getFiringRule() 
+     
+} // class Net
+    </PRE>
+    <P>
+      The <CODE>Place</CODE> class describes a place of a petrinet. You
+      create a place using the class constructor. The place registers
+      itself in the net which must be passed as a constructor's parameter.
+      You can remove a place by calling it's <CODE>delete()</CODE> method.
+      You may request the current marking and so on ... 
+    </P>
+    <PRE>
+
+public final class Place extends Node
+
+        public Place(Net net, String name, Object initiator)
+
+        public void delete(Object initiator)
+
+        public Marking getMarking()
+
+        public void setMarkingAsInitial()
+
+} // class Place
+    </PRE>
+    <P>
+      The <CODE>Transition</CODE> class describes a transition of a
+      petrinet. You create a transition using the class constructor. The
+      transition registers itself in the net which must be passed as a
+      constructor's parameter. You delete it using it's <CODE>delete()</CODE>
+      method. You can also request the mode of a transition. 
+    </P>
+    <PRE>
+
+public final class Transition extends Node {
+     
+        public Transition(Net net, String name, Object initiator)
+  
+        public void delete(Object initiator)
+  
+        public Mode getMode() 
+
+} // class Transition 
+    </PRE>
+    <P>
+      The <CODE>Arc</CODE> class describes an arc of a petrinet. You create
+      a new arc using the class constructor. The arc registers itself in
+      the net passed as constructor parameter. You may ask an arc for it's
+      initialnode, it's targetnode, it's inscription and so on ... 
+    </P>
+    <PRE>
+
+public class Arc extends Edge {
+
+       public Arc(Net net, Node source, Node target, Object initiator)
+
+       public Inscription getInscription()
+
+       public Place getPlace()
+
+       public Transition getTransition()
+
+       /// METHODS INHERITED FROM class Edge: 
+
+          public Node getSource()
+
+          public Node getTarget()
+
+} // class Arc 
+    </PRE>
+    <p>
+    <H4>
+      <A NAME="The ApplicationControl"></A>The ApplicationControl</H4>
+    <P>As you already notice the ApplicationControl in the
+      <CODE>de.huberlin.informatik.pnk.appControl</CODE> package plays an
+      very important role. This class manages all nets and applications of
+      the Petrinet Kernel. The ApplicationControl parses some XML files for
+      configuration. These are for example the specification of all
+      nettypes in the <EM>netTypeSpecification</EM> directory or a list of
+      valid applications to each nettype in <EM>toolSpecification.xml</EM>
+      file. Furthermore it is responsible for loading and writing nets as
+      PNML files. It also offers useful interfaces that lets different
+      applications cooperate with each other. Using the main <CODE>main()</CODE>
+      method of the ApplicationControl you launch the Petrinet Kernel on
+      commandline. 
+    </P>
+    <P><pre>
+java -classpath .:crimson.jar:jaxp.jar \
+    de.huberlin.informatik.pnk.appControl.ApplicationControl \
+    toolSpecifications/toolSpecification.xml
+    </pre> 
+    </P>
+    <P>Of course you have to specify the classpath correctly. Optional
+      you may give the location of an <EM>toolSpecification.xml</EM> file
+      as argument. If you don't the ApplicationControl uses
+      <EM>toolSpecifications/toolSpecification.xml</EM> as default. With
+      the toolSpecification.xml file you inform the ApplicationControl of
+      known nettypes and applications. The idea is to give you the
+      possibility to compose your own toolsets. This for example could be
+      the content of <EM>toolSpecifications/toolSpecification.xml</EM> : 
+    </P>
+    <PRE>
+
+&lt; ?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;? &gt;
+&lt; !DOCTYPE toolSpecification SYSTEM &quot;toolSpecification.dtd&quot; &gt;
+&lt; toolSpecification &gt;
+  &lt; !-- Nettypes -- &gt;
+  &lt; nettype id=&quot;n1&quot; typeSpecification=&quot;file:netTypeSpecifications/simpleHLNet.xml&quot;/ &gt;
+  &lt; nettype id=&quot;n2&quot; typeSpecification=&quot;file:netTypeSpecifications/dawnNet.xml&quot;/ &gt;
+  &lt; nettype id=&quot;n3&quot; typeSpecification=&quot;file:netTypeSpecifications/Echo.xml&quot;/ &gt;
+  &lt; !-- Applications -- &gt;
+  &lt; application id=&quot;a1&quot; mainClass=&quot;de.huberlin.informatik.pnk.editor.Editor&quot; maxinstances=&quot;inf&quot; &gt;
+    &lt; allowedNettypes &gt;
+      &lt; ntref ref=&quot;n1&quot;/ &gt;
+      &lt; ntref ref=&quot;n2&quot;/ &gt;
+      &lt; ntref ref=&quot;n3&quot;/ &gt;
+    &lt; /allowedNettypes &gt;
+  &lt; /application &gt;
+  &lt; !-- Input / Output -- &gt;
+    &lt; format id=&quot;pnml&quot; ioClass=&quot;de.huberlin.informatik.pnk.appControl.PnmlInOut&quot; &gt;
+      &lt; allowedNettypes &gt;
+        &lt; ntref ref=&quot;n1&quot;/ &gt;
+        &lt; ntref ref=&quot;n2&quot;/ &gt;
+      &lt; /allowedNettypes &gt;
+    &lt; /format &gt;
+    &lt; format id=&quot;io&quot; ioClass=&quot;de.huberlin.informatik.pnk.appControl.InOut&quot; &gt;
+    &lt; /format &gt;
+  &lt; !-- default settings -- &gt;
+  &lt; standardNettype ref=&quot;n1&quot;/ &gt;
+  &lt; standardApplication ref=&quot;a1&quot;/ &gt;
+  &lt; standardFormat ref=&quot;pnml&quot;/ &gt;
+&lt; /toolSpecification &gt;                                                                            
+    </PRE>
+    <P>
+      <A NAME="The Editor"></A>You see that the toolspecificationfile is
+      structured in three parts. The first part declares the nettypes, the
+      second part lists the applications with references to nettypes and
+      the third part defines Input/Output formats (in this case PNML). 
+      For each application you may list the allowed nettypes. If you drop
+      the &lt; allowedNettypes &gt;  tag, it is supposed that all nettypes
+      are tolerated. If the &lt; allowedNettypes &gt;  tag is found 
+      but it's empty, it is supposed that no nettype is allowed.
+    </P>
+    <H4>The Editor</H4>
+    <P><A NAME="Write Applications"></A>If you open a net it is by
+      default displayed in an editor. The editor application resists in the
+      <CODE>de.huberlin.informatik.pnk.editor</CODE> package. I presume
+      that you never need to access it directly. To let your application
+      work with an editor it is recommended to use the offered interface
+      <EM>ApplicationNetDialog</EM>. Nevertheless you may look at the
+      editor's implementation to learn how to combine complex applications
+      and the ApplicationControl. 
+    </P>
+    <H3>Write Applications</H3>
+    <HR>
+    <P><A NAME="Example Simulator"></A>Now I will give you a short
+      introduction how to write an application by discussing the
+      implementation of a simulator. 
+    </P>
+    <H4>Example Simulator</H4>
+    <P>Now let's take a look at the <EM>Simulator</EM> application in the
+      <CODE>de.huberlin.informatik.pnk.app</CODE> package. This example
+      should show how easy it is to write an application. 
+    </P>
+    <PRE>
+ 
+package de.huberlin.informatik.pnk.app;
+ 
+import de.huberlin.informatik.pnk.app.base.MetaApplication;
+import de.huberlin.informatik.pnk.appControl.ApplicationControl;
+import de.huberlin.informatik.pnk.netElementExtensions.llNet.SimpleRule;
+ 
+/**
+ * Simulator.java
+ *
+ * Created: Wed Jan 24 08:51:50 2001
+ *
+ * @author hohberg
+ * @version
+ */
+public class Simulator extends MetaApplication {
+
+    // this application's name
+    public static String staticAppName = &quot;Simulator&quot;;  
+
+    // class constructor
+    public Simulator(ApplicationControl ac) { 
+        super(ac);
+    }
+
+    public void run() {
+        SimpleRule rule =
+            (SimpleRule) net.getExtension(&quot;firingRule&quot;);
+        rule.simulateWithUserInteraction(this);
+    }
+
+} // Simulator
+
+    </PRE><P>
+      The Simulator extends the <CODE>MetaApplication</CODE> class. 
+    </P>
+    <PRE>
+
+public class Simulator extends MetaApplication
+
+    </PRE><P>
+      Every application has to extend this class to inherit important base
+      functionality. The class constructor has to take an
+      <CODE>ApplicationControl</CODE> object as parameter and propagate it
+      with the <CODE>super()</CODE> call to the <CODE>MetaApplication</CODE>'s
+      class constructor. 
+    </P>
+    <PRE>
+
+public Simulator(ApplicationControl ac) {
+    super(ac);
+}
+
+    </PRE><P>
+      The application may define it's name in a static class field
+      <CODE>staticAppName</CODE> so the ApplicationControl can display the
+      application's name in it's menubar. 
+    </P>
+    <PRE>
+
+public static String staticAppName = &quot;Simulator&quot;;
+
+    </PRE><P>
+      The application then implements a <CODE>run()</CODE> method. This
+      method is called by the ApplicationControl to start the application. 
+    </P>
+    <PRE>
+
+public void run() {
+
+    </PRE><P>
+      After this the Simulator requests a net's extension using the <CODE>net</CODE>
+      field inherited from the MetaApplication class. 
+    </P>
+    <PRE>
+
+SimpleRule rule = (SimpleRule) net.getExtension(&quot;firingRule&quot;);
+rule.simulateWithUserInteraction(this);
+
+    </PRE><H4>
+      <A NAME="The FiringRule interface"></A>The FiringRule interface</H4>
+    <P>The SimpleRule class implements the interface
+      <CODE>de.huberlin.informatik.pnk.netElementExtensions.base.FiringRule</CODE>.
+      This interface defines methods like: 
+    </P>
+    <UL>
+      <LI><P STYLE="margin-bottom: 0cm">void fire(Vector transitions); //
+          Fires some transitions 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Vector getAllConcessioned(); //
+          returns a list of concessioned transitions 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">Transition getConcessioned(); //
+          returns only one concessioned transition 
+	</P>
+      <LI><P>boolean isConcessioned(Transition t); // checks if a
+          transition is concessioned 
+	</P>
+    </UL>
+    <P>The <CODE>SimpleRule</CODE> object is nettype specific and has to
+      be implemented with the nettype. How to create new nettypes will be
+      discussed in a later section. Furthermore the method
+      <CODE>simulateWithUserInteraction(MetaApplication app)</CODE> is
+      declared in the SimpleRule class. It is implemented as: 
+    </P>
+    <PRE>
+
+
+public class SimpleRule extends FiringRule {
+
+   ...
+
+   public void simulateWithUserInteraction(MetaApplication app) {
+
+       checkContextAndParseExtensions();
+       ApplicationControl ac = app.getApplicationControl();
+       Net net = (Net) getGraph();
+
+       Vector concessioned = getAllConcessioned( ); //all concessioned transitions
+
+       if(conc == null || conc.isEmpty()) 
+           return;
+
+       Transition transition = (Transition) 
+           (new SelectObjectAction(ac, net, app, concessioned)).invokeAction();
+
+       while(transition != null) {
+           fire(transition);
+           concessioned = getAllConcessioned();
+           if(concessioned == null || concessioned.isEmpty()) 
+               return;
+           transition = (Transition) 
+               (new SelectObjectAction(ac, net, app, concessioned)).invokeAction();
+       }
+   }
+
+   ...
+  
+} // class SimpleRule
+
+    </PRE><P>
+      <A NAME="Communication between Applications"></A>The implementation
+      of this simulateWithUserInteraction() method is interesting in many
+      aspects. Especially you see the use of the FiringRule interface.
+      Farther you see how applications communicate with each other. 
+    </P>
+    <H4>Communication between applications</H4>
+    <P>For short I want to introduce the Petrinet Kernel's concept of
+      communication between applications. The Editor for example implements
+      the <EM>ApplicationNetDialog</EM> interface in
+      <CODE>de.huberlin.informatik.pnk.app.base</CODE> package. This
+      interface serves a couple of nice methods. With the help of these
+      methods an application may request the editor to emphasize, select or
+      annotate a place, transition or arc. 
+    </P>
+    <PRE>
+package de.huberlin.informatik.pnk.app.base;
+ 
+import de.huberlin.informatik.pnk.kernel.*;
+import java.util.*;
+
+/*
+ * If an application want's to request the editor
+ * to emphasize, annotate or select (one object | some objects),
+ * it may use the methods of this interface.
+ */
+public interface ApplicationNetDialog {
+
+   // The application requests the editor to annotate some objects.
+  public void anotateObjects(Hashtable annotations);  
+
+   // The application requests the editor to emphasize some objects.
+  public void emphasizeObjects(Vector objects);  
+
+   // The application requests the editor to reset all annotations.
+  public void resetAnnotations();  
+
+   // The application requests the editor to unemphasize all objects.
+  public void resetEmphasize();  
+
+   // The application requests the editor to select an object.
+  public Member selectObject(Vector objects);  
+
+   // The application requests the editor to select some objects...
+  public Vector selectObjects(Vector objects);  
+
+   // The application requests the editor to unannotate the objects.
+  public void unAnotateObjects(Vector objects);  
+
+   // The application requests the editor to unEmphasize the objects.
+  public void unEmphasizeObjects(Vector objects);  
+
+} //interface ApplicationNetDialog 
+
+    </PRE><P>
+      Communication is realized with the help of ActionObjects. The
+      following examples of ActionObjects reside in
+      <CODE>de.huberlin.informatik.pnk.app.base</CODE> 
+    </P>
+    <UL>
+      <LI><P STYLE="margin-bottom: 0cm">AnnotateObjectsAction // Requests
+          to annotate object 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">ResetAnnotationsAction // 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">UnAnnotateObjectsAction // 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">SelectObjectAction // Requests to
+          select an object 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">ResetEmphasizeAction // 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">SelectObjectsAction // Requests to
+          select a collection of objects 
+	</P>
+      <LI><P STYLE="margin-bottom: 0cm">EmphasizeObjectsAction // Requests
+          to emphasize a collection of objects 
+	</P>
+      <LI><P>UnEmphasizeObjectsAction 
+	</P>
+    </UL>
+    <P>An application can initialize an ActionObject giving a reference
+      of the ApplicationControl that should find a suitable request
+      executer application and a reference of the net this application
+      currently processes and calls the ActionObject's <CODE>invokeAction()</CODE>
+      method. 
+    </P>
+    <PRE>
+/**
+ * I presume that an MetaApplication 'app' requests the ApplicationControl 'ac'
+ * to instruct another MetaApplication (that implements the 'ApplicationNetDialog' interface) 
+ * to select a transition from the java.util.Vector 'concessioned'. 
+ */
+
+Net net;                     // net the transitions belong to
+Vector concessioned;         // one of these transitions should be selected
+MetaApplication app;         // application that initiates the request
+ApplicationControl ac;       // applicationcontrol that routes the request
+
+Transition transition = (Transition) 
+    (new SelectObjectAction(ac, net, app, concessioned)).invokeAction();
+
+    </PRE><P>
+      This example starts a <EM>SelectObject</EM> request. It returns a
+      transition of the list of <CODE>concessioned</CODE> transitions
+      passed as argument to the constructor. The ApplicationControl now
+      searches for an application that handles this request. The request
+      executer application is supposed to be an editor which asks the user
+      to select a transition. Then the editor returns a transition chosen
+      by the user. For a better understanding we discuss the implementation
+      of the EmphasizeObjectsAction which request to emphasize some
+      netobjects like Arcs, Places or Transitions. 
+    </P>
+    <PRE>
+
+package de.huberlin.informatik.pnk.app.base;
+ 
+import java.util.Vector;
+import de.huberlin.informatik.pnk.kernel.*;
+import de.huberlin.informatik.pnk.appControl.*;
+ 
+/**
+ * EmphasizeObjectsAction.java
+ *
+ * An application working on a net may emphasize
+ * some netobjects (for example Places or Transitions)
+ * using this ActionObject. The application specifies an
+ * ApplicationControl. This tries to find another application as target
+ * to perform the emphasize request. Therefore the ApplciationControl
+ * checks if the targetapplication works on the same net and
+ * implements the necessary interface.
+ *
+ * @author: gruenewa
+ */
+public class EmphasizeObjectsAction extends MetaActionObject {
+ 
+    /*
+     * A list of objects that should be emphasized by
+     * an application for example an editor
+     */
+    Vector emphasizeObjects = null;
+ 
+    /**
+     * Creates a new EmphasizeObjectsAction instance.
+     *
+     * @param ac an ApplicationControl the AC which should find a targetapplication
+     * @param net a Graph the graph/net the targetapplication currently processes
+     * @param initiator a MetaApplication initiator of this request
+     * @param emphasizeObjects a Vector parameters for the request
+     */
+    public EmphasizeObjectsAction(ApplicationControl ac,
+                                  Graph net,
+                                  MetaApplication initiator,
+                                  Vector emphasizeObjects) {
+        super(ac, net, initiator);
+        this.emphasizeObjects = emphasizeObjects;
+    }
+ 
+    /**
+     * method checkInterface
+     *
+     * The ApplicationControl uses this method to check all
+     * available applications if they implement the necessary
+     * interface to achieve this request.
+     *
+     * @param target an Object an application candidate
+     * @return a boolean true if candidate is fine
+     */
+    public boolean checkInterface(Object appCandidate) {
+        return appCandidate instanceof ApplicationNetDialog;
+    }
+ 
+    /**
+     * method performAction
+     *
+     * After the ApplicationControl has extracted a suitable application
+     * it call's this method to execute the request.
+     *
+     * @param target a MetaApplication application for the request
+     * @return an Object result of the request will always be null
+     */
+    public Object performAction(MetaApplication target) {
+        ((ApplicationNetDialog) target).emphasizeObjects(emphasizeObjects);
+        return null; // this request is one-way, no return value necessary
+    }
+ 
+} // class EmphasizeObjectsAction
+
+    </PRE><P>
+      <A NAME="Application with Menu"></A>Take this example to design your
+      own ActionObjects. 
+    </P>
+    <H4>Application with Menu</H4>
+    <P>Possibly you intend to write a more complex application with
+      buttons and frames for example an editor. You want the application to
+      set a menu in the ApplicationControl's menubar and to show this menu
+      ever when an application's window got the focus. If your application
+      implements an <CODE>getMenus()</CODE> method: 
+    </P>
+    <PRE>
+
+     public JMenu[] getMenus()
+ 
+    </PRE><P>
+      <A NAME="Load Applications"></A>the ApplicationControl uses this
+      method to request an <CODE>java.lang.Array</CODE> of
+      <CODE>javax.swing.JMenus</CODE>'s and sets these menus in it's
+      menubar. If your application uses frames we recommend to use the
+      <CODE>de.huberlin.informatik.pnk.app.base.MetaJFrame</CODE> class.
+      This class implements some base functionality. It informs the
+      ApplicationControl when the frame has got focus or it notifies the
+      ApplicationControl when a window was closed. So the
+      ApplicationControl knows which application currently works. 
+    </P>
+    <H4>Load Applications</H4>
+    <P>Presumed you have written a new application you have to announce
+      it to the Petrinet Kernel's ApplicationControl. You do this by
+      invoking the Petrinet Kernel's <EM>ToolSpecification</EM> mechanism.
+      Edit the related <EM>toolSpecification.xml</EM> file by inserting an
+      entry for your application. For the simulator application this entry
+      would look something like this: 
+    </P>
+    <PRE>
+&lt; !-- Simulator Application -- &gt;
+&lt; !-- Embedding a simulator application using a reference to it's class file -- &gt;
+&lt; !-- Maximum 5 instances, you could also choose 'inf' for infinity  -- &gt;
+&lt; application id=&quot;a5&quot; mainClass=&quot;de.huberlin.informatik.pnk.app.Simulator&quot; maxinstances=&quot;5&quot; &gt;
+  &lt; allowedNettypes &gt;
+    &lt; !-- Here you have to enter references -- &gt;
+    &lt; !-- of nettypes the simulator can work with -- &gt;
+    &lt; ntref ref=&quot;n1&quot;/ &gt;
+    &lt; ntref ref=&quot;n6&quot;/ &gt;
+  &lt; /allowedNettypes &gt;
+&lt; /application &gt;
+    </PRE>
+    <p>
+      Use a TOOLspecificationfile to unite some nettypes and applications to one tool.
+      For example the EchoSimulator tool has a specificationfile <em>toolSpecifications/EchoSimulator.xml</em>.
+      You launch the EchoSimulator tool on commandline by initiating the ApplicationControl with
+      the specificationfile as first argument.
+    <p>
+      <pre>
+java -classpath .:crimson.jar:jaxp.jar \
+  de.huberlin.informatik.pnk.appControl.ApplicationControl \
+  toolSpecifications/EchoSimulator.xml
+    </pre>
+    <p>
+      The EchoSimulator tool consists of two nettypes, a <code>Echo</code> Net that represents
+      the algorithm and a <code>graph</code>, used by the algorithm. 
+      It also inheres an editor application for animation, 
+      a simulator application that performs the algorithm and a MarkingsToInitial application to set the initial
+      marking before you continue the simulation.
+      All these components are enumerated in the specificationfile.
+    <p>
+    <pre>
+&lt; ?xml version="1.0" encoding="UTF-8"? &gt;
+&lt; !DOCTYPE toolSpecification SYSTEM "toolSpecification.dtd" &gt;
+&lt; toolSpecification &gt;
+
+  &lt; !-- Nettypes -- &gt;
+    &lt; nettype id="n3" typeSpecification="file:netTypeSpecifications/Echo.xml"/ &gt;  
+    &lt; nettype id="n4" typeSpecification="file:netTypeSpecifications/graph.xml"/ &gt;  
+
+  &lt; !-- Applications -- &gt;
+    &lt; application id="a1" mainClass="de.huberlin.informatik.pnk.editor.Editor" maxinstances="inf" &gt;
+    &lt; /application &gt;
+    &lt; application id="a3" mainClass="de.huberlin.informatik.pnk.app.MarkingsToInitial" maxinstances="inf" &gt;
+    &lt; /application &gt;
+    &lt; application id="a5" mainClass="de.huberlin.informatik.pnk.app.EchoSimulator" maxinstances="inf" &gt;
+      &lt; allowedNettypes &gt;
+        &lt; ntref ref="n4"/ &gt;
+      &lt; /allowedNettypes &gt;
+    &lt; /application &gt;
+	
+  &lt; !-- Input / Output Format Filters-- &gt;
+    &lt; format id="pnml" ioClass="de.huberlin.informatik.pnk.appControl.PnmlInOut" &gt;
+    &lt; /format &gt;
+
+  &lt; !-- default settings -- &gt; 
+    &lt; standardNettype ref="n4"/ &gt;
+    &lt; standardApplication ref="a1"/ &gt;
+    &lt; standardFormat ref="pnml"/ &gt;
+
+&lt; /toolSpecification &gt;
+    </pre>
+    <p>
+      You can write a specificationfile per tool, or you put all your nettypes, applications and
+      fileformatfilters into one specificationfile. So you will construct an universal monster tool.
+      I favor the first variant.
+    <p>
+    <A NAME="Write Nettypes"></A>
+    <H3>
+      Write Nettypes</H3>
+    <HR>
+    There exists much petrinet theorie in the world and a lot of different petrinet formalism.
+    You can find Place-Transition Net's, Algebraic Net's or Timed Net's and many others.
+    The idea of the Petrinet Kernel is that you may create your own nettype using our concept of netextensions.
+    Therefore you have to write a nettype specification. 
+    Then you have to notify the corresponding toolspecificationfile, that a new nettype exists and where
+    it can be found. For instance a file <em>toolSpecifications/PTNetTool.xml</em> would contain something like this:
+    <p>
+    <PRE>
+&lt; !DOCTYPE toolSpecification SYSTEM "toolSpecification.dtd" &gt;
+&lt; toolSpecification &gt;
+  &lt; !-- Nettypes -- &gt;
+    &lt; nettype id="n1" typeSpecification="file:netTypeSpecifications/PTNet.xml"/ &gt;
+  &lt; !-- Applications -- &gt;
+    &lt; !-- Here comes a list of applications ... -- &gt;
+  &lt; !-- Input / Output -- &gt;
+    &lt; !-- Here comes a list of Input / Output filters ... -- &gt;
+&lt; /toolSpecification &gt;
+    </PRE><p>
+    Let's take a closer look at <em>netTypeSpecifications/PTNet.xml</em>.
+
+    <PRE>
+
+&lt; ?xml version="1.0" encoding="UTF-8"? &gt;
+&lt; !DOCTYPE netTypeSpecification SYSTEM "netTypeSpecification.dtd" &gt;
+&lt; netTypeSpecification name="PTNet" &gt;
+  &lt; extendable class="de.huberlin.informatik.pnk.kernel.Net" &gt;
+    &lt; extension name="firingRule" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.SimpleRule"/ &gt;
+  &lt; /extendable &gt;
+  &lt; extendable class="de.huberlin.informatik.pnk.kernel.Place" &gt;
+    &lt; extension name="marking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber"/ &gt;
+    &lt; extension name="initialMarking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber"/ &gt;
+  &lt; /extendable &gt;
+  &lt; extendable class="de.huberlin.informatik.pnk.kernel.Transition" &gt;
+  &lt; /extendable &gt;
+  &lt; extendable class="de.huberlin.informatik.pnk.kernel.Arc" &gt;
+    &lt; extension name="inscription" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber1"/ &gt;
+  &lt; /extendable &gt;
+&lt; /netTypeSpecification &gt;
+    </PRE><p>
+      The &lt; netTypeSpecification name="PTNet" &gt;  tells us the name of the nettype. The same name will be shown
+      in the ApplicationControl's <em>new Net</em> menu or stored in a pnml file.
+      Then a list of <em>extendables</em> and it's <em>extensions</em>
+      follows. The extendable implements the
+      <code>de.huberlin.informatik.pnk.kernel.Extendable</code> interface. Extendables
+      for example are:
+    <p>
+    <ul>
+      <li> de.huberlin.informatik.pnk.kernel.Net
+      <li> de.huberlin.informatik.pnk.kernel.Arc
+      <li> de.huberlin.informatik.pnk.kernel.Place
+      <li> de.huberlin.informatik.pnk.kernel.Transition
+      <li> de.huberlin.informatik.pnk.kernel.Extension
+    </ul>
+    <p>
+    The interface serves methods like:
+    <p>
+    <ul>
+      <li> public Hashtable getExtIdToObject()  
+        // requests a java.util.Hashtable: String id -> Extensions ext
+      <li> public boolean hasExtension(String id)  
+        // requests if extension with name: id, exists
+      <li> public Extension getExtension(String id)  
+        // requests the extension object with name: id
+      <li> public void setExtension(Object initiator, String id, String value)  
+        // request from application: initiator, in extensions with name: id, sets the extensionvalue to: value 
+    </ul>
+    <p>
+
+    For the extandable <code>de.huberlin.informatik.pnk.kernel.Place</code> an imaginable extension
+    could be <em>marking</em>. The extensions implementation could be the class 
+    <code>de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber</code>. 
+    So that's the code you have to put into the nettype-specificationfile:
+    <p>
+    <PRE>
+  &lt; extendable class="de.huberlin.informatik.pnk.kernel.Place" &gt;
+    &lt; extension name="marking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber"/ &gt;
+    </PRE> 
+    <p>
+      As you can see an extension entry is formed by a name and a reference to a java class.
+      In this case the extension's name is <em>marking</em> 
+      and the extensions's implementation is 
+      <code>de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber</code>.
+      When an extendable is generated (in this case a place) the extensions where build from
+      the specification (an instance of de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber
+      will be initialized).
+    <p>
+      NOTE: The <em>name</em> of an extendable is a standard extension, so You have not to refer it in the nettype-specificationfile!
+    <p>
+      Now it's time to say something about the [ abstract classes | interfaces ] 
+      Marking, Inscription, Mode and FiringRule. These are very important to affect
+      the behaviour of your nettype. To make your nettype work you have to implement these or you use one of
+      our default implementations.
+    <p>
+
+      <h4><A NAME=Marking></A>Marking</h4>
+
+    Let's start with the <em>Marking</em> extension.
+    It is an abstact class. It serves methods like:
+<p>
+<pre>
+
+public abstract class Marking 
+  extends Extension implements Inscription {
+
+  //************************************************************
+  // These are the methods you have to implement to make the
+  // Marking work.
+  //************************************************************
+
+  /**
+   * Returns true if <code>marking</code> is contained in this marking.
+   */
+  abstract public boolean contains(Marking marking);
+
+  /** 
+   * Adds the markings. This method is called by
+   * the <code>add(Marking marking)</code> method
+   * of this marking.
+   */
+  abstract protected void localAdd(Marking marking);
+
+  /** 
+   * Subtracts the markings. This method is called by
+   * the <code>add(Marking marking)</code> method
+   * of this marking.
+   */
+  abstract protected void localSub(Marking marking);
+
+  //************************p************************************
+  // These are the methods you may use.
+  //************************************************************
+
+  public Marking evaluate() { return this; }
+
+  /**
+   * Add operation of an Marking.
+   * Uses the <code>localAdd(Marking marking)</code> method
+   * and updates the new value of the marking in kernel.
+   */
+  final public void add(Marking marking) { ... }
+
+  /**
+   * Subtract operation of an Marking.
+   * Uses the <code>localSub(Marking marking)</code> method
+   * and updates the new value of the marking in kernel.
+   */
+  final public void sub(Marking marking) { ... }
+
+  /**
+   * Returns true if this marking is empty.
+   */
+  final public boolean isEmpty( ){ ... }
+
+} // public interface Marking
+    </pre>
+    <p>
+      As you can see it is expected that you implement the methods:
+    <p>
+    <ul>
+        <li> public boolean contains(Marking marking);
+        <li> protected void localAdd(Marking marking);
+        <li> protected void localSub(Marking marking);
+    </ul>
+    <p>
+    <h4><A NAME="Inscription"></A>Inscription</h4>
+    <p>
+      The <em>inscription</em> extension of an arc is an interface.
+
+    <p>
+    <pre>
+/**
+  * The template for the implementation of an <em> inscription </em> of an
+  *  {@link Arc arc}.
+  * The <code> "inscription" </code> of an
+  * arc is a standard {@link Extension  extension}. Whenever you design
+  * your own {@link Net Petri Net} type you either need to implement a
+  * custom inscription class (derived from class Extension and
+  * implementing <code>Inscription</code>) or you use one of the
+  * standard implementations (e.g. {@link Arc arc} multiplicities for
+  * Place/Transition-Nets).
+*/
+public interface Inscription
+{
+        Marking evaluate();
+}
+    </pre>
+    <p>
+      It declares an <code>evaluate()</code> method that returns an object
+      of a <code>Marking</code> class. For example you want to
+      subtract tokens from a place using the inscription of an arc. You could program
+      something like
+    <p>
+    <pre>
+     // get sourcenode of arc
+     Place sourceNode = (Place) arc.getSource();
+     // get marking of sourcenode
+     Marking marking = sourceNode.getMarking();
+     // get inscription of arc
+     Inscription inscription = arc.getInscription();
+     // subtract the value of arc's inscription from sourcenode's marking
+     marking.sub(inscription.evaluate());  
+    </pre>
+    <p>
+      I hope this clears the idea of the <code>Inscription</code> interface
+      and the <code>Marking</code> class. You need both to implement the
+      <em>firingRule</em> extension of a net.
+
+    <p>
+    <h4><A NAME="FiringRule"></A>FiringRule</h4>
+    <p>
+      A <code>de.huberlin.informatik.pnk.kernel.Net</code> is recommended to have a <em>firingRule</em>.
+      This extension should implement the <code>de.huberlin.informatik.pnk.netElementExtensions.base.FiringRule</code>
+      interface. This interface demands as previously mentioned the methods:
+    <p>
+    <pre>
+
+/**
+  * Is the template for implementing the <em> firing rule </em> of a
+  * {@link de.huberlin.informatik.pnk.kernel.Net Petri Net}.
+  *
+  * The firing rule of a net is a
+  * standard {@link de.huberlin.informatik.pnk.kernel.Extension extension}. 
+  * Whenever you design your own
+  * Petri Net type you either need to implement a custom
+  * firing rule class (derived from class 
+  * {@link de.huberlin.informatik.pnk.kernel.Extension Extension} and implementing
+  * <code> FiringRule </code>) or you use one of the standard
+  * implementations (e.g. the 'Hamburg' rule for Place/Transition-Nets).
+  */
+public interface FiringRule
+{
+  /**
+   * Parses all Extensions with an internal value depending on
+   * (possibly edited) other extensions.
+   */      
+  void  checkContextAndParseExtensions();  
+
+  /**
+   * Fires the set of {@link Transition transitions} given by
+   * <code>transitions</code>. 
+   * The  transitions are fired simultaneously. Usually 
+   * an order is practically introduced due to the sequential nature of 
+   * the implementation of <code>fire</code>, but no assumptions should me 
+   * made about this order. 
+   */
+  void fire(Vector transitions);  
+
+  /**
+   * Returns the set of all {@link #isConcessioned concessioned} {@link 
+   * Transition transitions}. 
+   */
+  Vector getAllConcessioned();  
+
+  /**
+   * Returns the set of all {@link #isConcessioned concessioned}
+   * {@link Transition transitions}, which are in the  
+   *  set <code>inclTrans</code> and not in  <code>exclTrans</code>. 
+   * The returned set contains  each {@link #isConcessioned 
+   * concessioned} transition meeting the additional 
+   * criteria.
+   * Both sets may possibly be empty. Set <code>inclTrans</code> is empty 
+   * or set <code>exclTrans</code>  equals the set of all transitions 
+   * implies that an empty set will be returned. If <code>exclTrans</code> 
+   * is empty, no  transition is a priori excluded from 
+   * the eventually returned set. 
+   */
+  Vector getAllConcessioned(Vector inclTrans, Vector exclTrans);  
+
+  /**
+   * Returns the set of all simultaneously fireable sets ({@link #isStep 
+   * steps}) of {@link Transition transitions}. 
+   * @see #getStep()
+   */
+  Vector getAllSteps();  
+
+  /**
+   * Returns the set of all sets ({@link #isStep steps}) of 
+   * simultaneously fireable {@link Transition transitions}. 
+   * Each returned {@link #isStep step} has at least one 
+   *  transition in common with <code>inclTrans</code> and the 
+   * intersection with <code>exclTrans</code> is empty. 
+   */
+  Vector getAllSteps(Vector inclTrans, Vector exclTrans);  
+
+  /**
+   * Returns a reference to a {@link #isConcessioned concessioned} 
+   *  transition. 
+   */
+  Transition getConcessioned();  
+
+  /**
+   * Returns a reference to a {@link #isConcessioned concessioned} 
+   * transition, which is in the  transition 
+   * set <code>inclTrans</code> and not in <code>exclTrans</code>. 
+   * Both sets may possibly be empty. An empty set <code>inclTrans</code> 
+   * or a set <code>exclTrans</code> equal to the set of all
+   * transitions always causes an exception. If 
+   * <code>exclTrans</code> is empty, no  transition is 
+   * a priori excluded from the set of possible return values. 
+   */
+  Transition getConcessioned(Vector inclTrans, Vector exclTrans);  
+
+  /**
+   * Returns a simultaneously fireable set ({@link #isStep step}) of 
+   * {@link Transition transitions}. 
+   * The step is simultaneously fireable according to 
+   * the implemented firing rule. Naturally all  
+   * transitions in a  step are {@link #isConcessioned 
+   * concessioned}. 
+   * The returned {@link #isStep step} may serve as input for {@link 
+   * #fire fire(step)}. 
+   */
+  Vector getStep();  
+
+  /**
+   * Returns a simultaneously fireable subset ({@link #isStep step}) of 
+   * set <code> transitions</code>. 
+   * The {@link #isStep step} has at least one  
+   * transition in common with <code>inclTrans</code> and the 
+   * intersection with <code>exclTrans</code> is empty. 
+   * The  step is fireable according to the implemented 
+   * firing rule. Naturally all transitions in the 
+   * step are {@link #isConcessioned concessioned}. 
+   */
+  Vector getStep(Vector transitions);  
+
+  /**
+   * Returns whether the given  <code>transition</code> is 
+   * concessioned. 
+   * The definition of concessioned varies even among the same class of 
+   * {@link de.huberlin.informatik.pnk.kernel.Net Petri Nets}. The most commonly used definition for
+   * P/T-Nets simply demands that each {@link de.huberlin.informatik.pnk.kernel.Place place} in the preset
+   * of a {@link Transition transition} must carry at least as many tokens 
+   * as the multiplicity of the {@link de.huberlin.informatik.pnk.kernel.Arc arc} from the
+   * place to the  transition. 
+   */
+  boolean isConcessioned( Transition transition);  
+
+  /**
+   * Returns whether a set of {@link Transition transitions} is 
+   * simultaneously fireable. 
+   * Be aware of the difference between <em>simultaneously fireable</em> 
+   * and <em>fireable in an arbitrary order</em> under certain 
+   * circumstances. 
+   * The maximal step firing rule for P/T-Nets is an example for the 
+   * importance of that difference. In that case a step is defined as an 
+   * inclusion-maximal set of simultaneously fireable {@link Transition 
+   * transitions}. Under the normal firing rule for P/T-Nets the {@link 
+   * Transition transitions} in this set could be {@link #fire fired} in 
+   * an arbitrary order. One can imagine a situation where a  
+   * transition t, which is not member of the step, can only 
+   * be {@link #isConcessioned concessioned} <em>during</em> the {@link 
+   * #fire firing} of the  transitions in the step in 
+   * an appropriate order. The freedom of choosing the order is taken away 
+   * by the maximal step firing rule, since there is no 'during'. It all 
+   * happens in the very same moment. Consequently  
+   * transition t can never become {@link #isConcessioned concessioned}. 
+   * 
+   * What is even more astonishing: because of that feature of P/T-Nets 
+   * with the maximal step firing rule it is possible to simulate the 
+   * <em>decrement if not zero and goto i, otherwise goto j</em> operation 
+   * of a counter automata, which is as expressive as and as hard to 
+   * analyze as a Turing machine. 
+   */
+  boolean isStep( Vector transitions);  
+
+} // public interface FiringRule
+    </pre>
+    <p>
+      As showed in the simulator example, you use the firingrule extension to request
+      concessioned transitions and fire them. For an sample implementation you might see the 
+      <code>de.huberlin.informatik.pnk.netElementExtensions.llNet.SimpleRule</code>. You can use
+      this implementation as default. It profits by methods of the 
+      <code>de.huberlin.informatik.pnk.netElementExtensions.base.Marking</code> class and the
+      <code>de.huberlin.informatik.pnk.netElementExtensions.base.Inscription</code> interface.
+      An possible implementation of the <code>fire()</code> methode in a FiringRule object could be:
+    <p>
+    <pre>
+/**
+ * A sample implementation of methode fire() in FiringRule.
+ * Fires the given <code>transition</code> by subtracting
+ * markings from all places in preset of transition and 
+ * adding markings to all places in postset of transition.
+ */
+public void fire(Transition transition) {
+
+  Vector edges;
+
+  /*
+   * subtract markings from places in preset of transition
+   */
+
+  edges = transition.getIncomingEdges();
+  for(int i = 0; i < edges.size(); i++) {
+    Edge edge = (Edge) edges.get(i);
+    Inscription inscription = (Inscription) edge.getExtension("inscription");
+    Marking marking = ((Place) edge.getSource()).getMarking();
+    marking.sub(inscription.evaluate());
+  } // end for
+ 
+  /*
+   * add markings to places in postset of transition
+   */
+
+  edges = transition.getOutgoingEdges();
+  for(int i = 0; i < edges.size(); i++) {
+    Edge edge = (Edge) edges.get(i);
+    Inscription inscription = (Inscription) edge.getExtension("inscription");
+    Marking marking = ((Place) edge.getTarget()).getMarking();
+    marking.add(inscription.evaluate());
+  } // end for
+
+} // public void fire   
+    </pre>
+    <p>
+    A second example shows a practicable implementation of the <code>isConcessioned()</code>
+    method in a FiringRule object:
+    <p>
+    <pre>
+/**
+ * Returns whether the given
+ * <code>transition</code> is concessioned. <BR>
+ */
+public boolean isConcessioned(Transition transition) {
+
+  boolean to_return = true; // indicates that transition is concessioned
+
+  // enumerate on all incoming edges,
+  // check if there is one place as edge sourcenode
+  // that doesn't activate the transition
+
+  Vector edges = transition.getIncomingEdges();
+  for(int i = 0; i < edges.size(); i++) {
+    Edge edge = (Edge) edges.get(i);
+    Inscription inscription = (Inscription) edge.getExtension("inscription");
+    Marking marking = ((Place)edge.getSource()).getMarking();
+    if( ! marking.contains(inscription.evaluate())) 
+      to_return = false; // now it's clear, the transition is not activated
+  } // end for  
+
+  return to_return;
+
+} // boolean isConcessioned   
+    </pre>
+    <p>
+
+
+    <p>
+    <HR>
+    <ADDRESS><A HREF="mailto:gruenewa@informatik.hu-berlin.de">Alexander Gruenewald</A></ADDRESS>
+    <P><!-- Created: Wed May 16 20:19:15 CEST 2001 --><!-- hhmts start -->Last
+      modified: Tue Aug 7 15:34:01 MET DST 2001<!-- hhmts end --> 
+    </P>
+  </BODY>
+</HTML>

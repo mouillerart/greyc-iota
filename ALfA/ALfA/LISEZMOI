@@ -1,0 +1,43 @@
+ALfA - Access Layer For Applications
+
+Serveur RMI servant d’interface entre EPCglobal/IoTa et des applications de
+haut niveau.
+
+launch.sh           script pour lancer le serveur
+
+Dépendances:
+  modules IoTa:
+    - ALfA-PI
+    - IoTa-DiscoveryWS-Client
+  bibliothèques:
+    - epcis-query-client
+    - epcis-commons
+    - dnsjava
+    - axiom-api
+    - commons-logging
+    - log4j
+
+Configuration:
+  IoTa-Installer installe et configure ALfA.
+  Voir les fichiers *.properties et java.policy dans le fichier jar ; chacun
+  de ces fichiers peut être remplacé par un fichier du même nom dans le
+  répertoire courant.
+  (application.properties pour cette application,
+   ds-client.properties pour la bibliothèque cliente IoTa-DiscoveryWS-Client,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - un ONS
+  - un DWS (p.ex. IoTa-DiscoveryWS)
+  - un Epcis (p.ex. Fosstrak-Epcis)
+  - IoTa:
+    - DSeTa
+    - EpcILoN
+    - ETa
+    - DiscoveryPHI (facultatif)
+    - EpcisPHI (facultatif)
+
+Utilisation:
+  nohup ./alfa.sh
+
+  voir BETa, DELTa ou OMeGa pour des exemples de clients

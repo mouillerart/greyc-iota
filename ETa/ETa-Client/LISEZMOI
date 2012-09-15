@@ -1,0 +1,15 @@
+ETa-Client
+
+Bibliothèque cliente pour l’interfaçage avec le web service ETa (gestion des
+utilisateurs).
+
+Dépendances:
+  bibliothèques:
+    - Apache cxf
+
+Configuration:
+  (application.properties pour cette application,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - ETa

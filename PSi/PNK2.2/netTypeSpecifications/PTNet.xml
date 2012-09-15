@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE netTypeSpecification SYSTEM "netTypeSpecification.dtd">
+<netTypeSpecification name="PTNet">
+	<extendable class="de.huberlin.informatik.pnk.kernel.Net">
+		<extension name="firingRule" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.SimpleRule"/>
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.Place">
+		<extension name="marking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber"/>
+		<extension name="initialMarking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber"/>
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.Transition"> 
+	</extendable> 
+	<extendable class="de.huberlin.informatik.pnk.kernel.Arc">
+		<extension name="inscription" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.NaturalNumber1"/>
+	</extendable>
+</netTypeSpecification>

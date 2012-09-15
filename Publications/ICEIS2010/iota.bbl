@@ -1,0 +1,65 @@
+\begin{thebibliography}{10}
+
+\bibitem{afilias}
+Afilias.
+\newblock Afilias discovery services.
+\newblock \url{http://www.afilias.info/}.
+
+\bibitem{epcis}
+EPCGlobal.
+\newblock Epcis - epc information services standard.
+\newblock
+  \url{http://www.epcglobalinc.org/standards/epcis/epcis_1_0_1-standard-200709%
+21.pdf}, 2007.
+
+\bibitem{DBLP:conf/iot/EvdokimovFG08}
+Sergei Evdokimov, Benjamin Fabian, and Oliver G{\"u}nther.
+\newblock Multipolarity for the object naming service.
+\newblock In {\em Proceedings of the First International Conference, The
+  Internet of Things, IOT 2008}, volume 4952 of {\em Lecture Notes in Computer
+  Science}, pages 1--18, Zurich, Switzerland, march 2008. Springer.
+
+\bibitem{fosstrak}
+Fosstrak.
+\newblock Free and open source software for track and trace.
+\newblock \url{http://www.fosstrak.org}.
+
+\bibitem{IBM}
+IBM.
+\newblock Infosphere traceability server.
+\newblock
+  \url{http://www-01.ibm.com/software/data/infosphere/traceability-server/}.
+
+\bibitem{Kindler99thepetri}
+Ekkart Kindler and Michael Weber.
+\newblock The petri net kernel: An infrastructure for building petri net tools.
+\newblock {\em Software Tools for Technology Transfer (STTT}, 3:486--497, 1999.
+
+\bibitem{AI-LEMOULEC-2009}
+J.~Le~Moulec, J.~Madelaine, and Bedini I.
+\newblock Discovery services interconnection.
+\newblock In {\em Proceedings of the 3rd International Workshop on RFID
+  Technology - Concepts, Applications, Challenges (IWRT 2009)}, pages 59--68,
+  Milan, Italy, mai 2009. INSTICC Press, Portugal.
+
+\bibitem{bizTalk}
+Microsoft.
+\newblock Microsoft biztalk rfid.
+\newblock \url{http://www.microsoft.com/biztalk/}.
+
+\bibitem{seres}
+Seres.
+\newblock Seres.
+\newblock \url{http://www.seres.fr/}.
+
+\bibitem{bent}
+Bent System.
+\newblock Rfid epcis savant.
+\newblock \url{http://www.bentsystems.com/}.
+
+\bibitem{wings}
+WINGS.
+\newblock Wings anr project.
+\newblock \url{http://www.wings-project.fr/}.
+
+\end{thebibliography}

@@ -1,0 +1,395 @@
+a {
+    outline: none;
+}
+
+body,html{
+    font-family :sans-serif;
+    font-size : 10pt;
+    padding : 0px;
+    margin : 0px;
+    width : 100%;
+}
+
+body{
+    background : url('../pics/back.png') no-repeat top;
+}
+
+.TreeNodeTitle{
+    padding : 3px;
+    height : 20px;
+    padding-bottom : 1px;
+}
+
+.TreeNodeTitleInnerHtml{
+    float : left;
+    color : black;
+    text-decoration: none;
+    padding-right : 10px;
+    padding-left : 10px;
+}
+
+.TreeNodeTitleInnerHtml:hover{
+    color : darkblue;
+}
+
+.TreeNodeContent{
+    padding-left : 30px;
+}
+
+.TreeNodeBlock{
+    border : 1px dashed transparent;
+    -moz-border-radius:4px 4px 4px 4px;
+}
+
+.rootzone{
+    border : 2px dashed transparent;
+    -moz-border-radius:4px 4px 4px 4px;
+}
+
+.PolicyTree{
+    width : 100%;
+    height : 500px;
+    /*    border-left : 1px solid gray;
+        border-right : 1px solid gray;
+        border-bottom : 1px solid gray;*/
+    padding : 0px;
+    /*background-color: #f9f9f9;*/
+}
+
+.policyNode{
+    font-weight : bold;
+}
+
+.icon_tree{
+    display : block;
+    float : left;
+    height : 16px;
+    width : 16px;
+}
+
+.expanderButton{
+    background-image: url("../pics/collapse.png");
+}
+
+.expanderButton2{
+    background-image: url("../pics/expand.png");
+}
+
+.icon_tree_filter{
+    background-image: url("../pics/filter.png");
+}
+
+.icon_tree_user{
+    background-image: url("../pics/user.png");
+}
+
+.TreeTitle{
+    background-color: #cfd2db;
+    text-align : center;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 13pt;
+    color : #3c3f4d;
+    border : 1px solid gray;
+    width : 400px;
+}
+
+/* toolbar */
+
+.TreeToolBar{
+    background-color: #ececec;
+    padding : 5px;
+    padding-top : 10px;
+    padding-left : 10px;
+    height : 20px;
+    font-size : 9pt;
+    border : 1px solid gray;
+    width : 385px;
+    border-top : none;
+}
+
+.TreeToolBarItem{
+    display : block;
+    float : left;
+    height : 20px;
+    padding-left : 20px;
+    width : 90px;
+}
+
+.TreeToolBar .add {
+    background-image: url("../pics/add.png");
+    background-repeat: no-repeat;
+    margin-right : 20px;
+}
+
+.TreeToolBar .remove {
+    background-image: url("../pics/remove.png");
+    background-repeat: no-repeat;
+    margin-right : 20px;
+}
+
+.TreeToolBar .update {
+    background-image: url("../pics/update.png");
+    background-repeat: no-repeat;
+}
+
+/* node commande */
+
+.nodeCommand{
+    float : right;
+    height : 16px;
+    width: 49px;
+    display : none;
+}
+
+.nodeCommand a {
+    height : 16px;
+    width : 16px;
+    display: block;
+    float : right;
+    margin-right : 3px;
+}
+
+.nodeCommand .add {
+    background-image: url("../pics/add2.png");
+}
+
+.nodeCommand .remove {
+    background-image: url("../pics/remove2.png");
+}
+
+.nodeCommand .update {
+    background-image: url("../pics/update2.png");
+}
+
+.nodeCommand .save {
+    background-image: url("../pics/switch2.png");
+}
+
+.nodeCommand .switch {
+    background-image: url("../pics/switch2.png");
+}
+
+.nodeCommand .add:hover {
+    background-image: url("../pics/add.png");
+}
+
+.nodeCommand .remove:hover {
+    background-image: url("../pics/remove.png");
+}
+
+.nodeCommand .update:hover {
+    background-image: url("../pics/update.png");
+}
+
+.nodeCommand .switch:hover {
+    background-image: url("../pics/switch.png");
+}
+
+
+/*tabbed*/
+
+#tabs{
+    width : 720px;
+    margin : auto;
+}
+
+.ui-tabs .ui-tabs-panel {
+    padding : 0px;
+}
+
+#fragment-1{
+    padding : 10px;
+    height : 520px;
+    overflow: auto;
+    margin-top: 10px;
+    padding-top : 0px;
+}
+#fragment-2{
+    padding : 10px;
+    height : 520px;
+    overflow: auto;
+    margin-top: 10px;
+    padding-top : 0px;
+}
+#fragment-3{
+    padding : 10px;
+    height : 520px;
+    overflow: auto;
+    margin-top: 10px;
+    padding-top : 0px;
+}
+
+
+
+/****************   DIALOG *********************/
+
+#dialogServiceId{
+    display : none;
+}
+
+.dialog_message_category{
+    background-color: lightgray;
+    margin-top : 10px;
+    margin-bottom : 10px;
+    padding : 10px;
+    color : #222222;
+    border : 1px solid darkgray;
+    -moz-border-radius:8px 8px 8px 8px;
+}
+
+#serviceType1{
+    width : 198px;
+}
+
+#serviceType{
+    width : 198px;
+}
+
+.dialog_options{
+
+    text-align : right;
+
+}
+
+.dialog_action{
+    margin-top : 10px;
+    text-align : center;
+}
+
+.dialog_message{
+    padding : 10px;
+}
+
+.dialog_action input{
+    margin-right : 10px;
+}
+
+.modalDialog{
+    display : none;
+}
+
+.partnerSelector{
+    width : 100%;
+}
+
+.methodSelector{
+    width : 100%;
+}
+
+.ui-tabs .ui-tabs-nav li .tabControl{
+    display : none;
+    padding : 0px;
+    height : 16px;
+    width : 16px;
+    float : right;
+    background-image: url("../pics/valide.png");
+    margin-top : 10px;
+    margin-right : 7px;
+}
+
+.ui-tabs .ui-tabs-nav li .tabControl:hover{
+    cursor: pointer;
+}
+
+
+.ui-tabs .ui-tabs-nav li .tabControlCancel{
+    display : none;
+    padding : 0px;
+    height : 16px;
+    width : 16px;
+    float : right;
+    background-image: url("../pics/remove.png");
+    margin-top : 10px;
+    margin-right : 7px;
+}
+
+.ui-tabs .ui-tabs-nav li .tabControlCancel:hover{
+    cursor: pointer;
+}
+
+.titleWrapper{
+    width : 100%;
+    height : 100%;
+    overflow: hidden;
+}
+
+#treeAdminModule{
+    text-align : center;
+}
+#treeQueryModule{
+    text-align : center;
+}
+#treeCaptureModule{
+    text-align : center;
+}
+
+.treeTitle{
+    text-align : center;
+    font-weight : bold;
+    font-size: 32px;
+    padding : 15px;
+    margin-top : 15px;
+    background: url('../pics/logo.png') no-repeat center;
+}
+
+.account{
+    width : 720px;
+    color : #3d4557;
+    margin : auto;
+    margin-top : 10px;
+}
+
+#epcClassFilterName{
+    width : 200px;
+}
+
+/*.account div{
+    margin-top : 10px;
+}*/
+
+.account div span{
+    color : red;
+}
+
+.TreeNodeTitleInnerHtmlValue{
+    color : #5d5a8e;
+}
+
+.logout{
+    float : right;
+    height : 15px;
+}
+
+.rootMenu{
+    margin-top : 150px;
+    height : 370px;
+}
+
+.rootMenuItem a{
+    text-align: center;
+    display : block;
+    width : 200px;
+    padding : 50px;
+    background-color: gray;
+    text-decoration: none;
+    color : white;
+    margin : auto;
+    margin-bottom : 20px;
+    border : 1px solid darkgray;
+    -moz-border-radius:8px 8px 8px 8px;
+}
+
+#rootMenuItemLogout a{
+    padding-top : 10px;
+    padding-bottom : 10px;
+}
+
+#rootMenuItemLogout a:hover{
+    background-color: black;
+    color : white;
+}
+
+.rootMenuItem a:hover{
+    background-color: lightgray;
+}

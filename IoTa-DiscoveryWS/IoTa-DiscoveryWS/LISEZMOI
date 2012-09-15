@@ -1,0 +1,37 @@
+IoTa-DiscoveryWS
+
+Web services Discovery de IoTa.
+
+INSTALL                         instructions d’installation
+sql/                            schéma de la base de données SQL
+IoTa-DiscoveryWS-Client/        bibliothèque cliente
+
+Dépendances:
+  modules IoTa:
+    - LibXACML-DS
+    - IoTa-DiscoveryWS-Client
+  bibliothèques:
+    - hibernate
+    - mysql-connector
+    - axis2
+    - sunxacml
+    - dnsjava
+    - servlet-api
+    - commons-logging
+    - log4j
+
+Installation and Configuration:
+  Voir HOWTO/fr/INSTALL.
+  IoTa-Installer installe et configure IoTa-DiscoveryWS.
+  (application.properties, publisher.properties, root-account.properties pour
+   cette application,
+   ds-client.properties pour la bibliothèque client IoTa-DiscoveryWS-Client,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - un ONS
+  - un serveur MySQL
+  - EpcILoN
+
+Utilisation:
+  voir DSeTa pour des exemples

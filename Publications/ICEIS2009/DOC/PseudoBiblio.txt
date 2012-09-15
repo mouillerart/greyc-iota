@@ -1,0 +1,28 @@
+K¨urschner et al. give an overview about requirements towards an EPCDS and describe the directory look-up design currently under consideration at EPCglobal.
+
+[1] Kürschner, C., Condea, C., Kasten, O., & Thiesse, F. (2008). Discovery Service Design in the EPCglobal Network - Towards Full Supply Chain Visibility. In C. Floerkemeier et al. (Eds.): IOT 2008, LNCS 4952, pp. 19–34, 2008.
+
+[2] Jose Juan Cantero, Miguel Angel Guijarro, Guillermo Arrebola, Ernesto Garcia, Janie Banos, Mark Harrison, Thomas Kelepouris: Traceability applications based on discovery services. ETFA 2008: 1332-1337
+Traceability applications based on discovery services, Cantero, J.J.   Guijarro, M.A.   Arrebola, G.   Garcia, E.   Baos, J.   Harrison, M.   Kelepouris, T.   
+AT4 wireless, Malaga; This paper appears in: Emerging Technologies and Factory Automation, 2008. ETFA 2008. IEEE International Conference on
+Publication Date: 15-18 Sept. 2008
+On page(s): 1332-1337
+ISBN: 978-1-4244-1505-2
+INSPEC Accession Number: 10282019
+Digital Object Identifier: 10.1109/ETFA.2008.4638572
+Current Version Published: 2008-10-03
+
+
+Huang et al. present a distributed architecture that makes use of peer-to-peer technology and distributed hash tables to locate information about explicitly defined supply chains.
+
+[3] Dijiang Huang, Mayank Verma, Archana Ramachandran, and Zhibin Zhou. A Distributed ePedigree Architecture. In FTDCS ’07: Proceedings of the 11th IEEE International Workshop on Future Trends of Distributed Computing Systems, pages 220–230, Washington, DC, USA, 2007. IEEE Computer Society.
+
+
+Beier et al. describe the role of an EPCDS in a EPC network and the requirements for privacy and security. EPCDS is seen as an independent unit at which each EPCIS repository has to register with the EPC when they observe an item for the very first time. It is also mentioned that EPCDS should allow row-level data access control. The presented requirements match those for this work but no details of the prototype architecture are given.
+
+[4] Steve Beier, Tyrone Grandison, Karin Kailing, and Ralf Rantzau. Discovery Services – Enabling RFID Traceability in EPCglobal Networks. In Proc. of the 13th International Conference on Management of Data (COMAD), Delhi, India, December 2006
+
+
+[5] Jons-Tobias Wamhoff, Eberhard Grummt, Ralf Ackermann: Routing Mechanism for Secure, Distributed Discovery Services for Global Auto-ID Networks. IWRT 2008: 136-141
+
+

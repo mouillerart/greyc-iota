@@ -1,0 +1,39 @@
+Ce répertoire contient les composants du projet IoTa.
+
+Pour des instructions pour la construction et l’installation, voir le fichier
+INSTALL.fr ou utilisez l’installateur (dans IoTa-Installer/).
+
+Le Projet IoTa est un logiciel libre. Voir le fichier copyright pour les
+conditions de copies.
+
+Ce que l’on trouve dans ce répertoire :
+
+Scripts:
+  make-all.sh          Script shell pour construire tous les modules
+
+Documentations :
+  Licenses/            Textes des licences
+  Publications/        Articles publiés et matériel de publication
+
+Dépendances externes :
+  lib/                 Bibliothèques non disponibles sur les dépôts Maven
+
+Installateur :
+  IoTa-Installer/      Installateur pour les modules de IoTa
+
+Modules serveurs :
+  IoTa-DiscoveryWS/    DWS
+  DSeTa/               Discovery SErvices Trusted Agent
+  EpcILoN/             Web service EPC Information Layer tO Naming layer
+  ETa/                 Web service Epcis Trusted Agent
+  ALfA/                Serveur RMI Access Layer For Applications
+  OMeGa/               Web service Object MEthod GAteway WS pour ALfA
+
+Applications utilisateur :
+  DSeTa/DiscoveryPHI/  Web service Discovery Policy Human Interface
+  ETa/EpcisPHI/        Web service Epcis Policy Human Interface
+  BETa/                Basic EPC Test Application
+  DELTa/               Deep Event Layer Testing Application
+  ThETa/               ThemaMap EPC Tracing application
+  MuPHI/               MUltiple PSi Human Interface
+  PSi/                 Application Petri net SImulator

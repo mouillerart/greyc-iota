@@ -1,0 +1,18 @@
+BETa - Basic EPC Test Application
+
+Exemple d’application cliente de haut niveau.
+
+Dépendances:
+  modules IoTa:
+    - ALfA-PI
+    - OmICron
+
+Configuration:
+  Voir le fichier java.policy dans le fichier jar ; ces fichier peut être
+  remplacé par un fichier du même nom dans le répertoire courant.
+
+Dépendances d’utilisation:
+  - ALfA
+
+Utilisation:
+  ./beta.sh

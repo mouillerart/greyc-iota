@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iota="urn:fr:unicaen:params:xsd:ns:iota-1.0" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:fr:unicaen:params:xsd:ns:iota-1.0">
+    <xs:complexType name="traceEPCRequestIn">
+        <xs:attribute name="epc" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="traceEPCResponseOut">
+        <xs:sequence>
+            <xs:element name="eventList" type="iota:eventList"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="eventList">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="event" type="iota:event"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="event">
+        <xs:sequence>
+            <xs:element name="epcList" type="iota:epcList"/>
+            <xs:element name="childList" type="iota:childList"/>
+        </xs:sequence>
+        <xs:attribute name="type" type="iota:eventType" use="required"/>
+        <xs:attribute name="eventTime" type="xs:dateTime" use="required"/>
+        <xs:attribute name="recordTime" type="xs:dateTime" use="required"/>
+        <xs:attribute name="parentId" type="xs:string" />
+        <xs:attribute name="action" type="iota:eventAction" use="required"/>
+        <xs:attribute name="bizStep" type="xs:string" use="required"/>
+        <xs:attribute name="bizLoc" type="xs:string" use="required"/>
+        <xs:attribute name="readPoint" type="xs:string" use="required"/>
+        <xs:attribute name="quantity" type="xs:int" />
+        <xs:attribute name="epcClass" type="xs:string" />
+        <xs:attribute name="disposition" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="epcList">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="epcs" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="childList">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="childs" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="eventType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="OBJECT"/>
+            <xs:enumeration value="AGGREGATION"/>
+            <xs:enumeration value="QUANTITY"/>
+            <xs:enumeration value="TRANSACTION"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="eventAction">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ADD"/>
+            <xs:enumeration value="OBSERVE"/>
+            <xs:enumeration value="DELETE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="queryONSRequestIn">
+        <xs:attribute name="epc" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="queryONSResponseOut">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="onsMap" type="iota:onsEntry"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType  name="onsEntry">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="key" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="queryEPCISRequestIn">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="epc" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="EPCISAddress" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="queryEPCISResponseOut">
+        <xs:sequence>
+            <xs:element name="eventList" type="iota:eventList"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="queryDSRequestIn">
+        <xs:sequence>
+            <xs:element minOccurs="1" name="epc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="1" name="DSAddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="1" name="login" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="1" name="password" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="serviceType" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="queryDSResponseOut">
+        <xs:sequence>
+            <xs:element name="eventList" type="iota:dsEventList"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="dsEventList">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="event" type="iota:dsEvent"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="dsEvent">
+        <xs:sequence>
+            <xs:element name="epc" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="referenceAddress" type="xs:string" use="required"/>
+        <xs:attribute name="bizStep" type="xs:string" use="required"/>
+        <xs:attribute name="eventTime" type="xs:dateTime" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="helloRequestIn">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="helloResponseOut">
+        <xs:sequence>
+            <xs:element name="hello" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="getProductInfoRequestIn">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="address" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="getProductInfoResponseOut">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="getReferenteDSRequestIn">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="epc" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType  name="getReferenteDSResponseOut">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="queryEPCISRequest" type="iota:queryEPCISRequestIn"/>
+    <xs:element name="queryEPCISResponse" type="iota:queryEPCISResponseOut"/>
+    <xs:element name="helloRequest" type="iota:helloRequestIn"/>
+    <xs:element name="helloResponse" type="iota:helloResponseOut"/>
+    <xs:element name="queryDSRequest" type="iota:queryDSRequestIn"/>
+    <xs:element name="queryDSResponse" type="iota:queryDSResponseOut"/>
+    <xs:element name="traceEPCRequest" type="iota:traceEPCRequestIn"/>
+    <xs:element name="traceEPCResponse" type="iota:traceEPCResponseOut"/>
+    <xs:element name="getReferenteDSRequest" type="iota:getReferenteDSRequestIn"/>
+    <xs:element name="getReferenteDSResponse" type="iota:getReferenteDSResponseOut"/>
+    <xs:element name="queryONSRequest" type="iota:queryONSRequestIn"/>
+    <xs:element name="queryONSResponse" type="iota:queryONSResponseOut"/>
+    <xs:element name="getProductInfoRequest" type="iota:getProductInfoRequestIn"/>
+    <xs:element name="getProductInfoResponse" type="iota:getProductInfoResponseOut"/>
+
+</xs:schema>

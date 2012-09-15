@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE netTypeSpecification SYSTEM "netTypeSpecification.dtd">
+<netTypeSpecification name="graph">
+	<extendable class="de.huberlin.informatik.pnk.kernel.Net">
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.Place">
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.PlaceArc">
+	</extendable>
+</netTypeSpecification>

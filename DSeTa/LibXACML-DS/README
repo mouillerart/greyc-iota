@@ -1,0 +1,15 @@
+LibXACML-DS
+
+XACML library for DiscoveryPHI and DSeTa.
+
+Dependencies:
+  libraries:
+    - sunxacml
+    - commons-logging
+
+Configuration:
+  (xacml_configuration.properties)
+
+Usage Dependencies:
+  - DiscoveryPHI
+  - a DWS

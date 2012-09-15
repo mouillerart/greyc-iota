@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<pnml:pnml xmlns:pnml="pnml.xsd">
+  <net id="n1" xmlns="hlNet.xsd">
+ 		<name>Distributed connectivity</name>
+
+		<place id="p1">
+			<name>A</name>
+			<marking const="M"/>
+		</place>
+
+		<place id="p2">
+			<marking const="N"/>
+		</place>
+
+		<transition id="t1">
+			<name>t</name>
+			<transitionGuard>
+				<fct ref="and">
+					<fct ref="isElement">
+						<var ref="x"/>
+						<var ref="X"/>
+					</fct>
+					<fct ref="isElement">
+						<var ref="y"/>
+						<var ref="Y"/>
+					</fct>
+				</fct>
+			</transitionGuard>
+		</transition>
+
+		<arc id="a1" source="p1" target="t1">
+			<annotation>
+				<var ref="X"/>
+				<var ref="Y"/>
+			</annotation>
+		</arc>
+
+		<arc id="a2" source="t1" target="p1">
+			<annotation>
+				<fct ref="combine">
+					<var ref="X"/>
+					<var ref="Y"/>
+				</fct>
+			</annotation>
+		</arc>
+
+		<arc id="a3" source="p2" target="t1">
+			<annotation>
+				<tuple>
+					<var ref="x"/>
+					<var ref="y"/>
+				</tuple>
+			</annotation>
+		</arc>
+
+		<netInscription>
+			<sortDeclaration name="bool" type="basic"/>
+			<sortDeclaration name="nodes" type="basic"/>
+			<sortDeclaration name="subgraphs" type="setOf">
+				<sort ref="nodes"/>
+			</sortDeclaration>
+			<sortDeclaration name="arcs" type="tuple">
+				<sort ref="nodes"/>
+				<sort ref="nodes"/>
+			</sortDeclaration>
+			<constDeclaration name="M" sort="subgraphs"/>
+			<constDeclaration name="N" sort="arcs"/>
+			<fctDeclaration name="combine">
+				<argumentSort ref="subgraphs"/>
+				<argumentSort ref="subgraphs"/>
+				<targetSort ref="subgraphs"/>
+			</fctDeclaration>
+			<fctDeclaration name="and">
+				<argumentSort ref="bool"/>
+				<argumentSort ref="bool"/>
+				<targetSort ref="bool"/>
+			</fctDeclaration>
+			<fctDeclaration name="isElement">
+				<argumentSort ref="nodes"/>
+				<argumentSort ref="subgraphs"/>
+				<targetSort ref="bool"/>
+			</fctDeclaration>
+			<variableDeclaration name="X" sort="subgraphs"/>
+			<variableDeclaration name="Y" sort="subgraphs"/>
+			<variableDeclaration name="x" sort="nodes"/>
+			<variableDeclaration name="y" sort="nodes"/>
+		</netInscription>
+
+	</net>
+</pnml:pnml>

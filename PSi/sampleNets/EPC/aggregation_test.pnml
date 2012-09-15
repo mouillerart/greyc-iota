@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+  <net id="n1" type="EPCNet">
+    <place id="p1">
+      <marking>
+        <graphics>
+          <offset page="1" x="-125" y="-155"/>
+        </graphics>
+        <value> urn:epc:id:sgtin:10000.00001.33331
+ urn:epc:id:sgtin:10000.00001.33332
+ urn:epc:id:sgtin:10000.00001.33333
+ urn:epc:id:sgtin:10000.00001.33334
+ urn:epc:id:sgtin:10000.00001.33335
+ urn:epc:id:sgtin:10000.00001.33336
+ urn:epc:id:sgtin:10000.00001.33337
+ urn:epc:id:sgtin:10000.00001.33338
+ urn:epc:id:sgtin:10000.00001.33339</value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="1" y="15"/>
+        </graphics>
+        <value>p1</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="20" y="30"/>
+        </graphics>
+        <value> urn:epc:id:sgtin:10000.00001.33331
+ urn:epc:id:sgtin:10000.00001.33332
+ urn:epc:id:sgtin:10000.00001.33333
+ urn:epc:id:sgtin:10000.00001.33334
+ urn:epc:id:sgtin:10000.00001.33335
+ urn:epc:id:sgtin:10000.00001.33336
+ urn:epc:id:sgtin:10000.00001.33337
+ urn:epc:id:sgtin:10000.00001.33338
+ urn:epc:id:sgtin:10000.00001.33339</value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="209" y="170"/>
+      </graphics>
+    </place>
+    <place id="p2">
+      <marking>
+        <graphics>
+          <offset page="1" x="42" y="-27"/>
+        </graphics>
+        <value>  urn:epc:id:sgtin:10000.00001.33321
+ urn:epc:id:sgtin:10000.00001.33322
+ urn:epc:id:sgtin:10000.00001.33323
+ urn:epc:id:sgtin:10000.00001.33324
+ urn:epc:id:sgtin:10000.00001.33325
+ urn:epc:id:sgtin:10000.00001.33326
+ urn:epc:id:sgtin:10000.00001.33327
+ urn:epc:id:sgtin:10000.00001.33328
+ urn:epc:id:sgtin:10000.00001.33329 </value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0"/>
+        </graphics>
+        <value>p2</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="20" y="30"/>
+        </graphics>
+        <value>  urn:epc:id:sgtin:10000.00001.33321
+ urn:epc:id:sgtin:10000.00001.33322
+ urn:epc:id:sgtin:10000.00001.33323
+ urn:epc:id:sgtin:10000.00001.33324
+ urn:epc:id:sgtin:10000.00001.33325
+ urn:epc:id:sgtin:10000.00001.33326
+ urn:epc:id:sgtin:10000.00001.33327
+ urn:epc:id:sgtin:10000.00001.33328
+ urn:epc:id:sgtin:10000.00001.33329 </value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="426" y="100"/>
+      </graphics>
+    </place>
+    <place id="p5">
+      <marking>
+        <graphics>
+          <offset page="1" x="20" y="15"/>
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0"/>
+        </graphics>
+        <value>p5</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="20" y="30"/>
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="406" y="406"/>
+      </graphics>
+    </place>
+    <transition id="t7">
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0"/>
+        </graphics>
+        <value>t7</value>
+      </name>
+      <event>
+        <graphics>
+          <offset page="1" x="20" y="15"/>
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:12&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://epcis.greyc.fr:8080/epcis-producteur3/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="object"&gt;
+                 &lt;epcBase&gt;urn:epc:id:sgtin:10000.00002&lt;/epcBase&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:tester&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:tester&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:12,3&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+&lt;/EPCEvent&gt;
+</value>
+      </event>
+      <graphics>
+        <position page="1" x="308" y="278"/>
+      </graphics>
+    </transition>
+    <transition id="t8">
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0"/>
+        </graphics>
+        <value>t8</value>
+      </name>
+      <event>
+        <graphics>
+          <offset page="1" x="20" y="15"/>
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:12&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://epcis.greyc.fr:8080/epcis-producteur3/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="object"&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:tester&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:tester&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:12,4&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+&lt;/EPCEvent&gt;
+</value>
+      </event>
+      <graphics>
+        <position page="1" x="587" y="343"/>
+      </graphics>
+    </transition>
+    <place id="p10">
+      <marking>
+        <graphics>
+          <offset page="1" x="20" y="15"/>
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0"/>
+        </graphics>
+        <value>p10</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="20" y="30"/>
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="554" y="481"/>
+      </graphics>
+    </place>
+    <arc id="a8" source="t7" target="p5">
+      <inscription>
+        <graphics>
+          <offset page="1" x="10" y="0"/>
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="287" y="379"/>
+      </graphics>
+    </arc>
+    <arc id="a9" source="p5" target="t8">
+      <inscription>
+        <graphics>
+          <offset page="1" x="10" y="0"/>
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="475" y="312"/>
+      </graphics>
+    </arc>
+    <arc id="a10" source="t8" target="p10">
+      <inscription>
+        <graphics>
+          <offset page="1" x="10" y="0"/>
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="456" y="533"/>
+      </graphics>
+    </arc>
+    <arc id="a1" source="p1" target="t7">
+      <inscription>
+        <graphics>
+          <offset page="1" x="10" y="0"/>
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="251" y="285"/>
+      </graphics>
+    </arc>
+    <arc id="a2" source="p2" target="t7">
+      <inscription>
+        <graphics>
+          <offset page="1" x="10" y="0"/>
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="369" y="283"/>
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value>unnamed</value>
+    </name>
+  </net>
+</pnml>

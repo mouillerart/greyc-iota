@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.unicaen.iota.eta.callback</groupId>
+    <artifactId>callback-filter</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <name>ETa-Callback-Filter</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <epcis.version>0.5.0</epcis.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- IoTa dependency -->
+        <dependency>
+            <groupId>fr.unicaen.iota.xacml</groupId>
+            <artifactId>libxacml-epcis</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Fosstrak dependency -->
+        <dependency>
+            <groupId>org.fosstrak.epcis</groupId>
+            <artifactId>epcis-commons</artifactId>
+            <version>${epcis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fosstrak.epcis</groupId>
+            <artifactId>epcis-repository</artifactId>
+            <version>${epcis.version}</version>
+        </dependency>
+
+        <!-- XACML dependency -->
+        <dependency>
+            <groupId>net.sf.sunxacml</groupId>
+            <artifactId>sunxacml</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- ActiveMQ dependency -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
+        <!-- Test dependency -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Log dependencies -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+
+        <!-- Other dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.21</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>src</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>fosstrak</id>
+            <name>Fosstrak repository</name>
+            <url>http://oss.sonatype.org/content/repositories/public</url>
+        </repository>
+    </repositories>
+
+</project>

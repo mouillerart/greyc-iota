@@ -1,0 +1,23 @@
+ETa - EPCIS Trusted Agent
+
+Agents de gestion des politiques de permission pour l'EPCIS.
+
+ETa/                      agent de contrôle d'accès
+EpcisPHI/                 application web de gestion des droits d'accès
+ETa-Callback/             modules de gestion des retours d'abonnements
+ETa-Client/               bibliothèque cliente
+LibXACML-EPCIS/           bibliothèque XACML
+
+Dépendances d’utilisation:
+  - un serveur MySQL
+  - un serveur LDAP
+  - un serveur JMS/ActiveMQ
+  - un EPCIS
+
+Installation et Configuration:
+  IoTa-Installer installe et configure ETa.
+  Le script ldap.sh permet de configurer le groupe usergroup et d’y ajouter
+  deux utilisateurs: superadmin et anonymous.
+
+Utilisation:
+  voir ALfA pour des exemples

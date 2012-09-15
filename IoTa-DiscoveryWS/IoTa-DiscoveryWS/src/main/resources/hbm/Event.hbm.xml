@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="fr.unicaen.iota.discovery.server.hibernate"
+                   default-lazy="false">
+  <class name="Event"
+         table="event">
+    <id column="ID"
+        name="Id"
+        type="integer">
+      <generator class="increment" />
+    </id>
+    <property column="source_time_stamp"
+              length="10"
+              name="SourceTimeStamp"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <!-- <many-to-one name="Epc" column="epc" class="fr.unicaen.iota.discovery.server.hibernate.EPCs" cascade="save-update" lazy="false"/> -->
+    <property column="epc"
+              name="Epc"
+              not-null="true"
+              type="string" />
+    <property column="EPCCLass"
+              name="EPCClass"
+              not-null="true"
+              type="string" />
+    <property column="bizStep"
+              name="BizStep"
+              not-null="true"
+              type="string" />
+    <!--<many-to-one name="EPCClass" column="EPCClass" class="fr.unicaen.iota.discovery.server.hibernate.EPCClassId" cascade="save-update" lazy="false"/>-->
+    <property column="event_type"
+              length="40"
+              name="EventType"
+              not-null="true"
+              type="string" />
+    <property column="event_time_stamp"
+              length="10"
+              name="EventTimeStamp"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <!-- <many-to-one name="BizStep" column="bizStep" class="fr.unicaen.iota.discovery.server.hibernate.BizStepId" cascade="save-update" lazy="false"/>-->
+    <!--        <many-to-one name="EventToPublish" column="eventtopublish" class="fr.unicaen.iota.discovery.server.hibernate.EventToPublish" cascade="save-update"/> -->
+    <one-to-one name="EventToPublish"
+                class="fr.unicaen.iota.discovery.server.hibernate.EventToPublish"
+                cascade="all"></one-to-one>
+    <many-to-one class="Partner"
+                 name="Partner"
+                 not-null="true">
+      <column name="partner_ID" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

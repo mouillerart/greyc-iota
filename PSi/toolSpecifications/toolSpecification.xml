@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toolSpecification SYSTEM "toolSpecification.dtd">
+<toolSpecification>
+	
+  <!-- Nettypes -->
+  
+  <nettype id="n1" typeSpecification="file:netTypeSpecifications/EPCNet.xml"/>  
+	
+  <!-- Applications -->
+
+  <application id="a1" mainClass="fr.unicaen.iota.simulator.editor.Editor" maxinstances="inf">
+  </application>
+
+  <application id="a3" mainClass="de.huberlin.informatik.pnk.app.MarkingsToInitial" maxinstances="5">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+    </allowedNettypes>
+  </application>
+	
+  <application id="a4" mainClass="fr.unicaen.iota.simulator.app.SelfActingSimulator" maxinstances="inf">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+    </allowedNettypes>
+  </application>
+	
+  <application id="a5" mainClass="de.huberlin.informatik.pnk.app.Simulator" maxinstances="5">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+    </allowedNettypes>
+  </application>
+
+  <application id="a11" mainClass="de.huberlin.informatik.pnk.app.SaveNetType" maxinstances="1">
+  </application>
+
+  <application id="a24" mainClass="de.huberlin.informatik.pnk.app.DoNetLayout" maxinstances="5">
+  </application>
+
+  <!-- Input / Output -->
+
+  <format id="pnmlcsv" ioClass="fr.unicaen.iota.simulator.app.CSVInOut">
+  </format>
+	
+  <!-- default settings --> 
+	
+  <standardNettype ref="n1"/>
+  <standardApplication ref="a1"/>
+  <standardFormat ref="pnmlcsv"/>
+
+</toolSpecification>

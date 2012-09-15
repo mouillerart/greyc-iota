@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EPCEvent>
+        <infrastructure>
+                <bizLoc>urn:unicaen:iotatester:xxxx:ssl:_not_specified_</bizLoc>
+                <serviceAddress>http://_not_specified_/capture</serviceAddress>
+        </infrastructure>
+        <node type="object">
+                <bizStep>urn:unicaen:iotatester:bizstep:xxxx:tester</bizStep>
+                <disposition>urn:unicaen:iotatester:disp:xxxx:tester</disposition>
+                <readPoint>urn:unicaen:iotatester:xxxx:ssl:_not_specified_</readPoint>
+                <action>ADD</action>
+        </node>
+        <location>
+                 <latitude>0</latitude>
+                 <longitude>0</longitude>
+        </location>
+</EPCEvent>

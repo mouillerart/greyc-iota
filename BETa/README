@@ -1,0 +1,18 @@
+BETa - Basic EPC Test Application
+
+Top-level application query client example.
+
+Dependencies:
+  IoTa modules:
+    - ALfA-PI
+    - OmICron
+
+Configuration:
+  See the file java.policy in the jar file (it can be overriden by a file with
+  the same name in the current directory).
+
+Usage Dependencies:
+  - ALfA
+
+Usage:
+  ./beta.sh

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE
+hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.connection.datasource">java:comp/env/jdbc/DSDB</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.use_outer_join">true</property>
+    <property name="hibernate.max_fetch_depth">3</property>
+    <property name="hibernate.jdbc.batch_size">50</property>
+    <property name="hibernate.connection.autocommit">false</property>
+    <property name="hibernate.cache.use_second_level_cache">true</property>
+    <property name="hibernate.cache.use_query_cache">true</property>
+    <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+    <property name="hibernate.cache.use_structured_entries">true</property>
+    <property name="hibernate.jdbc.use_get_generated_keys">true</property>
+    <property name="hibernate.generate_statistics">true</property>
+    <property name="hibernate.order_inserts">true</property>
+    
+    <!-- Mapping files -->
+    <mapping resource="hbm/EventToPublish.hbm.xml" />
+    <mapping resource="hbm/Event.hbm.xml" />
+    <mapping resource="hbm/Scassociation.hbm.xml" />
+    <mapping resource="hbm/Sc.hbm.xml" />
+    <mapping resource="hbm/Partner.hbm.xml" />
+    <mapping resource="hbm/User.hbm.xml" />
+    <mapping resource="hbm/BusinessStepId.hbm.xml" />
+    <mapping resource="hbm/EPCClassId.hbm.xml" />
+    <mapping resource="hbm/EPCs.hbm.xml" />
+    <mapping resource="hbm/SCBusinessStepRestriction.hbm.xml" />
+    <mapping resource="hbm/SCEPCClassRestriction.hbm.xml" />
+    <mapping resource="hbm/SCEPCsRestriction.hbm.xml" />
+    <mapping resource="hbm/SCEventTimeRestriction.hbm.xml" />
+    <!-- <class-cache class="fr.unicaen.iota.discovery.server.hibernate.Partner" usage="read-write"/>-->
+  </session-factory>
+</hibernate-configuration>

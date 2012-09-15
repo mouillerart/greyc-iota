@@ -1,0 +1,28 @@
+ThETa - ThemaMap EPC Tracing application
+
+Modified version of ThemaMap (https://themamap.greyc.fr/) to trace and show
+EPC events and information.
+
+Dependencies:
+  libraries:
+    - antlr
+    - batik
+    - geotools
+    - jfreechart
+    - json
+    - jts
+    - openmap
+    - postgis
+    - postgresql
+    - swingx
+    - unidata
+    - themamap
+
+Configuration:
+  Use the installer `install_theta.py`
+
+Usage Dependencies:
+  - IoTa / RHO
+
+Usage:
+  ./theta.sh

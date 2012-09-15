@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:usvc="http://user.eta.iota.unicaen.fr/userservice.xsd"
+    targetNamespace="http://user.eta.iota.unicaen.fr/userservice.xsd"
+    elementFormDefault="unqualified"
+    attributeFormDefault="unqualified"
+    version="1.0">
+
+     <!-- SIMPLE TYPES -->
+
+    <xs:simpleType name="tPassword">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="6"/>
+            <xs:maxLength value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tServiceURI">
+        <xs:restriction base="xs:anyURI" />
+    </xs:simpleType>
+
+    <xs:simpleType name="tX509String">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="128"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tMessageDigestHexString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="512"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tLeaseSeconds">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxExclusive value="3600"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tEventTTL">
+        <xs:restriction base="xs:positiveInteger"/>
+    </xs:simpleType>
+
+     <!-- ENUM TYPES -->
+
+    <xs:simpleType name="tMethod">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="hello"/>
+            <xs:enumeration value="login"/>
+            <xs:enumeration value="logout"/>
+            <xs:enumeration value="create"/>
+            <xs:enumeration value="update"/>
+            <xs:enumeration value="delete"/>
+            <xs:enumeration value="info"/>
+            <xs:enumeration value="lookup"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tPermission">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="execute"/>
+            <xs:enumeration value="proxy"/>
+            <xs:enumeration value="void"/>
+            <xs:enumeration value="admin"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tListAction">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="add"/>
+            <xs:enumeration value="remove"/>
+            <xs:enumeration value="replace"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tLoginMode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="key-and-password"/>
+            <xs:enumeration value="key-only"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tMessageDigestAlgorithm">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="md5"/>
+            <xs:enumeration value="md4"/>
+            <xs:enumeration value="md2"/>
+            <xs:enumeration value="sha1"/>
+            <xs:enumeration value="sha"/>
+            <xs:enumeration value="mdc2"/>
+            <xs:enumeration value="ripemd160"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+     <!-- SIMPLE ID TYPES -->
+
+    <xs:simpleType name="tSessionID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="32"/>
+            <xs:maxLength value="32"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tUserID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tPartnerID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tTableID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="128"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tSmallUID">
+        <xs:restriction base="xs:int"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="tLargeUID">
+        <xs:restriction base="xs:positiveInteger"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="tExtensionID">
+        <xs:restriction base="xs:anyURI" />
+    </xs:simpleType>
+
+     <!-- LIST ITEM TYPES -->
+
+    <xs:complexType name="tUserItem">
+        <xs:attribute
+            name="id"
+            type="usvc:tUserID"
+            use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tUserItemList">
+        <xs:sequence>
+            <xs:element
+                name="user"
+                type="usvc:tUserItem"
+                minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute
+            name="action"
+            type="usvc:tListAction"/>
+    </xs:complexType>
+
+    <xs:complexType name="tX509CertItem">
+        <xs:attribute
+            name="cn"
+            type="usvc:tX509String"
+            use="required"/>
+        <xs:attribute
+            name="o"
+            type="usvc:tX509String"
+            use="required"/>
+        <xs:attribute
+            name="fingerprint"
+            type="usvc:tX509String"
+            use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tX509CertItemList">
+        <xs:sequence>
+            <xs:element
+                name="cert"
+                type="usvc:tX509CertItem"
+                minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute
+            name="action"
+            type="usvc:tListAction"/>
+    </xs:complexType>
+
+    <xs:complexType name="tExtensionItem">
+        <xs:attribute
+            name="id"
+            type="usvc:tExtensionID"
+            use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tExtensionItemList">
+        <xs:sequence>
+            <xs:element
+                name="extension"
+                type="usvc:tExtensionItem"
+                minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute
+            name="action"
+            type="usvc:tListAction"/>
+    </xs:complexType>
+
+
+     <!-- COMPLEX TYPES -->
+
+    <xs:complexType name="tExtension">
+        <xs:sequence>
+            <xs:any
+                namespace="##other"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="lax" />
+    </xs:complexType>
+
+    <xs:complexType name="tResult">
+        <xs:attribute
+            name="desc"
+            type="xs:string"
+            use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tMessageDigest">
+        <xs:sequence>
+            <xs:element
+                name="digest"
+                type="usvc:tMessageDigestHexString"/>
+        </xs:sequence>
+        <xs:attribute
+            name="alg"
+            type="usvc:tMessageDigestAlgorithm"
+            use="required"/>
+    </xs:complexType>
+
+
+     <!-- ABSTRACT REQ(IN)/RSP(OUT) BASE TYPES -->
+
+    <xs:complexType name="tAbstractIn" abstract="true">
+        <xs:sequence>
+            <xs:element
+                name="sid"
+                type="usvc:tSessionID"/>
+            <xs:element
+                name="extension"
+                type="usvc:tExtension"
+                minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tAbstractOut" abstract="true">
+        <xs:sequence>
+            <xs:element
+                name="result"
+                type="usvc:tResult"/>
+            <xs:element
+                name="extension"
+                type="usvc:tExtension"
+                minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+     <!-- GLOBAL METHODS -->
+
+    <xs:complexType name="HelloIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="HelloOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="serverIdentity"
+                        type="xs:token"/>
+                    <xs:element
+                        name="serverTS"
+                        type="xs:dateTime"/>
+                    <xs:element
+                        name="extensionList"
+                        type="usvc:tExtensionItemList"
+                        minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+     <!-- USER METHODS -->
+
+    <xs:complexType name="UserLookupIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="usvc:tUserID"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLookupOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="userList"
+                        type="usvc:tUserItemList"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserCreateIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="usvc:tUserID"/>
+                    <xs:element
+                        name="partnerID"
+                        type="usvc:tPartnerID"/>
+                    <xs:element
+                        name="password"
+                        type="usvc:tPassword"/>
+                    <xs:element
+                        name="loginMode"
+                        type="usvc:tLoginMode"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="usvc:tLeaseSeconds"/>
+                    <xs:element
+                        name="authorizedCertList"
+                        type="usvc:tX509CertItemList"
+                        minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserCreateOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserInfoIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="usvc:tUserID"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserInfoOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="usvc:tUserID"/>
+                    <xs:element
+                        name="partnerID"
+                        type="usvc:tPartnerID"/>
+                    <xs:element
+                        name="loginMode"
+                        type="usvc:tLoginMode"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="usvc:tLeaseSeconds"/>
+                    <xs:element
+                        name="authorizedCertList"
+                        type="usvc:tX509CertItemList"
+                        minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserUpdateIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userUID"
+                        type="usvc:tSmallUID"/>
+                    <xs:element
+                        name="userID"
+                        type="usvc:tUserID"
+                        minOccurs="0"/>
+                    <xs:element
+                        name="password"
+                        type="usvc:tPassword"
+                        minOccurs="0"/>
+                    <xs:element
+                        name="loginMode"
+                        type="usvc:tLoginMode"
+                        minOccurs="0"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="usvc:tLeaseSeconds"
+                        minOccurs="0"/>
+                    <xs:element
+                        name="authorizedCertList"
+                        type="usvc:tX509CertItemList"
+                        minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserUpdateOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserDeleteIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="usvc:tUserID"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserDeleteOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLoginIn">
+        <xs:sequence>
+            <xs:element
+                name="userID"
+                type="usvc:tUserID"/>
+            <xs:element
+                name="password"
+                type="usvc:tPassword"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="UserLoginOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="sid"
+                        type="usvc:tSessionID"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="usvc:tLeaseSeconds"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLogoutIn">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractIn">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLogoutOut">
+        <xs:complexContent>
+            <xs:extension base="usvc:tAbstractOut">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+     <!-- ELEMENT REFERENCES -->
+
+    <xs:element
+        name="Hello"
+        type="usvc:HelloIn"/>
+    <xs:element
+        name="HelloResult"
+        type="usvc:HelloOut"/>
+    <xs:element
+        name="UserLookup"
+        type="usvc:UserLookupIn"/>
+    <xs:element
+        name="UserLookupResult"
+        type="usvc:UserLookupOut"/>
+    <xs:element
+        name="UserCreate"
+        type="usvc:UserCreateIn"/>
+    <xs:element
+        name="UserCreateResult"
+        type="usvc:UserCreateOut"/>
+    <xs:element
+        name="UserInfo"
+        type="usvc:UserInfoIn"/>
+    <xs:element
+        name="UserInfoResult"
+        type="usvc:UserInfoOut"/>
+    <xs:element
+        name="UserUpdate"
+        type="usvc:UserUpdateIn"/>
+    <xs:element
+        name="UserUpdateResult"
+        type="usvc:UserUpdateOut"/>
+    <xs:element
+        name="UserDelete"
+        type="usvc:UserDeleteIn"/>
+    <xs:element
+        name="UserDeleteResult"
+        type="usvc:UserDeleteOut"/>
+    <xs:element
+        name="UserLogin"
+        type="usvc:UserLoginIn"/>
+    <xs:element
+        name="UserLoginResult"
+        type="usvc:UserLoginOut"/>
+    <xs:element
+        name="UserLogout"
+        type="usvc:UserLogoutIn"/>
+    <xs:element
+        name="UserLogoutResult"
+        type="usvc:UserLogoutOut"/>
+    <xs:element
+        name="UserServiceDocument"
+        type="usvc:tUserServiceDocument"/>
+
+     <!-- DOCUMENT -->
+
+    <xs:complexType name="tUserServiceDocument">
+        <xs:sequence>
+            <xs:element
+                name="UserServiceBody"
+                type="usvc:tUserServiceBody"/>
+        </xs:sequence>
+    </xs:complexType>
+
+     <!-- DOCUMENT BODY -->
+
+    <xs:complexType name="tUserServiceBody">
+        <xs:choice>
+            <xs:element ref="usvc:Hello"/>
+            <xs:element ref="usvc:HelloResult"/>
+            <xs:element ref="usvc:UserLookup"/>
+            <xs:element ref="usvc:UserLookupResult"/>
+            <xs:element ref="usvc:UserCreate"/>
+            <xs:element ref="usvc:UserCreateResult"/>
+            <xs:element ref="usvc:UserInfo"/>
+            <xs:element ref="usvc:UserInfoResult"/>
+            <xs:element ref="usvc:UserUpdate"/>
+            <xs:element ref="usvc:UserUpdateResult"/>
+            <xs:element ref="usvc:UserDelete"/>
+            <xs:element ref="usvc:UserDeleteResult"/>
+            <xs:element ref="usvc:UserLogin"/>
+            <xs:element ref="usvc:UserLoginResult"/>
+            <xs:element ref="usvc:UserLogout"/>
+            <xs:element ref="usvc:UserLogoutResult"/>
+        </xs:choice>
+    </xs:complexType>
+
+     <!-- EXCEPTIONS -->
+
+    <xs:element name="GatewayException" type="usvc:GatewayException"/>
+    <xs:complexType name="GatewayException">
+        <xs:sequence>
+            <xs:element name="reason" type="xs:string"/>
+            <xs:element name="queryName" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ImplementationException" type="usvc:ImplementationException"/>
+    <xs:complexType name="ImplementationException">
+        <xs:complexContent>
+            <xs:extension base="usvc:GatewayException">
+                <xs:sequence>
+                    <xs:element name="severity" type="usvc:ImplementationExceptionSeverity"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="ImplementationExceptionSeverity">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="ERROR"/>
+            <xs:enumeration value="SEVERE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="SecurityException" type="usvc:SecurityException"/>
+    <xs:complexType name="SecurityException">
+        <xs:complexContent>
+            <xs:extension base="usvc:GatewayException">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

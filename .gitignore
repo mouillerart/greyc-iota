@@ -1,0 +1,17 @@
+.directory
+*~
+*.bak
+*.class
+*.pyc
+*.log
+target
+
+# installer links
+IoTa-Installer/resources/alfa-*-bin-with-dependencies.tar.gz
+IoTa-Installer/resources/discovery-phi-*.war
+IoTa-Installer/resources/discovery-server-*.war
+IoTa-Installer/resources/epcilon-*.war
+IoTa-Installer/resources/epcis-phi-*.war
+IoTa-Installer/resources/eta-*.war
+IoTa-Installer/resources/omega-*.war
+IoTa-Installer/resources/install.ini

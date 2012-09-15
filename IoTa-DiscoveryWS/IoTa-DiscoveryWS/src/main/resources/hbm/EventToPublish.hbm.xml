@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="fr.unicaen.iota.discovery.server.hibernate"
+                   default-lazy="false">
+  <class name="EventToPublish"
+         table="eventtopublish">
+    <id column="ID"
+        name="Id"
+        type="integer">
+      <generator class="increment" />
+    </id>
+    <property column="lastupdate"
+              length="10"
+              name="lastupdate"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <!--
+        <property
+                        column="event_ID"
+                        length="1000"
+                        name="eventId"
+                        not-null="true"
+                        type="integer"
+                 />
+
+
+        <many-to-one class="Event" name="Event" not-null="true">
+            <column name="event_ID" />
+        </many-to-one>
+
+        -->
+    <many-to-one name="Event"
+                 column="event"
+                 unique="true"
+                 class="fr.unicaen.iota.discovery.server.hibernate.Event"
+                 not-null="true"
+                 lazy="false" />
+  </class>
+</hibernate-mapping>

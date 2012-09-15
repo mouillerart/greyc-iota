@@ -1,0 +1,201 @@
+Building and Installing
+=======================
+
+Building
+--------
+
+IoTa uses Apache Maven for build automation (http://maven.apache.org).
+
+Compilation of each module is achieved with this command:
+
+    mvn compile
+
+Maven will download all the necessary jar files and install them in a local
+repository (usually ~/.m2/repository).
+
+Installation of IoTa libraries in the local repository for further use (as
+needed for several IoTa modules) is achieved with this command:
+
+    mvn install
+
+Note that this command also compiles the module if necessary.
+
+Some of the modules provide unit tests and some of these tests need some
+application to be running (eg. the tests for the IoTa-DiscoveryWS-Client
+library need an up and running Discovery Web Service). To skip those tests,
+use this command to compile or install:
+
+    mvn -DskipTests install
+
+
+You can manually install already downloaded jar files with this command:
+
+    mvn install:install-file                 \
+        -Dfile=sunxacml-2.0-SNAPSHOT.jar     \
+        -DgroupId=net.sf.sunxacml            \
+        -DartifactId=sunxacml                \
+        -Dversion=2.0-SNAPSHOT               \
+        -Dpackaging=jar
+
+Note that this will be necessary for the sunxacml library as it’s on no
+widespread known Maven repository. The jar file can be downloaded from the
+SourceForge page for the project: http://sunxacml.sf.net
+
+Here is a direct link: http://sourceforge.net/projects/sunxacml/files/maven/snapshots/net/sf/sunxacml/sunxacml/2.0-SNAPSHOT/sunxacml-2.0-SNAPSHOT.jar/download
+
+
+Installing
+----------
+
+(All bracketted values `<name>` are place-holders.)
+
+The IoTa-Installer can help you install and configure all the servers and
+databases.
+
+All the applications and web applications have a `log4j.properties` file to
+configure the logging output (file output, log format, log level, and so on).
+
+
+### Applications
+
+Get and extract the `<application>-<version>-bin-with-dependency.tar.gz`
+tarball for the application.
+
+Modify or create the configuration files (see the application `README` file
+for a list and each file for comments).
+A file in the current directory overrides the default version which is
+embedded in the jar file.
+You can extract the default commented version of the files from the jar file:
+
+    jar xf <application>-<version>.jar application.properties
+
+or
+
+    unzip <application>-<version>.jar application.properties
+
+Use the provided script to start the application:
+
+    ./launch.sh
+
+
+### Web Applications
+
+Get the `<application>-<version>.war` war file for the web application.
+
+Deploy it in you servlet container (see the container documentation for
+information). For Apache Tomcat, this can be done in several ways:
+
+  1. manually dejar the war file in `$CATALINA_HOME/webapps`
+  2. copy the war file in `$CATALINA_HOME/webapps` and let Tomcat deploy it
+      (either at its next restart or while running if its autodeploy option is
+      on)
+  3. use the manager web application (http://localhost:8080/manager)
+  4. use the deploy-tools
+  5. use the Maven Tomcat plugin
+
+Edit the configuration files in `<webapp-dir>/WEB-INF/classes/` (see the web
+application `README` for a list and each file for comments).
+
+Reload the web application or restart the servlet container.
+
+
+### Web Applications with databases
+
+1. The database
+
+    Create the database for the application:
+
+        CREATE DATABASE <app_db>;
+
+    Create a specific user and grant them access rights:
+
+        GRANT SELECT, INSERT, UPDATE, DELETE ON <app_db>.*
+        TO <app_db_user>@localhost IDENTIFIED BY <app_db_password>;
+
+    Create the tables:
+
+        use <app_db>;
+        source <app>_schema.sql;
+
+    The file `<app>_schema.sql` for each application can be found in
+    `IoTa-Installer/resources` and in `<app>/src/main/resources/sql`.
+
+2. Install the web application as explained earlier.
+    At this point, the web application will probably fail to properly start.
+
+3. The context file
+
+    Modify the file `$CATALINA_HOME/webapps/<webapp>/META-INF/context.xml` to
+    reflect the values for your database (name, login and password).
+
+    Sometimes, it is needed to have a copy of this file as
+    `$CATALINA_HOME/conf/localhost/<webapp>.xml`.
+
+    Reload the web application or restart the servlet container.
+
+Do not forget to install the JDBC connector jar file. (For Apache Tomcat and
+MySQL, copy `mysql-connector-java.jar` in `$CATALINA_HOME/lib`.)
+
+
+### ONS
+
+Some applications need an Object Naming Service. NAPTR records are use to find
+the URL of the Discovery Service for a given EPC code.
+
+Here is a typical zone file for the product `urn:epc:id:sgtin:1234567.89012`:
+
+    ;;
+    $TTL 1d
+    
+    ;; zone, the vendor Id
+    $ORIGIN 7.6.5.4.3.2.1.sgtin.ons-peer.com.
+    
+    @ IN SOA localhost info.example.com ( ; info@example.com
+                            2012010101 ; serial version number
+                            3h         ; refresh
+                            1h         ; retry
+                            1d         ; expire
+                            1          ; negative cache TTL
+                            )
+    
+    ;; this server’s name
+      IN NS ons.example.com
+    
+    ; NAPTRs for products
+    ; example product
+    ;                 order pref flags service    regex
+    2.1.0.9.8  IN NAPTR 0     0    "u"   "epc+html" "!^.*$!http://www.example.com/!" .
+               IN NAPTR 1     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/ds/services/ESDS_Service!" .
+    ; first, the HTML web page for product information
+    ; second, the Discovery web service associated to this EPC
+
+
+On Debian and Debian-derived systems, you just need to install the `bind9`
+package, to create one or more zone file as the cited example and to activate
+those zones, that is to add that kind of statement in `named.conf.local`:
+
+    zone "7.6.5.4.3.2.1.sgtin.ons-peer.com" {
+         type master;
+         file "/etc/bind/db.ons.peer.com";
+    };
+
+
+Remember that in order to avoid a recursive open relay DNS, you need to add
+these options (in the `options` statement of `named.conf.options`):
+
+    allow-transfer { none };
+    allow-recursion { none };
+    recursion no;
+
+
+### LDAP
+
+Some applications (ETa) need an LDAP server.
+
+From a fonctionnal LDAP server, the script `ETa/ldap.sh` or the LDAP module of
+the IoTa-Installer adds a schema, a group and the two users superadmin and
+anonymous.
+
+On Debian and Debian-derived systems, you just need to install the packages
+`slapd` and `ldap-utils`. You have to execute `dpkg-reconfigure slapd` in
+order to complete the configuration.

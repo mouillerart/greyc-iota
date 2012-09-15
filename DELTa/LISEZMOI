@@ -1,0 +1,25 @@
+DELTa - Deep Event Layer Testing Application
+
+Application de haut niveau pour vérifier les événements générés et traités.
+
+Dépendances:
+  modules IoTa:
+    - ALfA-PI
+  bibliothèques:
+    - epcis-commons
+    - jfreechart
+    - jdom
+    - xerces
+
+Configuration:
+  Voir les fichiers *.properties et java.policy dans le fichier jar ; chacun
+  de ces fichiers peut être remplacé par un fichier du même nom dans le
+  répertoire courant.
+  (application.properties pour cette application,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - ALfA
+
+Utilisation:
+  ./delta.sh

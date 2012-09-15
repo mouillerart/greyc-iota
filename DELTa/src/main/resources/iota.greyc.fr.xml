@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iota>
+    <epcis activeAnalyse="true">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:1</bizLoc>
+            <serviceAddress>http://epcis.greyc.fr:8080/epcis-producteur1/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="true">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://epcis.greyc.fr:8080/ds-unicaen/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:2</bizLoc>
+            <serviceAddress>http://epcis.greyc.fr:8080/epcis-producteur2/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://epcis.greyc.fr:8080/ds-unicaen/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:3</bizLoc>
+            <serviceAddress>http://epcis.greyc.fr:8080/epcis-producteur3/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://epcis.greyc.fr:8080/ds-unicaen/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:8</bizLoc>
+            <serviceAddress>http://194.199.139.62:8081/epcis-grossiste3/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://194.199.139.63:8081/ds-orange/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:9</bizLoc>
+            <serviceAddress>http://194.199.139.63:8081/epcis-detaillant/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://194.199.139.63:8081/ds-orange/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:4</bizLoc>
+            <serviceAddress>http://leonard.certic.unicaen.fr:8080/epcis-assembleur1/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://leonard.certic.unicaen.fr:8080/ds-certic/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:5</bizLoc>
+            <serviceAddress>http://leonard.certic.unicaen.fr:8080/epcis-assembleur2/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://leonard.certic.unicaen.fr:8080/ds-certic/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:6</bizLoc>
+            <serviceAddress>http://194.199.139.62:8081/epcis-grossiste1/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://194.199.139.63:8081/ds-orange/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+    <epcis activeAnalyse="false">
+        <infrastructure>
+            <bizLoc>urn:unicaen:iotatester:xxxx:ssl:7</bizLoc>
+            <serviceAddress>http://194.199.139.62:8081/epcis-grossiste2/query</serviceAddress>
+        </infrastructure>
+        <dsLink activeAnalyse="false">
+            <wildCardAccount>
+                <login>anonymous</login>
+                <password>anonymous</password>
+            </wildCardAccount>
+            <serviceAddress>http://194.199.139.63:8081/ds-orange/services/ESDS_Service</serviceAddress>
+        </dsLink>
+    </epcis>
+</iota>

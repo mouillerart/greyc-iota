@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ESDS" targetNamespace="urn:ietf:params:wsdl:ns:esds-1.0" xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:esdsw="urn:ietf:params:wsdl:ns:esds-1.0" xmlns:esds="urn:ietf:params:xsd:ns:esds-1.0">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="urn:ietf:params:xsd:ns:esds-1.0" schemaLocation="xsd0.xsd"/>
+        </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="supplyChainLookupReq">
+    <wsdl:part name="parms" element="esds:SupplyChainLookup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userCreateReq">
+    <wsdl:part name="parms" element="esds:UserCreate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleLookupReq">
+    <wsdl:part name="parms" element="esds:RoleLookup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userLoginRsp">
+    <wsdl:part name="result" element="esds:UserLoginResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainDeleteReq">
+    <wsdl:part name="parms" element="esds:SupplyChainDelete">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userLogoutReq">
+    <wsdl:part name="parms" element="esds:UserLogout">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleInfoReq">
+    <wsdl:part name="parms" element="esds:RoleInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainUpdateReq">
+    <wsdl:part name="parms" element="esds:SupplyChainUpdate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainCreateReq">
+    <wsdl:part name="parms" element="esds:SupplyChainCreate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerLookupReq">
+    <wsdl:part name="parms" element="esds:PartnerLookup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eventInfoRsp">
+    <wsdl:part name="result" element="esds:EventInfoResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userInfoReq">
+    <wsdl:part name="parms" element="esds:UserInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainInfoRsp">
+    <wsdl:part name="result" element="esds:SupplyChainInfoResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleInfoRsp">
+    <wsdl:part name="result" element="esds:RoleInfoResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleCreateReq">
+    <wsdl:part name="parms" element="esds:RoleCreate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainCreateRsp">
+    <wsdl:part name="result" element="esds:SupplyChainCreateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerCreateRsp">
+    <wsdl:part name="result" element="esds:PartnerCreateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userLogoutRsp">
+    <wsdl:part name="result" element="esds:UserLogoutResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userDeleteRsp">
+    <wsdl:part name="result" element="esds:UserDeleteResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lookupReq">
+    <wsdl:part name="parms" element="esds:Lookup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userCreateRsp">
+    <wsdl:part name="result" element="esds:UserCreateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lookupRsp">
+    <wsdl:part name="result" element="esds:LookupResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="multipleEventCreateReq">
+    <wsdl:part name="parms" element="esds:MultipleEventCreate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerInfoRsp">
+    <wsdl:part name="result" element="esds:PartnerInfoResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="helloRsp">
+    <wsdl:part name="result" element="esds:HelloResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eventLookupReq">
+    <wsdl:part name="parms" element="esds:EventLookup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userUpdateReq">
+    <wsdl:part name="parms" element="esds:UserUpdate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainDeleteRsp">
+    <wsdl:part name="result" element="esds:SupplyChainDeleteResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userLookupRsp">
+    <wsdl:part name="result" element="esds:UserLookupResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerDeleteReq">
+    <wsdl:part name="parms" element="esds:PartnerDelete">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eventCreateReq">
+    <wsdl:part name="parms" element="esds:EventCreate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerInfoReq">
+    <wsdl:part name="parms" element="esds:PartnerInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userDeleteReq">
+    <wsdl:part name="parms" element="esds:UserDelete">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleCreateRsp">
+    <wsdl:part name="result" element="esds:RoleCreateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userLoginReq">
+    <wsdl:part name="parms" element="esds:UserLogin">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleDeleteReq">
+    <wsdl:part name="parms" element="esds:RoleDelete">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userLookupReq">
+    <wsdl:part name="parms" element="esds:UserLookup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleUpdateReq">
+    <wsdl:part name="parms" element="esds:RoleUpdate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleLookupRsp">
+    <wsdl:part name="result" element="esds:RoleLookupResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainInfoReq">
+    <wsdl:part name="parms" element="esds:SupplyChainInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userUpdateRsp">
+    <wsdl:part name="result" element="esds:UserUpdateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eventCreateRsp">
+    <wsdl:part name="result" element="esds:EventCreateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="helloReq">
+    <wsdl:part name="parms" element="esds:Hello">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userInfoRsp">
+    <wsdl:part name="result" element="esds:UserInfoResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerUpdateReq">
+    <wsdl:part name="parms" element="esds:PartnerUpdate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerUpdateRsp">
+    <wsdl:part name="result" element="esds:PartnerUpdateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerCreateReq">
+    <wsdl:part name="parms" element="esds:PartnerCreate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleUpdateRsp">
+    <wsdl:part name="result" element="esds:RoleUpdateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eventLookupRsp">
+    <wsdl:part name="result" element="esds:EventLookupResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerLookupRsp">
+    <wsdl:part name="result" element="esds:PartnerLookupResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="roleDeleteRsp">
+    <wsdl:part name="result" element="esds:RoleDeleteResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="multipleEventCreateRsp">
+    <wsdl:part name="result" element="esds:MultipleEventCreateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainUpdateRsp">
+    <wsdl:part name="result" element="esds:SupplyChainUpdateResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eventInfoReq">
+    <wsdl:part name="parms" element="esds:EventInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="supplyChainLookupRsp">
+    <wsdl:part name="result" element="esds:SupplyChainLookupResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="partnerDeleteRsp">
+    <wsdl:part name="result" element="esds:PartnerDeleteResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ESDSServicePortType">
+    <wsdl:operation name="hello">
+      <wsdl:input name="helloReq" message="esdsw:helloReq">
+    </wsdl:input>
+      <wsdl:output name="helloRsp" message="esdsw:helloRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="lookup">
+      <wsdl:input name="lookupReq" message="esdsw:lookupReq">
+    </wsdl:input>
+      <wsdl:output name="lookupRsp" message="esdsw:lookupRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleLookup">
+      <wsdl:input name="roleLookupReq" message="esdsw:roleLookupReq">
+    </wsdl:input>
+      <wsdl:output name="roleLookupRsp" message="esdsw:roleLookupRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleCreate">
+      <wsdl:input name="roleCreateReq" message="esdsw:roleCreateReq">
+    </wsdl:input>
+      <wsdl:output name="roleCreateRsp" message="esdsw:roleCreateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleInfo">
+      <wsdl:input name="roleInfoReq" message="esdsw:roleInfoReq">
+    </wsdl:input>
+      <wsdl:output name="roleInfoRsp" message="esdsw:roleInfoRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleUpdate">
+      <wsdl:input name="roleUpdateReq" message="esdsw:roleUpdateReq">
+    </wsdl:input>
+      <wsdl:output name="roleUpdateRsp" message="esdsw:roleUpdateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleDelete">
+      <wsdl:input name="roleDeleteReq" message="esdsw:roleDeleteReq">
+    </wsdl:input>
+      <wsdl:output name="roleDeleteRsp" message="esdsw:roleDeleteRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userLookup">
+      <wsdl:input name="userLookupReq" message="esdsw:userLookupReq">
+    </wsdl:input>
+      <wsdl:output name="userLookupRsp" message="esdsw:userLookupRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userCreate">
+      <wsdl:input name="userCreateReq" message="esdsw:userCreateReq">
+    </wsdl:input>
+      <wsdl:output name="userCreateRsp" message="esdsw:userCreateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userInfo">
+      <wsdl:input name="userInfoReq" message="esdsw:userInfoReq">
+    </wsdl:input>
+      <wsdl:output name="userInfoRsp" message="esdsw:userInfoRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userUpdate">
+      <wsdl:input name="userUpdateReq" message="esdsw:userUpdateReq">
+    </wsdl:input>
+      <wsdl:output name="userUpdateRsp" message="esdsw:userUpdateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userDelete">
+      <wsdl:input name="userDeleteReq" message="esdsw:userDeleteReq">
+    </wsdl:input>
+      <wsdl:output name="userDeleteRsp" message="esdsw:userDeleteRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userLogin">
+      <wsdl:input name="userLoginReq" message="esdsw:userLoginReq">
+    </wsdl:input>
+      <wsdl:output name="userLoginRsp" message="esdsw:userLoginRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userLogout">
+      <wsdl:input name="userLogoutReq" message="esdsw:userLogoutReq">
+    </wsdl:input>
+      <wsdl:output name="userLogoutRsp" message="esdsw:userLogoutRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerLookup">
+      <wsdl:input name="partnerLookupReq" message="esdsw:partnerLookupReq">
+    </wsdl:input>
+      <wsdl:output name="partnerLookupRsp" message="esdsw:partnerLookupRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerCreate">
+      <wsdl:input name="partnerCreateReq" message="esdsw:partnerCreateReq">
+    </wsdl:input>
+      <wsdl:output name="partnerCreateRsp" message="esdsw:partnerCreateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerInfo">
+      <wsdl:input name="partnerInfoReq" message="esdsw:partnerInfoReq">
+    </wsdl:input>
+      <wsdl:output name="partnerInfoRsp" message="esdsw:partnerInfoRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerUpdate">
+      <wsdl:input name="partnerUpdateReq" message="esdsw:partnerUpdateReq">
+    </wsdl:input>
+      <wsdl:output name="partnerUpdateRsp" message="esdsw:partnerUpdateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerDelete">
+      <wsdl:input name="partnerDeleteReq" message="esdsw:partnerDeleteReq">
+    </wsdl:input>
+      <wsdl:output name="partnerDeleteRsp" message="esdsw:partnerDeleteRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainLookup">
+      <wsdl:input name="supplyChainLookupReq" message="esdsw:supplyChainLookupReq">
+    </wsdl:input>
+      <wsdl:output name="supplyChainLookupRsp" message="esdsw:supplyChainLookupRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainCreate">
+      <wsdl:input name="supplyChainCreateReq" message="esdsw:supplyChainCreateReq">
+    </wsdl:input>
+      <wsdl:output name="supplyChainCreateRsp" message="esdsw:supplyChainCreateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainInfo">
+      <wsdl:input name="supplyChainInfoReq" message="esdsw:supplyChainInfoReq">
+    </wsdl:input>
+      <wsdl:output name="supplyChainInfoRsp" message="esdsw:supplyChainInfoRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainUpdate">
+      <wsdl:input name="supplyChainUpdateReq" message="esdsw:supplyChainUpdateReq">
+    </wsdl:input>
+      <wsdl:output name="supplyChainUpdateRsp" message="esdsw:supplyChainUpdateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainDelete">
+      <wsdl:input name="supplyChainDeleteReq" message="esdsw:supplyChainDeleteReq">
+    </wsdl:input>
+      <wsdl:output name="supplyChainDeleteRsp" message="esdsw:supplyChainDeleteRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eventLookup">
+      <wsdl:input name="eventLookupReq" message="esdsw:eventLookupReq">
+    </wsdl:input>
+      <wsdl:output name="eventLookupRsp" message="esdsw:eventLookupRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="multipleEventCreate">
+      <wsdl:input name="multipleEventCreateReq" message="esdsw:multipleEventCreateReq">
+    </wsdl:input>
+      <wsdl:output name="multipleEventCreateRsp" message="esdsw:multipleEventCreateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eventCreate">
+      <wsdl:input name="eventCreateReq" message="esdsw:eventCreateReq">
+    </wsdl:input>
+      <wsdl:output name="eventCreateRsp" message="esdsw:eventCreateRsp">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eventInfo">
+      <wsdl:input name="eventInfoReq" message="esdsw:eventInfoReq">
+    </wsdl:input>
+      <wsdl:output name="eventInfoRsp" message="esdsw:eventInfoRsp">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ESDS" type="esdsw:ESDSServicePortType">
+    <wsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="hello">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="helloReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="helloRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="lookup">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="lookupReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="lookupRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleLookup">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="roleLookupReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="roleLookupRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleCreate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="roleCreateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="roleCreateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleInfo">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="roleInfoReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="roleInfoRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleUpdate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="roleUpdateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="roleUpdateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="roleDelete">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="roleDeleteReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="roleDeleteRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userLookup">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userLookupReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userLookupRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userCreate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userCreateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userCreateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userInfo">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userInfoReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userInfoRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userUpdate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userUpdateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userUpdateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userDelete">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userDeleteReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userDeleteRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userLogin">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userLoginReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userLoginRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="userLogout">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="userLogoutReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userLogoutRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerLookup">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="partnerLookupReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="partnerLookupRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerCreate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="partnerCreateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="partnerCreateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerInfo">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="partnerInfoReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="partnerInfoRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerUpdate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="partnerUpdateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="partnerUpdateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerDelete">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="partnerDeleteReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="partnerDeleteRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainLookup">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="supplyChainLookupReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="supplyChainLookupRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainCreate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="supplyChainCreateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="supplyChainCreateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainInfo">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="supplyChainInfoReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="supplyChainInfoRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainUpdate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="supplyChainUpdateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="supplyChainUpdateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="supplyChainDelete">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="supplyChainDeleteReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="supplyChainDeleteRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eventLookup">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="eventLookupReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="eventLookupRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eventCreate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="eventCreateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="eventCreateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="multipleEventCreate">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="multipleEventCreateReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="multipleEventCreateRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eventInfo">
+      <wsoap:operation soapAction=""/>
+      <wsdl:input name="eventInfoReq">
+        <wsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="eventInfoRsp">
+        <wsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ESDS_Service">
+    <wsdl:port name="ESDS_Service" binding="esdsw:ESDS">
+      <wsoap:address location="http://localhost:8080/iotadiscoveryws/services/ESDS_Service"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

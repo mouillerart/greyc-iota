@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE netTypeSpecification SYSTEM "netTypeSpecification.dtd">
+<netTypeSpecification name="bagNet">
+	<extendable class="de.huberlin.informatik.pnk.kernel.Net">
+		<extension name="firingRule" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.SimpleRule"/>
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.Place">
+                <extension name="tokenClass" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenClassName"/>
+		<extension name="marking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenBag"/>
+		<extension name="initialMarking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenBag"/>
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.Transition"> 
+	</extendable> 
+	<extendable class="de.huberlin.informatik.pnk.kernel.Arc">
+                <extension name="tokenClass" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenClassName"/>
+		<extension name="inscription" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenSet"/>
+	</extendable>
+</netTypeSpecification>

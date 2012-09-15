@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pnml>
+  <net id="n1" type="PTNet">
+    <name>ProducerConsumer</name>
+    <place id="p1">
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>1</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="75" y="0" /> 
+        </graphics>
+        <value>ready to produce</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-10" /> 
+        </graphics>
+        <value>1</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="150" y="300" /> 
+      </graphics>
+    </place>
+    <transition id="t1">
+      <name>
+        <graphics> 
+          <offset page="1" x="45" y="-3" /> 
+        </graphics>
+        <value>produce</value>
+      </name>
+      <graphics> 
+        <position page="1" x="50" y="200" /> 
+      </graphics>
+    </transition>
+    <place id="p2">
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>0</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="65" y="-6" /> 
+        </graphics>
+        <value>ready to deliver</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-10" /> 
+        </graphics>
+        <value>0</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="150" y="100" /> 
+      </graphics>
+    </place>
+    <transition id="t2">
+      <name>
+        <graphics> 
+          <offset page="1" x="18" y="-32" /> 
+        </graphics>
+        <value>deliver</value>
+      </name>
+      <graphics> 
+        <position page="1" x="250" y="200" /> 
+      </graphics>
+    </transition>
+    <place id="p11">
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>1</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="73" y="-2" /> 
+        </graphics>
+        <value>ready to remove</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-10" /> 
+        </graphics>
+        <value>1</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="550" y="300" /> 
+      </graphics>
+    </place>
+    <transition id="t11">
+      <name>
+        <graphics> 
+          <offset page="1" x="46" y="-3" /> 
+        </graphics>
+        <value>remove</value>
+      </name>
+      <graphics> 
+        <position page="1" x="450" y="200" /> 
+      </graphics>
+    </transition>
+    <place id="p12">
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>0</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="79" y="-6" /> 
+        </graphics>
+        <value>ready to consume</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-10" /> 
+        </graphics>
+        <value>0</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="550" y="100" /> 
+      </graphics>
+    </place>
+    <transition id="t12">
+      <name>
+        <graphics> 
+          <offset page="1" x="53" y="-1" /> 
+        </graphics>
+        <value>consume</value>
+      </name>
+      <graphics> 
+        <position page="1" x="650" y="200" /> 
+      </graphics>
+    </transition>
+    <place id="p5">
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>0</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="1" y="-38" /> 
+        </graphics>
+        <value>buffer filled</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-10" /> 
+        </graphics>
+        <value>0</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="350" y="200" /> 
+      </graphics>
+    </place>
+    <place id="p6">
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>1</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="2" y="27" /> 
+        </graphics>
+        <value>buffer empty</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-10" /> 
+        </graphics>
+        <value>1</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="350" y="300" /> 
+      </graphics>
+    </place>
+    <arc id="a1" source="p1" target="t1">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-1" y="9" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="100" y="250" /> 
+      </graphics>
+    </arc>
+    <arc id="a2" source="t1" target="p2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="4" y="7" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="100" y="150" /> 
+      </graphics>
+    </arc>
+    <arc id="a3" source="p2" target="t2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-8" y="-2" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="200" y="150" /> 
+      </graphics>
+    </arc>
+    <arc id="a4" source="t2" target="p1">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="3" y="6" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="200" y="250" /> 
+      </graphics>
+    </arc>
+    <arc id="a11" source="p11" target="t11">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-1" y="8" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="500" y="250" /> 
+      </graphics>
+    </arc>
+    <arc id="a12" source="t11" target="p12">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="3" y="5" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="500" y="150" /> 
+      </graphics>
+    </arc>
+    <arc id="a13" source="p12" target="t12">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-3" y="4" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="600" y="150" /> 
+      </graphics>
+    </arc>
+    <arc id="a14" source="t12" target="p11">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="8" y="2" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="600" y="250" /> 
+      </graphics>
+    </arc>
+    <arc id="a5" source="t2" target="p5">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="1" y="7" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="300" y="200" /> 
+      </graphics>
+    </arc>
+    <arc id="a6" source="p5" target="t11">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="0" y="8" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="400" y="200" /> 
+      </graphics>
+    </arc>
+    <arc id="a7" source="t11" target="p6">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="4" y="8" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="400" y="250" /> 
+      </graphics>
+    </arc>
+    <arc id="a8" source="p6" target="t2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="0" y="7" /> 
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="300" y="250" /> 
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value> </value>
+    </name>
+  </net>
+</pnml>
+

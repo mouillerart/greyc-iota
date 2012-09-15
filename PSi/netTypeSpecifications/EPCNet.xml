@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE netTypeSpecification SYSTEM "netTypeSpecification.dtd">
+<netTypeSpecification name="EPCNet">
+	<extendable class="de.huberlin.informatik.pnk.kernel.Net">
+		<extension name="firingRule" class="fr.unicaen.iota.simulator.pnk.SimpleRule"/>
+	</extendable>
+	<extendable class="de.huberlin.informatik.pnk.kernel.Place">
+		<extension name="marking" class="fr.unicaen.iota.simulator.pnk.EPCList"/>
+		<extension name="initialMarking" class="fr.unicaen.iota.simulator.pnk.EPCList"/>
+                <extension name="eventfilesaver" class="fr.unicaen.iota.simulator.pnk.EventFileSaver"/>
+                <extension name="limitor" class="fr.unicaen.iota.simulator.pnk.Limitor"/>
+                <extension name="pipe" class="fr.unicaen.iota.simulator.pnk.Pipe"/>
+                <extension name="epcgenerator" class="fr.unicaen.iota.simulator.pnk.EPCGenerator"/>
+                <extension name="representation" class="fr.unicaen.iota.simulator.pnk.SpriteRepresentation"/>
+                <extension name="epcdeactivator" class="fr.unicaen.iota.simulator.pnk.EPCDeactivator"/>
+	</extendable> 
+	<extendable class="de.huberlin.informatik.pnk.kernel.Arc">
+                <extension name="inscription" class="fr.unicaen.iota.simulator.pnk.EPCInscription"/>
+                <extension name="subscription" class="fr.unicaen.iota.simulator.pnk.EPCSubscription"/>
+	</extendable>
+        <extendable class="de.huberlin.informatik.pnk.kernel.Transition">
+                <extension name="event" class="fr.unicaen.iota.simulator.pnk.Event"/>
+        </extendable>
+</netTypeSpecification>

@@ -1,0 +1,13 @@
+ALfA-PI - ALfA Programming Interface
+
+Common RMI programming interface between ALfA and top-level applications.
+
+Dependencies: none
+
+Configuration: none
+
+Usage Dependencies:
+  - ALfA
+
+Usage:
+  see BETa, DELTa, or OMeGa for examples

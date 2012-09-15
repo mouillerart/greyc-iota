@@ -1,0 +1,22 @@
+OMeGa - Object MEthod GAteway
+
+Interface web service pour le server RMI ALfA.
+
+Dépendances:
+  modules IoTa:
+    - ALfA-PI
+  bibliothèques:
+    - axis2
+    - commons-logging
+    - log4j
+
+Installation et Configuration:
+  IoTa-Installer installe et configure OMeGa.
+  (application.properties pour cette application,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - ALfA
+
+Utilisation:
+  voir OmICron, BETa ou ThETa pour des exemples

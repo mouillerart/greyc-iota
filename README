@@ -1,0 +1,39 @@
+This directory contains the components of the IoTa Project.
+
+For general building and installation instructions, see the file INSTALL or
+use the installer (in IoTa-Installer/).
+
+The IoTa Project is free software.  See the file copyright for copying
+conditions.
+
+What can be found in this directory:
+
+Scripts:
+  make-all.sh          Shell script to build all modules
+
+Documentations:
+  Licenses/            Licenses' texts
+  Publications/        Published articles and publication materials
+
+External Dependencies:
+  lib/                 Libraries not available on Maven repositories
+
+Installers:
+  IoTa-Installer/      Installer for IoTa modules
+
+Server modules:
+  IoTa-DiscoveryWS/    DWS
+  DSeTa/               Discovery SErvices Trusted Agent
+  EpcILoN/             EPC Information Layer tO Naming layer WS
+  ETa/                 Epcis Trusted Agent WS
+  ALfA/                Access Layer For Applications RMI server
+  OMeGa/               Object MEthod GAteway WS for ALfA
+
+End-User Applications:
+  DSeTa/DiscoveryPHI/  Discovery Policy Human Interface WS
+  ETa/EpcisPHI/        Epcis Policy Human Interface WS
+  BETa/                Basic EPC Test Application
+  DELTa/               Deep Event Layer Testing Application
+  ThETa/               ThemaMap EPC Tracing application
+  MuPHI/               MUltiple PSi Human Interface WS
+  PSi/                 Petri net SImulator application

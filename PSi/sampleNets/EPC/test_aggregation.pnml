@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+  <net id="n1" type="EPCNet">
+    <place id="p1">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="51"/>
+        
+        </graphics>
+        <value>urn:epc:id:sgtin:1.1%10</value>
+      </epcgenerator>
+      <pipe>
+        <graphics>
+          
+          <offset page="1" x="50" y="34"/>
+        
+        </graphics>
+        <value>isPipe=false
+address=http://localhost:8080/SimulatorServer
+password=poudredeperl1p1p1
+pipeId=pipe_1
+type=expedition</value>
+      </pipe>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="102"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="17"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="136"/>
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="68"/>
+        
+        </graphics>
+        <value>rfidprinter</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p1</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="85"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="119"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="216" y="215"/>
+      
+      </graphics>
+    </place>
+    <transition id="t1">
+      
+      <name>
+        <graphics>
+          
+          <offset page="1" x="41" y="17"/>
+        
+        </graphics>
+        <value>t1</value>
+      </name>
+      <event>
+        <graphics>
+          
+          <offset page="1" x="41" y="34"/>
+        
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:_not_specified_&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://_not_specified_/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="object"&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:tester&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:tester&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:_not_specified_&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+        &lt;location&gt;
+                 &lt;latitude&gt;0&lt;/latitude&gt;
+                 &lt;longitude&gt;0&lt;/longitude&gt;
+        &lt;/location&gt;
+&lt;/EPCEvent&gt;
+</value>
+      </event>
+      <graphics>
+        
+        <position page="1" x="394" y="203"/>
+      
+      </graphics>
+    </transition>
+    <place id="p2">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="51"/>
+        
+        </graphics>
+        <value>generator</value>
+      </epcgenerator>
+      <pipe>
+        <graphics>
+          
+          <offset page="1" x="50" y="34"/>
+        
+        </graphics>
+        <value>isPipe=false
+address=http://localhost:8080/SimulatorServer
+password=poudredeperl1p1p1
+pipeId=pipe_1
+type=expedition</value>
+      </pipe>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="102"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="17"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="136"/>
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="68"/>
+        
+        </graphics>
+        <value>warehouse3</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p2</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="85"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="119"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="561" y="225"/>
+      
+      </graphics>
+    </place>
+    <transition id="t2">
+      
+      <name>
+        <graphics>
+          
+          <offset page="1" x="41" y="17"/>
+        
+        </graphics>
+        <value>t2</value>
+      </name>
+      <event>
+        <graphics>
+          
+          <offset page="1" x="41" y="34"/>
+        
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:_not_specified_&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://_not_specified_/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="aggregation"&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:tester&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:tester&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:_not_specified_&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+        &lt;location&gt;
+                 &lt;latitude&gt;0&lt;/latitude&gt;
+                 &lt;longitude&gt;0&lt;/longitude&gt;
+        &lt;/location&gt;
+&lt;/EPCEvent&gt;
+</value>
+      </event>
+      <graphics>
+        
+        <position page="1" x="730" y="217"/>
+      
+      </graphics>
+    </transition>
+    <place id="p3">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="51"/>
+        
+        </graphics>
+        <value>generator</value>
+      </epcgenerator>
+      <pipe>
+        <graphics>
+          
+          <offset page="1" x="50" y="34"/>
+        
+        </graphics>
+        <value>isPipe=false
+address=http://localhost:8080/SimulatorServer
+password=poudredeperl1p1p1
+pipeId=pipe_1
+type=expedition</value>
+      </pipe>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="102"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="17"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="136"/>
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="68"/>
+        
+        </graphics>
+        <value>warehouse4</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p3</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="85"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="119"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="869" y="204"/>
+      
+      </graphics>
+    </place>
+    <place id="p4">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="51"/>
+        
+        </graphics>
+        <value>urn:epc:id:sgtin:1.2%1</value>
+      </epcgenerator>
+      <pipe>
+        <graphics>
+          
+          <offset page="1" x="50" y="34"/>
+        
+        </graphics>
+        <value>isPipe=false
+address=http://localhost:8080/SimulatorServer
+password=poudredeperl1p1p1
+pipeId=pipe_1
+type=expedition</value>
+      </pipe>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="102"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="17"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="136"/>
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="68"/>
+        
+        </graphics>
+        <value>rfidprinter</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p4</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="85"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="119"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="702" y="329"/>
+      
+      </graphics>
+    </place>
+    <arc id="a1" source="p1" target="t1">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="305" y="209"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a2" source="t1" target="p2">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="477" y="214"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a3" source="p2" target="t2">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>10</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="645" y="221"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a4" source="p4" target="t2">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="716" y="273"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a5" source="t2" target="p3">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="799" y="210"/>
+      
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value>unnamed</value>
+    </name>
+  </net>
+</pnml>

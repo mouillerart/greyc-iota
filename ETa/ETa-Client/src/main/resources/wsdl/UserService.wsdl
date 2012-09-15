@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="UserService"
+                  targetNamespace="http://user.eta.iota.unicaen.fr/UserService.wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:usvcw="http://user.eta.iota.unicaen.fr/UserService.wsdl"
+                  xmlns:usvc="http://user.eta.iota.unicaen.fr/userservice.xsd">
+
+    <!-- TYPES SECTION -->
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import
+                namespace="http://user.eta.iota.unicaen.fr/userservice.xsd"
+                schemaLocation="./userservice.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+    <!-- GLOBAL -->
+
+    <wsdl:message name="helloReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:Hello"/>
+    </wsdl:message>
+    <wsdl:message name="helloRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:HelloResult"/>
+    </wsdl:message>
+
+    <!-- USER -->
+
+    <wsdl:message name="userLookupReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserLookup"/>
+    </wsdl:message>
+    <wsdl:message name="userLookupRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserLookupResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userCreateReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserCreate"/>
+    </wsdl:message>
+    <wsdl:message name="userCreateRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserCreateResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userInfoReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserInfo"/>
+    </wsdl:message>
+
+    <wsdl:message name="userInfoRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserInfoResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userUpdateReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserUpdate"/>
+    </wsdl:message>
+    <wsdl:message name="userUpdateRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserUpdateResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userDeleteReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserDelete"/>
+    </wsdl:message>
+    <wsdl:message name="userDeleteRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserDeleteResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userLoginReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserLogin"/>
+    </wsdl:message>
+    <wsdl:message name="userLoginRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserLoginResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userLogoutReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserLogout"/>
+    </wsdl:message>
+    <wsdl:message name="userLogoutRsp">
+        <wsdl:part
+            name="result"
+            element="usvc:UserLogoutResult"/>
+    </wsdl:message>
+
+
+    <!-- EXCEPTION SECTION -->
+
+    <wsdl:message name="ImplementationExceptionResponse">
+        <wsdl:part name="fault" element="usvc:ImplementationException"/>
+    </wsdl:message>
+
+    <wsdl:message name="SecurityExceptionResponse">
+        <wsdl:part name="fault" element="usvc:SecurityException"/>
+    </wsdl:message>
+
+     <!-- PORT TYPE SECTION -->
+
+    <wsdl:portType name="UserServicePortType">
+
+     <!-- GLOBAL -->
+
+        <wsdl:operation name="hello">
+            <wsdl:input
+                message="usvcw:helloReq"
+                name="helloReq"/>
+            <wsdl:output
+                message="usvcw:helloRsp"
+                name="helloRsp"/>
+        </wsdl:operation>
+
+       <!-- USER -->
+
+        <wsdl:operation name="userLookup">
+            <wsdl:input
+                message="usvcw:userLookupReq"
+                name="userLookupReq"/>
+            <wsdl:output
+                message="usvcw:userLookupRsp"
+                name="userLookupRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCreate">
+            <wsdl:input
+                message="usvcw:userCreateReq"
+                name="userCreateReq"/>
+            <wsdl:output
+                message="usvcw:userCreateRsp"
+                name="userCreateRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userInfo">
+            <wsdl:input
+                message="usvcw:userInfoReq"
+                name="userInfoReq"/>
+            <wsdl:output
+                message="usvcw:userInfoRsp"
+                name="userInfoRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userUpdate">
+            <wsdl:input
+                message="usvcw:userUpdateReq"
+                name="userUpdateReq"/>
+            <wsdl:output
+                message="usvcw:userUpdateRsp"
+                name="userUpdateRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userDelete">
+            <wsdl:input
+                message="usvcw:userDeleteReq"
+                name="userDeleteReq"/>
+            <wsdl:output
+                message="usvcw:userDeleteRsp"
+                name="userDeleteRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userLogin">
+            <wsdl:input
+                message="usvcw:userLoginReq"
+                name="userLoginReq"/>
+            <wsdl:output
+                message="usvcw:userLoginRsp"
+                name="userLoginRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userLogout">
+            <wsdl:input
+                message="usvcw:userLogoutReq"
+                name="userLogoutReq"/>
+            <wsdl:output
+                message="usvcw:userLogoutRsp"
+                name="userLogoutRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+    </wsdl:portType>
+
+       <!-- BINDING SECTION -->
+
+    <wsdl:binding
+        name="UserBinding"
+        type="usvcw:UserServicePortType">
+
+        <wsoap:binding
+            style="document"
+            transport="http://schemas.xmlsoap.org/soap/http"/>
+
+       <!-- GLOBAL -->
+
+        <wsdl:operation name="hello">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="helloReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="helloRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+       <!-- USER -->
+
+        <wsdl:operation name="userLookup">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userLookupReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLookupRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCreate">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userCreateReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userCreateRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userInfo">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userInfoReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userInfoRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userUpdate">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userUpdateReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userUpdateRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userDelete">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userDeleteReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userDeleteRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userLogin">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userLoginReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLoginRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userLogout">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userLogoutReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLogoutRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+    </wsdl:binding>
+
+       <!-- SERVICE SECTION -->
+
+    <wsdl:service name="UserService">
+        <wsdl:port
+            binding="usvcw:UserBinding"
+            name="UserServicePort">
+        </wsdl:port>
+    </wsdl:service>
+
+
+</wsdl:definitions>

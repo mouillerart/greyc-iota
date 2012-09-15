@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pnml>
+  <net id="n1" type="subrange">
+    <name>unnamed</name>
+    <place id="p1">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="25" y="-2" /> 
+        </graphics>
+        <value>Int</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="25" y="17" /> 
+        </graphics>
+        <value>5</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-39" y="-18" /> 
+        </graphics>
+        <value>p1</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="30" y="39" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="275" y="175" /> 
+      </graphics>
+    </place>
+    <place id="p2">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="26" y="-18" /> 
+        </graphics>
+        <value>Int</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="25" y="2" /> 
+        </graphics>
+        <value> 9 16</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-35" y="-15" /> 
+        </graphics>
+        <value>p2</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="30" y="39" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="275" y="275" /> 
+      </graphics>
+    </place>
+    <transition id="t1">
+      <name>
+        <graphics> 
+          <offset page="1" x="30" y="0" /> 
+        </graphics>
+        <value>t1</value>
+      </name>
+      <graphics> 
+        <position page="1" x="375" y="225" /> 
+      </graphics>
+    </transition>
+    <arc id="a1" source="p1" target="t1">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-28" y="51" /> 
+        </graphics>
+        <value> x</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="375" y="50" /> 
+      </graphics>
+    </arc>
+    <arc id="a2" source="t1" target="p2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-25" y="-60" /> 
+        </graphics>
+        <value>multiply(2,multiply(x,x))</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="375" y="400" /> 
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value> </value>
+    </name>
+    <signature>
+      <value>
+        <variable name="x" />
+        <variable name="z" />
+        <function name="multiply" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.ScalarTypeInt" signature="multiply(de.huberlin.informatik.pnk.netElementExtensions.hlNet.ScalarTypeInt,de.huberlin.informatik.pnk.netElementExtensions.hlNet.ScalarTypeInt)" />
+        <function name="sub" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.ScalarTypeInt" signature="subMessageFrom(java.util.Vector)" />
+        <tokenType name="Int" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.ScalarTypeInt" />
+        <tokenType name="Agent" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoAgent" />
+      </value>
+    </signature>
+  </net>
+</pnml>
+

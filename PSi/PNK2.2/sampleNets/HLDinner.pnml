@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pnml>
+  <net id="n1" type="PNCube(ColoredToken, Set)">
+    <name>
+        </name>
+    <place id="p1">
+      <marking>
+        <graphics> 
+          
+          
+          <offset page="1" x="20" y="-30" /> 
+        
+        
+        </graphics>
+        <value>p1 p2 p3</value>
+      </marking>
+      <name>
+        <graphics> 
+          
+          
+          <offset page="1" x="-15" y="5" /> 
+        
+        
+        </graphics>
+        <value>Philos</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          
+          
+          <offset page="1" x="19" y="-7" /> 
+        
+        
+        </graphics>
+        <value>p1 p2 p3</value>
+      </initialMarking>
+      <graphics> 
+        
+        
+        <position page="1" x="275" y="100" /> 
+      
+      
+      </graphics>
+    </place>
+    <place id="p2">
+      <marking>
+        <graphics> 
+          
+          
+          <offset page="1" x="18" y="-22" /> 
+        
+        
+        </graphics>
+        <value></value>
+      </marking>
+      <name>
+        <graphics> 
+          
+          
+          <offset page="1" x="-42" y="8" /> 
+        
+        
+        </graphics>
+        <value>essende Philos</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          
+          
+          <offset page="1" x="18" y="-4" /> 
+        
+        
+        </graphics>
+        <value></value>
+      </initialMarking>
+      <graphics> 
+        
+        
+        <position page="1" x="275" y="375" /> 
+      
+      
+      </graphics>
+    </place>
+    <place id="p3">
+      <marking>
+        <graphics> 
+          
+          
+          <offset page="1" x="13" y="-22" /> 
+        
+        
+        </graphics>
+        <value>g1 g2 g3</value>
+      </marking>
+      <name>
+        <graphics> 
+          
+          
+          <offset page="1" x="-17" y="9" /> 
+        
+        
+        </graphics>
+        <value>Gabeln</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          
+          
+          <offset page="1" x="13" y="-8" /> 
+        
+        
+        </graphics>
+        <value>g1 g2 g3</value>
+      </initialMarking>
+      <graphics> 
+        
+        
+        <position page="1" x="275" y="225" /> 
+      
+      
+      </graphics>
+    </place>
+    <transition id="t1">
+      <variables>
+        <graphics> 
+          
+          
+          <offset page="1" x="20" y="0" /> 
+        
+        
+        </graphics>
+        <value> x</value>
+      </variables>
+      <name>
+        <graphics> 
+          
+          
+          <offset page="1" x="-12" y="10" /> 
+        
+        
+        </graphics>
+        <value>esse</value>
+      </name>
+      <graphics> 
+        
+        
+        <position page="1" x="450" y="225" /> 
+      
+      
+      </graphics>
+    </transition>
+    <transition id="t2">
+      <variables>
+        <graphics> 
+          
+          
+          <offset page="1" x="-22" y="-17" /> 
+        
+        
+        </graphics>
+        <value> x</value>
+      </variables>
+      <name>
+        <graphics> 
+          
+          
+          <offset page="1" x="-17" y="9" /> 
+        
+        
+        </graphics>
+        <value>denke</value>
+      </name>
+      <graphics> 
+        
+        
+        <position page="1" x="75" y="225" /> 
+      
+      
+      </graphics>
+    </transition>
+    <arc id="a1" source="t2" target="p3">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="0" y="0" />
+        
+        </graphics>
+        <value> </value>
+      </name>
+      <inscription>
+        <graphics> 
+          
+          
+          <offset page="1" x="10" y="0" /> 
+        
+        
+        </graphics>
+        <value>l(x) r(x,3)</value>
+      </inscription>
+      <graphics> 
+        
+        
+        <position page="1" x="175" y="225" /> 
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a2" source="p2" target="t2">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="0" y="0" />
+        
+        </graphics>
+        <value> </value>
+      </name>
+      <inscription>
+        <graphics> 
+          
+          
+          <offset page="1" x="11" y="7" /> 
+        
+        
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        
+        
+        <position page="1" x="200" y="275" /> 
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a3" source="t2" target="p1">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="0" y="0" />
+        
+        </graphics>
+        <value> </value>
+      </name>
+      <inscription>
+        <graphics> 
+          
+          
+          <offset page="1" x="10" y="0" /> 
+        
+        
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        
+        
+        <position page="1" x="175" y="175" /> 
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a4" source="p1" target="t1">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="0" y="0" />
+        
+        </graphics>
+        <value> </value>
+      </name>
+      <inscription>
+        <graphics> 
+          
+          
+          <offset page="1" x="10" y="0" /> 
+        
+        
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        
+        
+        <position page="1" x="350" y="175" /> 
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a5" source="p3" target="t1">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="0" y="0" />
+        
+        </graphics>
+        <value> </value>
+      </name>
+      <inscription>
+        <graphics> 
+          
+          
+          <offset page="1" x="10" y="0" /> 
+        
+        
+        </graphics>
+        <value>l(x) r(x,3)</value>
+      </inscription>
+      <graphics> 
+        
+        
+        <position page="1" x="350" y="225" /> 
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a6" source="t1" target="p2">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="0" y="0" />
+        
+        </graphics>
+        <value> </value>
+      </name>
+      <inscription>
+        <graphics> 
+          
+          
+          <offset page="1" x="10" y="0" /> 
+        
+        
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        
+        
+        <position page="1" x="350" y="275" /> 
+      
+      
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <tokenType>
+      <value></value>
+    </tokenType>
+    <name>
+      <value> </value>
+    </name>
+    <functions>
+      <value>path=de/huberlin/informatik/pnk/netElementExtensions/PNCube/FunctionTable.xml
+functions = l(token), r(token,token)</value>
+    </functions>
+  </net>
+</pnml>
+

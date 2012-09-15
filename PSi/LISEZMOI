@@ -1,0 +1,21 @@
+PSi - Petri net SImulator
+
+Générateur d’événements EPCIS construit sur PNK.
+
+Dépendances:
+  bibliothèques:
+    - epcis-captureclient
+    - epcis-commons
+    - jfreechart
+    - jdom
+    - crimson
+  src:
+    - PNK
+
+Configuration: aucune
+
+Dépendances d’utilisation:
+  - IoTa
+
+Utilisation:
+  ./psi.sh

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pnml>
+  <net id="HLTestNet" type="HLNet">
+    <name>HLTestNet</name>
+    <place id="1">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="0" y="30" />
+        </graphics>
+        <value>Integer</value>
+      </tokenClass>
+      <marking>
+        <graphics>
+          <offset page="1" x="33" y="-25" />
+        </graphics>
+        <value>2 3 4</value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="0" y="-37" />
+        </graphics>
+        <value>Place1</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="33" y="25" />
+        </graphics>
+        <value>2 3 4</value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="30" y="225" />
+      </graphics>
+    </place>
+    <place id="2">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="0" y="30" />
+        </graphics>
+        <value>Integer</value>
+      </tokenClass>
+      <marking>
+        <graphics>
+          <offset page="1" x="33" y="-25" />
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="0" y="-37" />
+        </graphics>
+        <value>Place2</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="33" y="25" />
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="405" y="225" />
+      </graphics>
+    </place>
+    <transition id="3">
+      <name>
+        <graphics>
+          <offset page="1" x="0" y="-37" />
+        </graphics>
+        <value>Transition1</value>
+      </name>
+      <graphics>
+        <position page="1" x="217" y="150" />
+      </graphics>
+    </transition>
+    <place id="p1">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="3" y="26" />
+        </graphics>
+        <value>Integer</value>
+      </tokenClass>
+      <marking>
+        <graphics>
+          <offset page="1" x="26" y="-14" />
+        </graphics>
+        <value> 6 8 10</value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="4" y="-31" />
+        </graphics>
+        <value>Place1_2</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="26" y="8" />
+        </graphics>
+        <value> 6 8 10</value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="216" y="308" />
+      </graphics>
+    </place>
+    <arc id="4" source="1" target="3">
+      <inscription>
+        <graphics>
+          <offset page="1" x="0" y="-15" />
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="123" y="187" />
+      </graphics>
+    </arc>
+    <arc id="5" source="3" target="2">
+      <inscription>
+        <graphics>
+          <offset page="1" x="0" y="-15" />
+        </graphics>
+        <value>x.plus(x.mal2(x),y)</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="311" y="187" />
+      </graphics>
+    </arc>
+    <arc id="a1" source="p1" target="3">
+      <inscription>
+        <graphics>
+          <offset page="1" x="20" y="0" />
+        </graphics>
+        <value> y</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="216" y="229" />
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <variables>
+      <value />
+    </variables>
+    <name>
+      <value> </value>
+    </name>
+    <declaration>
+      <value />
+    </declaration>
+    <signature>
+      <value>
+        <variable name="x" />
+        <variable name="y" />
+        <function name="mal2" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.HLFkt" signature="mal2(java.lang.Integer)" />
+        <function name="plus" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.HLFkt" signature="plus(java.lang.Integer,java.lang.Integer)" />
+        <tokenType name="Integer" class="java.lang.Integer" />
+        <tokenType name="String" class="java.lang.String" />
+      </value>
+    </signature>
+  </net>
+</pnml>
+

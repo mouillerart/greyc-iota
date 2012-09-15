@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pnml>
+  <net id="n1" type="echoNet">
+    <place id="p1">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-25" y="22" /> 
+        </graphics>
+        <value>Agent</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>i</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-27" y="-17" /> 
+        </graphics>
+        <value>quiet</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>i</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="25" y="75" /> 
+      </graphics>
+    </place>
+    <place id="p2">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-25" y="21" /> 
+        </graphics>
+        <value>Agent</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-42" y="-22" /> 
+        </graphics>
+        <value>waiting</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="-20" y="-4" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="225" y="75" /> 
+      </graphics>
+    </place>
+    <place id="p3">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-29" y="19" /> 
+        </graphics>
+        <value>Agent</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-47" y="-24" /> 
+        </graphics>
+        <value>terminated</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="425" y="75" /> 
+      </graphics>
+    </place>
+    <place id="p4">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-50" y="16" /> 
+        </graphics>
+        <value>Message</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-51" y="-12" /> 
+        </graphics>
+        <value>mailbox</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="-2" y="15" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="225" y="200" /> 
+      </graphics>
+    </place>
+    <place id="p5">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-25" y="20" /> 
+        </graphics>
+        <value>Agent</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="29" y="-14" /> 
+        </graphics>
+        <value>a,b,c</value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-29" y="-26" /> 
+        </graphics>
+        <value>uninformed</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="31" y="11" /> 
+        </graphics>
+        <value>a,b,c</value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="25" y="325" /> 
+      </graphics>
+    </place>
+    <place id="p6">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-34" y="26" /> 
+        </graphics>
+        <value>Message</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-42" y="-24" /> 
+        </graphics>
+        <value>pending</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="2" y="5" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="225" y="325" /> 
+      </graphics>
+    </place>
+    <place id="p7">
+      <tokenClass>
+        <graphics> 
+          <offset page="1" x="-33" y="17" /> 
+        </graphics>
+        <value>Agent</value>
+      </tokenClass>
+      <marking>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics> 
+          <offset page="1" x="-43" y="-26" /> 
+        </graphics>
+        <value>accepted</value>
+      </name>
+      <initialMarking>
+        <graphics> 
+          <offset page="1" x="0" y="-11" /> 
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics> 
+        <position page="1" x="425" y="325" /> 
+      </graphics>
+    </place>
+    <transition id="t1">
+      <name>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>t1</value>
+      </name>
+      <graphics> 
+        <position page="1" x="125" y="75" /> 
+      </graphics>
+    </transition>
+    <transition id="t2">
+      <name>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>t2</value>
+      </name>
+      <graphics> 
+        <position page="1" x="325" y="75" /> 
+      </graphics>
+    </transition>
+    <transition id="t3">
+      <name>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>t3</value>
+      </name>
+      <graphics> 
+        <position page="1" x="125" y="325" /> 
+      </graphics>
+    </transition>
+    <transition id="t4">
+      <name>
+        <graphics> 
+          <offset page="1" x="0" y="0" /> 
+        </graphics>
+        <value>t4</value>
+      </name>
+      <graphics> 
+        <position page="1" x="325" y="325" /> 
+      </graphics>
+    </transition>
+    <arc id="a1" source="p1" target="t1">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-1" y="-9" /> 
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="75" y="75" /> 
+      </graphics>
+    </arc>
+    <arc id="a2" source="t1" target="p2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-1" y="-8" /> 
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="175" y="75" /> 
+      </graphics>
+    </arc>
+    <arc id="a3" source="p2" target="t2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="3" y="-8" /> 
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="275" y="75" /> 
+      </graphics>
+    </arc>
+    <arc id="a4" source="t2" target="p3">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="8" y="-12" /> 
+        </graphics>
+        <value>x</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="375" y="75" /> 
+      </graphics>
+    </arc>
+    <arc id="a5" source="t1" target="p4">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="21" y="-3" /> 
+        </graphics>
+        <value>x.Mc()</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="125" y="175" /> 
+      </graphics>
+    </arc>
+    <arc id="a6" source="p4" target="t2">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-11" y="-7" /> 
+        </graphics>
+        <value>x.M()</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="325" y="175" /> 
+      </graphics>
+    </arc>
+    <arc id="a7" source="p4" target="t3">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-13" y="17" /> 
+        </graphics>
+        <value>z</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="200" y="275" /> 
+      </graphics>
+    </arc>
+    <arc id="a8" source="t3" target="p4">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="3" y="-22" /> 
+        </graphics>
+        <value>z.a().sub(z.p1().Mc())</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="125" y="200" /> 
+      </graphics>
+    </arc>
+    <arc id="a9" source="p4" target="t4">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-7" y="-26" /> 
+        </graphics>
+        <value>z.sub(z.p1().M())</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="250" y="275" /> 
+      </graphics>
+    </arc>
+    <arc id="a10" source="t4" target="p4">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-11" y="10" /> 
+        </graphics>
+        <value>z.a()</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="325" y="200" /> 
+      </graphics>
+    </arc>
+    <arc id="a11" source="p5" target="t3">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="8" y="-10" /> 
+        </graphics>
+        <value>z.p1()</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="75" y="325" /> 
+      </graphics>
+    </arc>
+    <arc id="a12" source="t3" target="p6">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="0" y="-9" /> 
+        </graphics>
+        <value>z</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="175" y="325" /> 
+      </graphics>
+    </arc>
+    <arc id="a13" source="p6" target="t4">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="3" y="-9" /> 
+        </graphics>
+        <value>z</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="275" y="325" /> 
+      </graphics>
+    </arc>
+    <arc id="a14" source="t4" target="p7">
+      <inscription>
+        <graphics> 
+          <offset page="1" x="-7" y="-9" /> 
+        </graphics>
+        <value>z.p1()</value>
+      </inscription>
+      <graphics> 
+        <position page="1" x="375" y="325" /> 
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value>EchoAlgorithm</value>
+    </name>
+    <signature>
+      <value>
+        <variable name="x" />
+        <variable name="z" />
+        <function name="p1" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoMessage" signature="getReceiver()" />
+        <function name="sub" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoMessage" signature="subMessageFrom(java.util.Vector)" />
+        <function name="M" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoAgent" signature="receiveMessages()" />
+        <function name="Mc" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoAgent" signature="sendMessages()" />
+        <function name="a" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoMessage" signature="getAnswer()" />
+        <function name="inform" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoMessage" signature="inform()" />
+        <function name="answers" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoMessage" signature="answers()" />
+        <tokenType name="Message" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoMessage" />
+        <tokenType name="Agent" class="de.huberlin.informatik.pnk.netElementExtensions.graphAlgorithms.EchoAgent" />
+      </value>
+    </signature>
+  </net>
+  <net id="n1" type="graph">
+    <place id="p1">
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0" />
+        </graphics>
+        <value>i</value>
+      </name>
+      <graphics>
+        <position page="1" x="317" y="355" />
+      </graphics>
+    </place>
+    <place id="p4">
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0" />
+        </graphics>
+        <value>a</value>
+      </name>
+      <graphics>
+        <position page="1" x="315" y="188" />
+      </graphics>
+    </place>
+    <place id="p5">
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0" />
+        </graphics>
+        <value>c</value>
+      </name>
+      <graphics>
+        <position page="1" x="415" y="263" />
+      </graphics>
+    </place>
+    <place id="p7">
+      <name>
+        <graphics>
+          <offset page="1" x="20" y="0" />
+        </graphics>
+        <value>b</value>
+      </name>
+      <graphics>
+        <position page="1" x="247" y="78" />
+      </graphics>
+    </place>
+    <edge id="pa2" source="p1" target="p4" type="PlaceArc">
+      <graphics>
+        <position page="1" x="258" y="243" />
+      </graphics>
+    </edge>
+    <edge id="pa4" source="p1" target="p5" type="PlaceArc">
+      <graphics>
+        <position page="1" x="342" y="286" />
+      </graphics>
+    </edge>
+    <edge id="pa6" source="p7" target="p4" type="PlaceArc">
+      <graphics>
+        <position page="1" x="402" y="124" />
+      </graphics>
+    </edge>
+    <name>
+      <value>unnamed</value>
+    </name>
+  </net>
+</pnml>
+

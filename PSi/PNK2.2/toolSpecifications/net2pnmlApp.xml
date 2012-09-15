@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toolSpecification SYSTEM "toolSpecification.dtd">
+<toolSpecification>
+	<!-- Nettypes -->
+	<nettype id="n1" typeSpecification="file:netTypeSpecifications/PTNet.xml"/>
+	<!-- Applications -->
+	<application id="a1" mainClass="de.huberlin.informatik.pnk.editor.Editor" maxinstances="inf">
+		<allowedNettypes>
+ 			<ntref ref="n1"/>
+		</allowedNettypes>
+	</application>
+	<!-- Input / Output -->
+	<format id="pnml" ioClass="de.huberlin.informatik.pnk.appControl.PnmlInOut">
+		<allowedNettypes>
+			<ntref ref="n1"/>
+		</allowedNettypes>
+	</format>
+	<format id="net" ioClass="de.huberlin.informatik.pnk.appControl.NetInOut">
+		<allowedNettypes>
+			<ntref ref="n1"/>
+		</allowedNettypes>
+	</format>
+	<!-- default settings --> 
+	<standardNettype ref="n1"/>
+	<standardApplication ref="a1"/>
+	<standardFormat ref="pnml"/>
+</toolSpecification>

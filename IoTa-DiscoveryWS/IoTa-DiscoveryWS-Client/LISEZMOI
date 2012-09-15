@@ -1,0 +1,23 @@
+IoTa-DiscoveryWS-Client
+
+Bibliothèque client pour l’interfaçage avec le web service Discovery de IoTa.
+
+Dépendances:
+  bibliothèques:
+    - axis2
+    - axiom-api
+    - commons-logging
+    - log4j
+    - junit
+
+Configuration:
+  Voir les fichiers *.properties dans le fichier jar ; chacun de ces fichiers
+  peut être remplacé par un fichier du même nom dans le répertoire courant.
+  (ds-client.properties,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - un DWS
+
+Utilisation:
+  voir ALfA ou EpcILoN pour des exemples

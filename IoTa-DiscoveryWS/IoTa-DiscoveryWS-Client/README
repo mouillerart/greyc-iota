@@ -1,0 +1,23 @@
+IoTa-DiscoveryWS-Client
+
+Common library for interfacing with the IoTa Discovery web service.
+
+Dependencies:
+  libraries:
+    - axis2
+    - axiom-api
+    - commons-logging
+    - log4j
+    - junit
+
+Configuration:
+  See the files *.properties in the jar file (each of those can be overriden
+  by a file with the same name in the current directory).
+  (ds-client.properties,
+   commons-logging.properties and log4j.properties for the logs)
+
+Usage Dependencies:
+  - a DWS
+
+Usage:
+  see ALfA or EpcILoN for examples

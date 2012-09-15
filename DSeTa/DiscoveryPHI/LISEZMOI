@@ -1,0 +1,27 @@
+DiscoveryPHI - Discovery Policy Human Interface
+
+Web service d’édition de politiques pour le DS.
+
+Dépendances:
+  modules IoTa:
+    - IoTa-DiscoveryWS-Client
+    - LibXACML-DS
+  bibliothèques:
+    - sunxacml
+    - axis2-adb
+    - servlet-api
+    - commons-logging
+    - log4j
+
+Installation et Configuration:
+  IoTa-Installer installe et configure DiscoveryPHI.
+  (application.properties pour cette application,
+   xacml_configuration.properties pour la bibliothèque cliente LibXACML-DS,
+   ds-client.properties pour la bibliothèque cliente IoTa-DiscoveryWS-Client,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - un DWS
+
+Utilisation:
+  http://localhost:8080/discovery-phi/

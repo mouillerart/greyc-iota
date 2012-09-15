@@ -1,0 +1,302 @@
+|NET
+|
+|SPECIFICATION DAWN_Specification
+|Signature
+|include "pair";
+|sort AGENT;
+|#sort U;
+|function initU: gives MS<AGENT>;
+|function initM: AGENT, AGENT gives PAIR<AGENT,AGENT>;
+|function M: AGENT gives MS<PAIR<AGENT,AGENT>>;
+|function N: AGENT gives MS<PAIR<AGENT,AGENT>>;
+|function U: gives MS<AGENT>;
+|
+|
+;
+|Axioms
+|agents: forall x: inMS(x,U());
+|UisSET:	isSET(U());
+|
+|
+|
+|
+|
+;
+|Variables
+|var x as AGENT;
+|var y as AGENT;
+|
+;
+|Model
+|AGENT = enumerate {'a','b','c'};
+|#U = enumerate{'a','b','c'};
+|function M: c as AGENT gives MS<PAIR<AGENT,AGENT>>
+|begin
+|  var n as AGENT;
+|  var m as MS<PAIR<AGENT,AGENT>>;
+|  foreach n in AGENT do
+|    m[(c,n)] = 1;
+|  od
+|  return m;
+| end
+|
+|function initU: u as AGENT gives AGENT
+|begin
+|  #var u as AGENT;
+|  #var v as SET<AGENT>;
+|  #foreach u in AGENT do
+|  # v[u] = 1;
+|  #od
+|  #return v;
+|  return u;
+| end
+|
+|function initM: q as AGENT, w as AGENT gives PAIR<AGENT, AGENT>
+|begin
+| #var q as AGENT;
+|# var w as AGENT;
+| #var t as PAIR<AGENT,AGENT>;
+| #foreach q in AGENT do
+| #  foreach w in AGENT do
+| #   t[(q,w)] = 1;
+| #  od
+| #od
+| #return t;
+| return pair(q,w);
+|end
+|
+|function N: o as AGENT gives MS<PAIR<AGENT, AGENT>>
+| begin
+|  var p as AGENT;
+|  var d as MS<PAIR<AGENT,AGENT>>;
+|  foreach p in AGENT do
+|   d[(p,o)] = 1;
+|  od
+|  return d;
+| end
+|
+|function U: gives MS<AGENT>
+|begin
+| var v as AGENT;
+| var res as MS<AGENT>;
+| foreach v in AGENT do
+|  res[v] = 1;
+| od
+| return res;
+|end
+|
+|
+|
+|
+|
+;
+|PLACES
+|negotiating 2
+|Sort
+|AGENT
+;
+;
+|agreed 3
+|Sort
+|AGENT
+;
+;
+|envelopes 4
+|Sort
+|PAIR<AGENT, AGENT>
+;
+;
+|mailbox 5
+|Sort
+|PAIR<AGENT, AGENT>
+;
+;
+;
+|TRANSITIONS
+|t2 6
+;
+|t3 7
+;
+|t4 8
+;
+|t1 17
+;
+;
+|ARCS
+|2 --> 8 9
+|inj(x)
+;
+;
+|8 --> 3 10
+|inj(x)
+;
+;
+|3 --> 7 11
+|inj(x)
+;
+;
+|7 --> 2 12
+|inj(x)
+;
+;
+|5 --> 7 13
+|inj(pair(x,y))
+;
+;
+|7 --> 4 14
+|inj(pair(y,x))
+;
+;
+|5 --> 6 15
+|inj(pair(x,y))
+;
+;
+|6 --> 4 16
+|inj(pair(y,x))
+;
+;
+|4 --> 17 18
+|inj(pair(x,y))
+;
+;
+|17 --> 5 19
+|inj(pair(y,x))
+;
+;
+|2 --> 17 20
+|inj(x)
+;
+;
+|17 --> 2 21
+|inj(x)
+;
+;
+|2 --> 6 22
+|inj(x)
+;
+;
+|6 --> 2 23
+|inj(x)
+;
+;
+|8 --> 4 24
+|cross(inj(x),U())
+;
+;
+|4 --> 8 25
+|cross(inj(x),U())
+;
+;
+;
+|MARKING
+|2
+|U()
+;
+|4
+|cross(U(),U()) 
+;
+;
+|NET_END
+EDITOR_INFOS
+PAGES
+   1 518x518+564+258 1
+;
+PLACE
+   3 :
+   1 417.0 248.0
+   {'Sort': (-30, -13, 1)}
+   .
+   4 :
+   1 239.0 174.0
+   {'Initial Marking': (3, 0, 0), 'Sort': (-74, -12, 1)}
+   .
+   2 :
+   1 68.0 242.0
+   {'Initial Marking': (1, 0, 0), 'Sort': (15, -19, 1)}
+   .
+   5 :
+   1 239.0 322.0
+   {'Sort': (84, 1, 1)}
+   .
+;
+TRANSITION
+   6 :
+   1 152.0 243.0
+   .
+   7 :
+   1 332.0 248.0
+   .
+   8 :
+   1 239.0 77.0
+   .
+   17 :
+   1 239.0 250.0
+   .
+;
+ARC
+   9 :
+   1 0 0 SMOOTH POINT 83.5 81.0
+   {}
+   .
+   12 :
+   1 0 0 SMOOTH POINT 332.0 367.125 332.0 366.25 167.0 368.5 80.5 317.75
+   {}
+   .
+   10 :
+   1 0 0 SMOOTH POINT 392.0 82.0
+   {}
+   .
+   13 :
+   1 0 0
+   {}
+   .
+   16 :
+   1 0 0
+   {}
+   .
+   19 :
+   1 0 0
+   {}
+   .
+   22 :
+   1 0 0 SMOOTH POINT 109.0 228.5
+   {}
+   .
+   25 :
+   1 0 0 SMOOTH POINT 209.0 110.5
+   {}
+   .
+   15 :
+   1 0 0
+   {}
+   .
+   18 :
+   1 0 0
+   {}
+   .
+   21 :
+   1 0 0 SMOOTH POINT 149.5 319.0
+   {}
+   .
+   24 :
+   1 0 0 SMOOTH POINT 261.0 146.5
+   {}
+   .
+   11 :
+   1 0 0
+   {}
+   .
+   14 :
+   1 0 0
+   {}
+   .
+   20 :
+   1 0 0 SMOOTH POINT 154.5 192.0
+   {}
+   .
+   23 :
+   1 0 0 SMOOTH POINT 111.0 257.5
+   {}
+   .
+;
+END_EDITOR

@@ -1,0 +1,16 @@
+MuPHI - MUltiple PSi Human interface
+
+Web services to manage multiple PSi/Petri net Simulators.
+
+Dependencies:
+  libraries:
+    - xercesImpl
+    - jdom
+    - servlet-api
+    - commons-logging
+
+Configuration: ?
+
+Usage Dependencies: ?
+
+Usage: ?

@@ -1,0 +1,111 @@
+|NET
+|HLTestNet
+|SPECIFICATION HL_Specification
+
+|DECLARATION
+|mal2(x)
+|plus(x,y)
+;
+|VARIABLES
+|x
+|y
+;
+|signature
+|<variable name="x" />
+|<variable name="y" />
+|<function name="mal2" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.HLFkt" signature="mal2(java.lang.Integer)"/>
+|<function name="plus" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.HLFkt" signature="plus(java.lang.Integer,java.lang.Integer)"/>
+|<tokenType name="Integer" class="java.lang.Integer"/>
+;
+
+|PLACES
+|Place1 1
+|tokenClass
+|Integer
+;
+;
+|Place1_2 12
+|tokenClass
+|Integer
+;
+;
+|Place2 2
+|tokenClass
+|Integer
+;
+;
+;
+
+|TRANSITIONS
+|Transition1 3
+;
+;
+
+|ARCS
+|1 --> 3 4
+|x
+;
+;
+|12 --> 3 6
+|y
+;
+;
+|3 --> 2 5
+|x.plus(x.mal2(x),y)
+;
+;
+;
+
+|MARKING
+|1
+|2 3 4
+;
+|12
+|4 6 8
+;
+;
+|NET_END
+
+EDITOR_INFOS
+PAGES
+   1 516x516+91+199 1
+   2 516x516+669+217 1
+;
+
+PLACE
+   1 :
+   1 20.0 150.0
+   {'Initial Marking': (22, 17, 1), 'MARKING': (22, -17, 1), 'name': (0, -25, 1), 'tokenClass': (0, 20, 1)}
+   .
+   12:
+   1 145.0 200.0
+   {'Initial Marking': (22, 17, 1), 'MARKING': (22, -17, 1), 'name': (0, -25, 1), 'tokenClass': (0, 20, 1)}
+   .
+   2 :
+   1 270.0 150.0
+   {'Initial Marking': (22, 17, 0), 'MARKING': (22, -17, 1), 'name': (0, -25, 1), 'tokenClass': (0, 20, 1)}
+   .
+;
+
+TRANSITION
+   3 :
+   1 145.0 100.0
+   {'name': (0, -25, 1)}
+   .
+;
+
+ARC
+   4 :
+   1 0 0
+   {'inscription': (0, -10, 1)}
+   .
+   5 :
+   1 0 0
+   {'inscription': (0, -10, 1)}
+   .
+   6 :
+   1 0 0
+   {'inscription': (10, 0, 1)}
+   .
+;
+END_EDITOR

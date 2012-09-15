@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/epcilon" reloadable="true">
+    <Resource auth="Container" defaultAutoCommit="false"
+       type="javax.sql.DataSource" name="jdbc/EPCILONDB"
+       driverClassName="com.mysql.jdbc.Driver"
+       username="epcilon_usr" password="1ElaStUM2"
+       url="jdbc:mysql://localhost:3306/is2ds?autoReconnect=true">
+    </Resource>
+</Context>

@@ -1,0 +1,15 @@
+ETa-Callback
+
+Modules de gestion des retours d'abonnements à un EPCIS.
+
+ETa-Callback-Receiver/            serveur web de réception des retours d'abonnements
+ETa-Callback-Filter/              module de filtrage des évènements
+ETa-Callback-Sender/              module d'envoi des évènements
+
+Configuration: aucune
+
+Dépendances d’utilisation:
+  - ETa
+  - un EPCIS
+
+Utilisation: ?

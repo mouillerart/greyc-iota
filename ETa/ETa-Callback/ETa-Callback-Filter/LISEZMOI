@@ -1,0 +1,21 @@
+ETa-Callback-Filter
+
+Module de filtrage des évènements envoyés par un EPCIS (retours d'abonnements).
+
+Dépendances:
+  modules IoTa:
+    - LibXACML-Epcis
+  bibliothèques:
+    - epcis-commons
+    - epcis-repository
+    - servlet-api
+    - mysql-connector
+    - activemq-core
+    - sunxacml
+    - commons-logging
+    - log4j
+    - junit
+
+Configuration:
+  (application.properties pour cette application,
+   commons-logging.properties et log4j.properties pour les journaux)

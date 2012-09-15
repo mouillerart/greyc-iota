@@ -1,0 +1,15 @@
+ETa-Callback
+
+Modules of callback management for the EPCIS.
+
+ETa-Callback-Receiver/            web server for reception of callbacks
+ETa-Callback-Filter/              event filtering module
+ETa-Callback-Sender/              event sending module
+
+Configuration: none
+
+Usage Dependencies:
+  - ETa
+  - an EPCIS
+
+Usage: ?

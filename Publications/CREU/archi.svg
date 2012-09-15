@@ -1,0 +1,1238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2905"
+   version="1.1"
+   inkscape:version="0.47pre4 r22446"
+   sodipodi:docname="archi.svg"
+   inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/archi.png"
+   inkscape:export-xdpi="200"
+   inkscape:export-ydpi="200">
+  <defs
+     id="defs2907">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective2913" />
+    <inkscape:perspective
+       id="perspective2923"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart"
+       style="overflow:visible">
+      <path
+         id="path3813"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path3816"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker2931"
+       style="overflow:visible">
+      <path
+         id="path2933"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective3019"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3045"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4633"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4113"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4153"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4183"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart-5"
+       style="overflow:visible">
+      <path
+         id="path3813-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-4"
+       style="overflow:visible">
+      <path
+         id="path3816-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4430"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective6204"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective6240"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective6282"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective7469"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2973"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4650"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart-5-6"
+       style="overflow:visible">
+      <path
+         id="path3813-5-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-4-7"
+       style="overflow:visible">
+      <path
+         id="path3816-2-9"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5303"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5329"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5950"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="369.41598"
+     inkscape:cy="465.68473"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="952"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata2910">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect7550"
+       width="620"
+       height="274.28574"
+       x="68.571426"
+       y="450.93362"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.90417624;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect7455"
+       width="638.9931"
+       height="231.26428"
+       x="41.958569"
+       y="469.01892"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="opacity:0;fill:#000000;fill-opacity:1;stroke:none"
+       id="rect2383"
+       width="169.70563"
+       height="133.34013"
+       x="385.45547"
+       y="454.2674"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#00ffff;fill-opacity:1;stroke:#000000;stroke-width:1.69761395;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.09284102, 5.09284102;stroke-dashoffset:0"
+       id="rect3233"
+       width="296.86334"
+       height="170.35173"
+       x="361.65738"
+       y="503.94894"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#c7ffff;fill-opacity:1;stroke:#000000;stroke-width:0.69454384;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.66666667;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3245"
+       width="133.58809"
+       height="20.151236"
+       x="478.67349"
+       y="461.59113"
+       rx="9.9856119"
+       ry="8.2117777"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans"
+       x="544.27124"
+       y="475.58887"
+       id="text3247"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         x="544.27124"
+         y="475.58887"
+         id="tspan4173"
+         style="font-size:12px">DS Query Interface</tspan><tspan
+         sodipodi:role="line"
+         x="544.27124"
+         y="490.58887"
+         id="tspan3251" /></text>
+    <rect
+       style="fill:#c7ffff;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.66666667;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3253"
+       width="152.45457"
+       height="19.821445"
+       x="478.91956"
+       y="692.09863"
+       rx="10"
+       ry="9.9107227"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans"
+       x="553.61127"
+       y="705.89771"
+       id="text3255"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan3257"
+         x="553.61127"
+         y="705.89771"
+         style="font-size:12px">DS Capture Interface</tspan><tspan
+         sodipodi:role="line"
+         x="553.61127"
+         y="720.89771"
+         id="tspan3259" /></text>
+    <rect
+       style="fill:#8effff;fill-opacity:1;stroke:#000000;stroke-width:0.65586978;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.96760937, 1.96760937;stroke-dashoffset:0"
+       id="rect3277"
+       width="49.794445"
+       height="154.5509"
+       x="373.2392"
+       y="514.86035"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="m 551.34088,691.74327 -0.23204,-27.29515"
+       id="path8279"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)"
+       d="m 539.14545,510.14138 0.39123,-26.86184"
+       id="path8281"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.67824841px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="552.85114"
+       y="630.01538"
+       id="text3025"
+       transform="scale(0.98901081,1.0111113)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         x="552.85114"
+         y="630.01538"
+         id="tspan3029">DS Repository</tspan></text>
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3031"
+       width="128.57143"
+       height="19.285715"
+       x="482.13458"
+       y="511.97968"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="507.84888"
+       y="525.55109"
+       id="text3033"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan3035"
+         x="507.84888"
+         y="525.55109">Query Module</tspan></text>
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3031-4"
+       width="122.00542"
+       height="19.285706"
+       x="489.50873"
+       y="643.65765"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="502.59613"
+       y="657.73413"
+       id="text3033-6"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan3035-7"
+         x="502.59613"
+         y="657.73413">Capture Module</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Mend-4)"
+       d="m 599.98302,572.8602 0.35714,-36.2105"
+       id="path3855"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker2931)"
+       d="m 597.94275,642.64753 0,-61.42857 -14.64286,0"
+       id="path3857"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.23316419;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect4611"
+       width="40.222271"
+       height="138.96844"
+       x="378.27283"
+       y="522.09296"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="387.43811"
+       y="589.69745"
+       id="text4613"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4615"
+         x="387.43811"
+         y="589.69745">PEP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="398.05267"
+       y="531.49475"
+       id="text4651"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4653"
+         x="398.05267"
+         y="531.49475"
+         style="font-size:10px;text-align:center;text-anchor:middle">Access</tspan><tspan
+         sodipodi:role="line"
+         x="398.05267"
+         y="543.99475"
+         id="tspan5309"
+         style="font-size:10px;text-align:center;text-anchor:middle">Control</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart)"
+       d="M 375.61033,573.35118 291.45424,554.33685"
+       id="path4655"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart)"
+       d="m 290.73995,565.41789 85.31419,20.47354"
+       id="path4657"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart-5);marker-end:url(#Arrow1Mend-4)"
+       d="m 487.75575,653.27578 -20.97336,0"
+       id="path4659"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:7.33452415px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="608.92572"
+       y="-581.41455"
+       id="text5875"
+       transform="matrix(-0.00802931,0.95790583,-1.0438822,-0.00736799,0,0)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan5877"
+         x="608.92572"
+         y="-581.41455">eventCreate()</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="531.81641"
+       y="-608.43872"
+       id="text5879"
+       transform="matrix(-0.00651013,0.99997881,-0.99997881,-0.00651013,0,0)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan5881"
+         x="531.81641"
+         y="-608.43872"
+         style="font-size:8px">Lookup()</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="544.17773"
+       y="496.32666"
+       id="text6077"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan6079"
+         x="544.17773"
+         y="496.32666">userOperation()</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="556.06165"
+       y="686.87201"
+       id="text6081"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan6083"
+         x="556.06165"
+         y="686.87201">PublishOperation()</tspan></text>
+    <rect
+       style="fill:#00ffff;fill-opacity:1;stroke:#000000;stroke-width:1.66199999999999992;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:4.98599999999999977, 4.98599999999999977;stroke-dashoffset:0"
+       id="rect6089"
+       width="213.05786"
+       height="159.68071"
+       x="89.445175"
+       y="529.1463"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2877"
+       width="45.714287"
+       height="32.857143"
+       x="243.82597"
+       y="545.58337"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2879"
+       width="45.714287"
+       height="31.428585"
+       x="136.32599"
+       y="546.29761"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8e9ac5;fill-opacity:0.24905659;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2881"
+       width="52.142853"
+       height="20.714277"
+       x="94.897423"
+       y="621.29761"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8e9ac5;fill-opacity:0.24905659;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2883"
+       width="63.571434"
+       height="20.357117"
+       x="127.57597"
+       y="661.65472"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8e9ac5;fill-opacity:0.24905659;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2885"
+       width="85.35714"
+       height="20.000034"
+       x="173.46884"
+       y="620.94043"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2887"
+       width="41.071438"
+       height="27.5"
+       x="244.18311"
+       y="655.58337"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="254.18314"
+       y="566.65479"
+       id="text2889"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan2891"
+         x="254.18314"
+         y="566.65479"
+         style="font-size:12px">PDP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="150.25456"
+       y="566.29767"
+       id="text2893"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan2895"
+         x="150.25456"
+         y="566.29767">PIP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="254.18314"
+       y="674.15479"
+       id="text2897"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan2899"
+         x="254.18314"
+         y="674.15479">PAP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="98.11171"
+       y="635.58337"
+       id="text2901"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan2903"
+         x="98.11171"
+         y="635.58337">Subject</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="131.86171"
+       y="675.94049"
+       id="text2905"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan2907"
+         x="131.86171"
+         y="675.94049">Resource</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="176.68311"
+       y="635.22614"
+       id="text2909"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan2911"
+         x="176.68311"
+         y="635.22614">Environment</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.07634449;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart)"
+       d="m 241.89565,552.51751 -58.76016,0"
+       id="path3703"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.07634449;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart)"
+       d="m 183.99205,569.36073 58.93148,0"
+       id="path3705"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.29999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 267.81298,577.85917 0,22.01235"
+       id="path3707"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.29999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart)"
+       d="m 159.15159,580.0887 -0.35714,65.6494"
+       id="path3709"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.29999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 119.75564,621.50495 0,-22.72844 88.38835,0 0,21.71828"
+       id="path3713"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="191.16264"
+       y="566.01221"
+       id="text4091"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4093"
+         x="191.16264"
+         y="566.01221"
+         style="font-size:6px">Attribute query</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="201.98589"
+       y="549.26105"
+       id="text4095"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4097"
+         x="201.98589"
+         y="549.26105"
+         style="font-size:6px">Attribute</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="258.11169"
+       y="615.58331"
+       id="text4099"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4101"
+         x="258.11169"
+         y="615.58331">Policy</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       id="path4103"
+       d="m 267.81298,577.95651 0,31.46796"
+       style="fill:none;stroke:#000000;stroke-width:1.39394081;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       sodipodi:nodetypes="cc"
+       id="path4103-6"
+       d="m 267.39741,617.03777 0,38.76489"
+       style="fill:none;stroke:#000000;stroke-width:1.37069154;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="121.68312"
+       y="605.58337"
+       id="text4127"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4129"
+         x="121.68312"
+         y="605.58337"
+         style="font-size:6px">Subject</tspan><tspan
+         sodipodi:role="line"
+         x="121.68312"
+         y="613.08337"
+         id="tspan4131"
+         style="font-size:6px">attributes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="206.32597"
+       y="604.86908"
+       id="text4133"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4135"
+         x="206.32597"
+         y="604.86908"
+         style="text-align:end;text-anchor:end">Env</tspan><tspan
+         sodipodi:role="line"
+         x="206.32597"
+         y="612.36908"
+         id="tspan4137"
+         style="text-align:end;text-anchor:end">attributes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="130.96884"
+       y="652.19049"
+       id="text4139"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan4141"
+         x="130.96884"
+         y="652.19049">Resource attributes</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 158.64742,661.65481 0,-6.96428"
+       id="path4143"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.86457288;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3031-1"
+       width="202.49257"
+       height="18.921143"
+       x="94.600769"
+       y="515.72461"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="115.58709"
+       y="528.60864"
+       id="text3033-7"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan3035-8"
+         x="115.58709"
+         y="528.60864">Admin Module</tspan></text>
+    <rect
+       style="fill:#c7ffff;fill-opacity:1;stroke:#000000;stroke-width:0.69454384;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.66666667;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3245-5"
+       width="132.51666"
+       height="20.508379"
+       x="93.695839"
+       y="462.96136"
+       rx="9.9856119"
+       ry="8.2117777"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans"
+       x="158.51796"
+       y="477.31625"
+       id="text3247-9"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         x="158.51796"
+         y="477.31625"
+         id="tspan4173-0"
+         style="font-size:12px">DS Admin Interface</tspan><tspan
+         sodipodi:role="line"
+         x="158.51796"
+         y="492.31625"
+         id="tspan3251-4" /></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)"
+       d="m 159.66236,512.37385 0.39123,-26.86184"
+       id="path8281-0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart-5);marker-end:url(#Arrow1Mend-4)"
+       d="m 486.07143,532.89789 0,27.50001 -19.46429,0"
+       id="path4420"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="335.04199"
+       y="587.19415"
+       id="text5404"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan5406"
+         x="335.04199"
+         y="587.19415">Request</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="303.37888"
+       y="554.3833"
+       id="text5408"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan5410"
+         x="303.37888"
+         y="554.3833">Response</tspan></text>
+    <rect
+       style="fill:#8effc5;fill-opacity:1;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect5800"
+       width="17.172594"
+       height="152.53304"
+       x="624.69269"
+       y="511.42551"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="-635.22388"
+       y="635.81451"
+       id="text5802"
+       transform="matrix(-0.00281212,-0.99999605,0.99999605,-0.00281212,0,0)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan5804"
+         x="-635.22388"
+         y="635.81451"
+         style="font-size:12px">DS2DS Module</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.96321690000000004px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart-5);marker-end:none"
+       d="m 620.56679,572.79226 -37.78935,0"
+       id="path5806"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#eaffd4;fill-opacity:1;stroke:#000000;stroke-width:1.39999998000000003;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect6194"
+       width="28.214285"
+       height="50.357143"
+       x="642.14288"
+       y="524.86218"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#eaffd4;fill-opacity:1;stroke:#000000;stroke-width:1.39999998000000003;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect6194-9"
+       width="28.214285"
+       height="50.357143"
+       x="641.96429"
+       y="595.39789"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="-551.91174"
+       y="653.88806"
+       id="text6218"
+       transform="matrix(-0.00250196,-0.99999687,0.99999687,-0.00250196,0,0)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan6220"
+         x="-551.91174"
+         y="653.88806"
+         style="font-size:8px;text-align:center;text-anchor:middle">ONS Query</tspan><tspan
+         sodipodi:role="line"
+         x="-551.91174"
+         y="663.88806"
+         id="tspan6222"
+         style="font-size:8px;text-align:center;text-anchor:middle">Client</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot6224"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:6"><flowRegion
+         id="flowRegion6226"><rect
+           id="rect6228"
+           width="0.35714287"
+           height="23.035715"
+           x="664.10712"
+           y="534.50507" /></flowRegion><flowPara
+         id="flowPara6230" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="-621.83954"
+       y="653.67035"
+       id="text6218-7"
+       transform="matrix(-0.00250196,-0.99999687,0.99999687,-0.00250196,0,0)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan6220-1"
+         x="-621.83954"
+         y="653.67035"
+         style="font-size:8px;text-align:center;text-anchor:middle">DS Capture</tspan><tspan
+         sodipodi:role="line"
+         x="-621.83954"
+         y="663.67035"
+         id="tspan6222-3"
+         style="font-size:8px;text-align:center;text-anchor:middle">Client</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="46.169811"
+       y="501.43777"
+       id="text6077-3"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan6079-9"
+         x="46.169811"
+         y="501.43777">adminOperation()</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="340.26657"
+       y="493.0607"
+       id="text7457"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan7459"
+         x="340.26657"
+         y="493.0607"
+         style="font-size:18px">DS</tspan></text>
+    <rect
+       style="fill:#ff0500;fill-opacity:1;stroke:#000000;stroke-width:1.06620598000000011;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect4611-3"
+       width="30.032085"
+       height="139.13541"
+       x="436.52213"
+       y="521.65985"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Mend-4);marker-start:url(#Arrow1Mstart-5)"
+       d="m 418.86668,587.69201 18.0243,0.50508"
+       id="path2987"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart-5);marker-end:url(#Arrow1Mend-4)"
+       d="m 468.96332,586.93439 38.03918,-0.35714"
+       id="path2987-7"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="-653.50604"
+       y="461.86493"
+       id="text4676"
+       transform="matrix(0.00425765,-0.99999094,0.99999094,0.00425765,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan4678"
+         x="-653.50604"
+         y="461.86493"
+         style="font-size:20px;fill:#ffffff;fill-opacity:1">CONTROLER</tspan></text>
+    <image
+       y="541.8136"
+       x="500.67191"
+       id="image5305"
+       height="85.14286"
+       width="85.14286"
+       xlink:href="file:///export/home/jlemoule/Bureau/Database.png" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:4, 4;stroke-dashoffset:0"
+       d="m 333.57143,450.21933 0,277.14286"
+       id="path5311"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="282.33765"
+       y="484.15137"
+       id="text5315"><tspan
+         sodipodi:role="line"
+         id="tspan5317"
+         x="282.33765"
+         y="484.15137"
+         style="font-size:13px">XACML</tspan><tspan
+         sodipodi:role="line"
+         x="282.33765"
+         y="500.40137"
+         id="tspan5319"
+         style="font-size:13px">Module</tspan></text>
+    <rect
+       style="fill:#eaffd4;fill-opacity:1;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect6194-9-6"
+       width="28.214285"
+       height="50.357143"
+       x="499.25449"
+       y="-276.77039"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"
+       transform="matrix(-0.00170865,0.99999854,-0.99999854,-0.00170865,0,0)" />
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="249.97046"
+       y="510.99973"
+       id="text6218-7-4"
+       transform="matrix(0.99999969,-7.9331291e-4,7.9331291e-4,0.99999969,0,0)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         id="tspan6220-1-9"
+         x="249.97046"
+         y="510.99973"
+         style="font-size:8px;text-align:center;text-anchor:middle">DS Query</tspan><tspan
+         sodipodi:role="line"
+         x="249.97046"
+         y="520.99976"
+         id="tspan6222-3-0"
+         style="font-size:8px;text-align:center;text-anchor:middle">Client</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Mend-4-7);marker-start:url(#Arrow1Mstart-5-6)"
+       d="m 252.14286,497.36218 0,-60 273.57143,0 0,22.85715"
+       id="path5352"
+       sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.67824841px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="392.55817"
+       y="428.16162"
+       id="text3025-7"
+       transform="scale(0.98901081,1.0111113)"
+       inkscape:export-filename="/export/home/jlemoule/DEV2/epcnetwork/CREU/secu_archi.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"><tspan
+         sodipodi:role="line"
+         x="392.55817"
+         y="428.16162"
+         id="tspan3029-9">DS User &amp; Partner methods</tspan></text>
+  </g>
+</svg>

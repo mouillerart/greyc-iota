@@ -1,0 +1,14 @@
+grant {
+    permission java.util.PropertyPermission "*", "read";
+    permission java.util.PropertyPermission "java.rmi.server.hostname", "write";
+
+    permission java.io.FilePermission "<<ALL FILES>>", "read";
+
+    permission java.net.SocketPermission "*:*", "connect,resolve";
+    permission java.net.SocketPermission "*:*", "accept";
+
+    permission javax.xml.bind.JAXBPermission "setDatatypeConverter";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+    permission java.lang.RuntimePermission "getClassLoader";
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};

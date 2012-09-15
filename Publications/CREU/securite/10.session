@@ -1,0 +1,15 @@
+window_sizes 1200 896 300 894 702 120
+diagrams
+  sequencediagram_ref 128010 // sequence
+    715 561 100 4 0 0
+  sequencediagram_ref 128138 // eventLookup
+    715 561 100 4 0 0
+  active  sequencediagram_ref 128266 // userCreate
+    894 702 100 4 0 0
+end
+show_stereotypes
+selected sequencediagram_ref 128266 // userCreate
+open
+  classview_ref 128010 // ds
+end
+end

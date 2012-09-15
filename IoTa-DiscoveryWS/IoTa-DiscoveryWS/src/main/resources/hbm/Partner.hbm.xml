@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="fr.unicaen.iota.discovery.server.hibernate"
+                   default-lazy="false">
+  <class name="Partner"
+         table="partner">
+    <id column="ID"
+        name="Id"
+        type="integer">
+      <generator class="increment" />
+    </id>
+    <property column="active"
+              name="Active"
+              not-null="true"
+              type="boolean" />
+    <property column="partnerID"
+              length="30"
+              name="PartnerID"
+              not-null="true"
+              type="string" />
+    <property column="date"
+              length="10"
+              name="Date"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <property column="serviceType"
+              length="30"
+              name="ServiceType"
+              not-null="true"
+              type="string" />
+    <property column="serviceAddress"
+              length="100"
+              name="ServiceAddress"
+              not-null="true"
+              type="string" />
+    <!--
+        <set inverse="true" name="EventSet">
+            <key column="partner_ID" />
+            <one-to-many class="Event" />
+        </set>
+        -->
+    <set inverse="true"
+         name="UserSet">
+      <key column="partner_ID" />
+      <one-to-many class="User" />
+    </set>
+    <set inverse="true"
+         name="ScSet">
+      <key column="partner_ID" />
+      <one-to-many class="Sc" />
+    </set>
+    <set inverse="true"
+         name="ScassociationSet">
+      <key column="partner_ID" />
+      <one-to-many class="Scassociation" />
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/eta" reloadable="true">
+  <!--
+     Parameters defined here are 'initial parameters' which are loaded at
+     startup. Changes to these parameters have no effect on the running
+     application! If parameter changes should be recognized on reloading the
+     context, then put them in application.properties file.
+   -->
+  <Resource auth="Container" defaultAutoCommit="false" driverClassName="com.mysql.jdbc.Driver" name="jdbc/ETADB" password="gateway" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/gateway_db?autoReconnect=true" username="gateway"/>
+  <Resource auth="Container" com.sun.jndi.ldap.connect.pool="true" factory="com.sun.jndi.ldap.LdapCtxFactory" java.naming.factory.initial="com.sun.jndi.ldap.LdapCtxFactory" java.naming.provider.url="ldap://localhost:389/dc=gateway,dc=iota,dc=greyc,dc=fr" java.naming.security.authentication="simple" java.naming.security.credentials="gatewayldap" java.naming.security.principal="cn=admin,dc=gateway,dc=iota,dc=greyc,dc=fr" name="ldap/gatewayldap" type="com.sun.jndi.ldap.LdapCtx"/>
+</Context>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="fr.unicaen.iota.discovery.server.hibernate"
+                   default-lazy="false">
+  <class name="Sc"
+         table="sc">
+    <id column="ID"
+        name="Id"
+        type="integer">
+      <generator class="increment" />
+    </id>
+    <property column="scID"
+              length="30"
+              name="ScID"
+              not-null="true"
+              type="string" />
+    <property column="date"
+              length="10"
+              name="Date"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <property column="bizStepPolicy"
+              name="BizStepPolicy"
+              type="string" />
+    <property column="epcClassPolicy"
+              name="EpcClassPolicy"
+              type="string" />
+    <property column="epcsPolicy"
+              name="EpcsPolicy"
+              type="string" />
+    <property column="eventTimePolicy"
+              name="EventTimePolicy"
+              type="string" />
+    <many-to-one class="Partner"
+                 name="Partner"
+                 not-null="true">
+      <column name="partner_ID" />
+    </many-to-one>
+    <set inverse="true"
+         name="ScassociationSet">
+      <key column="sc_ID" />
+      <one-to-many class="Scassociation" />
+    </set>
+    <set inverse="true"
+         name="ScBusinessStepRestrictionSet">
+      <key column="scID" />
+      <one-to-many class="ScBusinessStepRestriction" />
+    </set>
+    <set inverse="true"
+         name="ScEPCClassRestrictionSet">
+      <key column="scID" />
+      <one-to-many class="ScEPCClassRestriction" />
+    </set>
+    <set inverse="true"
+         name="ScEventTimeRestrictionSet">
+      <key column="scID" />
+      <one-to-many class="ScEventTimeRestriction" />
+    </set>
+    <set inverse="true"
+         name="ScEPCsRestrictionSet">
+      <key column="scID" />
+      <one-to-many class="ScEPCsRestriction" />
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pnml>
+  <net id="n1" type="bagNet">
+    <name>unnamed</name>
+    <place id="p1">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="40" y="13" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <marking>
+        <graphics>
+          <offset page="1" x="13" y="-19" />
+        </graphics>
+        <value> 1 1 2 2</value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="-53" y="-24" />
+        </graphics>
+        <value>start</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="13" y="-37" />
+        </graphics>
+        <value> 1 1 2 2</value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="300" y="100" />
+      </graphics>
+    </place>
+    <place id="p2">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="40" y="13" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <marking>
+        <graphics>
+          <offset page="1" x="40" y="26" />
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="40" y="0" />
+        </graphics>
+        <value>ziel1</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="40" y="39" />
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="175" y="325" />
+      </graphics>
+    </place>
+    <place id="p3">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="40" y="13" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <marking>
+        <graphics>
+          <offset page="1" x="40" y="26" />
+        </graphics>
+        <value> </value>
+      </marking>
+      <name>
+        <graphics>
+          <offset page="1" x="40" y="0" />
+        </graphics>
+        <value>ziel2</value>
+      </name>
+      <initialMarking>
+        <graphics>
+          <offset page="1" x="40" y="39" />
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <graphics>
+        <position page="1" x="425" y="325" />
+      </graphics>
+    </place>
+    <transition id="t1">
+      <name>
+        <graphics>
+          <offset page="1" x="40" y="0" />
+        </graphics>
+        <value>t1</value>
+      </name>
+      <graphics>
+        <position page="1" x="175" y="175" />
+      </graphics>
+    </transition>
+    <transition id="t2">
+      <name>
+        <graphics>
+          <offset page="1" x="40" y="0" />
+        </graphics>
+        <value>t2</value>
+      </name>
+      <graphics>
+        <position page="1" x="425" y="175" />
+      </graphics>
+    </transition>
+    <arc id="a1" source="p1" target="t1">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="0" y="27" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <inscription>
+        <graphics>
+          <offset page="1" x="0" y="13" />
+        </graphics>
+        <value> 1</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="250" y="125" />
+      </graphics>
+    </arc>
+    <arc id="a2" source="t1" target="p2">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="-1" y="26" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <inscription>
+        <graphics>
+          <offset page="1" x="0" y="13" />
+        </graphics>
+        <value> 11 3</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="175" y="250" />
+      </graphics>
+    </arc>
+    <arc id="a3" source="t2" target="p3">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="-1" y="27" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <inscription>
+        <graphics>
+          <offset page="1" x="0" y="13" />
+        </graphics>
+        <value> 22</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="425" y="250" />
+      </graphics>
+    </arc>
+    <arc id="a4" source="p1" target="t2">
+      <tokenClass>
+        <graphics>
+          <offset page="1" x="0" y="0" />
+        </graphics>
+        <value>java.lang.String</value>
+      </tokenClass>
+      <inscription>
+        <graphics>
+          <offset page="1" x="0" y="13" />
+        </graphics>
+        <value> 2</value>
+      </inscription>
+      <graphics>
+        <position page="1" x="350" y="125" />
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value> </value>
+    </name>
+  </net>
+</pnml>
+

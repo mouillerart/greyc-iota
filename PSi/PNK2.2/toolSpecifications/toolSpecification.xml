@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v3.0b3 build 2 NT (http://www.xmlspy.com) by abc (abc) -->
+<!DOCTYPE toolSpecification SYSTEM "toolSpecification.dtd">
+<toolSpecification>
+	
+  <!-- Nettypes -->
+  
+  <nettype id="n1" typeSpecification="file:netTypeSpecifications/PTNet.xml"/>
+  <nettype id="n4" typeSpecification="file:netTypeSpecifications/graph.xml"/>  
+  <nettype id="n6" typeSpecification="file:netTypeSpecifications/BlackTokenNet.xml"/>  
+  <nettype id="n7" typeSpecification="file:netTypeSpecifications/timedNet.xml"/>  
+  <nettype id="n8" typeSpecification="file:netTypeSpecifications/bagNet.xml"/>  
+  <nettype id="n9" typeSpecification="file:netTypeSpecifications/subrange.xml"/>  
+  <nettype id="n5" typeSpecification="file:netTypeSpecifications/HLNet.xml"/>  
+	
+  <!-- Applications -->
+
+  <application id="a1" mainClass="de.huberlin.informatik.pnk.editor.Editor" maxinstances="inf">
+  </application>
+
+  <application id="a3" mainClass="de.huberlin.informatik.pnk.app.MarkingsToInitial" maxinstances="5">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+      <ntref ref="n6"/>
+      <ntref ref="n7"/>
+      <ntref ref="n8"/>
+      <ntref ref="n9"/>
+    </allowedNettypes>
+  </application>
+	
+  <application id="a4" mainClass="de.huberlin.informatik.pnk.app.SelfActingSimulator" maxinstances="inf">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+      <ntref ref="n6"/>
+      <ntref ref="n7"/>
+      <ntref ref="n8"/>
+      <ntref ref="n9"/>
+    </allowedNettypes>
+  </application>
+	
+  <application id="a5" mainClass="de.huberlin.informatik.pnk.app.Simulator" maxinstances="5">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+      <ntref ref="n6"/>
+      <ntref ref="n7"/>
+      <ntref ref="n8"/>
+      <ntref ref="n9"/>
+    </allowedNettypes>
+  </application>
+
+  <application id="a11" mainClass="de.huberlin.informatik.pnk.app.SaveNetType" maxinstances="1">
+  </application>
+
+  <application id="a24" mainClass="de.huberlin.informatik.pnk.app.DoNetLayout" maxinstances="5">
+  </application>
+
+  <!-- Input / Output -->
+
+  <format id="pnml" ioClass="de.huberlin.informatik.pnk.appControl.PnmlInOut">
+  </format>
+	
+  <format id="net" ioClass="de.huberlin.informatik.pnk.appControl.NetInOut">
+    <allowedNettypes>
+      <ntref ref="n1"/>
+      <ntref ref="n9"/>
+      <ntref ref="n10"/>
+    </allowedNettypes>
+  </format>
+	
+  <!-- default settings --> 
+	
+  <standardNettype ref="n1"/>
+  <standardApplication ref="a1"/>
+  <standardFormat ref="pnml"/>
+
+</toolSpecification>
+
+
+
+
+

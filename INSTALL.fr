@@ -1,0 +1,215 @@
+Construction et installation
+============================
+
+Construction
+------------
+
+IoTa utilise Apache Maven pour l’automatisation de la production
+(http://maven.apache.org).
+
+La compilation de chaque module est réalisé à l’aide de cette commande :
+
+  mvn compile
+
+Maven téléchargera tous les fichiers jar nécessaires et les installera dans un
+dépôt local (habituellement ~/.m2/repository).
+
+L’installation des bibliothèques IoTa dans le dépôt local pour une utilisation
+future (comme cela est nécessaire pour plusieurs modules IoTa) est réalisée
+par la commande suivante :
+
+  mvn install
+
+Notez que cette commande compile aussi le module si nécessaire.
+
+Certains modules sont fournis avec des tests unitaires et certains de ces
+tests nécessitent que des applications soient fonctionnelles (p.ex. les tests
+de la bibliothèque IoTa-DiscoveryWS-Client veulent accéder à un serveur
+IoTa-DiscoveryWS). Pour sauter ces tests, utilisez cette commande pour la
+compilation ou l’installation :
+
+  mvn -DskipTests install
+
+
+Vous pouvez installer manuellement des fichiers jar préalablement téléchargés
+avec une commande de ce type :
+
+  mvn install:install-file                 \
+      -Dfile=sunxacml-2.0-SNAPSHOT.jar     \
+      -DgroupId=net.sf.sunxacml            \
+      -DartifactId=sunxacml                \
+      -Dversion=2.0-SNAPSHOT               \
+      -Dpackaging=jar
+
+Notez que cela sera nécessaire pour la bibliothèque sunxacml puisque celle-ci
+ne se trouve sur aucun dépôt Maven connu. Le fichier jar peut être téléchargé
+depuis la page SourceForge du projet : http://sunxacml.sf.net.
+
+Voici un lien direct : http://sourceforge.net/projects/sunxacml/files/maven/snapshots/net/sf/sunxacml/sunxacml/2.0-SNAPSHOT/sunxacml-2.0-SNAPSHOT.jar/download
+
+
+Installation
+------------
+
+(Toutes les valeurs entre chevrons `<nom>` sont à substituer.)
+
+Le programme IoTa-Installer peut vous aider à installer et configurer tous les
+serveurs et bases de données.
+
+Toutes les applications et applications webs ont un fichier `log4j.properties`
+pour configurer les journaux (fichier, format, niveau de log, etc.).
+
+
+### Applications
+
+Récupérez et extrayez le tarball de l’application
+`<application>-<version>-bin-with-dependency.tar.gz`.
+
+Modifiez ou créez les fichiers de configuration (voir le fichier `LISEZMOI` de
+l’application pour une liste de ces fichiers et chaque fichier pour des
+commentaires).
+Un fichier dans le répertoire courant remplace la version par défaut qui est
+intégrée au fichier jar.
+Vous pouvez extraire la version par défaut commentée de ces fichiers depuis le
+fichier jar:
+
+    jar xf <application>-<version>.jar application.properties
+
+ou
+
+    unzip <application>-<version>.jar application.properties
+
+Utilisez le script fourni pour lancer l’application:
+
+    ./launch.sh
+
+
+### Applications webs
+
+Récupérez le fichier war de l’application web `<application>-<version>.war`.
+
+Déployez-le dans votre conteneur de servlets (voir la documentation du
+conteneur pour plus d’information). Pour Apache Tomcat, cela peut être fait de
+plusieurs manières:
+
+  1. déjarez manuellement le fichier war dans  `$CATALINA_HOME/webapps`
+  2. copiez le fichier war dans `$CATALINA_HOME/webapps` et laissez Tomcat le
+      déployer (soit à son propchain redémarrage, soit à chaud si son option
+      autodeploy est active)
+  3. utilisez l’application web de gestion (http://localhost:8080/manager)
+  4. utilisez les outils de déploiement deploy-tools
+  5. utilisez le greffon Tomcat de Maven
+
+Éditez les fichiers de configuration dans `<webapp-dir>/WEB-INF/classes/`
+(voir le `LISEZMOI` de l’application web pour une liste de ces fichiers et
+chaque fichier pour les commentaires).
+
+Rechargez l’application web ou relancez le conteneur de servlet.
+
+
+### Applications Web avec bases de données
+
+1. La base de données
+
+    Créez la base de données pour l’application:
+
+        CREATE DATABASE <app_db>;
+
+    Créez un utilisateur spécifique et accordez-lui les droits d’accès à la
+    base:
+
+        GRANT SELECT, INSERT, UPDATE, DELETE ON <app_db>.*
+        TO <app_db_user>@localhost IDENTIFIED BY <app_db_password>;
+
+    Créez les tables:
+
+        use <app_db>;
+        source <app>_schema.sql;
+
+    Le fichier `<app>_schema.sql` de chaque application se trouve dans
+    `IoTa-Installer/resources` et dans `<app>/src/main/resources/sql`.
+
+2. Installez l’application web comme expliqué plus haut.
+    À ce point, l’application web n’arrivera probablement pas à démarrer
+    correctement.
+
+3. Le fichier context
+
+    Modifiez le fichier `$CATALINA_HOME/webapps/<webapp>/META-INF/context.xml`
+    pour qu’il corresponde aux valeurs pour votre base de données (nom, login
+    et mot de passe).
+
+    Parfois, il est nécessaire d’avoir une copie de ce fichier en
+    `$CATALINA_HOME/conf/localhost/<webapp>.xml`.
+
+    Rechargez l’application web ou relancez le conteneur de servlet.
+
+N’oubliez pas d’installer le fichier jar du connecteur JDBC. (Pour Apache
+Tomcat et MySQL, copiez `mysql-connector-java.jar` dans `$CATALINA_HOME/lib`.)
+
+
+### ONS
+
+Certaines applications on besoin d’un service de nommage d’objet (ONS, Object
+Naming Service). Des enregistrements NAPTR sont utilisés pour trouver l’URL du
+service de découverte (Discovery Service) pour un code EPC donnée.
+
+Voici un fichier de zone typique pour le produit
+`urn:epc:id:sgtin:1234567.89012` :
+
+    ;;
+    $TTL 1d
+    
+    ;; la zone, l’Id du fabricant
+    $ORIGIN 7.6.5.4.3.2.1.sgtin.ons-peer.com.
+    
+    @ IN SOA localhost info.example.com ( ; info@example.com
+                            2012010101 ; numéro de version du fichier
+                            3h         ; rafraîchissement
+                            1h         ; réessai
+                            1d         ; expiration
+                            1          ; TTL cache négatif
+                            )
+    
+    ;; le nom de ce serveur
+      IN NS ons.example.com
+    
+    ; NAPTR pour les produits
+    ; produit exemple
+    ;                 order pref flags service    regex
+    2.1.0.9.8  IN NAPTR 0     0    "u"   "epc+html" "!^.*$!http://www.example.com/!" .
+               IN NAPTR 1     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/ds/services/ESDS_Service!" .
+    ; en premier, la page web HTML pour des informations sur le produit
+    ; en second, le web service Discovery associé à cet EPC
+
+
+Sur les systèmes utilisant une distribution Debian ou dérivée, il suffit
+d’installer le paquet `bind9`, de créer un ou plusieurs fichiers de zone sur
+le modèle précédent et d’activer ces zones, c’est-à-dire d’ajouter ce genre de
+clause dans `named.conf.local` :
+
+    zone "7.6.5.4.3.2.1.sgtin.ons-peer.com" {
+         type master;
+         file "/etc/bind/db.ons.peer.com";
+    };
+
+
+Rappelons que pour éviter d’avoir un serveur relais récursif, il faut ajouter
+ces options (dans la clause `options` de `named.conf.options`) :
+
+    allow-transfer { none };
+    allow-recursion { none };
+    recursion no;
+
+
+### LDAP
+
+Certaines applications (ETa) ont besoin d’un serveur LDAP.
+
+À partir d’un serveur LDAP fonctionnel, le script `ETa/ldap.sh` ou le module
+LDAP de l’installateur permet d’ajouter un schéma, un groupe et les deux
+utilisateurs superadmin et anonymous.
+
+Sur les distributions Debian et dérivées, il suffit d’installer les paquets
+`slapd` et `ldap-utils`. Il est nécessaire de lancer `dpkg-reconfigure slapd`
+pour compléter la configuration.

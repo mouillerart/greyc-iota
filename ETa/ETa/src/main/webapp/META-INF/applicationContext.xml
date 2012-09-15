@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://cxf.apache.org/core
+      http://cxf.apache.org/schemas/core.xsd
+      http://cxf.apache.org/jaxws
+      http://cxf.apache.org/schemas/jaxws.xsd">
+
+  <!-- beans and configurations defined in the cxf jars -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+  <!-- post-processor which replaces placeholders like ${test} with values from property files -->
+    <bean id="dataPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+  <!-- =========================================================== -->
+  <!--  Database connection configuration                          -->
+  <!-- =========================================================== -->
+
+  <!-- data source configuration available via JNDI (in JEE environments) -->
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+        <property name="jndiName" value="java:comp/env/jdbc/ETADB" />
+    </bean>
+
+  <!-- data source configuration available via JNDI (in JEE environments)
+  <bean id="ldapSource" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+    <property name="jndiName" value="java:comp/env/ldap/gatewayldap" />
+  </bean>
+  -->
+
+  <!-- =========================================================== -->
+  <!--  Service layer definitions                                  -->
+  <!-- =========================================================== -->
+
+    <bean id="queryOperationsWebService" class="fr.unicaen.iota.eta.query.QueryOperationsWebService">
+        <constructor-arg>
+            <ref bean="queryOperationsModule" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="queryOperationsModule" class="fr.unicaen.iota.eta.query.QueryOperationsModule">
+        <property name="dataSource" ref="dataSource" />
+        <property name="serviceVersion" value="${service-version}" />
+        <property name="servletContext">
+            <bean class="org.springframework.web.context.support.ServletContextFactoryBean" />
+        </property>
+        <property name="backend">
+            <bean class="fr.unicaen.iota.eta.query.QueryOperationsBackendSQL" />
+        </property>
+        <property name="epcisQueryClient" ref="epcisQueryClient" />
+    </bean>
+
+    <bean id="epcisQueryClient"  class="org.fosstrak.epcis.queryclient.QueryControlClient" >
+        <constructor-arg type="java.lang.String" value="${epcis-query-url}" />
+    </bean>
+
+    <bean id="captureOperationsModule" class="fr.unicaen.iota.eta.capture.CaptureOperationsModule">
+        <property name="epcisCaptureClient" ref="epcisCaptureClient" />
+        <property name="epcisSchemaFile" value="${epcisSchemaFile}" />
+        <property name="epcisMasterDataSchemaFile" value="${epcisMasterDataSchemaFile}" />
+    </bean>
+
+    <bean id="epcisCaptureClient" class="org.fosstrak.epcis.captureclient.CaptureClient" >
+        <constructor-arg type="java.lang.String" value="${epcis-capture-url}" />
+    </bean>
+
+  <!-- inject captureOperationsModule bean into servlet context, so the CaptureOperationsServlet can access it -->
+    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+        <property name="attributes">
+            <map>
+                <entry key="captureOperationsModule">
+                    <ref bean="captureOperationsModule" />
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="userOperationsWebService" class="fr.unicaen.iota.eta.user.UserOperationsWebService" >
+    </bean>
+
+
+
+  <!-- =========================================================== -->
+  <!--  CXF (Web service) configuration                            -->
+  <!-- =========================================================== -->
+
+  <!-- publish the Web service endpoint and it's implementing bean -->
+    <jaxws:endpoint id="EpcisQueryEndpoint" implementor="#queryOperationsWebService" address="/query" />
+    <jaxws:endpoint id="EpcisQueryLocalEndpoint" implementor="#queryOperationsWebService" address="local://query" />
+
+    <jaxws:endpoint id="ETaUserServiceEndpoint" implementor="#userOperationsWebService" address="/user" />
+
+
+  <!-- register local transport -->
+    <bean class="org.apache.cxf.transport.local.LocalTransportFactory" lazy-init="false">
+        <property name="transportIds">
+            <list>
+                <value>http://cxf.apache.org/transports/local</value>
+                <value>http://schemas.xmlsoap.org/soap/http</value>
+                <value>http://schemas.xmlsoap.org/wsdl/soap/http</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

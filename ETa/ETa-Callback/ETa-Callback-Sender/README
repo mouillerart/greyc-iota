@@ -1,0 +1,16 @@
+ETa-Callback-Sender
+
+Sending module of events sent by an EPCIS (callbacks).
+
+Dependencies:
+  libraries:
+    - mysql-connector
+    - activemq-core
+    - commons-io
+    - commons-logging
+    - log4j
+    - junit
+
+Configuration:
+  (application.properties for this application,
+   commons-logging.properties and log4j.properties for the logs)

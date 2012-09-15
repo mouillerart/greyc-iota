@@ -1,0 +1,25 @@
+EpcisPHI - Epcis Policy Human Interface
+
+XACML web service for ETa and policy administration interface.
+
+Dependencies:
+  IoTa modules:
+    - LibXACML-EPCIS
+    - ETa-Client
+  libraries:
+    - commons-codec
+    - servlet-api
+    - commons-logging
+    - log4j
+
+Installation and Configuration:
+  IoTa-Installer installs and configures EpcisPHI.
+  (xacml_configuration.properties for the client library LibXACML-DS,
+   commons-logging.properties and log4j.properties for the logs)
+
+Usage Dependencies:
+  - ETa
+  - an EPCIS
+
+Usage:
+  http://localhost:8080/epcis-phi/

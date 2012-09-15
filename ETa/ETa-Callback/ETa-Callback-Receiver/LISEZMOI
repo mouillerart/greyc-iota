@@ -1,0 +1,16 @@
+ETa-Callback-Receiver
+
+Serveur web de réception des retours d'abonnements à un EPCIS.
+
+Dépendances:
+  bibliothèques:
+    - epcis-commons
+    - servlet-api
+    - activemq-core
+    - commons-logging
+    - log4j
+    - junit
+
+Configuration:
+  (application.properties pour cette application,
+   commons-logging.properties et log4j.properties pour les journaux)

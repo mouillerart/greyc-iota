@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false"
+                   package="fr.unicaen.iota.discovery.server.hibernate">
+  <class lazy="true"
+         name="ScBusinessStepRestriction"
+         proxy="fr.unicaen.iota.discovery.server.hibernate.ScBusinessStepRestriction"
+         table="sc_BizStep_Restriction">
+    <id name="id"
+        type="integer">
+      <generator class="native" />
+    </id>
+    <many-to-one class="fr.unicaen.iota.discovery.server.hibernate.Sc"
+                 column="scID"
+                 lazy="false"
+                 name="Sc"
+                 not-null="true"
+                 unique="true" />
+    <many-to-one class="fr.unicaen.iota.discovery.server.hibernate.BizStepId"
+                 column="bizStep"
+                 lazy="false"
+                 name="BizStepId"
+                 not-null="true"
+                 unique="true" />
+  </class>
+</hibernate-mapping>

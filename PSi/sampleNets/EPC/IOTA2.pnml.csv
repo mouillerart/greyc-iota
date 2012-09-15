@@ -1,0 +1,16 @@
+reader ; latitude ; longitude 
+urn:unicaen:iotatester:xxxx:ssl:1,1 ; 49.509 ; -1.308
+urn:unicaen:iotatester:xxxx:ssl:1,2 ; 49.638 ; -0.188
+urn:unicaen:iotatester:xxxx:ssl:2,1 ; 50.885 ; 2.03
+urn:unicaen:iotatester:xxxx:ssl:2,2 ; 51.258 ; 4.22
+urn:unicaen:iotatester:xxxx:ssl:3,1 ; 49.751 ; 4.836
+urn:unicaen:iotatester:xxxx:ssl:3,2 ; 49.719 ; 6.298
+urn:unicaen:iotatester:xxxx:ssl:4,1 ; 48.847 ; 7.322
+urn:unicaen:iotatester:xxxx:ssl:4,1 ; 48.847 ; 7.322
+urn:unicaen:iotatester:xxxx:ssl:4,1 ; 48.847 ; 7.322
+urn:unicaen:iotatester:xxxx:ssl:4,2 ; 48.685 ; 9.555
+urn:unicaen:iotatester:xxxx:ssl:4,3 ; 48.747 ; 12.502
+urn:unicaen:iotatester:xxxx:ssl:6,2 ; 42.44 ; 8.78
+urn:unicaen:iotatester:xxxx:ssl:6,1 ; 44.488 ; 6.611
+urn:unicaen:iotatester:xxxx:ssl:9,1 ; 48.283 ; -4.222
+urn:unicaen:iotatester:xxxx:ssl:9,2 ; 48.787 ; -3.379

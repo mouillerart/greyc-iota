@@ -1,0 +1,19 @@
+DSeTa - Discovery SErvices Trusted Agent
+
+Capabilities and permissions policy agent for discovery services.
+
+LibXACML-DS/                    XACML library
+DiscoveryPHI/                   permissions management web application
+
+Dependencies:
+  Projects:
+    - LibXACML-DS
+
+Configuration: ?
+
+Usage Dependencies:
+  - a DWS
+  - an Epcis or EpcILoN
+
+Usage:
+  see ALfA for examples

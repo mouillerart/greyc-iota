@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serviceGroup>
+    <service name="IOTA_Service">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="fr.unicaen.iota.application.soap.server.IOTA_ServiceMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">fr.unicaen.iota.application.soap.server.IOTA_Service</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="queryDS" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:queryDSRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:queryDSResponse</outputActionMapping>
+        </operation>
+        <operation name="queryEPCIS" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:queryEPCISRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:queryEPCISResponse</outputActionMapping>
+        </operation>
+        <operation name="getProductInfo" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:getProductInfoRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:getProductInfoResponse</outputActionMapping>
+        </operation>
+        <operation name="hello" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:helloRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:helloResponse</outputActionMapping>
+        </operation>
+        <operation name="queryONS" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:queryONSRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:queryONSResponse</outputActionMapping>
+        </operation>
+        <operation name="traceEPC" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:traceEPCRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:traceEPCResponse</outputActionMapping>
+        </operation>
+        <operation name="getReferenteDS" mep="http://www.w3.org/ns/wsdl/in-out" namespace="urn:fr:unicaen:params:wsdl:ns:iota-1.0">
+            <actionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:getReferenteDSRequest</actionMapping>
+            <outputActionMapping>urn:fr:unicaen:params:wsdl:ns:iota-1.0:IOTAServicePortType:getReferenteDSResponse</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>

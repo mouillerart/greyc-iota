@@ -1,0 +1,311 @@
+Copyright © 2008-2012  Univirsité de Caen Basse-Normandie, GREYC
+Copyright © 2008-2012  Orange Labs
+
+The IoTa Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You can find the GPL license text in the file GPL-3.
+
+
+PSi, the Petri net Simulator, is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You can find the GPL license text in the file GPL-2.
+
+
+Please note that some of the softwares used by and distributed with IoTa may
+not be covered by the GPL-3. Please see the jar files and the project websites
+for further information.
+
+All licenses files are to be found in the Licenses directory.
+
+
+This product includes software developed by Fosstrak, distributed under the
+GNU Lesser General Public License 2.1 (see file LGPL-2.1):
+
+  Fosstrak (lib/Fostrak-Epcis-Repository/, epcis*.jar)
+
+
+This product includes software developed by The Petri Net Kernel Team,
+Humboldt-University Berlin, distributed under the GNU General Public License 2
+(see file GPL-2):
+
+  The Petri Net Kernel (PSi/PNK2.2/)
+
+
+This product includes software developed by the Université de Caen
+Basse-Normandie, Certic and GREYC, distributed under the GNU General Public
+License 3 or superior (see file GPL-3):
+
+  ThemaMap (themamap.jar)
+
+
+This product includes software developed by The Apache Software Foundation
+(http://www.apache.org/), distributed under the Apache Software License 2.0
+(see file Apache-2.0):
+
+  ActiveIO (activeio-core*.jar)
+  ActiveMQ (activemq-*.jar)
+  Ant (ant-*.jar)
+  Axiom (axiom-*.jar)
+  Axis2 (axis2-*.jar)
+  Batik (batik-*.jar,
+         js.jar, pdf-transcoder.jar, xalan-2.6.0.jar, xerces_2_5_0.jar,
+         xml-apis.jar, xml-apis-ext.jar)
+  Commons Codec (commons-codec-*.jar)
+  Commons Collections (commons-collections-*.jar)
+  Commons FileUpload (commons-fileupload-*.jar)
+  Commons HttpClient (commons-httpclient-*.jar)
+  Commons Lang (commons-lang*.jar)
+  Commons Logging (commons-logging*.jar)
+  Commons Net (commons-net*.jar)
+  Crimson (crimson-*.jar)
+  CXF (cxf-*.jar)
+  Geronimo (geronimo-*.jar)
+  HttpCore (httpcore-*.jar)
+  KahaDB (kahadb-*.jar)
+  Log4j (log4j-*.jar)
+  Neethi (neethi-*.jar)
+  Tomcat (apache-tomcat-*.tar.gz)
+  Woden (woden-*.jar)
+  XmlSchema (XmlSchema-*.jar)
+  Xerces (xercesImpl-*.jar, xml-apis*.jar, xml-resolver-*.jar)
+
+
+This product includes software developed by SpringSource
+(http://www.springsource.org/), distributed under the Apache Software License
+2.0 (see file Apache-2.0):
+
+  Spring Framework (spring-*.jar)
+
+
+This product includes software developed by Sun Microsystems, Inc.,
+distributed under both the Common Development and Distribution License 1.0
+(see file CDDL-1.0) and the GNU General Public License 2 with the classpath
+exception (see file GPL-2):
+
+  The Sun Java System Application Server (activation-*.jar)
+  The Java Servlet API ((javax.)servlet-api-*.jar)
+  The Java Architecture for XML Binding (jaxb-*.jar)
+  SOAP with Attachments API for Java (saaj-*.jar)
+  Streaming API for XML (stax-*.jar)
+
+
+This product includes software developped by Sun Microsystems, Inc.
+(http://sunxacml.net.sf), distributed under the BSD License (see file
+BSD-sunxacml):
+
+  Sun's XACML Implementation (sunxacml-*.jar)
+
+
+This product includes software developed by Sun Microsystems, Inc, distributed
+under the JTA License (see file JTA):
+
+  Java Transaction API (jta-*.jar)
+
+
+This product includes software developed by the Terence Parr, distributed
+under the BSD License (see file BSD-ANTLR):
+
+  ANTLR (antlr-*.jar)
+
+
+This product includes software developed by RedHat, distributed under the
+GNU Lesser General Public License 2.1 (see file LGPL-2.1):
+
+  Hibernate (hibernate-*.jar)
+
+
+This product includes software developed by MySQL AB, distributed under the
+GNU Public License 2 with classpath exception (see file GPL-2):
+
+  MySQL Connector/J (mysql-connector-java*-bin.jar)
+
+
+This product includes software developed by Brian Wellington
+(http://www.dnsjava.org/), distributed under the BSD License (see file
+BSD-DNSJava):
+
+  DNSJava (dnsjava-*.jar)
+
+
+This product includes software developed by JFree.org, distributed under the
+GNU Lesser General Public License 2.1 (see file LGPL-2.1):
+
+  JFreeChart (jcommon-*.jar, jfreechart-*.jar)
+
+
+This product includes software developed by the JDOM Project
+(http://www.jdom.org/), distributed under the JDOM License (see file JDOM):
+
+  JDOM (jdom-*.jar)
+
+
+This product includes software developed by the DOM4J Project
+(http://www.dom4j.org), distributed under the DOM4J License (see file DOM4J):
+
+  DOM4J (dom4j-*.jar)
+
+
+This product includes software developed by the Vivid Solutions
+(http://www.vividsolutions.com), distributed under the GNU Lesser General
+Public License 2.1 (see file LGPL-2.1):
+
+  JTS Topology Suite (jts-*.jar)
+
+
+This product includes software developed by BBN Technologies
+(http://www.openmap.org), distributed under the OpenMap License (see the file
+OpenMap):
+
+  OpenMap (openmap.jar)
+
+
+This product includes software developed by the PostGIS team, distributed
+under the GNU Lesser General Public License 2.1 (see file LGPL-2.1):
+
+  PostGIS (postgis.jar)
+
+
+This product includes software developed by the PostgreSQL Global Development
+Group, distributed under the BSD License (see file BSD-PostgreSQL):
+
+  PostgreSQL JDBC Driver (postgresql.jar)
+
+
+This product includes software developed by Open Source Geospatial Foundation,
+distributed under the GNU Lesser General Public License 2.1 (see file
+LGPL-2.1):
+
+  GeoTools (gt-*.jar)
+           (also provided but not used: jts.jar, jdom.jar,
+            net.opengis.wfs.jar)
+
+
+This product includes software developed by SwinLabs, distributed under the
+GNU Lesser General Public License 2.1 (see file LGPL-2.1):
+
+  SwingLabs Swing Components Extensions (swingx-*.jar)
+
+
+This product includes software developed by the Unidata Program
+Center/Universiy Corporation for Atmospheric Research, distributed under the
+GNU Lesser General Public License 2.1 (see file LGPL-2.1):
+
+  Netcdf (toolsUI-2.2.22.jar)
+
+
+This product includes software developed by the CGLib developpers
+(http://cglib.sf.net), distributed under the Apache Software License 2.0 (see
+file Apache-2.0):
+
+  CGLib (cglib-*.jar)
+
+
+This product includes software developed by Terracotta, Inc.
+(http://ehcache.org), distributed under the Apache Software License 2.0 (see
+file Apache-2.0):
+
+  ehcache (ehcache-*.jar)
+
+
+This product includes software developed by Tatu Saloranta and others
+(http://woodstox.codehaus.org), distributed under the Apache Software License
+2.0 (see file Apache-2.0):
+
+  WoodSToX XML-processor (wstx-asl-*.jar)
+
+
+This product includes software developed by INRIA and France Telecom R&D,
+distributed under the BSD License (see file BSD-ASM):
+
+  ASM (asm-*.jar)
+
+
+This product includes software developed by the JASYPT team
+(http://www.jasypt.org), distributed under the Apache Software License 2.0
+(see file Apache-2.0):
+
+  Java Simplified Encryption (jasypt-*.jar)
+
+
+This product includes software developed by the Werken Company
+(http://www.jaxen.org), distributed under the BSD License (see file
+BSD-jaxen):
+
+  Jaxen (jaxen-*.jar)
+
+
+This product includes software developed by the AOP Alliance
+(http://aopalliance.sf.net), placed into the Public Domain:
+
+  aopalliance (aopalliance-*.jar)
+
+
+This product includes software developed by the OSGI Alliance
+(http://www.osgi.org), distributed under the Apache Software License (see file
+Apache-2.0):
+
+  OSGi Service Platform Release 4 Core Interface and Classes (org.osgi.*.jar)
+
+
+This product includes software developed by Quality Open Software
+(http://www.qos.ch, http://www.slf4j.org), distributed under the MIT License
+(see file MIT-SLF4J):
+ 
+  Simple Logging Facade for Java (slf4j-*.jar)
+
+
+This product includes software developed by the Legion of the Bouncy Castle
+(http://www.bouncycastle.org), distributed under the MIT License (see file
+MIT-bc):
+
+  Java cryptography API (bcmail-*.jar, bcprov-*.jar)
+
+
+This product includes softtware developed by Douglas Crokford
+(http://www.json.org/), distributed under the MIT Licence (see file MIT-JSON):
+
+  org.json (json.jar)
+
+
+This product includes software developed by 1T3XT BVBA (http://itextpdf.com),
+distributed under the Mozilla Public License 1.1, and the GNU Lesser General
+Public License 2.1 or later (see files MPL-1.1, and LGPL-2.1) or, depending
+on the version of the software, the GNU Affero General Public License 3 (see
+file AGPL-3):
+
+  iText (itext-*.jar)
+
+
+This product includes software developed by Shigeru Chiba
+(http://www.csg.is.titech.ac.jp/~chiba/javassist/), distributed under the
+Mozilla Public License 1.1, and the GNU Lesser General Public License 2.1 (see
+files MPL-1.1, and LGPL-2.1):
+
+  Javassist (javassist-*.jar)
+
+
+This product includes software developed by the IBM Corporation, distributed
+under the IBM Common Public License (see file CPL-1.0):
+
+  WSDL4J (wsdl4j-*.jar)
+
+
+This product includes software developed by Kent Beck, Erich Gamma, and David
+Saff, distributed under the Common Public License (see file CPL-1.0):
+
+  JUnit (junit-*.jar)

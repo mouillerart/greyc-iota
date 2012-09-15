@@ -1,0 +1,15 @@
+LibXACML-EPCIS
+
+Bibliothèque XACML pour ETa.
+
+Dépendances:
+  bibliothèques:
+    - sunxacml
+    - commons-logging
+
+Configuration:
+  (xacm_configuration.properties)
+
+Dépendances d’utilisation:
+  - ETa
+  - un EPCIS

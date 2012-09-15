@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false"
+                   package="fr.unicaen.iota.discovery.server.hibernate">
+  <class lazy="true"
+         name="EPCClassId"
+         proxy="fr.unicaen.iota.discovery.server.hibernate.EPCClassId"
+         table="voc_EPCClass">
+    <id name="id"
+        type="integer">
+      <generator class="native" />
+    </id>
+    <natural-id>
+      <property index="voc_EPCClass_uri_ix"
+                insert="true"
+                name="uri"
+                not-null="true"
+                type="java.lang.String"
+                update="false" />
+    </natural-id>
+  </class>
+</hibernate-mapping>

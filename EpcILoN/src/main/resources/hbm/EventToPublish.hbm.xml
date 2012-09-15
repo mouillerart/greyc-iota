@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="fr.unicaen.iota.epcilon.model"
+                   default-lazy="false">
+  <class name="EventToPublish"
+         table="EventToPublish">
+    <id column="ID"
+        name="Id"
+        type="integer">
+      <generator class="increment" />
+    </id>
+    <property column="eventTime"
+              length="10"
+              name="EventTime"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <property column="epc"
+              name="Epc"
+              not-null="true"
+              type="string" />
+    <property column="bizStep"
+              name="BizStep"
+              not-null="true"
+              type="string" />
+    <property column="eventType"
+              length="40"
+              name="EventType"
+              not-null="true"
+              type="string" />
+    <property column="eventClass"
+              length="40"
+              name="EventClass"
+              not-null="true"
+              type="string" />
+    <property column="lastUpdate"
+              length="40"
+              name="LastUpdate"
+              not-null="true"
+              type="java.sql.Timestamp" />
+  </class>
+</hibernate-mapping>

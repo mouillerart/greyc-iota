@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.unicaen.iota.discovery</groupId>
+    <artifactId>discovery-server</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
+    <name>IoTa-DiscoveryWS</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <axis2-version>1.5.6</axis2-version>
+        <hibernate-version>3.6.10.Final</hibernate-version>
+    </properties>
+
+    <dependencies>
+
+        <!-- IoTa depdencies -->
+        <dependency>
+            <groupId>fr.unicaen.iota.xacml</groupId>
+            <artifactId>libxacml-ds</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota.discovery</groupId>
+            <artifactId>discovery-client</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Hibernate & MySQL dependencies -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>${hibernate-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.16.1-GA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.21</version>
+        </dependency>
+
+        <!-- Axis2 dependencies -->
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-kernel</artifactId>
+            <version>${axis2-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-adb</artifactId>
+            <version>${axis2-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-http</artifactId>
+            <version>${axis2-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-local</artifactId>
+            <version>${axis2-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-tcp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- Log dependencies -->
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+
+        <!-- Other dependies -->
+        <dependency>
+            <groupId>net.sf.sunxacml</groupId>
+            <artifactId>sunxacml</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dnsjava</groupId>
+            <artifactId>dnsjava</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+                <version>${axis2-version}</version>
+                <executions>
+                    <execution>
+                        <id>wsdl2code</id>
+                        <goals>
+                            <goal>wsdl2code</goal>
+                        </goals>
+                        <configuration>
+                            <packageName>fr.unicaen.iota.discovery.server.repository.soap</packageName>
+                            <wsdlFile>src/main/resources/wsdl/ESDS_Service.wsdl</wsdlFile>
+                            <generateServerSide>true</generateServerSide>
+                            <generateServerSideInterface>true</generateServerSideInterface>
+                            <namespaceURIs>
+                                <namespaceURI>
+                                    <uri>urn:ietf:params:xsd:ns:esds-1.0</uri>
+                                    <packageName>fr.unicaen.iota.discovery.server.repository.soap.model</packageName>
+                                </namespaceURI>
+                            </namespaceURIs>
+                            <!--<outputDirectory>target/generated-sources/axis2</outputDirectory>
+                            <flattenFiles>true</flattenFiles>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <id>hbm2java</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>hbm2java</goal>
+                        </goals>
+                        <configuration>
+                            <components>
+                                <component>
+                                    <name>hbm2java</name>
+                                    <implementation>configuration</implementation>
+                                    <outputDirectory>target/generated-sources/hibernate3</outputDirectory>
+                                </component>
+                            </components>
+                            <componentProperties>
+                                <drop>true</drop>
+                                <jdk5>true</jdk5>
+                                <configurationfile>src/main/resources/hibernate.cfg.xml</configurationfile>
+                            </componentProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>hbm2ddl</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>hbm2ddl</goal>
+                        </goals>
+                        <configuration>
+                            <componentProperties>
+                                <outputfilename>ds-schema.sql</outputfilename>
+                                <configurationfile>src/main/resources/hibernate.cfg.xml</configurationfile>
+                                <drop>false</drop>
+                                <create>true</create>
+                                <export>false</export>
+                                <format>true</format>
+                            </componentProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                        <webResources>
+                            <resource>
+                                <directory>${project.basedir}</directory>
+                                <includes>
+                                    <include>LICENSE</include>
+                                    <include>LISEZMOI</include>
+                                    <include>README</include>
+                                </includes>
+                                <targetPath>META-INF</targetPath>
+                                <filtering>false</filtering>
+                            </resource>
+                        </webResources>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>src</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+    <repositories>
+        <repository>
+            <id>sunxacml-repository</id>
+            <name>sunxacml Repository</name>
+            <url>http://sunxacml.sourceforge.net/maven2/repository/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>

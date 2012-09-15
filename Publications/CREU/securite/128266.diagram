@@ -1,0 +1,107 @@
+format 66
+
+classinstancecanvas 128266 classinstance_ref 128522 // 
+  xyz 214 86 2005 life_line_z 2000
+end
+classinstancecanvas 128394 classinstance_ref 128650 // 
+  xyz 674 83 2005 life_line_z 2000
+end
+classinstancecanvas 128522 classinstance_ref 128394 // 
+  drawing_mode natural  xyz 548 84 2005 life_line_z 2000
+end
+classinstance 130442 class_ref 128778 // User
+  drawing_mode actor  name ""   xyz 57 71 2005 life_line_z 2000
+fragment 133514 "if PERMIT"
+  xyzwh 24 245 2020 724 95
+end
+fragment 133642 "if DENY"
+  xyzwh 23 348 2020 725 68
+end
+fragment 133770 "UserCreate"
+  xyzwh 13 45 2010 750 385
+end
+durationcanvas 130570 classinstance_ref 130442 // :User
+  xyzwh 67 144 2010 11 40
+end
+durationcanvas 130698 classinstance_ref 128266 // :XACMLApp
+  xyzwh 247 144 2010 11 27
+end
+durationcanvas 130954 classinstance_ref 128522 // :DS_CORE
+  xyzwh 579 160 2010 11 45
+end
+durationcanvas 131722 classinstance_ref 128266 // :XACMLApp
+  xyzwh 247 194 2010 11 57
+end
+durationcanvas 131978 classinstance_ref 128522 // :DS_CORE
+  xyzwh 579 212 2010 11 201
+end
+durationcanvas 132234 classinstance_ref 128394 // :DS_DB
+  xyzwh 696 266 2010 11 27
+end
+durationcanvas 132490 classinstance_ref 128266 // :XACMLApp
+  xyzwh 247 293 2010 11 30
+end
+durationcanvas 132746 classinstance_ref 130442 // :User
+  xyzwh 67 312 2010 11 25
+end
+durationcanvas 133002 classinstance_ref 128266 // :XACMLApp
+  xyzwh 247 365 2010 11 33
+end
+durationcanvas 133258 classinstance_ref 130442 // :User
+  xyzwh 67 381 2010 11 31
+end
+msg 130826 synchronous
+  from durationcanvas_ref 130570
+  to durationcanvas_ref 130698
+  yz 144 2015 explicitmsg "UserCreate(userInfo)"
+  show_full_operations_definition default drawing_language default
+  label_xy 106 128
+msg 131082 synchronous
+  from durationcanvas_ref 130698
+  to durationcanvas_ref 130954
+  yz 160 2015 explicitmsg "UserCreate(sessionId,userInfo)"
+  show_full_operations_definition default drawing_language default
+  label_xy 318 144
+msg 131850 synchronous
+  from durationcanvas_ref 130954
+  to durationcanvas_ref 131722
+  yz 194 2020 explicitmsg "XACMLRequest(userId,PartnerId,UserCreateMethode)"
+  show_full_operations_definition default drawing_language default
+  label_xy 265 177
+msg 132106 synchronous
+  from durationcanvas_ref 131722
+  to durationcanvas_ref 131978
+  yz 231 2015 explicitmsg "PERMIT / DENY"
+  show_full_operations_definition default drawing_language default
+  label_xy 375 215
+msg 132362 synchronous
+  from durationcanvas_ref 131978
+  to durationcanvas_ref 132234
+  yz 273 2015 explicitmsg "UserCreate(user)"
+  show_full_operations_definition default drawing_language default
+  label_xy 599 257
+msg 132618 synchronous
+  from durationcanvas_ref 131978
+  to durationcanvas_ref 132490
+  yz 298 2015 explicitmsg "UserCreateResult"
+  show_full_operations_definition default drawing_language default
+  label_xy 370 282
+msg 132874 synchronous
+  from durationcanvas_ref 132490
+  to durationcanvas_ref 132746
+  yz 312 2015 explicitmsg "Success Message"
+  show_full_operations_definition default drawing_language default
+  label_xy 113 300
+msg 133130 synchronous
+  from durationcanvas_ref 131978
+  to durationcanvas_ref 133002
+  yz 370 2015 explicitmsg "ProtocoleException -> User not allowed"
+  show_full_operations_definition default drawing_language default
+  label_xy 309 354
+msg 133386 synchronous
+  from durationcanvas_ref 133002
+  to durationcanvas_ref 133258
+  yz 381 2015 explicitmsg "Error Message"
+  show_full_operations_definition default drawing_language default
+  label_xy 121 365
+end

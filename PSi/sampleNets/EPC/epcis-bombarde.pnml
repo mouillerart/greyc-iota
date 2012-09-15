@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+  <net id="n1" type="EPCNet">
+    <place id="p1">
+      <epcgenerator>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="10" y="25"/>
+        
+        
+        
+        
+        </graphics>
+        <value>urn:epc:id:sgtin:10000.00001%10</value>
+      </epcgenerator>
+      <initialMarking>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="50" y="90"/>
+        
+        
+        
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="50" y="45"/>
+        
+        
+        
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          
+          <offset page="1" x="0" y="0"/>
+        
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="50" y="15"/>
+        
+        
+        
+        
+        </graphics>
+        <value>rfidprinter</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="50" y="0"/>
+        
+        
+        
+        
+        </graphics>
+        <value>p1</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="50" y="30"/>
+        
+        
+        
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="50" y="75"/>
+        
+        
+        
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        
+        
+        
+        <position page="1" x="138" y="145"/>
+      
+      
+      
+      
+      </graphics>
+    </place>
+    <transition id="t1">
+      <name>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="41" y="0"/>
+        
+        
+        
+        
+        </graphics>
+        <value>t1</value>
+      </name>
+      <event>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="41" y="15"/>
+        
+        
+        
+        
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:1&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://10.130.1.4:8080/epcis/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="object"&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:depart&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:tester&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:1,1&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+&lt;/EPCEvent&gt;
+</value>
+      </event>
+      <graphics>
+        
+        
+        
+        
+        <position page="1" x="262" y="93"/>
+      
+      
+      
+      
+      </graphics>
+    </transition>
+    <transition id="t2">
+      <name>
+        <graphics>
+          
+          
+          <offset page="1" x="41" y="0"/>
+        
+        
+        </graphics>
+        <value>t2</value>
+      </name>
+      <event>
+        <graphics>
+          
+          
+          <offset page="1" x="41" y="15"/>
+        
+        
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:4&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://10.130.1.4:8080/epcis/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="aggregation"&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:other&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:unknown&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:4,2&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+        &lt;location&gt;
+                 &lt;latitude&gt;48.685&lt;/latitude&gt;
+                 &lt;longitude&gt;9.555&lt;/longitude&gt;
+        &lt;/location&gt;
+&lt;/EPCEvent&gt;</value>
+      </event>
+      <graphics>
+        
+        
+        <position page="1" x="322" y="338"/>
+      
+      
+      </graphics>
+    </transition>
+    <place id="p2">
+      <epcgenerator>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="75"/>
+        
+        
+        </graphics>
+        <value>generator</value>
+      </epcgenerator>
+      <initialMarking>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="105"/>
+        
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="60"/>
+        
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="45"/>
+        
+        
+        </graphics>
+        <value>deactivator</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="15"/>
+        
+        
+        </graphics>
+        <value/>
+      </representation>
+      <name>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="0"/>
+        
+        
+        </graphics>
+        <value>p2</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="30"/>
+        
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="90"/>
+        
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        
+        <position page="1" x="160" y="379"/>
+      
+      
+      </graphics>
+    </place>
+    <place id="p3">
+      <epcgenerator>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="75"/>
+        
+        
+        </graphics>
+        <value>generator</value>
+      </epcgenerator>
+      <initialMarking>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="105"/>
+        
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="60"/>
+        
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="45"/>
+        
+        
+        </graphics>
+        <value>deactivator</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="15"/>
+        
+        
+        </graphics>
+        <value/>
+      </representation>
+      <name>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="0"/>
+        
+        
+        </graphics>
+        <value>p3</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="30"/>
+        
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          
+          <offset page="1" x="50" y="90"/>
+        
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        
+        <position page="1" x="364" y="153"/>
+      
+      
+      </graphics>
+    </place>
+    <place id="p4">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="75"/>
+        
+        </graphics>
+        <value>urn:epc:id:sgtin:20000.00001%10</value>
+      </epcgenerator>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="105"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="60"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="45"/>
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="15"/>
+        
+        </graphics>
+        <value>rfidprinter</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p4</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="30"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="90"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="419" y="371"/>
+      
+      </graphics>
+    </place>
+    <place id="p5">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="75"/>
+        
+        </graphics>
+        <value>generator</value>
+      </epcgenerator>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="105"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="60"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="45"/>
+        
+        </graphics>
+        <value>deactivator</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="15"/>
+        
+        </graphics>
+        <value/>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p5</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="30"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="90"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="417" y="259"/>
+      
+      </graphics>
+    </place>
+    <place id="p6">
+      <epcgenerator>
+        <graphics>
+          
+          <offset page="1" x="50" y="75"/>
+        
+        </graphics>
+        <value>urn:epc:id:sgtin:30000.00001%10</value>
+      </epcgenerator>
+      <initialMarking>
+        <graphics>
+          
+          <offset page="1" x="50" y="105"/>
+        
+        </graphics>
+        <value> </value>
+      </initialMarking>
+      <marking>
+        <graphics>
+          
+          <offset page="1" x="50" y="60"/>
+        
+        </graphics>
+        <value> </value>
+      </marking>
+      <epcdeactivator>
+        <graphics>
+          
+          <offset page="1" x="50" y="45"/>
+        
+        </graphics>
+        <value>false</value>
+      </epcdeactivator>
+      <representation>
+        <graphics>
+          
+          <offset page="1" x="50" y="15"/>
+        
+        </graphics>
+        <value>rfidprinter</value>
+      </representation>
+      <name>
+        <graphics>
+          
+          <offset page="1" x="50" y="0"/>
+        
+        </graphics>
+        <value>p6</value>
+      </name>
+      <eventfilesaver>
+        <graphics>
+          
+          <offset page="1" x="50" y="30"/>
+        
+        </graphics>
+        <value>OFF</value>
+      </eventfilesaver>
+      <limitor>
+        <graphics>
+          
+          <offset page="1" x="50" y="90"/>
+        
+        </graphics>
+        <value>INF</value>
+      </limitor>
+      <graphics>
+        
+        <position page="1" x="502" y="192"/>
+      
+      </graphics>
+    </place>
+    <transition id="t3">
+      <name>
+        <graphics>
+          
+          <offset page="1" x="41" y="0"/>
+        
+        </graphics>
+        <value>t3</value>
+      </name>
+      <event>
+        <graphics>
+          
+          <offset page="1" x="41" y="15"/>
+        
+        </graphics>
+        <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;EPCEvent&gt;
+        &lt;infrastructure&gt;
+                &lt;bizLoc&gt;urn:unicaen:iotatester:xxxx:ssl:1&lt;/bizLoc&gt;
+                &lt;serviceAddress&gt;http://10.130.1.4:8080/epcis/capture&lt;/serviceAddress&gt;
+        &lt;/infrastructure&gt;
+        &lt;node type="object"&gt;
+                &lt;bizStep&gt;urn:unicaen:iotatester:bizstep:xxxx:depart&lt;/bizStep&gt;
+                &lt;disposition&gt;urn:unicaen:iotatester:disp:xxxx:tester&lt;/disposition&gt;
+                &lt;readPoint&gt;urn:unicaen:iotatester:xxxx:ssl:1,1&lt;/readPoint&gt;
+                &lt;action&gt;ADD&lt;/action&gt;
+        &lt;/node&gt;
+&lt;/EPCEvent&gt;
+</value>
+      </event>
+      <graphics>
+        
+        <position page="1" x="529" y="321"/>
+      
+      </graphics>
+    </transition>
+    <arc id="a1" source="p1" target="t1">
+      <inscription>
+        <graphics>
+          
+          
+          
+          
+          <offset page="1" x="40" y="0"/>
+        
+        
+        
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        
+        
+        
+        <position page="1" x="200" y="119"/>
+      
+      
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a2" source="t1" target="p3">
+      <inscription>
+        <graphics>
+          
+          
+          <offset page="1" x="40" y="0"/>
+        
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        
+        <position page="1" x="313" y="123"/>
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a3" source="p3" target="t2">
+      <inscription>
+        <graphics>
+          
+          
+          <offset page="1" x="40" y="0"/>
+        
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        
+        <position page="1" x="343" y="245"/>
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a4" source="t2" target="p2">
+      <inscription>
+        <graphics>
+          
+          
+          <offset page="1" x="40" y="0"/>
+        
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        
+        <position page="1" x="241" y="358"/>
+      
+      
+      </graphics>
+    </arc>
+    <arc id="a5" source="p4" target="t2">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="370" y="354"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a6" source="p6" target="t3">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="515" y="256"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a7" source="t3" target="p5">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="473" y="290"/>
+      
+      </graphics>
+    </arc>
+    <arc id="a8" source="p5" target="t2">
+      <inscription>
+        <graphics>
+          
+          <offset page="1" x="40" y="0"/>
+        
+        </graphics>
+        <value>1</value>
+      </inscription>
+      <graphics>
+        
+        <position page="1" x="369" y="298"/>
+      
+      </graphics>
+    </arc>
+    <firingRule>
+      <value> </value>
+    </firingRule>
+    <name>
+      <value>unnamed</value>
+    </name>
+  </net>
+</pnml>

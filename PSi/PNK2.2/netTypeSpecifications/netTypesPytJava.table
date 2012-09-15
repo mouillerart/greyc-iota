@@ -1,0 +1,37 @@
+ST_Specification PTNet
+  PLACE
+    'Initial Marking' 'initialMarking'
+    'MARKING' 'marking'
+  ;
+;
+
+HL_Specification HLNet
+  NET
+    'DECLARATION' 'declaration'
+    'VARIABLES' 'variables'
+  ;
+  PLACE
+    'Initial Marking' 'initialMarking'
+    'MARKING' 'marking'
+  ;
+;
+
+DAWN_Specification DawnNet
+  NET
+    'Signature' 'Signature'
+    'Axioms' 'Axioms'
+    'Variables' 'Variables'
+    'Properties' 'Properties'
+  ;
+  PLACE
+    'Sort' 'sort'
+    'Initial Marking' 'initialMarking'
+    'Marking' 'marking'
+  ;
+  TRANSITION
+    'Guard' 'guard'
+  ;
+  ARC
+    'Inscription' 'inscription'
+  ;
+;

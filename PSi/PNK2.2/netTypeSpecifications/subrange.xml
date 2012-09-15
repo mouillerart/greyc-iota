@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE netTypeSpecification SYSTEM "netTypeSpecification.dtd">
+<netTypeSpecification name="subrange">
+        <extendable class=".kernel.Net">
+                <extension name="firingRule" class=".netElementExtensions.hlNet.HLRule"/>
+                <extension name="signature" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.TestSig"/>
+        </extendable>
+        <extendable class="de.huberlin.informatik.pnk.kernel.Place">
+                <extension name="tokenClass" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenClassName"/>
+                 <extension name="marking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenSet"/> 
+                <extension name="initialMarking" class="de.huberlin.informatik.pnk.netElementExtensions.llNet.TokenSet"/>
+         </extendable>
+        <extendable class="de.huberlin.informatik.pnk.kernel.Arc">
+                <extension name="inscription" class="de.huberlin.informatik.pnk.netElementExtensions.hlNet.HLInscription"/>
+        </extendable>
+        <extendable class="de.huberlin.informatik.pnk.kernel.Transition">
+        </extendable>
+</netTypeSpecification>

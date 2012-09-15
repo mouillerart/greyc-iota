@@ -1,0 +1,37 @@
+IoTa-Installer
+
+Python installation script for IoTa.
+
+Dependencies:
+  IoTa modules:
+    - IoTa-DiscoveryWS
+    - DiscoveryPHI
+    - Fosstrak-Epcis
+    - EpcILoN
+    - ETa
+    - EpcisPHI
+    - ALfA
+    - OMeGa
+  libraries:
+    - Python
+    - Apache Tomcat
+    - mysql-connector-java
+
+Configuration:
+  The file resources/install.ini contains all the default values used in the
+  user interface.
+
+Usage Dependencies:
+  - a MySQL server
+  - the mysql command-line client
+  - a servlet contener (optional)
+
+Usage:
+  ./install_iota.py [--accept-defaults]
+
+  With the option --accept-defaults, no question are asked, answers are found
+  in the file resources/install.ini.
+
+  You may select the modules to install with the installer. The installer may
+  be used in steps or several times: the install.ini file keeps the previously
+  entered values and can then be reused.

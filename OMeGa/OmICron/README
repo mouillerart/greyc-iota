@@ -1,0 +1,20 @@
+OmICron - OMeGa Internet Client
+
+OMeGa client library and simple SOAP client to IoTa.
+
+Dependencies:
+  libraries:
+    - axis2
+    - commons-logging
+    - log4j
+
+Configuration:
+  See the files *.properties in the jar file (each of those can be overriden
+  by a file with the same name in the current directory).
+  (commons-logging.properties and log4j.properties for the logs)
+
+Usage Dependencies:
+  - OMeGa
+
+Usage:
+  ./omicron.sh

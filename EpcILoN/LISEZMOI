@@ -1,0 +1,30 @@
+EpcILoN - EPC Information Layer tO Naming layer
+
+Interface entre les événements EPC (couche information) et les événements DS
+(couche nommage).
+
+Dépendances:
+  modules IoTa:
+    - IoTa-DiscoveryWS-Client
+  bibliothèques:
+    - epcis-query-client
+    - hibernate
+    - mysql-connector
+    - axis2-adb
+    - servlet-api
+    - commons-logging
+    - log4j
+
+Installation et Configuration:
+  IoTa-Installer installe et configure EpcILoN.
+  (application.properties, subscription_key et
+   root-account.properties pour cette application,
+   ds-client.properties pour la bibliothèque cliente IoTa-DiscoveryWS-Client,
+   commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - un serveur MySQL
+  - un Epcis ou ETa
+  - un DWS
+
+Utilisation: aucune

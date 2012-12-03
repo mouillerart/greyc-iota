@@ -6,7 +6,7 @@ INSTALL.fr ou utilisez l’installateur (dans IoTa-Installer/).
 Le Projet IoTa est un logiciel libre. Voir le fichier copyright pour les
 conditions de copies.
 
-Ce que l’on trouve dans ce répertoire :
+Ce que l’on peut trouver dans ce répertoire :
 
 Scripts:
   make-all.sh          Script shell pour construire tous les modules
@@ -22,12 +22,13 @@ Installateur :
   IoTa-Installer/      Installateur pour les modules de IoTa
 
 Modules serveurs :
-  IoTa-DiscoveryWS/    DWS
+  IoTa-DiscoveryWS/    Web service Discovery
   DSeTa/               Discovery SErvices Trusted Agent
   EpcILoN/             Web service EPC Information Layer tO Naming layer
   ETa/                 Web service Epcis Trusted Agent
-  ALfA/                Serveur RMI Access Layer For Applications
+  ALfA/ALfA-RMI        Serveur RMI Access Layer For Applications
   OMeGa/               Web service Object MEthod GAteway WS pour ALfA
+  SigMa/               Signature verification Module
 
 Applications utilisateur :
   DSeTa/DiscoveryPHI/  Web service Discovery Policy Human Interface
@@ -37,3 +38,4 @@ Applications utilisateur :
   ThETa/               ThemaMap EPC Tracing application
   MuPHI/               MUltiple PSi Human Interface
   PSi/                 Application Petri net SImulator
+  OMeGa/OmiCron        OMeGa Internet Client

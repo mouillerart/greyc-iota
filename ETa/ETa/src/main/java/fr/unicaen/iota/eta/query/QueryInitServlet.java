@@ -1,36 +1,35 @@
 /*
- * Copyright (C) 2007 ETH Zurich
+ *  This program is a part of the IoTa Project.
  *
- * This file is part of Fosstrak (www.fosstrak.org).
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011       Orange Labs
+ *  Copyright © 2007       ETH Zurich
  *
- * Fosstrak is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 2.1, as published by the Free Software Foundation.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Fosstrak is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  <http://www.gnu.org/licenses/>
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Fosstrak; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA  02110-1301  USA
+ *  See AUTHORS for a list of contributors.
  */
 /*
- * Copied from org.fosstrak.epcis.repository.query.QueryInitServlet
+ * Derived from org.fosstrak.epcis.repository.query.QueryInitServlet
  */
 package fr.unicaen.iota.eta.query;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.eta.soap.IDedEPCISServicePortType;
+import fr.unicaen.iota.xi.client.EPCISPEP;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import javax.xml.ws.Endpoint;
@@ -55,11 +54,9 @@ import org.fosstrak.epcis.soap.EPCISServicePortType;
 public class QueryInitServlet extends CXFNonSpringServlet {
 
     private static final long serialVersionUID = -5839101192038037389L;
-    private static final String APP_CONFIG_LOCATION = "appConfigLocation";
-    private static final String PROP_SERVICE_VERSION = "service.version";
-    private static final String PROP_JNDI_DATASOURCE_NAME = "jndi.datasource.name";
     private static final Log LOG = LogFactory.getLog(QueryInitServlet.class);
-    private Properties properties;
+    private transient EPCISServicePortType service;
+    private transient IDedEPCISServicePortType idedService;
 
     /**
      * {@inheritDoc}
@@ -77,58 +74,33 @@ public class QueryInitServlet extends CXFNonSpringServlet {
             getBus().getOutFaultInterceptors().add(new LoggingOutInterceptor());
             getBus().getInFaultInterceptors().add(new LoggingInInterceptor());
         }
-        EPCISServicePortType service = setupQueryOperationsModule(servletConfig);
+        setupQueryOperationsModules(servletConfig);
 
         LOG.debug("Publishing query operations module service at /query");
         Endpoint.publish("/query", service);
+        service = null;
+
+        LOG.debug("Publishing ided query operations module service at /ided_query");
+        Endpoint.publish("/ided_query", idedService);
+        idedService = null;
     }
 
-    private EPCISServicePortType setupQueryOperationsModule(ServletConfig servletConfig) {
-        loadApplicationProperties(servletConfig);
-        String jndiName = properties.getProperty(PROP_JNDI_DATASOURCE_NAME);
-        DataSource dataSource = loadDataSource(jndiName);
+    private void setupQueryOperationsModules(ServletConfig servletConfig) {
+        DataSource dataSource = loadDataSource(Constants.JNDI_DATASOURCE_NAME);
 
         LOG.debug("Initializing query operations module");
         QueryOperationsModule module = new QueryOperationsModule();
-        module.setServiceVersion(properties.getProperty(PROP_SERVICE_VERSION));
+        module.setServiceVersion(Constants.SERVICE_VERSION);
         module.setDataSource(dataSource);
         module.setServletContext(servletConfig.getServletContext());
         module.setBackend(new QueryOperationsBackendSQL());
+        EPCISPEP epcisPEP = new EPCISPEP(Constants.XACML_URL);
+        module.setQueryCheck(new QueryCheck(epcisPEP));
 
         LOG.debug("Initializing query operations web service");
-        QueryOperationsWebService service = new QueryOperationsWebService(module);
-        return service;
-    }
-
-    /**
-     * Loads the application property file and populates a java.util.Properties
-     * instance.
-     *
-     * @param servletConfig The ServletConfig used to locate the application
-     * property file.
-     */
-    private void loadApplicationProperties(ServletConfig servletConfig) {
-        properties = new Properties();
-
-        // read application.properties from classpath
-        String path = "/";
-        String appConfigFile = "application.properties";
-        InputStream is = QueryInitServlet.class.getResourceAsStream(path + appConfigFile);
-
-        try {
-            if (is == null) {
-                // read properties from file specified in servlet context
-                ServletContext ctx = servletConfig.getServletContext();
-                path = ctx.getRealPath("/");
-                appConfigFile = ctx.getInitParameter(APP_CONFIG_LOCATION);
-                is = new FileInputStream(path + appConfigFile);
-            }
-            properties.load(is);
-            is.close();
-            LOG.debug("Loaded application properties from " + path + appConfigFile);
-        } catch (IOException e) {
-            LOG.error("Unable to load application properties from " + path + appConfigFile, e);
-        }
+        service = new QueryOperationsWebService(module);
+        LOG.debug("Initializing ided query operations web service");
+        idedService = new IDedQueryOperationsWebService(module);
     }
 
     /**

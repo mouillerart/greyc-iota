@@ -17,6 +17,7 @@
  */
 package fr.unicaen.iota.simulator.model;
 
+import fr.unicaen.iota.sigma.SigMaFunctions;
 import fr.unicaen.iota.simulator.util.Config;
 import fr.unicaen.iota.simulator.util.ServicePool;
 import fr.unicaen.iota.simulator.util.StatControler;
@@ -144,14 +145,15 @@ public abstract class BaseEvent {
     public void setInfrastructure(Infrastructure service) {
         this.infrastructure = service;
     }
-    
+
     protected abstract EPCISEventType prepareEventType();
 
     protected abstract void setExtensionsObjects(EPCISEventType event, List<Object> extensions);
-    
+
     public int publish() throws CaptureClientException, IOException, JAXBException {
         EPCISEventType event = prepareEventType();
-        // get the current time and set the eventTime
+
+        // get the current time and set the eventTime        
         XMLGregorianCalendar now = null;
         try {
             DatatypeFactory dataFactory = DatatypeFactory.newInstance();
@@ -173,7 +175,6 @@ public abstract class BaseEvent {
         }
 
         // add extensions
-        Map<QName, String> epcisExtensionsAttr = new HashMap<QName, String>();
         List<Object> extensionsObjects = new LinkedList<Object>();
         for (String extensionName : extensions.keySet()) {
             String namespace = "http://api.orange.com/extensions/other"; // TODO: hard value
@@ -195,7 +196,6 @@ public abstract class BaseEvent {
                 }
                 prefix = remainingString;
             }
-            epcisExtensionsAttr.put(new QName(namespace, name, prefix), value);
 
             Element extensionElemJdom = new Element(name, prefix, namespace);
             extensionElemJdom.setText(value);
@@ -222,6 +222,15 @@ public abstract class BaseEvent {
             extensionsObjects.add(nameElement);
         }
         setExtensionsObjects(event, extensionsObjects);
+
+        if (Config.sign) {
+            SigMaFunctions sigMaFunctions = new SigMaFunctions(Config.keystore, Config.keystore_password);
+            try {
+                sigMaFunctions.sign(event);
+            } catch (Exception ex) {
+                log.error("an error has been thrown during the signature of the event", ex);
+            }
+        }
 
         // create the EPCISDocument containing a single ObjectEvent
         EPCISDocumentType epcisDoc = new EPCISDocumentType();
@@ -267,7 +276,7 @@ public abstract class BaseEvent {
         } catch (InterruptedException ex) {
             log.fatal("Interrupted while releasing capture client", ex);
         }
-        return httpResponseCode;        
+        return httpResponseCode;
     }
 
     public abstract String toXML();

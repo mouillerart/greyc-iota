@@ -1,8 +1,3 @@
 #!/bin/sh
 
-cp="."
-for f in lib/*.jar; do
-    cp="${cp}:${f}"
-done
-
-java -cp ${cp} fr.unicaen.iota.validator.Main
+java -cp ".:lib/*" fr.unicaen.iota.validator.Main

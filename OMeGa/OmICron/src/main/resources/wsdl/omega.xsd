@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:iota="urn:unicaen:iota:omega:xsd"
+           xmlns:tau="urn:unicaen:iota:tau:xsd"
+           xmlns:ds="urn:unicaen:iota:ds:xsd"
+           xmlns:epc="urn:epcglobal:xsd:1"
+           xmlns:epcis="urn:epcglobal:epcis:xsd:1"
+           xmlns:epcisq="urn:epcglobal:epcis-query:xsd:1"
+           attributeFormDefault="unqualified"
+           elementFormDefault="unqualified"
+           targetNamespace="urn:unicaen:iota:omega:xsd">
+
+    <xs:import namespace="urn:epcglobal:xsd:1" schemaLocation="./EPCglobal.xsd"/>
+    <xs:import namespace="urn:epcglobal:epcis:xsd:1" schemaLocation="./EPCglobal-epcis-1_0.xsd"/>
+    <xs:import namespace="urn:epcglobal:epcis-query:xsd:1" schemaLocation="./EPCglobal-epcis-query-1_0.xsd"/>
+    <xs:import namespace="urn:unicaen:iota:tau:xsd" schemaLocation="./tau.xsd"/>
+    <xs:import namespace="urn:unicaen:iota:ds:xsd" schemaLocation="./ds.xsd"/>
+
+    <xs:element name="QueryONSRequest" type="iota:QueryONSRequest"/>
+    <xs:element name="QueryONSResponse" type="iota:QueryONSResponse"/>
+
+    <xs:complexType name="QueryONSRequest">
+        <xs:sequence>
+            <xs:element name="epc" type="epc:EPC" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="QueryONSResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="onsMap" type="iota:OnsEntry"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType  name="OnsEntry">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="key" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="GetEPCDocURLRequest" type="iota:GetEPCDocURLRequest"/>
+    <xs:element name="GetEPCDocURLResponse" type="iota:GetEPCDocURLResponse"/>
+
+    <xs:complexType name="GetEPCDocURLRequest">
+        <xs:sequence>
+            <xs:element name="epc" type="epc:EPC" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GetEPCDocURLResponse">
+        <xs:attribute name="url" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="GetReferentDSRequest" type="iota:GetReferentDSRequest"/>
+    <xs:element name="GetReferentDSResponse" type="iota:GetReferentDSResponse"/>
+
+    <xs:complexType name="GetReferentDSRequest">
+        <xs:sequence>
+            <xs:element name="epc" type="epc:EPC" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType  name="GetReferentDSResponse">
+        <xs:attribute name="url" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="QueryDSRequest" type="iota:QueryDSRequest"/>
+    <xs:element name="QueryDSResponse" type="iota:QueryDSResponse"/>
+
+    <xs:complexType name="QueryDSRequest">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="identity" type="tau:Identity"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="epc" type="epc:EPC"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="DSAddress" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="serviceType" type="ds:tServiceType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="QueryDSResponse">
+        <xs:sequence>
+            <xs:element name="eventList" type="ds:tEventItemList"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="TraceEPCRequest" type="iota:TraceEPCRequest"/>
+    <xs:element name="TraceEPCResponse" type="iota:TraceEPCResponse"/>
+
+    <xs:complexType name="TraceEPCRequest">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="identity" type="tau:Identity"/>
+            <xs:element name="epc" type="epc:EPC" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="filters" type="epcisq:QueryParams" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TraceEPCResponse">
+        <xs:sequence>
+            <xs:element name="eventList" type="epcis:EventListType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="QueryEPCISRequest" type="iota:QueryEPCISRequest"/>
+    <xs:element name="QueryEPCISResponse" type="iota:QueryEPCISResponse"/>
+
+    <xs:complexType name="QueryEPCISRequest">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="identity" type="tau:Identity"/>
+            <xs:choice>
+                <xs:element minOccurs="1" maxOccurs="1" name="epc" type="epc:EPC"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="filters" type="epcisq:QueryParams"/>
+            </xs:choice>
+            <xs:element minOccurs="1" maxOccurs="1" name="EPCISAddress" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="QueryEPCISResponse">
+        <xs:sequence>
+            <xs:element name="eventList" type="epcis:EventListType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ExceptionInformation" type="iota:ExceptionInformation"/>
+
+    <xs:simpleType name="ExceptionInformation">
+        <xs:restriction base="xs:int"/>
+    </xs:simpleType>
+
+</xs:schema>

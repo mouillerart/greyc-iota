@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="TAuXiService"
+                  targetNamespace="urn:fr:unicaen:iota:tau:wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xi="urn:fr:unicaen:iota:tau:wsdl"
+                  xmlns:tau="urn:fr:unicaen:iota:tau:xsd">
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="urn:fr:unicaen:iota:tau:xsd" schemaLocation="tau.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="canBeRequest">
+        <wsdl:part name="principal" element="tau:principal"/>
+        <wsdl:part name="identity" element="tau:identity" />
+    </wsdl:message>
+    <wsdl:message name="canBeResponse">
+        <wsdl:part name="result" type="xs:boolean"/>
+    </wsdl:message>
+
+    <wsdl:portType name="TAuXiServicePortType">
+        <wsdl:operation name="canBe">
+            <wsdl:input name="canBeRequest" message="xi:canBeRequest"/>
+            <wsdl:output name="canBeResult" message="xi:canBeResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="TAuXiBinding" type="xi:TAuXiServicePortType">
+        <wsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="canBe">
+            <wsoap:operation/>
+            <wsdl:input>
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="TAuXiService">
+        <wsdl:port name="TAuXiServicePort" binding="xi:TAuXiBinding">
+        </wsdl:port>
+    </wsdl:service>
+
+
+</wsdl:definitions>

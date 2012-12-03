@@ -18,99 +18,93 @@
  */
 package fr.unicaen.iota.application.operations;
 
-import fr.unicaen.iota.application.conf.Constants;
-import fr.unicaen.iota.application.model.EPCISEvent;
-import fr.unicaen.iota.application.util.EpcisUtil;
+import fr.unicaen.iota.nu.ONSOperation;
+import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.AggregationEventType;
 import org.fosstrak.epcis.model.EPC;
 import org.fosstrak.epcis.model.EPCISEventType;
+import org.fosstrak.epcis.model.TransactionEventType;
 
 /**
  *
  */
 public class TraceEPC {
 
-    private final String DS_LOGIN;
-    private final String DS_PASS;
+    private final Identity identity;
     private final ONSOperation onsOperation;
-    private List<EPCISEventType> eventList;
     private static final Log log = LogFactory.getLog(TraceEPC.class);
 
-    public TraceEPC(String login, String pass) {
-        this.DS_LOGIN = login;
-        this.DS_PASS = pass;
-        this.onsOperation = new ONSOperation(Constants.ONS_HOSTS);
+    public TraceEPC(Identity identity) {
+        this.identity = identity;
+        this.onsOperation = new ONSOperation();
     }
 
-    public List<EPCISEvent> traceEPC(String epc) throws RemoteException {
-        log.trace("EPC = " + epc);
-        eventList = new ArrayList<EPCISEventType>();
-        return traceEPCaux(epc);
+    public List<EPCISEventType> traceEPC(String EPC) throws RemoteException {
+        log.trace("EPC = " + EPC);
+        return traceEPCAux(EPC, new HashMap<String, String>());
     }
 
-    private List<EPCISEvent> traceEPCaux(String epc) throws RemoteException {
-        log.trace("[TRACE EPC]: " + epc);
-        log.trace("CALLED METHOD: <traceEPC>");
+    public List<EPCISEventType> filteredTrace(String EPC, Map<String, String> filters) throws RemoteException {
+        log.trace("Filters = " + filters);
+        return traceEPCAux(EPC, filters);
+    }
+
+    private List<EPCISEventType> traceEPCAux(String EPC, Map<String, String> filters) throws RemoteException {
+        log.trace("[TRACE EPC]: " + EPC);
         log.trace("Get Referent ds address");
-        String dsAddress = onsOperation.getReferentDS(epc);
+        String dsAddress = onsOperation.getReferentIDedDS(EPC);
         if (dsAddress == null) {
             log.warn("Unable to retreive referent ds address for this epc code");
-            return new ArrayList<EPCISEvent>();
+            return new ArrayList<EPCISEventType>();
         } else {
             log.trace("referent ds address found: " + dsAddress);
         }
         log.trace("Start discover");
-        DiscoveryOperation dsOp = new DiscoveryOperation(DS_LOGIN, DS_PASS, dsAddress);
-        traceEPC(epc, dsOp);
-        List<EPCISEvent> tab = processEventList(eventList);
-        return tab;
+        DiscoveryOperation dsOp = new DiscoveryOperation(identity, dsAddress);
+        return traceEPC(dsOp, EPC, filters);
     }
 
-    private void traceEPC(String epc, DiscoveryOperation dsOp) throws RemoteException {
-        for (String EPCIS_SERVICE_ADDRESS : dsOp.discover(epc)) {
+    private List<EPCISEventType> traceEPC(DiscoveryOperation dsOp, String EPC, Map<String, String> filters) throws RemoteException {
+        List<EPCISEventType> eventList = new ArrayList<EPCISEventType>();
+        for (String EPCIS_SERVICE_ADDRESS : dsOp.discover(EPC)) {
             EpcisOperation epcisOperation = null;
             while (epcisOperation == null) {
                 try {
-                    epcisOperation = new EpcisOperation(EPCIS_SERVICE_ADDRESS);
-                } catch (Exception e) {
+                    epcisOperation = new EpcisOperation(identity, EPCIS_SERVICE_ADDRESS);
+                } catch (Exception ex) {
                     epcisOperation = null;
-                    log.warn("Unable to create service proxy port! [RETRYING]");
-                }
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException ex) {
+                    log.warn("Unable to create service proxy port! [RETRYING]", ex);
                 }
             }
-            Collection<EPCISEventType> list = epcisOperation.getObjectEventFromEPC(epc);
+            Collection<EPCISEventType> list = epcisOperation.getObjectEventFromEPC(EPC, filters);
             eventList.addAll(list);
-            log.trace("nb epc events: " + list.size());
-            Collection<EPCISEventType> childs = epcisOperation.getAggregationEventFromEPC(epc);
-            log.trace("nb child events: " + childs.size());
-            eventList.addAll(childs);
-            if (childs != null) {
-                for (EPCISEventType o : childs) {
-                    AggregationEventType event = (AggregationEventType) o;
-                    for (EPC epc2 : event.getChildEPCs().getEpc()) {
-                        log.trace("new traceEPC: " + epc2.getValue());
-                        traceEPCaux(epc2.getValue());
-                    }
+            list = epcisOperation.getQuantityEventFromEPC(EPC, filters);
+            eventList.addAll(list);
+            log.trace("nbr epc events: " + list.size());
+            Collection<EPCISEventType> children = epcisOperation.getAggregationEventFromEPC(EPC, filters);
+            eventList.addAll(children);
+            log.trace("nbr child events: " + children.size());
+            for (EPCISEventType o : children) {
+                AggregationEventType event = (AggregationEventType) o;
+                for (EPC childEpc : event.getChildEPCs().getEpc()) {
+                    log.trace("new traceEPC: " + childEpc.getValue());
+                    eventList.addAll(traceEPCAux(childEpc.getValue(), filters));
+                }
+            }
+            Collection<EPCISEventType> trans = epcisOperation.getTransactionEventFromEPC(EPC, filters);
+            eventList.addAll(trans);
+            for (EPCISEventType o : trans) {
+                TransactionEventType event = (TransactionEventType) o;
+                for (EPC childEpc : event.getEpcList().getEpc()) {
+                    log.trace("new traceEPC: " + childEpc.getValue());
+                    eventList.addAll(traceEPCAux(childEpc.getValue(), filters));
                 }
             }
         }
-    }
-
-    private List<EPCISEvent> processEventList(Collection<EPCISEventType> eventList) {
-        List<EPCISEvent> result = new ArrayList<EPCISEvent>();
-
-        for (EPCISEventType o : eventList) {
-            result.add(EpcisUtil.processEvent(o));
-        }
-        return result;
+        return eventList;
     }
 }

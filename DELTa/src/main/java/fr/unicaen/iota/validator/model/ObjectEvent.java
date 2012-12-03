@@ -18,7 +18,8 @@
  */
 package fr.unicaen.iota.validator.model;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
+import fr.unicaen.iota.mu.EPCISEventTypeHelper;
+import org.fosstrak.epcis.model.EPCISEventType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -82,15 +83,16 @@ public class ObjectEvent extends BaseEvent {
     }
 
     @Override
-    public boolean isContainedIn(Collection<EPCISEvent> list) {
-        for (EPCISEvent event : list) {
+    public boolean isContainedIn(Collection<EPCISEventType> list) {
+        for (EPCISEventType evt : list) {
+            EPCISEventTypeHelper event = new EPCISEventTypeHelper(evt);
             for (String epc : event.getEpcs()) {
                 if (!getEpcList().contains(epc)) {
                     return false;
                 }
             }
-            if (event.getAction().equals(getAction().value())
-                    && event.getBizLoc().equals(getInfrastructure().getBizLoc())
+            if (event.getAction() == getAction()
+                    && event.getBizLocation().equals(getInfrastructure().getBizLoc())
                     && event.getBizStep().equals(getBizStep())
                     && event.getDisposition().equals(getDisposition())) {
                 return true;
@@ -114,7 +116,7 @@ public class ObjectEvent extends BaseEvent {
                     return false;
                 }
             }
-            return objEvt.getAction().value().equals(getAction().value())
+            return objEvt.getAction() == getAction()
                     && objEvt.getInfrastructure().getBizLoc().equals(getInfrastructure().getBizLoc())
                     && objEvt.getBizStep().equals(getBizStep())
                     && objEvt.getDisposition().equals(getDisposition());

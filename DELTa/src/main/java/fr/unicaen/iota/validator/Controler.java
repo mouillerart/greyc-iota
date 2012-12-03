@@ -18,6 +18,7 @@
  */
 package fr.unicaen.iota.validator;
 
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.listener.AnalyserStatus;
 import fr.unicaen.iota.validator.operations.Analyser;
 import fr.unicaen.iota.validator.operations.ThreadManager;
@@ -33,16 +34,17 @@ import org.apache.commons.logging.LogFactory;
 public class Controler extends Thread implements Runnable {
 
     private static final Log log = LogFactory.getLog(Controler.class);
-
     private File xmlEventFolder;
-    private IOTA iota;
+    private final IOTA iota;
+    private final Identity identity;
     private AnalyserStatus analyserStatus;
     private boolean proceedAnalyse = true;
     public static List<String> ACTIVE_FILE_LIST = new ArrayList<String>();
 
-    Controler(File f, IOTA iota) {
+    Controler(Identity identity, File f, IOTA iota) {
         this.xmlEventFolder = f;
         this.iota = iota;
+        this.identity = identity;
         this.analyserStatus = new AnalyserStatus();
     }
 
@@ -58,7 +60,7 @@ public class Controler extends Thread implements Runnable {
                     continue;
                 }
                 ACTIVE_FILE_LIST.add(Configuration.XML_EVENT_FOLDER + "/" + file);
-                Analyser analyser = new Analyser(Configuration.XML_EVENT_FOLDER + "/" + file, getIota(), getAnalyserStatus());
+                Analyser analyser = new Analyser(Configuration.XML_EVENT_FOLDER + "/" + file, getIdentity(), getIota(), getAnalyserStatus());
                 try {
                     threadManager.startThread(analyser);
                 } catch (InterruptedException ex) {
@@ -98,10 +100,10 @@ public class Controler extends Thread implements Runnable {
     }
 
     /**
-     * @param iota the iota to set
+     * @return the identity
      */
-    public void setIota(IOTA iota) {
-        this.iota = iota;
+    public Identity getIdentity() {
+        return identity;
     }
 
     /**

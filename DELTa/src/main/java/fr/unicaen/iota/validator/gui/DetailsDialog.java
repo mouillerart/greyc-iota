@@ -561,7 +561,7 @@ public class DetailsDialog extends JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             AccessInterface server = (AccessInterface) Naming.lookup(Configuration.RMI_SERVER_URL);
-            EPCISEntryComparator epcisComparator = new EPCISEntryComparator(server, iota);
+            EPCISEntryComparator epcisComparator = new EPCISEntryComparator(gui.getIdentity(), server, iota);
             List<EPC> list = new ArrayList<EPC>();
             list.add(container);
             Map<EPC, List<BaseEvent>> result = epcisComparator.getEventNotVerified(list);
@@ -592,7 +592,7 @@ public class DetailsDialog extends JDialog {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
             AccessInterface server = (AccessInterface) Naming.lookup(Configuration.RMI_SERVER_URL);
-            DSEntryComparator dSEntryComparator = new DSEntryComparator(server, gui.getIota());
+            DSEntryComparator dSEntryComparator = new DSEntryComparator(gui.getIdentity(), server, gui.getIota());
             Map<EPC, List<DSEvent>> result = dSEntryComparator.getEventNotVerified(container, gui.getAnalyserResult().get(container.getEpc()).getContainerList());
             AnalyserResult analyserResult = gui.getAnalyserResult();
 
@@ -621,7 +621,7 @@ public class DetailsDialog extends JDialog {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
             AccessInterface server = (AccessInterface) Naming.lookup(Configuration.RMI_SERVER_URL);
-            DSEntryComparator dSEntryComparator = new DSEntryComparator(server, gui.getIota());
+            DSEntryComparator dSEntryComparator = new DSEntryComparator(gui.getIdentity(), server, gui.getIota());
             List<EPC> list = new ArrayList<EPC>();
             list.add(container);
             Map<EPC, List<DSEvent>> result = dSEntryComparator.verifyDSToDSReferences(list);

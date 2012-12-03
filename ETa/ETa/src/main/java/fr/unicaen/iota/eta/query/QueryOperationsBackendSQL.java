@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -65,21 +65,19 @@ public class QueryOperationsBackendSQL implements QueryOperationsBackend {
      * {@inheritDoc}
      */
     @Override
-    public void storeSubscription(final QueryOperationsSession session, String subscrId, String dest)
+    public void storeSubscription(final QueryOperationsSession session, String subscrId, String dest, String user)
             throws SQLException {
-        String insert = "INSERT INTO subscription (subscriptionid, "
-                + "address) VALUES " + "((?), (?))";
+        String insert = "INSERT INTO subscription (subscriptionid, address, user) VALUES ((?), (?), (?))";
         PreparedStatement stmt = session.getConnection().prepareStatement(insert);
         LOG.debug("QUERY: " + insert);
         stmt.setString(1, subscrId);
         LOG.debug("       query param 1: " + subscrId);
-
         stmt.setString(2, dest);
         LOG.debug("       query param 2: " + dest);
-
+        stmt.setString(3, user);
+        LOG.debug("       query param 3: " + user);
         stmt.executeUpdate();
         session.commit();
-
     }
 
     /**

@@ -4,12 +4,11 @@ Interface between EPC events (information layer) and DS events (naming layer).
 
 Dependencies:
   IoTa modules:
-    - IoTa-DiscoveryWS-Client
+    - DSeTa-Client
   librairies:
     - epcis-query-client
     - hibernate
     - mysql-connector
-    - axis2-adb
     - servlet-api
     - commons-logging
     - log4j

@@ -12,7 +12,9 @@ Dependencies:
   src:
     - PNK
 
-Configuration: none
+Configuration:
+  See config/*.properties.
+  Especially, set the keystore and keystore-password in PTNet.properties.
 
 Usage Dependencies:
   - IoTa

@@ -2,16 +2,47 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unicaen.iota.application</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>alfa-pi</artifactId>
-    <version>1.0</version>
+    <version>1.9-mock</version>
     <packaging>jar</packaging>
 
     <name>ALfA-PI</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <epcis-version>0.5.0</epcis-version>
     </properties>
+
+    <dependencies>
+
+        <!-- IoTa dependencies -->
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>nu-pi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>tau</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>dseta-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Fosstrak dependencies -->
+        <dependency>
+            <groupId>org.fosstrak.epcis</groupId>
+            <artifactId>epcis-commons</artifactId>
+            <version>${epcis-version}</version>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <plugins>

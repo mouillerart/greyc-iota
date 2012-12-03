@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="SigMaService"
+                  targetNamespace="urn:fr:unicaen:iota:sigma:wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:service="urn:fr:unicaen:iota:sigma:wsdl"
+                  xmlns:model="urn:fr:unicaen:iota:sigma:xsd">
+    
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="urn:fr:unicaen:iota:sigma:xsd" schemaLocation="sigma.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    
+    <wsdl:message name="verifyRequest">
+        <wsdl:part name="principal" element="model:principal"/>
+    </wsdl:message>
+    
+    <wsdl:message name="verifyResponse">
+        <wsdl:part name="result" type="model:Verification"/>
+    </wsdl:message>
+    
+    <wsdl:portType name="SigMaServicePortType">
+        <wsdl:operation name="verify">
+            <wsdl:input name="verifyRequest" message="service:verifyRequest"/>
+            <wsdl:output name="verifyResult" message="service:verifyResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="SigMaBinding" type="service:SigMaServicePortType">
+        <wsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="verify">
+            <wsoap:operation/>
+            <wsdl:input>
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="SigMaService">
+        <wsdl:port name="SigMaServiceServicePort" binding="service:SigMaBinding">
+        </wsdl:port>
+    </wsdl:service>
+    
+</wsdl:definitions>

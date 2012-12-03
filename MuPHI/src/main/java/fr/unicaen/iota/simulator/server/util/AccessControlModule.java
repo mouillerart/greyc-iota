@@ -19,6 +19,8 @@
 package fr.unicaen.iota.simulator.server.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,12 +37,20 @@ public class AccessControlModule {
 
     public static boolean isAuthenticated(String publicKey, String message) {
         try {
-            return MD5.MD5_Algo(publicKey + Configuration.MDP).equals(message);
-        } catch (NoSuchAlgorithmException ex) {
-            log.fatal(null, ex);
+            byte[] digest = MD5.digest((publicKey + Configuration.MDP).getBytes("UTF-8"));
+            return new BigInteger(1, digest).toString(16).equals(message);
         } catch (UnsupportedEncodingException ex) {
             log.fatal(null, ex);
         }
         return false;
+    }
+    private static MessageDigest MD5;
+
+    static {
+        try {
+            MD5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            log.fatal("MD5 not avalaible", e);
+        }
     }
 }

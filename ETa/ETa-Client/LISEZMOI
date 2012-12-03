@@ -4,8 +4,14 @@ Bibliothèque cliente pour l’interfaçage avec le web service ETa (gestion des
 utilisateurs).
 
 Dépendances:
+  modules IoTa:
+    - Tau
   bibliothèques:
     - Apache cxf
+    - epcis-queryclient
+    - servlet-api
+    - commons-logging
+    - log4j
 
 Configuration:
   (application.properties pour cette application,

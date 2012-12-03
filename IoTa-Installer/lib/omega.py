@@ -28,5 +28,9 @@ class OMeGaInstaller(installer.WebAppInstaller):
                 ("Enter the archive file pathname", "omega", "repo", {"type": "file"}),
                 ("Enter the RMI URL of ALfA", "alfa", "rmi_url", {})
                 ], [
-                ("application", { "alfa-rmi-url": ("alfa", "rmi_url") })
+                ("application",
+                 { "alfa-rmi-url": ("alfa", "rmi_url"),
+                   "ons": ("ons", "server"),
+                   "ons-domain-prefix": ("ons", "domain_prefix"),
+                   "default-identity": ("global", "anonymous_user") })
                 ] )

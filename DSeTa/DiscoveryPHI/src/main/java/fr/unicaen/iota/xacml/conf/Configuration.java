@@ -2,7 +2,7 @@
  *  This program is a part of the IoTa project.
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -32,13 +32,11 @@ public final class Configuration {
     }
     private static final String PROPERTIES_CONFIG_FILE = "/application.properties";
     public static String DS_ADDRESS;
-    public static int XACML_SERVICE_PORT;
 
     static {
         try {
             Properties props = loadProperties();
             DS_ADDRESS = props.getProperty("ds-address");
-            XACML_SERVICE_PORT = Integer.parseInt(props.getProperty("xacml-service-port"));
         } catch (IOException ex) {
             LogFactory.getLog(Configuration.class).fatal(null, ex);
         }

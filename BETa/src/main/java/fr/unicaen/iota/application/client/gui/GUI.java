@@ -18,21 +18,24 @@
  */
 package fr.unicaen.iota.application.client.gui;
 
-import fr.unicaen.iota.application.client.CallBackClientImpl;
+import fr.unicaen.iota.application.client.CallbackClientImpl;
 import fr.unicaen.iota.application.client.Configuration;
 import fr.unicaen.iota.application.client.TraceEPCRMIAsync;
-import fr.unicaen.iota.application.model.EPCISEvent;
-import fr.unicaen.iota.application.rmi.CallBackClient;
-import fr.unicaen.iota.application.soap.client.IOTA_ServiceStub;
+import fr.unicaen.iota.application.soap.IoTaException;
+import fr.unicaen.iota.application.soap.client.IoTaFault;
+import fr.unicaen.iota.application.soap.client.OmICron;
 import fr.unicaen.iota.application.util.Utils;
+import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
  *
@@ -43,14 +46,17 @@ public class GUI extends javax.swing.JFrame implements ChangeListener, Observer 
 
         alpha, omega
     };
-    private String defaultEPC = "";
-    private CallBackClientImpl callBackHandler;
     private static final Log log = LogFactory.getLog(GUI.class);
+    private String defaultEPC = "";
+    private final CallbackClientImpl callBackHandler;
 
     /**
      * Creates new form mainGui
+     *
+     * @param callBackHandler
      */
-    public GUI() {
+    public GUI(CallbackClientImpl callBackHandler) {
+        this.callBackHandler = callBackHandler;
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             /*
@@ -122,9 +128,11 @@ public class GUI extends javax.swing.JFrame implements ChangeListener, Observer 
                 addComponent(closableTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)));
 
         pack();
-        SearchArea home = new SearchArea("", null, closableTabbedPane);
-        closableTabbedPane.addClosableTabComponent(home);
-        home.setTitle("Home");
+        /*
+         * SearchArea home = new SearchArea("", closableTabbedPane);
+         * closableTabbedPane.addClosableTabComponent(home);
+         * home.setTitle("Home");
+         */
         jTextField1.setText(defaultEPC);
         closableTabbedPane.addChangeListener(this);
         this.setTitle("BETa: Basic Epcis Test Application");
@@ -141,10 +149,10 @@ public class GUI extends javax.swing.JFrame implements ChangeListener, Observer 
         closableTabbedPane.setSelectedIndex(index);
         switch (ao) {
             case alpha:
-                alphaTraceEPC(jTextField1.getText(), sessionID, callBackHandler);
+                alphaTraceEPC(jTextField1.getText(), sessionID);
                 break;
             case omega:
-                omegaTraceEPC(jTextField1.getText(), sessionID, callBackHandler);
+                omegaTraceEPC(jTextField1.getText(), sessionID);
                 break;
         }
     }
@@ -177,78 +185,34 @@ public class GUI extends javax.swing.JFrame implements ChangeListener, Observer 
         log.trace(arg);
     }
 
-    /**
-     * @return the callBackHandler
-     */
-    public CallBackClient getCallBackHandler() {
-        return callBackHandler;
-    }
-
-    /**
-     * @param callBackHandler the callBackHandler to set
-     */
-    public void setCallBackHandler(CallBackClientImpl callBackHandler) {
-        this.callBackHandler = callBackHandler;
-    }
-
-    private void alphaTraceEPC(String text, String sessionID, CallBackClientImpl callBackHandler) {
+    private void alphaTraceEPC(String text, String sessionID) {
         log.trace("Start RMI Asynchronous Trace");
-        new TraceEPCRMIAsync(text, sessionID, callBackHandler).start();
+        Identity identity = new Identity();
+        identity.setAsString(Configuration.DEFAULT_IDENTITY);
+        new TraceEPCRMIAsync(text, identity, sessionID, callBackHandler).start();
         log.trace("Done");
     }
 
-    private void omegaTraceEPC(String text, String sessionID, CallBackClientImpl callBackHandler) {
+    private void omegaTraceEPC(String epc, String sessionID) {
         log.trace("Processing omegaTraceEPC ...");
-        IOTA_ServiceStub iota_ServiceStub;
+        Identity identity = new Identity();
+        identity.setAsString(Configuration.DEFAULT_IDENTITY);
+        OmICron client = new OmICron(identity, Configuration.SOAP_SERVICE_URL);
         try {
-            iota_ServiceStub = new IOTA_ServiceStub(Configuration.SOAP_SERVICE_URL);
-        } catch (AxisFault ex) {
-            log.fatal(null, ex);
-            return;
-        }
-        IOTA_ServiceStub.TraceEPCRequest traceEPCRequest = new IOTA_ServiceStub.TraceEPCRequest();
-        IOTA_ServiceStub.TraceEPCRequestIn in = new IOTA_ServiceStub.TraceEPCRequestIn();
-        in.setEpc(text);
-        traceEPCRequest.setTraceEPCRequest(in);
-        IOTA_ServiceStub.TraceEPCResponse respTrac;
-        try {
-            respTrac = iota_ServiceStub.traceEPC(traceEPCRequest);
-        } catch (RemoteException ex) {
-            log.fatal(null, ex);
-            return;
-        }
-        IOTA_ServiceStub.Event[] events = respTrac.getTraceEPCResponse().getEventList().getEvent();
-        if (events != null) {
-            for (IOTA_ServiceStub.Event e : events) {
-                EPCISEvent evt = new EPCISEvent();
-                evt.setAction(EPCISEvent.ActionType.valueOf(e.getAction().toString()));
-                evt.setBizLoc(e.getBizLoc());
-                evt.setBizStep(e.getBizStep());
-                List<String> childs = new ArrayList<String>();
-                if (e.getChildList().getChilds() != null) {
-                    childs.addAll(Arrays.asList(e.getChildList().getChilds()));
+            List<EPCISEventType> events = client.traceEPC(epc);
+            if (!events.isEmpty()) {
+                for (EPCISEventType evt : events) {
+                    try {
+                        callBackHandler.pushEvent(sessionID, evt);
+                    } catch (RemoteException ex) {
+                        log.error("Could not push event to callback client", ex);
+                    }
                 }
-                evt.setChildren(childs);
-                evt.setDisposition(e.getDisposition());
-                List<String> epcs = new ArrayList<String>();
-                if (e.getEpcList().getEpcs() != null) {
-                    epcs.addAll(Arrays.asList(e.getEpcList().getEpcs()));
-                }
-                evt.setEpcs(epcs);
-                evt.setEventTime(e.getRecordTime());
-                evt.setInsertedTime(e.getEventTime());
-                evt.setParentID(e.getParentId());
-                evt.setQuantity(e.getQuantity() + "");
-                evt.setReadPoint(e.getReadPoint());
-                evt.setType(EPCISEvent.EventType.valueOf(e.getType().toString()));
-                try {
-                    callBackHandler.pushEvent(sessionID, evt);
-                } catch (RemoteException ex) {
-                    log.fatal(null, ex);
-                }
+            } else {
+                log.trace("(no events)");
             }
-        } else {
-            log.trace("(no events)");
+        } catch (IoTaException ex) {
+            log.warn("Could not retreive events: " + IoTaFault.explain(ex), ex);
         }
         log.trace("Done");
     }

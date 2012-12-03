@@ -20,6 +20,7 @@ package fr.unicaen.iota.validator.operations;
 
 import fr.unicaen.iota.application.model.DSEvent;
 import fr.unicaen.iota.application.rmi.AccessInterface;
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.IOTA;
 import fr.unicaen.iota.validator.model.DSLink;
@@ -35,13 +36,15 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DSEntryComparator {
 
-    private AccessInterface applicationLevelInterface;
-    private IOTA iota;
+    private final AccessInterface applicationLevelInterface;
+    private final IOTA iota;
+    private final Identity identity;
     private static final Log log = LogFactory.getLog(DSEntryComparator.class);
 
-    public DSEntryComparator(AccessInterface applicationLevelInterface, IOTA iota) {
+    public DSEntryComparator(Identity identity, AccessInterface applicationLevelInterface, IOTA iota) {
         this.applicationLevelInterface = applicationLevelInterface;
         this.iota = iota;
+        this.identity = identity;
     }
 
     public Map<EPC, List<DSEvent>> getEventNotVerified(EPC container, List<EPC> list) {
@@ -83,7 +86,7 @@ public class DSEntryComparator {
             tmp.add(link.getDsAddress());
             Date d1 = new Date();
             eventList.addAll(applicationLevelInterface.queryDS(container.getEpc(),
-                    link.getDsAddress(), link.getLogin(), link.getPassword(), Configuration.DS_SERVICE_TYPE_FOR_EPCIS));
+                    link.getDsAddress(), identity, Configuration.DS_SERVICE_TYPE_FOR_EPCIS));
             Date d2 = new Date();
             link.addTimeResponse(d2.getTime() - d1.getTime());
         }
@@ -119,7 +122,7 @@ public class DSEntryComparator {
         List<DSEvent> dsEventList = new ArrayList<DSEvent>();
         List<Infrastructure> infrastructures = container.getInfrastructures();
         List<String> dsLinks = new ArrayList<String>();
-        String referentDS = applicationLevelInterface.getReferenteDS(container.getEpc());
+        String referentDS = applicationLevelInterface.getReferentDS(container.getEpc());
         for (Infrastructure infra : infrastructures) {
             if (!iota.get(infra.getBizLoc()).getDSLink().isActiveAnalyse()) {
                 continue;
@@ -130,7 +133,7 @@ public class DSEntryComparator {
             }
             if (link.getDsAddress().equals(referentDS)) {
                 Date d1 = new Date();
-                List<DSEvent> list = applicationLevelInterface.queryDS(container.getEpc(), link.getDsAddress(), link.getLogin(), link.getPassword(), Configuration.DS_SERVICE_TYPE_FOR_DS);
+                List<DSEvent> list = applicationLevelInterface.queryDS(container.getEpc(), link.getDsAddress(), identity, Configuration.DS_SERVICE_TYPE_FOR_DS);
                 Date d2 = new Date();
                 link.addTimeResponse(d2.getTime() - d1.getTime());
                 for (DSEvent dSEvent : list) {

@@ -8,13 +8,14 @@ IoTa-DiscoveryWS-Client/        bibliothèque cliente
 
 Dépendances:
   modules IoTa:
+    - Nu
     - LibXACML-DS
+    - DS-Xi-Client
     - IoTa-DiscoveryWS-Client
   bibliothèques:
     - hibernate
     - mysql-connector
     - axis2
-    - sunxacml
     - dnsjava
     - servlet-api
     - commons-logging

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -112,7 +112,7 @@ public class CallbackOperationsServlet extends HttpServlet {
         LOG.debug("Gateway Callback Interface invoked.");
         rsp.setContentType("text/plain");
         final PrintWriter out = rsp.getWriter();
-        InputStream is = null;
+        InputStream is;
         is = req.getInputStream();
 
         try {
@@ -126,6 +126,7 @@ public class CallbackOperationsServlet extends HttpServlet {
             callbackOperationsModule.send(msg);
             rsp.setStatus(HttpServletResponse.SC_OK);
             out.println("Event received by Callback Interface module");
+            LOG.info("Event received.");
         } catch (SAXException e) {
             String response = "An error processing the XML document occurred";
             LOG.error(response, e);

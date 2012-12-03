@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:model="urn:fr:unicaen:iota:sigma:xsd"
+           xmlns:epcis="urn:epcglobal:epcis:xsd:1"
+           targetNamespace="urn:fr:unicaen:iota:sigma:xsd"
+           elementFormDefault="unqualified" attributeFormDefault="unqualified">
+
+    <xs:import namespace="urn:epcglobal:epcis:xsd:1" schemaLocation="./EPCglobal-epcis-1_0.xsd"/>
+
+    <xs:complexType name="verifyResponse">
+        <xs:sequence>
+            <xs:element name="value" type="xs:boolean"/>
+            <xs:element name="message" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="verification" type="model:Verification"/>
+
+    <xs:complexType name="Verification">
+        <xs:sequence>
+            <xs:element name="verifyResponse" type="model:verifyResponse"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="principal" type="model:Principal"/>
+
+    <xs:complexType name="Principal">
+        <xs:sequence>
+            <xs:element name="event" type="epcis:EPCISEventType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

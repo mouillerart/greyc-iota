@@ -20,9 +20,11 @@
 import installer
 from config import CONFIG
 
+
 class GlobalConfigurer(installer.Configurer):
 
     def __init__(self):
         installer.Configurer.__init__(self, "Global", "global", [
-                ("Enter this server hostname (as it will be known to the clients)", "global", "host", {})
+                ("Enter this server hostname (as it will be known to the clients)", "global", "host", {}),
+                ("Enter the anonymous user identity", "global", "anonymous_user", {})
                 ])

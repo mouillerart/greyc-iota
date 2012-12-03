@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -45,7 +45,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,80 +62,18 @@ import org.xml.sax.SAXParseException;
  */
 public class CallbackOperationsModule {
 
-    private static final String PROP_EPCIS_SCHEMA_FILE = "/wsdl/EPCglobal-epcis-query-1_0.xsd";
-    private static final String PROPERTY_FILE = "/application.properties";
     private Schema schema;
-    private Properties properties;
-    private String queueName = "queueToFilter";
-    private String msgUser;
-    private String msgPassword;
-    private String msgUrl;
-    private static final String PROP_MSG_QUEUENAME = "messagebroker.queueName";
-    private static final String PROP_MSG_USER = "messagebroker.user";
-    private static final String PROP_MSG_PASSWORD = "messagebroker.password";
-    private static final String PROP_MSG_URL = "messagebroker.url";
-    /**
-     * The
-     * <code>Connection</code> to the database
-     */
     private java.sql.Connection dbConnection;
-    /**
-     * The
-     * <code>CallbackOperationsBackendSQL</code> used for database
-     */
     private CallbackOperationsBackendSQL backend;
-    // Properties of database
-    private static final String PROP_DB_USERNAME = "database.username";
-    private static final String DEFAULT_DB_USERNAME = "eta_usr";
-    private static final String PROP_DB_PASSWORD = "database.password";
-    private static final String DEFAULT_DB_PASSWORD = "eta_pwd";
-    private static final String PROP_DB_URL = "database.url";
-    private static final String DEFAULT_DB_URL = "jdbc:mysql://localhost:3306/eta_db?autoReconnect=true";
-    /**
-     * Whether to trust a certificate whose certificate chain cannot be
-     * validated when delivering results via Sender.
-     */
     private boolean trustAllCertificates;
     private static final Log LOG = LogFactory.getLog(CallbackOperationsModule.class);
 
     public CallbackOperationsModule() {
-        this.properties = loadProperties(PROPERTY_FILE);
-        this.schema = initEpcisSchema(PROP_EPCIS_SCHEMA_FILE);
-        this.trustAllCertificates = Boolean.parseBoolean(properties.getProperty("trustAllCertificates", "false"));
-        queueName = properties.getProperty(PROP_MSG_QUEUENAME, queueName);
-        msgUrl = properties.getProperty(PROP_MSG_URL, ActiveMQConnection.DEFAULT_BROKER_URL);
-        msgUser = properties.getProperty(PROP_MSG_USER, ActiveMQConnection.DEFAULT_USER);
-        msgPassword = properties.getProperty(PROP_MSG_PASSWORD, ActiveMQConnection.DEFAULT_PASSWORD);
+        this.schema = initEpcisSchema(Constants.EPCIS_SCHEMA_PATH);
+        this.trustAllCertificates = Boolean.parseBoolean(Constants.TRUST_ALL_CERTIFICATES);
         backend = new CallbackOperationsBackendSQL();
         dbConnection = loadDatabaseConnection();
         LOG.info("CallbackModule sender is successfully loaded");
-    }
-
-    /**
-     * Gets the ActiveMQ password.
-     *
-     * @return The ActiveMQ password.
-     */
-    public String getMsgPassword() {
-        return msgPassword;
-    }
-
-    /**
-     * Gets the destination URL.
-     *
-     * @return The destination URL.
-     */
-    public String getMsgUrl() {
-        return msgUrl;
-    }
-
-    /**
-     * Gets the user name.
-     *
-     * @return The user name.
-     */
-    public String getMsgUser() {
-        return msgUser;
     }
 
     /**
@@ -166,42 +103,19 @@ public class CallbackOperationsModule {
     }
 
     /**
-     * Loads the application's properties file from the class path.
-     *
-     * @return A populated Properties instance.
-     */
-    private Properties loadProperties(String file) {
-        // read application properties from classpath
-        InputStream is = this.getClass().getResourceAsStream(file);
-        Properties prop = new Properties();
-        try {
-            prop.load(is);
-            is.close();
-        } catch (IOException e) {
-            LOG.error("Unable to load application properties from classpath:" + file + " ("
-                    + this.getClass().getResource(file) + ")", e);
-        }
-        return prop;
-    }
-
-    /**
      * Loads the connection to the database.
      *
      * @return The connection to the database.
      */
     private java.sql.Connection loadDatabaseConnection() {
-        String username = properties.getProperty(PROP_DB_USERNAME, DEFAULT_DB_USERNAME);
-        String password = properties.getProperty(PROP_DB_PASSWORD, DEFAULT_DB_PASSWORD);
-        String url = properties.getProperty(PROP_DB_URL, DEFAULT_DB_URL);
         java.sql.Connection c = null;
-
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Properties props = new Properties();
-            props.setProperty("user", username);
-            props.setProperty("password", password);
+            props.setProperty("user", Constants.DATABASE_LOGIN);
+            props.setProperty("password", Constants.DATABASE_PASSWORD);
             props.setProperty("autoReconnect", "true");
-            c = DriverManager.getConnection(url, props);
+            c = DriverManager.getConnection(Constants.DATABASE_URL, props);
             c.setAutoCommit(false);
             LOG.debug("MySQL connection established");
         } catch (ClassNotFoundException e) {
@@ -239,11 +153,9 @@ public class CallbackOperationsModule {
                     transformer.transform(new DOMSource(document), new StreamResult(writer));
                     String xml = writer.toString();
                     if (xml.length() > 100 * 1024) {
-                        // too large, do not log
-                        xml = null;
-                    } else {
-                        LOG.debug("Incoming contents:\n\n" + writer.toString() + "\n");
+                        xml = "[too large, not logged]";
                     }
+                    LOG.debug("Incoming contents:\n\n" + xml + "\n");
                 } catch (Exception e) {
                     // never mind ... do not log
                 }
@@ -287,14 +199,15 @@ public class CallbackOperationsModule {
     public void consumeAndSend() throws JMSException, MalformedURLException, IOException, SAXException,
             SQLException, Exception {
         ActiveMQConnectionFactory factory;
-        if (msgUser != null && msgPassword != null && !msgUser.isEmpty() && !msgPassword.isEmpty()) {
-            factory = new ActiveMQConnectionFactory(msgUser, msgPassword, msgUrl);
+        if (Constants.ACTIVEMQ_LOGIN != null && Constants.ACTIVEMQ_PASSWORD != null
+                && !Constants.ACTIVEMQ_LOGIN.isEmpty() && !Constants.ACTIVEMQ_PASSWORD.isEmpty()) {
+            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_LOGIN, Constants.ACTIVEMQ_PASSWORD, Constants.ACTIVEMQ_URL);
         } else {
-            factory = new ActiveMQConnectionFactory(msgUrl);
+            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_URL);
         }
         Connection connection = factory.createConnection();
         Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-        Destination destination = session.createQueue(queueName);
+        Destination destination = session.createQueue(Constants.ACTIVEMQ_QUEUE_NAME);
         MessageConsumer consumer = session.createConsumer(destination);
         connection.start();
 
@@ -305,7 +218,7 @@ public class CallbackOperationsModule {
                     break;
                 }
 
-                String docText = "";
+                String docText;
                 if (message != null && message instanceof TextMessage) {
                     TextMessage text = (TextMessage) message;
                     docText = text.getText();
@@ -315,24 +228,22 @@ public class CallbackOperationsModule {
 
                     try {
                         int response = send(docText, dest);
+                        LOG.info("Event sent.");
                     } catch (SocketTimeoutException e) {
                     } catch (IOException e) {
                         Session prodS = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-                        Destination sendDest = prodS.createQueue(queueName);
+                        Destination sendDest = prodS.createQueue(Constants.ACTIVEMQ_QUEUE_NAME);
                         MessageProducer producer = prodS.createProducer(sendDest);
                         TextMessage messageToSend = prodS.createTextMessage();
                         messageToSend.setText(docText);
                         producer.send(messageToSend);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug(e);
-                        } else {
-                            LOG.error(e);
-                        }
+                        LOG.info("Fails to send event: event resent.");
                     }
                     message.acknowledge();
                 }
             }
         } finally {
+            session.close();
             connection.close();
         }
     }
@@ -344,14 +255,16 @@ public class CallbackOperationsModule {
      * @param dest The destination to send the data to.
      * @return The response code.
      * @throws MalformedURLException If the destination url is not conformed.
+     * @throws SocketTimeoutException
      * @throws IOException If a communication error occurred.
+     * @throws Exception
      */
     public int send(String data, String dest)
             throws MalformedURLException, SocketTimeoutException, IOException, Exception {
         // set up connection and send data to given destination
         URL serviceUrl;
         try {
-            serviceUrl = new URL(dest.toString());
+            serviceUrl = new URL(dest);
         } catch (MalformedURLException e) {
             throw new MalformedURLException("Unable to parse destination as a URL");
         }
@@ -428,6 +341,7 @@ public class CallbackOperationsModule {
         TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
 
+                @Override
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }

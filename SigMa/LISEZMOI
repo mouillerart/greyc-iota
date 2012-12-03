@@ -1,0 +1,8 @@
+SigMa - SIGnature verification Module
+
+Module de gestion des signatures éléctroniques dans IoTa
+
+SigMa/			  service web de vérification
+SigMa-Client/             client du service web
+SigMa-Commons/            fonctions de base de signature
+SigMa-Test/               Application basique des différents modules

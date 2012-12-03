@@ -3,7 +3,7 @@
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -19,16 +19,19 @@
  */
 package fr.unicaen.iota.discovery.server.querycontrol;
 
-import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.discovery.server.hibernate.Event;
 import fr.unicaen.iota.discovery.server.hibernate.EventToPublish;
 import fr.unicaen.iota.discovery.server.hibernate.Partner;
 import fr.unicaen.iota.discovery.server.hibernate.User;
-import fr.unicaen.iota.discovery.server.query.DSPEP;
 import fr.unicaen.iota.discovery.server.query.QueryOperationsModule;
-import fr.unicaen.iota.discovery.server.util.EPCUtilities.InvalidFormatException;
-import fr.unicaen.iota.discovery.server.util.*;
-import fr.unicaen.iota.xacml.policy.Module;
+import fr.unicaen.iota.discovery.server.util.Constants;
+import fr.unicaen.iota.discovery.server.util.ProtocolException;
+import fr.unicaen.iota.discovery.server.util.Session;
+import fr.unicaen.iota.discovery.server.util.XACMLUtils;
+import fr.unicaen.iota.nu.EPCUtilities;
+import fr.unicaen.iota.nu.EPCUtilities.InvalidFormatException;
+import fr.unicaen.iota.xi.client.DSPEP;
+import fr.unicaen.iota.xi.utils.Utils;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +46,7 @@ public class DSControler {
 
     private static final Log log = LogFactory.getLog(DSControler.class);
     private QueryOperationsModule queryOperationsModule = new QueryOperationsModule();
-    private DSPEP dspep = new DSPEP();
+    private DSPEP dspep = new DSPEP(Constants.XACML_URL);
 
     public String hello() {
         return Constants.SERVICE_ID;
@@ -52,7 +55,7 @@ public class DSControler {
     public List<Event> eventLookup(String sessionId, String epc) throws ProtocolException {
         log.trace("eventLookup method called.");
         try {
-            new EPCUtilities().checkEpcOrUri(epc);
+            EPCUtilities.checkEpcOrUri(epc);
         } catch (InvalidFormatException ex) {
             throw new ProtocolException(2000, ex.getMessage());
         }
@@ -60,8 +63,8 @@ public class DSControler {
         List<Event> eventList = new ArrayList<Event>();
         User u = Session.getUser(sessionId);
         for (Event e : eventListTmp) {
-            int resp = dspep.eventLookup(u.getUserID(), XACMLUtils.createXACMLEvent(e), Module.queryModule.getValue());
-            if (resp == Result.DECISION_PERMIT) {
+            int resp = dspep.eventLookup(u.getUserID(), XACMLUtils.createXACMLEvent(e));
+            if (Utils.responseIsPermit(resp)) {
                 eventList.add(e);
             }
         }
@@ -88,8 +91,8 @@ public class DSControler {
         User u = Session.getUser(sessionId);
         List<User> uList = queryOperationsModule.userLookup(userID);
         for (User u2 : uList) {
-            int resp = dspep.userLookup(u.getUserID(), u2.getPartner().getPartnerID(), Module.administrationModule.getValue());
-            if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionId, Module.administrationModule.getValue())) {
+            int resp = dspep.userLookup(u.getUserID(), u2.getPartner().getPartnerID());
+            if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
                 throw new ProtocolException(2100, "Access denied for user " + userID);
             }
         }
@@ -103,8 +106,8 @@ public class DSControler {
             throw new ProtocolException(2002, "user not found");
         }
         User u = Session.getUser(sessionID);
-        int resp = dspep.userInfo(u.getUserID(), uList.get(0).getPartner().getPartnerID(), Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionID, Module.administrationModule.getValue())) {
+        int resp = dspep.userInfo(u.getUserID(), uList.get(0).getPartner().getPartnerID());
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionID)) {
             throw new ProtocolException(2100, "Access denied for user " + userId);
         }
         if (uList.isEmpty()) {
@@ -116,14 +119,14 @@ public class DSControler {
     public int userCreate(String sessionID, String partnerId, String password, String login) throws ProtocolException {
         log.trace("userCreate method called.");
         User u = Session.getUser(sessionID);
-        int resp = dspep.userCreate(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionID, Module.administrationModule.getValue())) {
+        int resp = dspep.userCreate(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionID)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         if (!queryOperationsModule.userLookup(login).isEmpty()) {
             throw new ProtocolException(2002, "user already exists");
         }
-        List<Partner> pList = null;
+        List<Partner> pList;
         if ((pList = queryOperationsModule.partnerLookup(partnerId)).isEmpty()) {
             throw new ProtocolException(2002, "partner not found");
         }
@@ -142,8 +145,8 @@ public class DSControler {
     public void userUpdate(String sessionID, String partnerId, int uid, String userId, String password) throws ProtocolException {
         log.trace("userUpdate method called.");
         User u = Session.getUser(sessionID);
-        int resp = dspep.userInfo(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionID, Module.administrationModule.getValue())) {
+        int resp = dspep.userInfo(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionID)) {
             throw new ProtocolException(2100, "Access denied for user " + userId);
         }
         User u2 = queryOperationsModule.userLookup(uid);
@@ -167,8 +170,8 @@ public class DSControler {
         }
         for (User u2 : uList) {
             User u = Session.getUser(sessionID);
-            int resp = dspep.userDelete(u.getUserID(), u2.getPartner().getPartnerID(), Module.administrationModule.getValue());
-            if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionID, Module.administrationModule.getValue())) {
+            int resp = dspep.userDelete(u.getUserID(), u2.getPartner().getPartnerID());
+            if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionID)) {
                 throw new ProtocolException(2100, "Access denied for user " + userId);
             }
             queryOperationsModule.userDelete(u2);
@@ -178,8 +181,8 @@ public class DSControler {
     public List<Partner> partnerLookup(String sessionId, String partnerId) throws ProtocolException {
         log.trace("partnerLookup method called.");
         User u = Session.getUser(sessionId);
-        int resp = dspep.partnerLookup(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionId, Module.administrationModule.getValue())) {
+        int resp = dspep.partnerLookup(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         List<Partner> pList = queryOperationsModule.partnerLookup(partnerId);
@@ -189,8 +192,8 @@ public class DSControler {
     public Partner partnerInfo(String sessionId, String partnerId) throws ProtocolException {
         log.trace("partnerLookup method called.");
         User u = Session.getUser(sessionId);
-        int resp = dspep.partnerInfo(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionId, Module.administrationModule.getValue())) {
+        int resp = dspep.partnerInfo(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         List<Partner> pList = queryOperationsModule.partnerLookup(partnerId);
@@ -203,8 +206,8 @@ public class DSControler {
     public int partnerCreate(String sessionId, String partnerId, String partnerServiceType, String partnerServiceURL) throws ProtocolException {
         log.trace("partnerCreate method called: " + partnerId);
         User u = Session.getUser(sessionId);
-        int resp = dspep.partnerCreate(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionId, Module.administrationModule.getValue())) {
+        int resp = dspep.partnerCreate(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         if (!queryOperationsModule.partnerLookup(partnerId).isEmpty()) {
@@ -226,8 +229,8 @@ public class DSControler {
     public int partnerUpdate(String sessionId, int partnerUID, String partnerId, String serviceType, String serviceUri) throws ProtocolException {
         log.trace("partnerUpdate method called.");
         User u = Session.getUser(sessionId);
-        int resp = dspep.partnerUpdate(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionId, Module.administrationModule.getValue())) {
+        int resp = dspep.partnerUpdate(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         Partner p = queryOperationsModule.partnerLookup(partnerUID);
@@ -246,8 +249,8 @@ public class DSControler {
     public void partnerDelete(String sessionId, String partnerId) throws ProtocolException {
         log.trace("partnerDelete method called.");
         User u = Session.getUser(sessionId);
-        int resp = dspep.partnerCreate(u.getUserID(), partnerId, Module.administrationModule.getValue());
-        if (resp != Result.DECISION_PERMIT && !dspep.isRootAccess(sessionId, Module.administrationModule.getValue())) {
+        int resp = dspep.partnerCreate(u.getUserID(), partnerId);
+        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         List<Partner> pList = queryOperationsModule.partnerLookup(partnerId);
@@ -263,8 +266,8 @@ public class DSControler {
         log.trace("eventInfo method called.");
         Event e = queryOperationsModule.eventLookup(eventId);
         User u = Session.getUser(sessionID);
-        int resp = dspep.eventInfo(u.getUserID(), XACMLUtils.createXACMLEvent(e), Module.queryModule.getValue());
-        if (resp != Result.DECISION_PERMIT) {
+        int resp = dspep.eventInfo(u.getUserID(), XACMLUtils.createXACMLEvent(e));
+        if (!Utils.responseIsPermit(resp)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         return e;
@@ -273,9 +276,8 @@ public class DSControler {
     public int eventCreate(String sessionId, String partnerId, String epc, String eventClass, Timestamp eventTimeStamp,
             Timestamp sourceTimeStamp, String eventType, String bizStep) throws ProtocolException {
         log.trace("eventCreate method called.");
-        EPCUtilities ePCUtilities = new EPCUtilities();
         try {
-            ePCUtilities.checkEpcOrUri(epc);
+            EPCUtilities.checkEpcOrUri(epc);
         } catch (InvalidFormatException ex) {
             throw new ProtocolException(2000, ex.getMessage());
         }
@@ -293,11 +295,11 @@ public class DSControler {
         event.setBizStep(bizStep);
         event.setPartner(p.get(0));
         User u = Session.getUser(sessionId);
-        int resp = dspep.eventCreate(u.getUserID(), XACMLUtils.createXACMLEvent(event), Module.captureModule.getValue());
-        if (resp != Result.DECISION_PERMIT) {
+        int resp = dspep.eventCreate(u.getUserID(), XACMLUtils.createXACMLEvent(event));
+        if (!Utils.responseIsPermit(resp)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
-        if (ePCUtilities.isReferencable(epc)) {
+        if (EPCUtilities.isReferencable(epc)) {
             EventToPublish etp = new EventToPublish();
             etp.setEvent(event);
             etp.setLastupdate(Constants.DEFAULT_EVENT_TOPUBLISH_TIMESTAMP);
@@ -314,8 +316,8 @@ public class DSControler {
         log.trace("voidEvent method called.");
         Event event = queryOperationsModule.eventLookup(eventId);
         User u = Session.getUser(sessionId);
-        int resp = dspep.voidEvent(u.getUserID(), XACMLUtils.createXACMLEvent(event), Module.captureModule.getValue());
-        if (resp != Result.DECISION_PERMIT) {
+        int resp = dspep.voidEvent(u.getUserID(), XACMLUtils.createXACMLEvent(event));
+        if (!Utils.responseIsPermit(resp)) {
             throw new ProtocolException(2100, "Access denied for user " + u.getUserID());
         }
         event.setEventType("void");
@@ -337,5 +339,10 @@ public class DSControler {
         }
         partnerCreate(sessionId, partnerId, partnerServiceType, partnerServiceURL);
         userCreate("root", partnerId, rootUserPass, rootUserLogin);
+    }
+
+    public boolean isRootAccess(String sessionId) {
+        User u = Session.getUser(sessionId);
+        return dspep.isRootAccess(u.getUserID(), u.getPartner().getPartnerID());
     }
 }

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ public interface MethodNamesCapture {
 
     public int hello(String user, String partner, String module);
 
-    public int captureEvent(String user, XACMLEPCISEvent epcisEvent, String module);
+    public int captureEvent(String user, XACMLEPCISEvent epcisEvent);
 
-    public int captureMasterData(String user, XACMLEPCISMasterData epcisMasterData, String module);
+    public int captureMasterData(String user, XACMLEPCISMasterData epcisMasterData);
 }

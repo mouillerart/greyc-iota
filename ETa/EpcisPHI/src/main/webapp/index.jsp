@@ -23,11 +23,6 @@
                 return;
             }
 %>
-<%--
-    Document   : index
-    Created on : 7 déc. 2010, 10:09:19
-    Author     : jlemoule
---%>
 
 <%@page import="fr.unicaen.iota.epcisphi.xacml.ihm.Module"%>
 <%@page import="fr.unicaen.iota.epcisphi.utils.HTMLUtilities"%>

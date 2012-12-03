@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/ds" reloadable="true">
     <Resource auth="Container" defaultAutoCommit="false"
-       type="javax.sql.DataSource" name="jdbc/DSDB"
-       driverClassName="com.mysql.jdbc.Driver"
-       username="ds_usr" password="ds_pwd"
-       url="jdbc:mysql://localhost:3306/ds_repository_db?autoReconnect=true">
+              type="javax.sql.DataSource" name="jdbc/DSDB"
+              driverClassName="com.mysql.jdbc.Driver"
+              username="ds_usr" password="ds_pwd"
+              url="jdbc:mysql://localhost:3306/DS_DB?autoReconnect=true">
     </Resource>
 </Context>

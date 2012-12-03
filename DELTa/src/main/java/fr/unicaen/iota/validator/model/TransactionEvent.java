@@ -18,13 +18,14 @@
  */
 package fr.unicaen.iota.validator.model;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
+import fr.unicaen.iota.mu.EPCISEventTypeHelper;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.fosstrak.epcis.model.ActionType;
 import org.fosstrak.epcis.model.BusinessTransactionListType;
 import org.fosstrak.epcis.model.BusinessTransactionType;
+import org.fosstrak.epcis.model.EPCISEventType;
 import org.jdom.Element;
 
 /**
@@ -135,19 +136,20 @@ public class TransactionEvent extends BaseEvent {
     }
 
     @Override
-    public boolean isContainedIn(Collection<EPCISEvent> list) {
-        for (EPCISEvent event : list) {
-            for (String epc : event.getEpcs()) {
+    public boolean isContainedIn(Collection<EPCISEventType> list) {
+        for (EPCISEventType evt : list) {
+            EPCISEventTypeHelper event = new EPCISEventTypeHelper(evt);
+            for (String epc : event.getEpcList()) {
                 if (!getEpcList().contains(epc)) {
                     return false;
                 }
             }
-            if (event.getAction().equals(getAction().value())
-                    && event.getBizLoc().equals(getInfrastructure().getBizLoc())
+            if (event.getAction() == getAction()
+                    && event.getBizLocation().equals(getInfrastructure().getBizLoc())
                     && event.getBizStep().equals(getBizStep())
                     && event.getDisposition().equals(getDisposition())
                     && event.getParentID().equals(getParentId())
-                    && verifyBizTransList(event.getBizTrans())) {
+                    && verifyBizTransList(event.getBizTransactions())) {
                 return true;
             }
         }

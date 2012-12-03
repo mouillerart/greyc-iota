@@ -55,7 +55,7 @@ public class CaptureOperation {
             log.trace("CREATE ENTRY");
             DsClient dsClient = new DsClient(EndPointEPR);
             System.out.println("LOGIN");
-            String SESSION_ID = null;
+            String SESSION_ID;
             Session session = dsClient.userLogin(Configuration.DEFAULT_SESSION, getLOGIN(), getPASS());
             SESSION_ID = session.getSessionId();
             log.trace("USER INFO");

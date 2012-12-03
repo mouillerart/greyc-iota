@@ -18,12 +18,13 @@
 package fr.unicaen.iota.simulator.app;
 
 import fr.unicaen.iota.simulator.util.HttpClient;
-import fr.unicaen.iota.simulator.util.MD5;
 import fr.unicaen.iota.simulator.util.Pair;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -191,12 +192,20 @@ public class CommCenter {
 
     public String createEncodedPass(String id, String passwd) {
         try {
-            return MD5.MD5_Algo(id + passwd);
-        } catch (NoSuchAlgorithmException ex) {
-            log.fatal(null, ex);
+            byte[] digest = MD5.digest((id + passwd).getBytes("UTF-8"));
+            return new BigInteger(1, digest).toString(16);
         } catch (UnsupportedEncodingException ex) {
             log.fatal(null, ex);
         }
         return null;
+    }
+    private static MessageDigest MD5;
+
+    static {
+        try {
+            MD5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            log.fatal("MD5 not avalaible", e);
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -23,13 +23,14 @@
  */
 package fr.unicaen.iota.eta.query;
 
-import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.xacml.XACMLConstantsEventType;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,7 +42,6 @@ import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.queryclient.QueryControlClient;
 import org.fosstrak.epcis.repository.EpcisConstants;
-import org.fosstrak.epcis.repository.EpcisQueryControlInterface;
 import org.fosstrak.epcis.soap.*;
 
 /**
@@ -50,7 +50,7 @@ import org.fosstrak.epcis.soap.*;
  * queries to EPCIS interface, XACML query for each result to check access
  * rigths and returns the final result to the requesting client through Axis.
  */
-public class QueryOperationsModule implements EpcisQueryControlInterface {
+public class QueryOperationsModule {
 
     private static final Log LOG = LogFactory.getLog(QueryOperationsModule.class);
     /**
@@ -67,44 +67,85 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
         QUERYNAMES.add("SimpleEventQuery");
         QUERYNAMES.add("SimpleMasterDataQuery");
     }
+
     /**
      * The version of this service implementation. The empty string indicates
      * that the implementation implements only standard functionality with no
      * vendor extensions.
      */
-    private String serviceVersion = "";
-    private ServletContext servletContext;
+    private String serviceVersion = "1.0-eta";
     private DataSource dataSource;
     private QueryOperationsBackend backend;
     private QueryControlClient epcisQueryClient;
     private QueryCheck queryCheck;
 
+    public QueryOperationsBackend getBackend() {
+        return backend;
+    }
+
+    public void setBackend(QueryOperationsBackend backend) {
+        this.backend = backend;
+    }
+
+    public QueryControlClient getEpcisQueryClient() {
+        return epcisQueryClient;
+    }
+
+    public void setEpcisQueryClient(QueryControlClient epcisQueryClient) {
+        this.epcisQueryClient = epcisQueryClient;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+    }
+
+    public String getServiceVersion() {
+        return serviceVersion;
+    }
+
+    public QueryCheck getQueryCheck() {
+        return queryCheck;
+    }
+
+    public void setQueryCheck(QueryCheck queryCheck) {
+        this.queryCheck = queryCheck;
+    }
 
     /**
-     * {@inheritDoc}
+     * @param serviceVersion the serviceVersion to set
      */
-    @Override
+    public void setServiceVersion(String serviceVersion) {
+        if (!"".equals(serviceVersion)) {
+            // serviceVersion must be a valid URL
+            try {
+                new URL(serviceVersion);
+            } catch (MalformedURLException e) {
+                serviceVersion = "https://code.google.com/p/fosstrak/wiki/EpcisMain/" + serviceVersion;
+            }
+        }
+        this.serviceVersion = serviceVersion;
+    }
+
     public List<String> getQueryNames() throws SecurityExceptionResponse, ValidationExceptionResponse,
             ImplementationExceptionResponse {
         LOG.debug("Invoking 'getQueryNames'");
         return QUERYNAMES;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getStandardVersion() throws SecurityExceptionResponse, ValidationExceptionResponse,
             ImplementationExceptionResponse {
         LOG.debug("Invoking 'getStandardVersion'");
         return STD_VERSION;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> getSubscriptionIDs(String queryName) throws NoSuchNameExceptionResponse,
+    public List<String> getSubscriptionIDs(String queryName, String user) throws NoSuchNameExceptionResponse,
             SecurityExceptionResponse, ValidationExceptionResponse, ImplementationExceptionResponse {
         try {
             LOG.debug("Invoking 'getSubscriptionIDs'");
@@ -125,18 +166,13 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getVendorVersion() throws SecurityExceptionResponse, ValidationExceptionResponse,
             ImplementationExceptionResponse {
         LOG.debug("Invoking 'getVendorVersion'");
         return serviceVersion;
     }
 
-    @Override
-    public QueryResults poll(String queryName, QueryParams queryParams) throws NoSuchNameExceptionResponse,
+    public QueryResults poll(String queryName, QueryParams queryParams, String user) throws NoSuchNameExceptionResponse,
             QueryParameterExceptionResponse, QueryTooComplexExceptionResponse, QueryTooLargeExceptionResponse,
             SecurityExceptionResponse, ValidationExceptionResponse, ImplementationExceptionResponse {
         QueryResults results;
@@ -153,14 +189,12 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
             }
             throw new ImplementationExceptionResponse(msg, ie, e);
         }
-        queryCheck = new QueryCheck();
 
         /**
          * TODO: add user and owner in the XACMLEPCISEvent owner =
          * ((ObjectEventType)result).getAny(); user =
          */
         String owner = "anonymous";
-        String user = "anonymous";
 
         if ("SimpleEventQuery".equals(queryName)) {
             for (QueryParam queryParam : queryParams.getParam()) {
@@ -225,11 +259,7 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void subscribe(String queryName, QueryParams params, String dest, SubscriptionControls controls, String subscriptionID)
+    public void subscribe(String queryName, QueryParams params, String dest, SubscriptionControls controls, String subscriptionID, String user)
             throws NoSuchNameExceptionResponse, InvalidURIExceptionResponse, DuplicateSubscriptionExceptionResponse,
             QueryParameterExceptionResponse, QueryTooComplexExceptionResponse, SubscriptionControlsExceptionResponse,
             SubscribeNotPermittedExceptionResponse, SecurityExceptionResponse, ValidationExceptionResponse,
@@ -330,14 +360,10 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
                     throw new ImplementationExceptionResponse(msg, ie, e);
                 }
 
-                queryCheck = new QueryCheck();
-
                 // XACML check
                 // TODO user
-                String user = "ppda";
-                String owner = "test";
-                int subscriptionResponse = queryCheck.checkSubscribe(user, owner);
-                if (subscriptionResponse == Result.DECISION_PERMIT) {
+                String owner = "anonymous";
+                if (queryCheck.checkSubscribe(user, owner)) {
                     String callbackAddress;
                     try {
                         callbackAddress = Constants.CALLBACK_URL;
@@ -361,10 +387,10 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
                     // Subscribe query to the EPCIS
                     epcisQueryClient.subscribe(subscribe);
                     // Stores the query subscription to the database
-                    backend.storeSubscription(session, subscriptionID, dest);
+                    backend.storeSubscription(session, subscriptionID, dest, user);
                     LOG.debug("New subscription from user: " + user);
                 } else {
-                    String msg = "Subscription not allowed";
+                    String msg = "Subscription not allowed for (" + user + ", " + owner + ")";
                     LOG.warn("SubscribeNotPermittedException: " + msg);
                     SubscribeNotPermittedException e = new SubscribeNotPermittedException();
                     e.setReason(msg);
@@ -388,11 +414,7 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void unsubscribe(String subscriptionID) throws NoSuchSubscriptionExceptionResponse,
+    public void unsubscribe(String subscriptionID, String user) throws NoSuchSubscriptionExceptionResponse,
             SecurityExceptionResponse, ValidationExceptionResponse, ImplementationExceptionResponse {
         try {
             LOG.debug("Invoking 'unsubscribe'");
@@ -438,69 +460,10 @@ public class QueryOperationsModule implements EpcisQueryControlInterface {
         }
     }
 
-    /**
-     * @return the dataSource
-     */
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    /**
-     * @param dataSource the dataSource to set
-     */
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    /**
-     * @param servletContext the servletContextservletContext to set
-     */
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
-
-    /**
-     * @return the serviceVersion
-     */
-    public String getServiceVersion() {
-        return serviceVersion;
-    }
-
-    /**
-     * @param serviceVersion the serviceVersion to set
-     */
-    public void setServiceVersion(String serviceVersion) {
-        if (!"".equals(serviceVersion)) {
-            // serviceVersion must be a valid URL
-            try {
-                new URL(serviceVersion);
-            } catch (MalformedURLException e) {
-                serviceVersion = "https://code.google.com/p/fosstrak/wiki/EpcisMain/" + serviceVersion;
-            }
-        }
-        this.serviceVersion = serviceVersion;
-    }
-
-    /**
-     * @return the backend
-     */
-    public QueryOperationsBackend getBackend() {
-        return backend;
-    }
-
-    /**
-     * @param backend the backend to set
-     */
-    public void setBackend(QueryOperationsBackend backend) {
-        this.backend = backend;
-    }
-
-    public QueryControlClient getEpcisQueryClient() {
-        return epcisQueryClient;
-    }
-
-    public void setEpcisQueryClient(QueryControlClient epcisQueryClient) {
-        this.epcisQueryClient = epcisQueryClient;
+    public boolean canBe(Principal principal, Identity identity) {
+        String user = identity.getAsString();
+        String partner = principal.getName();
+        return queryCheck.canBe(user, partner);
     }
 
     private void configureEPCISQueryClient() throws IOException, Exception {

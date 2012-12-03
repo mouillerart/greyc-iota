@@ -1,0 +1,29 @@
+Adding a module
+===============
+
+There are four types of modules (installer.py):
+
+  Configurer: gets values for options, does not usually install or modify
+              anything.
+
+  Installer: installs an application from a tarball.
+
+  WebAppInstaller: installs a web application from a war file with Tomcat.
+
+  DBWebAppInstaller: a WebAppInstaller that also creates and configures a
+              MySQL database.
+
+
+The update-version.sh script:
+ * writes the file install.ini, an INI file wich contains installation and
+   configuration parameters
+ * cleans and creates symbolic links in resources to the correct versions of
+   the applications tarballs and war files.
+
+
+When adding a module, don’t forget to modify this script to:
+ * add the correct section to install.ini
+ * remove old links to the tarball or war file in resources/
+ * create the correct link to the tarball or war file in resources/
+
+The tarball/war file pattern also needs to be added to the .gitignore file.

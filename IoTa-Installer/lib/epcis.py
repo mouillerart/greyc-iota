@@ -34,11 +34,10 @@ class EpcisInstaller(installer.DBWebAppInstaller):
 
 
     def postConfigure(self):
-        url = ("http://" + CONFIG.get("global", "host") + ":" +
-               CONFIG.get("tomcat", "http_port") + "/" + CONFIG.get("epcis", "name"))
-        CONFIG.set("epcis", "url", url)
-        CONFIG.set("epcis", "query_url", url + "/query")
-        CONFIG.set("epcis", "capture_url", url + "/capture")
-        CONFIG.set("epcis", "db_jndi", "EPCISDB")
-        CONFIG.set("ds", "epcis_query_url", url + "/query")
-        CONFIG.set("epcilon", "subscription_url", url + "/query")
+        url = self.setURL()
+        qurl = self.cset("query_url", url + "query")
+        self.cset("capture_url", url + "capture")
+        self.cset("db_jndi", "EPCISDB")
+        CONFIG.set("ds", "epcis_type", "epcis")
+        CONFIG.set("ds", "epcis_query_url", qurl)
+        CONFIG.set("epcilon", "subscription_url", qurl)

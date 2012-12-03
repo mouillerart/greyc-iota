@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class for Servlet: Logout
- * 
+ *
  */
 public class Logout extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
 
@@ -36,7 +36,7 @@ public class Logout extends javax.servlet.http.HttpServlet implements javax.serv
 
     /*
      * (non-Java-doc)
-     * 
+     *
      * @see javax.servlet.http.HttpServlet#HttpServlet()
      */
     public Logout() {
@@ -45,9 +45,9 @@ public class Logout extends javax.servlet.http.HttpServlet implements javax.serv
 
     /*
      * (non-Java-doc)
-     * 
+     *
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest request,
-     *      HttpServletResponse response)
+     * HttpServletResponse response)
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,9 +62,9 @@ public class Logout extends javax.servlet.http.HttpServlet implements javax.serv
 
     /*
      * (non-Java-doc)
-     * 
+     *
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest request,
-     *      HttpServletResponse response)
+     * HttpServletResponse response)
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

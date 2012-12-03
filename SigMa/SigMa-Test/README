@@ -1,0 +1,18 @@
+SigMa-Test
+
+Test client program for the SigMa web service.
+
+Dependencies:
+  IoTa modules:
+    - SigMa-Client
+    - SigMa-Commons
+  libraries:
+    - epcis-commons
+    - epcis-captureclient
+
+Usage dependencies:
+  - SigMa
+  - an Epcis (or ETa)
+
+Usage:
+  ./sigma-test.sh

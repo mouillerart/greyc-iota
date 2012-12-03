@@ -1,0 +1,20 @@
+DSeTa - Discovery SErvices Trusted Agent
+
+Mock version.
+
+Dependencies:
+  IoTa modules:
+    - DSeTa-Client
+    - IoTa-DiscoveryWS-Client
+  libraries:
+    - commons-logging
+    - log4j
+
+Installation and Configuration:
+  IoTa-Installer installs and configures DSeTa.
+
+Usage Dependencies:
+  - a DS
+
+Usage:
+  .

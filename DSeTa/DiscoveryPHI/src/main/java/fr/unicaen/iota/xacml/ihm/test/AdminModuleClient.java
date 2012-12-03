@@ -2,7 +2,7 @@
  *  This program is a part of the IoTa project.
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +22,6 @@ import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.utils.InterfaceHelper;
 import fr.unicaen.iota.xacml.pep.DSPEP;
 import fr.unicaen.iota.xacml.pep.MethodNamesAdmin;
-import fr.unicaen.iota.xacml.pep.XACMLResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -109,14 +108,13 @@ public class AdminModuleClient extends javax.swing.JFrame {
         ArrayList args = new ArrayList();
         args.add(userField.getText());
         args.add(partnerField.getText());
-        args.add(fr.unicaen.iota.xacml.policy.Module.administrationModule.getValue());
         try {
             DSPEP dspep = new DSPEP();
             int response = (Integer) runMethod(dspep, args.toArray(), action);
-            XACMLResponse res = new XACMLResponse(new Result(response));
+            String res = (response == Result.DECISION_PERMIT)? "ACCEPT": "DENY";
             AccessResponseDialog dialog = new AccessResponseDialog(this, true);
             dialog.setLocationRelativeTo(this);
-            dialog.setResponse(res.toString());
+            dialog.setResponse(res);
             dialog.setVisible(true);
         } catch (InvocationTargetException ex) {
             AccessResponseDialog dialog = new AccessResponseDialog(this, true);

@@ -2,49 +2,58 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unicaen.iota.application</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>omicron</artifactId>
-    <version>1.0</version>
+    <version>1.9-mock</version>
     <packaging>jar</packaging>
 
     <name>OmICron</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <axis2-version>1.5.6</axis2-version>
+        <lib-cxf-version>2.2.12</lib-cxf-version>
+        <lib-spring-version>2.5.6.SEC03</lib-spring-version>
+        <epcis-version>0.5.0</epcis-version>
     </properties>
 
     <dependencies>
 
-        <!-- Axis2 dependencies -->
+        <!-- IoTa dependencies -->
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-kernel</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>nu-pi</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-adb</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>mu</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- CXF dependencies -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${lib-cxf-version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-http</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${lib-cxf-version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-local</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-local</artifactId>
+            <version>${lib-cxf-version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-tcp</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-databinding-jaxb</artifactId>
+            <version>${lib-cxf-version}</version>
         </dependency>
 
         <!-- Log dependencies -->
@@ -75,22 +84,36 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.axis2</groupId>
-                <artifactId>axis2-wsdl2code-maven-plugin</artifactId>
-                <version>${axis2-version}</version>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>2.6.1</version>
                 <executions>
                     <execution>
-                        <id>wsdl2code</id>
-                        <goals>
-                            <goal>wsdl2code</goal>
-                        </goals>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
                         <configuration>
-                            <packageName>fr.unicaen.iota.application.soap.client</packageName>
-                            <wsdlFile>src/main/resources/wsdl/IoTaWSInterface.wsdl</wsdlFile>
-                            <generateServerSide>false</generateServerSide>
-                            <!--<outputDirectory>target/generated-sources/axis2</outputDirectory>
-                            <flattenFiles>true</flattenFiles>-->
+                            <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <packagenames>
+                                        <packagename>urn:unicaen:iota:tau:xsd=fr.unicaen.iota.tau.model</packagename>
+                                        <packagename>urn:unicaen:iota:ds:xsd=fr.unicaen.iota.ds.model</packagename>
+                                        <packagename>urn:unicaen:iota:omega:xsd=fr.unicaen.iota.application.model</packagename>
+                                        <packagename>urn:unicaen:iota:omega:wsdl=fr.unicaen.iota.application.soap</packagename>
+                                        <packagename>urn:epcglobal:xsd:1=org.fosstrak.epcis.model</packagename>
+                                        <packagename>urn:epcglobal:epcis:xsd:1=org.fosstrak.epcis.model</packagename>
+                                        <packagename>urn:epcglobal:epcis-masterdata:xsd:1=org.fosstrak.epcis.model</packagename>
+                                        <packagename>urn:epcglobal:epcis-query:xsd:1=org.fosstrak.epcis.model</packagename>
+                                        <packagename>http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader=org.fosstrak.epcis.model</packagename>
+                                    </packagenames>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/omega.wsdl</wsdl>
+                                    <wsdlLocation>classpath:wsdl/omega.wsdl</wsdlLocation>
+                                </wsdlOption>
+                            </wsdlOptions>
                         </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

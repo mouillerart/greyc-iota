@@ -309,3 +309,30 @@ This product includes software developed by Kent Beck, Erich Gamma, and David
 Saff, distributed under the Common Public License (see file CPL-1.0):
 
   JUnit (junit-*.jar)
+
+
+This product includes artworks by different artists (kde-artists@kde.org),
+distributed under the GNU Lesser General Public Licence 3 or superior (see
+file LGPL-3):
+
+  Oxygen theme icons (object-locked-verified.svgz)
+
+
+This product includes artworks by David Vignoni (http://www.icon-king.com),
+distributed under the GNU Lesser General Public Licence 2.1 (see file
+LGPL-2.1):
+
+  Nuvola icon theme (application-pgp.svg, stock-contact.svg)
+
+
+This product includes artworks by saofasil
+(http://www.clker.com/clipart-rfid-reader.html), placed in the Public Domain:
+
+  Rfid Reader (rfid-reader.svg)
+
+
+This product includes artworks by Sakurambo (), distributed under the GNU Free
+Documentation License version 1.2 and the Creative Commons Attribution-Share
+alike 3.0 Unported license (see files GFDL-1.2 and CCBySA-3U):
+
+  EPC-RFID-TAG (EPC-RFID-TAG.svg)

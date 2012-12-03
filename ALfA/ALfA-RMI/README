@@ -1,0 +1,41 @@
+ALfA-RMI - Access Layer For Applications RMI Server
+
+RMI server to serve between EPCglobal/IoTa and top-level applications.
+
+alfa.sh           utility script for starting the server
+
+Dependencies:
+  IoTa modules:
+    - ALfA
+    - Nu
+    - DSeTa-Client
+    - ETa-Client
+  libraries:
+    - epcis-commons
+    - dnsjava
+    - commons-logging
+    - log4j
+
+Configuration:
+  IoTa-Installer installs and configures ALfA.
+  See the files *.properties and java.policy in the jar file (each of those
+  can be overriden by a file with the same name in the current directory).
+  (application.properties for this application,
+   ds-client.properties for the client library IoTa-DiscoveryWS-Client,
+   commons-logging.properties and log4j.properties for the logs)
+
+Usage Dependencies:
+  - an ONS
+  - a DWS (eg. IoTa-DiscoveryWS)
+  - an Epcis (eg. Fosstrak-Epcis)
+  - IoTa:
+    - DSeTa
+    - EpcILoN
+    - ETa
+    - DiscoveryPHI (optional)
+    - EpcisPHI (optional)
+
+Usage:
+  nohup ./alfa.sh
+
+  see BETa, DELTa, or OMeGa for examples

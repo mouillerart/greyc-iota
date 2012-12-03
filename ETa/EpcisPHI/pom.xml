@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>greyc.xacml</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>epcis-phi</artifactId>
-    <version>1.0</version>
+    <version>1.9-mock</version>
     <packaging>war</packaging>
 
     <name>EpcisPHI</name>
@@ -17,15 +17,15 @@
 
         <!-- IoTa dependencies -->
         <dependency>
-            <groupId>fr.unicaen.iota.xacml</groupId>
+            <groupId>fr.unicaen.iota</groupId>
             <artifactId>libxacml-epcis</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>fr.unicaen.iota.eta</groupId>
-            <artifactId>eta-client</artifactId>
-            <version>1.0</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>user-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Other dependencies -->

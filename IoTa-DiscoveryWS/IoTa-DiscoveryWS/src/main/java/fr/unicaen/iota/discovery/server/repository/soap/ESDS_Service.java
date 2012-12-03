@@ -69,6 +69,7 @@ public class ESDS_Service implements ESDS_ServiceSkeletonInterface {
      *
      * @param userLookup
      */
+    @Override
     public UserLookupResult userLookup(UserLookup userLookup) {
         log.trace("userLookup method called");
         UserLookupResult result = new UserLookupResult();
@@ -141,6 +142,7 @@ public class ESDS_Service implements ESDS_ServiceSkeletonInterface {
      *
      * @param userInfo
      */
+    @Override
     public UserInfoResult userInfo(UserInfo userInfo) {
         log.trace("userInfo method called");
         UserInfoResult result = new UserInfoResult();
@@ -752,7 +754,7 @@ public class ESDS_Service implements ESDS_ServiceSkeletonInterface {
                 TEventType eT = TEventType.value2;
                 TLifeCycleStepID tLifeCycleStepID = tObjectEvent.getLifeCycleStepID();
                 Calendar eTS = Calendar.getInstance();
-                Integer uid = null;
+                Integer uid;
                 try {
                     uid = dsControler.eventCreate(sessionID, multipleEventCreate.getMultipleEventCreate().getProxyPartnerID().getTPartnerID().toString(),
                             epc.getTObjectID().toString(), eC.getTEventClass().toString(), Util.convert(sTS), Util.convert(eTS),
@@ -805,6 +807,10 @@ public class ESDS_Service implements ESDS_ServiceSkeletonInterface {
             return TServiceType.html;
         } else if ("xmlrpc".equalsIgnoreCase(type)) {
             return TServiceType.xmlrpc;
+        } else if ("ided_epcis".equalsIgnoreCase(type)) {
+            return TServiceType.ided_epcis;
+        } else if ("ided_ds".equalsIgnoreCase(type)) {
+            return TServiceType.ided_ds;
         }
         return null;
     }

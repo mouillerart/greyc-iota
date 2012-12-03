@@ -1,4 +1,4 @@
-/*
+ /*
  *  This program is a part of the IoTa Project.
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
@@ -481,7 +481,7 @@ public class DsClient {
         }
         return result;
     }
-  
+
     private ADBBean execOperation(ADBBean operation) throws RemoteException {
         ESDS_ServiceStub service;
         ADBBean result = null;
@@ -571,6 +571,8 @@ public class DsClient {
         SERVICE_TYPES.put("ws", TServiceType.ws);
         SERVICE_TYPES.put("html", TServiceType.html);
         SERVICE_TYPES.put("xmlrpc", TServiceType.xmlrpc);
+        SERVICE_TYPES.put("ided_ds", TServiceType.ided_ds);
+        SERVICE_TYPES.put("ided_epcis", TServiceType.ided_epcis);
     }
 
     private TServiceType createServiceType(String type) {
@@ -656,26 +658,6 @@ public class DsClient {
             result.put(k, v);
         }
         return result;
-    }
-
-    private TEventTypeChoice createVoidEventTypeChoice(int eventId, String ttl, int priority) {
-        TEventTypeChoice tEventTypeChoice = new TEventTypeChoice();
-        ESDS_ServiceStub.TVoidEvent tVoidEvent = new ESDS_ServiceStub.TVoidEvent();
-
-        ESDS_ServiceStub.TEventID tEventID = new ESDS_ServiceStub.TEventID();
-        tEventID.setTEventID(new PositiveInteger(eventId + ""));
-        tVoidEvent.setEventID(tEventID);
-
-        ESDS_ServiceStub.TEventTTL tEventTTL = new ESDS_ServiceStub.TEventTTL();
-        tEventTTL.setTEventTTL(new PositiveInteger(ttl));
-        tVoidEvent.setTtl(tEventTTL);
-
-        ESDS_ServiceStub.TEventPriority tEventPriority = new ESDS_ServiceStub.TEventPriority();
-        tEventPriority.setTEventPriority(priority);
-        tVoidEvent.setPriority(tEventPriority);
-
-        tEventTypeChoice.setVoidEvent(tVoidEvent);
-        return tEventTypeChoice;
     }
 
     private List<String> createServiceIds(Collection<Service> serviceList) {

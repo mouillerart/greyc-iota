@@ -29,24 +29,20 @@ class EPHIInstaller(installer.WebAppInstaller):
                 ("Enter the EpcisPHI web application name", "ephi", "name", {}),
                 ("Enter the archive file pathname", "ephi", "repo", {"type": "file"}),
                 ("Enter the path where the policies will be saved", "epcis_policies", "dir", {}), # not "type": "path" as the directories are created
-                ("Enter the port that will be used between ETa and XACML module", "epcis_policies", "xacml_port", {}),
-                ("Enter the URL of the User web service of ETa", "eta", "userservice_url", {})
+                ("Enter the URL of the User web service", "user", "url", {})
                 ], [
                 ("xacml_configuration",
                  { "query-policy-directory": ("epcis_policies", "query_dir"),
                    "capture-policy-directory": ("epcis_policies", "capture_dir"),
                    "admin-policy-directory": ("epcis_policies", "admin_dir") }),
                 ("application",
-                 { "xacml-service-port": ("epcis_policies", "xacml_port"),
-                   "eta.userservice.url": ("eta", "userservice_url") })
+                 { "eta.userservice.url": ("user", "url") })
                 ] )
 
 
     def postConfigure(self):
-        # set default url (for ETa)
-        url = "http://" + CONFIG.get("global", "host") + ":" + CONFIG.get("tomcat", "http_port") + "/" + CONFIG.get("ephi", "name")
-        CONFIG.set("ephi", "url", url + "/index.jsp")
-        CONFIG.set("epcis_policies", "xacml_url", url + "/xacml")
+        url = self.setURL()
+        CONFIG.set("epcis_policies", "xacml_url", url + "xi")
 
         # set policies directories (for ETa)
         policies_dir = CONFIG.get("epcis_policies", "dir")

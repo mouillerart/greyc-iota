@@ -2,7 +2,7 @@
  *  This program is a part of the IoTa project.
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -18,12 +18,12 @@
  */
 package fr.unicaen.iota.xacml.ihm.test;
 
+import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.utils.InterfaceHelper;
 import fr.unicaen.iota.utils.MapSessions;
 import fr.unicaen.iota.xacml.pep.DSPEP;
 import fr.unicaen.iota.xacml.pep.MethodNamesCapture;
 import fr.unicaen.iota.xacml.pep.XACMLDSEvent;
-import fr.unicaen.iota.xacml.pep.XACMLResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -155,13 +155,13 @@ public class CaptureModuleClient extends javax.swing.JFrame {
             XACMLDSEvent xacmldse = new XACMLDSEvent(partnerField.getText(), bizStepField.getText(), epcField.getText(), epcClassField.getText(), eventTime);
             args.add(xacmldse);
         }
-        args.add(fr.unicaen.iota.xacml.policy.Module.captureModule.getValue());
         try {
             DSPEP dspep = new DSPEP();
-            XACMLResponse res = (XACMLResponse) runMethod(dspep, args.toArray(), action);
+            int response = (Integer) runMethod(dspep, args.toArray(), action);
+            String res = (response == Result.DECISION_PERMIT)? "ACCEPT": "DENY";
             AccessResponseDialog dialog = new AccessResponseDialog(this, true);
             dialog.setLocationRelativeTo(this);
-            dialog.setResponse(res.toString());
+            dialog.setResponse(res);
             dialog.setVisible(true);
         } catch (InvocationTargetException ex) {
             AccessResponseDialog dialog = new AccessResponseDialog(this, true);

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -24,8 +24,9 @@
 package fr.unicaen.iota.eta.capture;
 
 import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.sigma.client.SigMaClient;
+import fr.unicaen.iota.xi.client.EPCISPEP;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -59,12 +60,15 @@ public class CaptureOperationsServlet extends HttpServlet {
             cm = new CaptureOperationsModule();
             cm.setEpcisSchemaFile(Constants.EPCIS_SCHEMA_FILE);
             cm.setEpcisMasterDataSchemaFile(Constants.EPCIS_MASTER_DATA_SCHEMA_FILE);
+            EPCISPEP epcisPEP = new EPCISPEP(Constants.XACML_URL);
+            cm.setCaptureCheck(new CaptureCheck(epcisPEP));
             getServletContext().setAttribute("captureOperationsModule", cm);
+            SigMaClient sigMaClient = new SigMaClient(Constants.SIGMA_URL);
+            cm.setSigMaClient(sigMaClient);
         } else {
             LOG.debug("Capture module found");
         }
         setCaptureOperationsModule(cm);
-        cm.setCaptureCheck(new CaptureCheck());
     }
 
     public void setCaptureOperationsModule(CaptureOperationsModule captureOperationsModule) {
@@ -120,7 +124,6 @@ public class CaptureOperationsServlet extends HttpServlet {
         rsp.setContentType("text/plain");
         final PrintWriter out = rsp.getWriter();
         LOG.debug("EPCIS validating Event ...");
-        InputStream is = null;
         // check if we have a POST request with form parameters
         if ("application/x-www-form-urlencoded".equalsIgnoreCase(req.getContentType())) {
             // check if the 'event' or 'dbReset' form parameter are given
@@ -140,9 +143,8 @@ public class CaptureOperationsServlet extends HttpServlet {
             out.close();
         } else {
             LOG.debug("EPCIS saving and publishing event ...");
-            is = req.getInputStream();
             try {
-                captureOperationsModule.doCapture(is, rsp);
+                captureOperationsModule.doCapture(req, rsp);
             } catch (SAXException e) {
                 String msg = "Unable to parse incoming XML due to error: " + e.getMessage();
                 LOG.debug(msg, e);

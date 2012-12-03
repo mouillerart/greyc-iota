@@ -50,7 +50,9 @@ public class TestConfiguration extends HttpServlet {
     };
 
     /**
-     * Processes requests for HTTP <code>GET</code> methods.
+     * Processes requests for HTTP
+     * <code>GET</code> methods.
+     *
      * @param request servlet request
      * @param response servlet response
      */
@@ -87,8 +89,7 @@ public class TestConfiguration extends HttpServlet {
             out.println("<form method=\"POST\" action=\"test?action=serviceaddress\" target=\"serviceaddresseframe\"><input type=\"submit\" value=\"Test address\" /></form>");
             out.println("<iframe name=\"serviceaddresseframe\" ></iframe>");
             out.println("<h2>Authentification configuration: </h2>");
-            out.println("<div><span class=\"name\">Login: </span><span class=\"param\">" + Configuration.LOGIN + "</span></div>");
-            out.println("<div><span class=\"name\">Password: </span><span class=\"param\">" + Configuration.PASS + "</span></div>");
+            out.println("<div><span class=\"name\">identity: </span><span class=\"param\">" + Configuration.IDENTITY + "</span></div>");
             out.println("<form method=\"POST\" action=\"test?action=login\" target=\"loginframe\"><input type=\"submit\" value=\"Test login\" /></form>");
             out.println("<iframe name=\"loginframe\" ></iframe>");
             out.println("<h2>Database configuration: </h2>");
@@ -116,16 +117,20 @@ public class TestConfiguration extends HttpServlet {
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse rsp) throws ServletException, IOException {
         processAction(req, rsp);
     }
 
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse rsp) throws ServletException, IOException {
         processRequest(req, rsp);
     }
 
     /**
-     * Processes requests for HTTP <code>POST</code> methods.
+     * Processes requests for HTTP
+     * <code>POST</code> methods.
+     *
      * @param request servlet request
      * @param response servlet response
      */
@@ -162,7 +167,7 @@ public class TestConfiguration extends HttpServlet {
                     out.flush();
                     out.println("<br/>");
                 } catch (EnhancedProtocolException ex) {
-                    LOG.error("Impossible de se connecter au DS référant: "+ex.getMessage(), null);
+                    LOG.error("Impossible de se connecter au DS référant: " + ex.getMessage(), null);
                     out.println("<span class=\"error\">[ FAILED ]</span>");
                     out.flush();
                     out.println("<br/>");
@@ -173,35 +178,6 @@ public class TestConfiguration extends HttpServlet {
                     out.println("<span class=\"error\">[ FAILED ]</span>");
                     out.flush();
                     out.println("<br/>");
-                    out.println("<span class=\"error\">finished: [ ERROR ]</span>");
-                    out.flush();
-                }
-            } else if ("login".equals(action)) {
-                try {
-                    out.println("start test login/logout !");
-                    out.flush();
-                    out.println("<br/>");
-                    out.println("<span class=\"name\">executing login operation ... </span>");
-                    out.flush();
-                    String sessionId = new DsClient(Configuration.DISCOVERY_SERVICE_ADDRESS).userLogin(fr.unicaen.iota.discovery.client.util.Configuration.DEFAULT_SESSION,Configuration.LOGIN, Configuration.PASS).getSessionId();
-                    out.println("<span class=\"param\">[ DONE ]</span>");
-                    out.flush();
-                    out.println("<br/>");
-                    out.println("<span class=\"name\">executing logout operation ... </span>");
-                    out.flush();
-                    new DsClient(Configuration.DISCOVERY_SERVICE_ADDRESS).userLogout(sessionId);
-                    out.println("<span class=\"param\">[ DONE ]</span>");
-                    out.flush();
-                    out.println("<br/>");
-                    out.println("<span class=\"name\">finished:</span><span class=\"param\"> [ SUCCEDED ]</span>");
-                    out.flush();
-                    out.println("<br/>");
-                } catch (Exception e) {
-                    LOG.error("Impossible de se connecter au DS référant", e);
-                    out.println("<span class=\"error\">[ FAILED ]</span>");
-                    out.flush();
-                    out.println("<br/>");
-                    out.flush();
                     out.println("<span class=\"error\">finished: [ ERROR ]</span>");
                     out.flush();
                 }
@@ -240,12 +216,11 @@ public class TestConfiguration extends HttpServlet {
                 out.flush();
                 out.println("<br/>");
                 QueryControlClient client;
-                StandingQueryCaptureModule captureModule = new StandingQueryCaptureModule();
                 try {
                     out.println("<span class=\"name\"> Sending subscription to " + Configuration.DEFAULT_QUERY_CLIENT_ADDRESS + "...</span>");
                     out.flush();
                     client = new QueryControlClient(Configuration.DEFAULT_QUERY_CLIENT_ADDRESS);
-                    Subscribe subscribe = captureModule.createScheduleSubscribe("SimpleEventQuery", "test",
+                    Subscribe subscribe = StandingQueryCaptureModule.createScheduleSubscribe("SimpleEventQuery", "test",
                             Configuration.DEFAULT_QUERY_CALLBACK_ADDRESS, Configuration.SUBSCRIPTION_TYPE, Configuration.SUBSCRIPTION_VALUE);
                     client.subscribe(subscribe);
                     LOG.info("Subscription shared");

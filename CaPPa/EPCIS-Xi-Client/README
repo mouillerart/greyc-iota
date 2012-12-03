@@ -1,0 +1,15 @@
+EPCIS-Xi-Client
+
+Common library interfacing with the xi web service for EPCIS.
+
+Dependencies:
+  libraries:
+    - sunxacml
+    - servlet-api
+    - commons-logging
+
+Usage Dependencies:
+  - Xi
+  - EpcisPHI
+  - ETa
+  - an EPCIS

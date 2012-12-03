@@ -45,6 +45,9 @@ public final class Config {
     public static boolean saveStats;
     public static String ONS_ADDRESS;
     public static String ONS_TLD_DOMAIN;
+    public static boolean sign;
+    public static String keystore;
+    public static String keystore_password;
 
     static {
         try {
@@ -62,6 +65,9 @@ public final class Config {
             saveStats = Boolean.valueOf(props.getProperty("save-stats", "false"));
             ONS_ADDRESS = props.getProperty("ons-address", "localhost");
             ONS_TLD_DOMAIN = props.getProperty("ons-tld-domain", "ons-peer.com.");
+            sign = Boolean.valueOf(props.getProperty("sign"));
+            keystore = props.getProperty("keystore");
+            keystore_password = props.getProperty("keystore-password");
         } catch (Throwable e) {
             LogFactory.getLog(Config.class).fatal("Problem while reading 'config/PTNet.properties'", e);
         }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://cxf.apache.org/core
+      http://cxf.apache.org/schemas/core.xsd
+      http://cxf.apache.org/jaxws
+      http://cxf.apache.org/schemas/jaxws.xsd">
+
+  <!-- beans and configurations defined in the cxf jars -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+  <!-- post-processor which replaces placeholders like ${test} with values from property files -->
+    <bean id="dataPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+  <!-- =========================================================== -->
+  <!--  Service layer definitions                                  -->
+  <!-- =========================================================== -->
+
+    <bean id="userOperationsWebService" class="fr.unicaen.iota.eta.user.UserOperationsWebService" >
+    </bean>
+
+  <!-- =========================================================== -->
+  <!--  CXF (Web service) configuration                            -->
+  <!-- =========================================================== -->
+
+  <!-- publish the Web service endpoint and it's implementing bean -->
+  <jaxws:endpoint id="ETaUserServiceEndpoint"
+                  xmlns:user="http://user.eta.iota.unicaen.fr/UserService.wsdl"
+                  serviceName="user:UserService"
+                  implementor="#userOperationsWebService"
+                  address="/" />
+
+  <!-- register local transport -->
+    <bean class="org.apache.cxf.transport.local.LocalTransportFactory" lazy-init="false">
+        <property name="transportIds">
+            <list>
+                <value>http://cxf.apache.org/transports/local</value>
+                <value>http://schemas.xmlsoap.org/soap/http</value>
+                <value>http://schemas.xmlsoap.org/wsdl/soap/http</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

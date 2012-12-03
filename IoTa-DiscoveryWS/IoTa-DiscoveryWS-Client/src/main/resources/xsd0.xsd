@@ -43,6 +43,8 @@
             <xs:enumeration value="html"/>
             <xs:enumeration value="xmlrpc"/>
             <xs:enumeration value="ds"/>
+            <xs:enumeration value="ided_ds"/>
+            <xs:enumeration value="ided_epcis"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="tEventType">

@@ -25,36 +25,27 @@ import installer
 class ALfAInstaller(installer.Installer):
 
     def __init__(self):
-        installer.Installer.__init__(self, "ALfA", "alfa", [
-                ("Enter the DS login", "alfa", "ds_login", {}),
-                ("Enter the DS password", "alfa", "ds_password", {}),
-                ("Enter the RMI name", "alfa", "rmi_name", {}),
-                ("Enter the RMI port number", "alfa", "rmi_port", {}),
+        installer.Installer.__init__(self, "ALfA RMI server", "alfa", [
                 ("Enter the archive file pathname", "alfa", "repo", {"type": "file"}),
                 ("Enter the path where you want to unpack it", "alfa", "directory",
                  {"type": "path"}),
-                ("Enter the name of the directory", "alfa", "name", {})
+                ("Enter the name of the directory", "alfa", "name", {}),
+                ("Enter the RMI name", "alfa", "rmi_name", {}),
+                ("Enter the RMI port number", "alfa", "rmi_port", {})
                 ], [
                 ("application",
-                 { "ds-login": ("alfa", "ds_login"),
-                   "ds-password": ("alfa", "ds_password"),
-                   "rmi-server-name": ("alfa", "rmi_name"),
+                 { "rmi-server-name": ("alfa", "rmi_name"),
                    "rmi-server-host": ("global", "host"),
                    "rmi-server-port": ("alfa", "rmi_port"),
                    "ons": ("ons", "server"),
                    "ons-domain-prefix": ("ons", "domain_prefix"),
-                   "ons-spec-level": ("ons", "spec_level"),
-                   "ons-epcis-entry": ("ons", "epcis_entry"),
-                   "ons-ds-entry": ("ons", "ds_entry"),
-                   "ons-spec-entry": ("ons", "spec_entry"),
-                   "ons-entry-regex": ("ons", "entry_regex")
                    })
                 ])
 
 
     def postConfigure(self):
-        url = "//" + CONFIG.get("global", "host") + ":" + CONFIG.get("alfa", "rmi_port") + "/" + CONFIG.get("alfa", "rmi_name")
-        CONFIG.set("alfa", "rmi_url", url)
+        url = "//" + CONFIG.get("global", "host") + ":" + self.cget("rmi_port") + "/" + self.cget("rmi_name")
+        self.cset("rmi_url", url)
 
 
     def postInstall(self):

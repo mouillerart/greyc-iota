@@ -32,42 +32,38 @@ class DSInstaller(installer.DBWebAppInstaller):
                 ("Enter the DS database name", "ds", "db_name", {}),
                 ("Enter the DS database login", "ds", "db_login", {}),
                 ("Enter the DS database password", "ds", "db_password", {}),
-                ("Enter the hostname of XACML module (socket)", "ds_policies", "xacml_host", {}),
-                ("Enter the port of the XACML module (socket)", "ds_policies", "xacml_port", {}),
                 ("Enter the URL to the XACML module", "ds_policies", "xacml_url", {}),
                 ("Use as multi DS instance?", "publisher", "multi_ds_architecture",
                  {"type": "YN"}),
-                ("Enter one or several ONS IP address(es) (comma separated)",
-                 "publisher", "ons_hosts",
+                ("Enter your DS login for publisher", "publisher", "login",
                  {"when": ("publisher", "multi_ds_architecture")}),
-                ("Enter your DS LOGIN for publisher", "publisher", "login",
-                 {"when": ("publisher", "multi_ds_architecture")}),
-                ("Enter your DS PASSWORD for publisher", "publisher", "password",
+                ("Enter your DS password for publisher", "publisher", "password",
                  {"when": ("publisher", "multi_ds_architecture")}),
                 ("Enter the URL of the Epcis Query service (or ETa)", "ds", "epcis_query_url", {})
                 ], [
                 ("application",
                  { "service-id": ("ds", "server_identity"),
-                   "xacml-address": ("ds_policies", "xacml_host"),
-                   "xacml-port": ("ds_policies", "xacml_port"),
+                   "ons": ("ons", "server"),
+                   "ons-domain-prefix": ("ons", "domain_prefix"),
+                   "xacml-url": ("ds_policies", "xacml_url"),
                    "xacml-ihm-url": ("dphi", "url") }),
                 ("publisher",
                  { "multi-ds-architecture": ("publisher", "multi_ds_architecture"),
-                   "ons-hosts": ("publisher", "ons_hosts"),
                    "ds-login": ("publisher", "login"),
-                   "ds-password": ("publisher", "password")
-                   })
+                   "ds-password": ("publisher", "password") })
                 ])
 
 
     def postConfigure(self):
-        CONFIG.set("ds", "url",
-                   "http://" + CONFIG.get("global", "host") + ":" + CONFIG.get("tomcat", "http_port") + "/" +
-                   CONFIG.get("ds", "name") + "/services/ESDS_Service")
-        CONFIG.set("ds", "db_jndi", "DSDB")
+        self.setURL()
+        self.cset("url", self.cget("url") + "services/ESDS_Service")
+        self.cset("db_jndi", "DSDB")
 
 
     def postUnpack(self):
-        if CONFIG.isTrue("ds", "db_install"):
-            utils.execDB("Setting Anonymous partner’s service address", CONFIG.get("ds", "db_name"),
-                         "UPDATE partner SET serviceAddress='" + CONFIG.get("ds", "epcis_query_url") + "' WHERE partnerID='anonymous'")
+        if self.cisTrue("db_install"):
+            utils.execDB("Setting Anonymous partner’s service address", self.cget("db_name"),
+                         "UPDATE partner SET serviceType='" + self.cget("epcis_type") +
+                         "', serviceAddress='" + self.cget("epcis_query_url") +
+                         "' WHERE partnerID='anonymous'")
+        # note: this 'anonymous' should be the Epcis/EpcILoN identity

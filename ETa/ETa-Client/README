@@ -3,8 +3,14 @@ ETa-Client
 Common library for interfacing with the ETa web service (user management).
 
 Dependencies:
+  IoTa modules:
+    - Tau
   libraries:
     - Apache cxf
+    - epcis-queryclient
+    - servlet-api
+    - commons-logging
+    - log4j
 
 Configuration: ?
 

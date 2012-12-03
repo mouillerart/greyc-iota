@@ -6,6 +6,8 @@ Building
 
 IoTa uses Apache Maven for build automation (http://maven.apache.org).
 
+A convenience building script is provided: make-all.sh.
+
 Compilation of each module is achieved with this command:
 
     mvn compile
@@ -49,8 +51,8 @@ Installing
 
 (All bracketted values `<name>` are place-holders.)
 
-The IoTa-Installer can help you install and configure all the servers and
-databases.
+**The IoTa-Installer can help you to install and configure all the servers and
+databases.**
 
 All the applications and web applications have a `log4j.properties` file to
 configure the logging output (file output, log format, log level, and so on).
@@ -73,9 +75,7 @@ or
 
     unzip <application>-<version>.jar application.properties
 
-Use the provided script to start the application:
-
-    ./launch.sh
+Use the provided script to start the application.
 
 
 ### Web Applications
@@ -148,7 +148,7 @@ Here is a typical zone file for the product `urn:epc:id:sgtin:1234567.89012`:
     $TTL 1d
     
     ;; zone, the vendor Id
-    $ORIGIN 7.6.5.4.3.2.1.sgtin.ons-peer.com.
+    $ORIGIN 7.6.5.4.3.2.1.sgtin.id.ons-peer.com.
     
     @ IN SOA localhost info.example.com ( ; info@example.com
                             2012010101 ; serial version number
@@ -159,22 +159,31 @@ Here is a typical zone file for the product `urn:epc:id:sgtin:1234567.89012`:
                             )
     
     ;; this server’s name
-      IN NS ons.example.com
+      IN NS ons.example.com.
     
     ; NAPTRs for products
     ; example product
     ;                 order pref flags service    regex
     2.1.0.9.8  IN NAPTR 0     0    "u"   "epc+html" "!^.*$!http://www.example.com/!" .
-               IN NAPTR 1     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/ds/services/ESDS_Service!" .
+               IN NAPTR 1     0    "u"   "epc+epcis"   "!^.*$!http://epcis.example.com/epcis/!" .
+               IN NAPTR 2     0    "u"   "epc+ided_epcis"   "!^.*$!http://epcis.example.com/eta/!" .
+               IN NAPTR 3     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/ds/services/ESDS_Service!" .
+               IN NAPTR 4     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/dseta/ds/!" .
+               IN NAPTR 5     0    "u"   "epc+ided_ds"   "!^.*$!http://ds.example.com/dseta/ided_ds/!" .
     ; first, the HTML web page for product information
-    ; second, the Discovery web service associated to this EPC
+    ; then, the EPCIS-repository web service associated to this EPC
+    ; then, the identified EPCIS-repository (ETa) web service associated to this EPC
+    ; then, the Discovery web service associated to this EPC (WINGS version)
+    ; then, the Discovery web service associated to this EPC
+    ; finally, the identified Discovery web service associated to this EPC
+    ; the order is free
 
 
 On Debian and Debian-derived systems, you just need to install the `bind9`
 package, to create one or more zone file as the cited example and to activate
 those zones, that is to add that kind of statement in `named.conf.local`:
 
-    zone "7.6.5.4.3.2.1.sgtin.ons-peer.com" {
+    zone "7.6.5.4.3.2.1.sgtin.id.ons-peer.com" {
          type master;
          file "/etc/bind/db.ons.peer.com";
     };
@@ -183,9 +192,22 @@ those zones, that is to add that kind of statement in `named.conf.local`:
 Remember that in order to avoid a recursive open relay DNS, you need to add
 these options (in the `options` statement of `named.conf.options`):
 
-    allow-transfer { none };
-    allow-recursion { none };
+    allow-transfer { none; };
+    allow-recursion { none; };
     recursion no;
+
+
+### DNSSEC
+
+Enable DNSSEC in bind9 with these options (in the `options` statement of
+`named.conf.options`):
+
+    dnssec-enable yes;
+    dnssec-validation auto;
+    dnssec-lookaside auto;
+
+You can generate keys and sign your zone files with, for example, the program
+`zonesigner` from `dnssec-tools`.
 
 
 ### LDAP
@@ -199,3 +221,29 @@ anonymous.
 On Debian and Debian-derived systems, you just need to install the packages
 `slapd` and `ldap-utils`. You have to execute `dpkg-reconfigure slapd` in
 order to complete the configuration.
+
+
+### ActiveMQ
+
+Some applications (ETa-Callback*) need an ActiveMQ JMS broker.
+
+On Debian and Debian-derived systems, you just need to install the package
+`activemq`.
+
+
+### Memory Issues
+
+Due to extensive introspection (e.g. by Hibernate or CXF), and if you want to
+install all the web applications on the same server, the JVM “PermGen” memory
+needs to be increased. For Apache Tomcat, it can be done with the environment
+variable JAVA_OPTS. In POSIX shells, that can be done by a command like the
+following one:
+
+    export JAVA_OPTS='-Xms2048m -Xmx4096m -XX:MaxPermSize=512m'
+
+This environment variable needs to be set before starting Apache Tomcat hence
+before starting the IoTa installer (as the IoTa installer starts Apache
+Tomcat).
+
+This is only necessary if you install all (or most of) the web applications in
+the same servlet container.

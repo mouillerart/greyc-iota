@@ -19,6 +19,7 @@
 #
 from config import CONFIG
 import installer
+import utils
 
 
 class ETaInstaller(installer.DBWebAppInstaller):
@@ -27,29 +28,51 @@ class ETaInstaller(installer.DBWebAppInstaller):
         installer.WebAppInstaller.__init__(self, "ETa web application", "eta", [
                 ("Enter the ETa web application name", "eta", "name", {}),
                 ("Enter the archive file pathname", "eta", "repo", {"type": "file"}),
-                ("Enter the Epcis web application URL", "epcis", "url", {}),
-                ("Enter the URL to the XACML module", "epcis_policies", "xacml_url", {}),
                 ("Enter the ETa database name", "eta", "db_name", {}),
                 ("Enter the ETa database login", "eta", "db_login", {}),
-                ("Enter the ETa database password", "eta", "db_password", {})
+                ("Enter the ETa database password", "eta", "db_password", {}),
+                ("Do you want to create the database callback management user", "eta", "db_user_create", {"type": "YN"}),
+                ("Enter the database login for callback management user", "eta", "callback_db_login", {}),
+                ("Enter the database password for callaback management user", "eta", "callback_db_password", {}),
+                ("Enter the Epcis web application URL", "epcis", "url", {}),
+                ("Enter the URL to the XACML module", "epcis_policies", "xacml_url", {}),
+                ("Enter the URL to the Callback Receiver module", "eta_callback_receiver", "callback_url", {}),
+                ("Do you use electronic signatures (SigMa)", "eta", "use_sigma", {"type": "YN"}),
                 ], [
                 ("application",
                  { "xacml-url": ("epcis_policies", "xacml_url"),
                    "xacml-ihm-url": ("ephi", "url"),
+                   "xacml-default-user": ("global", "anonymous_user"),
                    "epcis-query-url": ("epcis", "query_url"),
                    "epcis-capture-url": ("epcis", "capture_url"),
-                   "eta-userservice-url": ("eta", "userservice_url"),
+                   "eta-userservice-url": ("user", "url"),
+                   "eta-callback-url": ("eta_callback_receiver", "callback_url"),
                    "ldap-url": ("ldap", "url"),
                    "ldap-basedn": ("ldap", "base_dn"),
                    "ldap-user": ("ldap", "login"),
-                   "ldap-password": ("ldap", "password"), })
+                   "ldap-password": ("ldap", "password"),
+                   "sigma-url": ("sigma", "url"),
+                   "sigma-verification": ("eta", "use_sigma"),})
                 ] )
 
 
     def postConfigure(self):
-        # set default url (for User web service)
-        url = "http://" + CONFIG.get("global", "host") + ":" + CONFIG.get("tomcat", "http_port") + "/" + CONFIG.get("eta", "name")
-        CONFIG.set("eta", "userservice_url", url + "/" + CONFIG.get("eta", "userservice_name"))
-        CONFIG.set("eta", "db_jndi", "ETADB")
-        CONFIG.set("ds", "epcis_query_url", url + "/query")
-        CONFIG.set("epcilon", "subscription_url", url + "/query")
+        self.setURL()
+        self.cset("db_jndi", "ETADB")
+        url = self.cget("url")
+        CONFIG.set("ds", "epcis_type", "ided_epcis")
+        CONFIG.set("ds", "epcis_query_url", url + "ided_query")
+        CONFIG.set("epcilon", "subscription_url", url + "query")
+        # configure database connection for callbacks
+        murl = "jdbc:mysql://" + CONFIG.get("db", "host") + ":" + CONFIG.get("db", "port") + "/" + self.cget("db_name") + "?autoReconnect=true"
+        self.cset("callback_db_url", murl)
+
+
+    def postInstall(self):
+        if self.cisTrue("db_user_create"):
+            utils.putMessage("Creating callback management user ...")
+            if not utils.execDB("Granting access rights", "mysql",
+                                "GRANT SELECT ON " + self.cget("db_name") + ".subscription " +
+                                "TO '" + self.cget("callback_db_login") + "'@'" + CONFIG.get("db", "user_host") + "' " +
+                                "IDENTIFIED BY '" + self.cget("callback_db_password") + "';"):
+                return

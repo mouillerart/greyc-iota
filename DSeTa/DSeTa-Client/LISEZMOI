@@ -1,0 +1,15 @@
+DSeTa-Client
+
+Bibliothèque client pour le web service DSeTa.
+
+Dépendances:
+  bibliothèques:
+    - cxf
+    - commons-logging
+    - log4j
+
+Dépendances d’utilisation:
+  - DSeTa
+
+Utilisation:
+  voir ALfA ou EpcILoN pour des exemples

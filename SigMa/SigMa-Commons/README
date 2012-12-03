@@ -1,0 +1,8 @@
+SigMa-Commons
+
+Library for EPCIS events electronic signature.
+
+Dependencies:
+   - epcis-commons
+   - bouncycastle
+   - commons-logging

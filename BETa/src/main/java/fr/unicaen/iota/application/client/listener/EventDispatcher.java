@@ -18,36 +18,36 @@
  */
 package fr.unicaen.iota.application.client.listener;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
 import fr.unicaen.iota.application.util.TimeParser;
 import fr.unicaen.iota.application.util.TravelTimeTuple;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.event.EventListenerList;
+import org.fosstrak.epcis.model.*;
 
 /**
  *
  */
 public class EventDispatcher {
 
-    private Map<String, Set<EPCISEvent>> eventHashtable = new HashMap<String, Set<EPCISEvent>>();
     private Map<String, TravelTimeTuple> travelTime = new HashMap<String, TravelTimeTuple>();
-    private Map<String, ArrayList<String>> usedObjects = new HashMap<String, ArrayList<String>>();
+    private Map<String, Set<String>> usedObjects = new HashMap<String, Set<String>>();
     private final EventListenerList listeners = new EventListenerList();
 
     public EventDispatcher() {
     }
 
-    public synchronized void addEvent(String session, EPCISEvent e) {
-        if (eventHashtable.get(session) == null) {
-            eventHashtable.put(session, new HashSet<EPCISEvent>());
+    public synchronized void addEvent(String session, EPCISEventType e) {
+        if (!travelTime.containsKey(session)) {
             travelTime.put(session, new TravelTimeTuple());
-            usedObjects.put(session, new ArrayList<String>());
+            usedObjects.put(session, new HashSet<String>());
         }
-        eventHashtable.get(session).add(e);
         TravelTimeTuple ttt = travelTime.get(session);
-        ArrayList<String> nbObjects = usedObjects.get(session);
+        Set<String> nbObjects = usedObjects.get(session);
         processNbObjects(session, e, nbObjects);
-        ttt.addEventTimestamp(TimeParser.convert(e.getEventTime()));
+        ttt.addEventTimestamp(TimeParser.convert(e.getEventTime().toGregorianCalendar()));
         fireEventReiceved(session, e);
         fireTravelTimeChanged(session, ttt);
     }
@@ -60,11 +60,11 @@ public class EventDispatcher {
         listeners.remove(EPCEventListener.class, listener);
     }
 
-    public EPCEventListener[] getEPCEventListeners() {
+    private EPCEventListener[] getEPCEventListeners() {
         return listeners.getListeners(EPCEventListener.class);
     }
 
-    protected void fireEventReiceved(String session, EPCISEvent e) {
+    protected void fireEventReiceved(String session, EPCISEventType e) {
         for (EPCEventListener listener : getEPCEventListeners()) {
             listener.eventReveived(session, e);
         }
@@ -82,32 +82,23 @@ public class EventDispatcher {
         }
     }
 
-    private void processNbObjects(String session, EPCISEvent e, ArrayList<String> nbObjects) {
-        if (EPCISEvent.ActionType.ADD == e.getAction()) {
-            switch (e.getType()) {
-                case OBJECT:
-                {
-                    String epc = e.getEpcs().get(0);
-                    if (!nbObjects.contains(epc)) {
-                        nbObjects.add(epc);
-                    }
-                    break;
-                }
-                case AGGREGATION:
-                {
-                    String epc = e.getParentID();
-                    if (!nbObjects.contains(epc)) {
-                        nbObjects.add(epc);
-                    }
-                    break;
-                }
-                case TRANSACTION:
-                    throw new UnsupportedOperationException("Not yet implemented (Transaction) class: eventDispatcher");
-                    //break;
-                case QUANTITY:
-                    throw new UnsupportedOperationException("Not yet implemented (Quantity) class: eventDispatcher");
-                    //break;
+    private void processNbObjects(String session, EPCISEventType e, Set<String> nbObjects) {
+        if (e instanceof ObjectEventType) {
+            ObjectEventType oe = (ObjectEventType) e;
+            if (oe.getAction() == ActionType.ADD) {
+                String epc = oe.getEpcList().getEpc().get(0).getValue();
+                nbObjects.add(epc);
             }
+        } else if (e instanceof AggregationEventType) {
+            AggregationEventType ae = (AggregationEventType) e;
+            if (ae.getAction() == ActionType.ADD) {
+                String epc = ae.getParentID();
+                nbObjects.add(epc);
+            }
+        } else if (e instanceof TransactionEventType) {
+            throw new UnsupportedOperationException("Not yet implemented (Transaction) class: eventDispatcher");
+        } else if (e instanceof QuantityEventType) {
+            throw new UnsupportedOperationException("Not yet implemented (Quantity) class: eventDispatcher");
         }
         fireUsedObjectsChanged(session, nbObjects.size());
     }

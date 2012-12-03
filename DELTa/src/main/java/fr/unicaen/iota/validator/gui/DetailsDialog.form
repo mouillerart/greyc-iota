@@ -296,7 +296,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="245" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="241" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -374,7 +374,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" pref="245" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" pref="241" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -452,7 +452,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane3" pref="245" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" pref="241" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>

@@ -1,0 +1,13 @@
+TAu - TLS and AUthentication
+
+Server and client librairies for the adding identification and authentication
+to web services.
+
+Dependencies:
+  librairies:
+    - cxf
+    - commons-logging
+    - log4j
+
+Usage:
+  see DSeTa, EpcILoN, and ETa for examples.

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="IOTA"
+                  targetNamespace="urn:unicaen:iota:omega:wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:iotaw="urn:unicaen:iota:omega:wsdl"
+                  xmlns:iota="urn:unicaen:iota:omega:xsd">
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="urn:unicaen:iota:omega:xsd" schemaLocation="./omega.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+<!-- MESSAGES DEFINITIONS -->
+
+    <wsdl:message name="queryONSRequest">
+        <wsdl:part name="parms" element="iota:QueryONSRequest"/>
+    </wsdl:message>
+    <wsdl:message name="queryONSResponse">
+        <wsdl:part name="results" element="iota:QueryONSResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="getEPCDocURLRequest">
+        <wsdl:part name="parms" element="iota:GetEPCDocURLRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getEPCDocURLResponse">
+        <wsdl:part name="results" element="iota:GetEPCDocURLResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="getReferentDSRequest">
+        <wsdl:part name="parms" element="iota:GetReferentDSRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getReferentDSResponse">
+        <wsdl:part name="results" element="iota:GetReferentDSResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="queryDSRequest">
+        <wsdl:part name="parms" element="iota:QueryDSRequest"/>
+    </wsdl:message>
+    <wsdl:message name="queryDSResponse">
+        <wsdl:part name="results" element="iota:QueryDSResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="traceEPCRequest">
+        <wsdl:part name="parms" element="iota:TraceEPCRequest"/>
+    </wsdl:message>
+    <wsdl:message name="traceEPCResponse">
+        <wsdl:part name="results" element="iota:TraceEPCResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="queryEPCISRequest">
+        <wsdl:part name="parms" element="iota:QueryEPCISRequest"/>
+    </wsdl:message>
+    <wsdl:message name="queryEPCISResponse">
+        <wsdl:part name="results" element="iota:QueryEPCISResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="IoTaException">
+        <wsdl:part name="fault" type="iota:ExceptionInformation"/>
+    </wsdl:message>
+
+<!-- PORT-TYPE DEFINITIONS -->  
+  
+    <wsdl:portType name="IoTaServicePortType">
+        <wsdl:operation name="queryONS">
+            <wsdl:input name="queryONSRequest" message="iotaw:queryONSRequest"/>
+            <wsdl:output name="queryONSResponse" message="iotaw:queryONSResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getEPCDocURL">
+            <wsdl:input name="getEPCDocURLRequest" message="iotaw:getEPCDocURLRequest"/>
+            <wsdl:output name="getEPCDocURLResponse" message="iotaw:getEPCDocURLResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getReferentDS">
+            <wsdl:input name="getReferentDSRequest" message="iotaw:getReferentDSRequest"/>
+            <wsdl:output name="getReferentDSResponse" message="iotaw:getReferentDSResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+        <wsdl:operation name="queryDS">
+            <wsdl:input name="queryDSRequest" message="iotaw:queryDSRequest"/>
+            <wsdl:output name="queryDSResponse" message="iotaw:queryDSResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+        <wsdl:operation name="traceEPC">
+            <wsdl:input name="traceEPCRequest" message="iotaw:traceEPCRequest"/>
+            <wsdl:output name="traceEPCResponse" message="iotaw:traceEPCResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+        <wsdl:operation name="queryEPCIS">
+            <wsdl:input name="queryEPCISRequest" message="iotaw:queryEPCISRequest"/>
+            <wsdl:output name="queryEPCISResponse" message="iotaw:queryEPCISResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+<!-- BINDING DEFINITIONS -->
+
+    <wsdl:binding name="IoTaServiceBinding" type="iotaw:IoTaServicePortType">
+        <wsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="queryONS">
+            <wsoap:operation/>
+            <wsdl:input><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEPCDocURL">
+            <wsoap:operation/>
+            <wsdl:input><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>    
+        <wsdl:operation name="getReferentDS">
+            <wsoap:operation/>
+            <wsdl:input><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="queryDS">
+            <wsoap:operation/>
+            <wsdl:input><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="traceEPC">
+            <wsoap:operation/>
+            <wsdl:input><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="queryEPCIS">
+            <wsoap:operation/>
+            <wsdl:input ><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+<!-- SERVICE DEFINITION -->
+
+    <wsdl:service name="IoTaService">
+        <wsdl:port name="IoTaService" binding="iotaw:IoTaServiceBinding">
+            <wsoap:address location="http://localhost:8080/omega/"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

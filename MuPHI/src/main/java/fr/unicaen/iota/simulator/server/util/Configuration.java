@@ -23,8 +23,8 @@ package fr.unicaen.iota.simulator.server.util;
  */
 public final class Configuration {
 
-    private Configuration() {}
-
+    private Configuration() {
+    }
     public static final String MDP = "poudredeperl1p1p1";
     public static final int PULL_WINDOW = 1000;
     public static final String XML_PIPE_CONFIG_FILE = "pipes.xml";

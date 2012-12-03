@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -63,7 +63,6 @@ public final class PEPRequester {
         ArrayList args = new ArrayList();
         args.add(user.getUserID());
         args.add(user.getPartnerID());
-        args.add(fr.unicaen.iota.xacml.policy.Module.administrationModule.getValue());
         EPCISPEP epcispep = new EPCISPEP();
         return (Integer) runMethod(epcispep, args.toArray(), methodName);
     }

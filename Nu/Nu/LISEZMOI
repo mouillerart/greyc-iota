@@ -1,0 +1,20 @@
+Nu - Name system Utilities
+
+Bibliothèque client pour DNS (et DNSSEC).
+
+Dépendances:
+  bibliothèques:
+    - dnsjava
+    - commons-logging
+    - log4j
+
+Configuration:
+  Voir les fichiers *.properties dans le fichier jar ; chacun de ces fichiers
+  peut être remplacé par un fichier du même nom dans le répertoire courant.
+  (commons-logging.properties et log4j.properties pour les journaux)
+
+Dépendances d’utilisation:
+  - un ONS
+
+Utilisation:
+  Voir ALfA et IoTa-DiscoveryWS pour des exemples.

@@ -51,6 +51,19 @@ class Configurer:
         self.options = options
 
 
+    def cget(self, option_name):
+        return CONFIG.get(self.section_name, option_name)
+
+
+    def cisTrue(self, option_name):
+        return CONFIG.isTrue(self.section_name, option_name)
+
+
+    def cset(self, option_name, value):
+        CONFIG.set(self.section_name, option_name, value)
+        return value
+
+
     def configure(self):
         # asks all the questions
         for question, section, option, dic in self.options:
@@ -113,10 +126,9 @@ class Installer(Configurer):
 
     def unpack(self):
         utils.putWait("Unpacking " + self.pretty_name)
-        directory = CONFIG.get(self.section_name, "directory") + "/" + CONFIG.get(self.section_name, "name")
+        directory = self.cget("directory") + "/" + self.cget("name")
         utils.sh_mkdir_p(directory)
-        detar_command = ("tar -C " + directory + " --strip-components=1 -xaf " +
-                         CONFIG.get(self.section_name, "repo"))
+        detar_command = "tar -C " + directory + " --strip-components=1 -xaf " + self.cget("repo")
         if utils.sh_exec(detar_command):
             utils.putDoneOK()
             self.postUnpack()
@@ -193,13 +205,23 @@ class WebAppInstaller(Installer):
         self.postUnpack()
 
 
+    def setURL(self):
+        return self.cset("url", "http://" + CONFIG.get("global", "host") + ":" +
+                         CONFIG.get("tomcat", "http_port") + "/" + self.cget("name") + "/")
+
+
+    # default implementation, beware when overrinding
+    def postConfigure(self):
+        self.setURL()
+
+
     def configureProperties(self):
         for filename, dic in self.properties_options:
             utils.configurePropertiesWebApp(self.pretty_name, filename, self.section_name, dic)
         if self.properties_options:
             if CONFIG.isTrue("tomcat", "use_manager"):
                 utils.putWait("Reloading " + self.pretty_name)
-                utils.manageTomcat("reload?path=/" + CONFIG.get(self.section_name, "name"))
+                utils.manageTomcat("reload?path=/" + self.cget("name"))
             else:
                 utils.stopTomcat()
                 utils.startTomcat()

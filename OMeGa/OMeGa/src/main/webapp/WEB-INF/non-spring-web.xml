@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>OMeGa</display-name>
+
+  <servlet>
+    <!-- CXFServlet providing the Interface Endpoint -->
+    <servlet-name>OMeGa</servlet-name>
+    <servlet-class>fr.unicaen.iota.application.soap.OMeGa</servlet-class>
+  </servlet>
+  <servlet>
+    <!-- RHO servlet -->
+    <servlet-name>RHO</servlet-name>
+    <servlet-class>fr.unicaen.iota.application.rest.RHO</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <!-- The REST JSON servlet will be available at http://{url:port}/{context-path}/rho -->
+    <servlet-name>RHO</servlet-name>
+    <url-pattern>/rho</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <!-- The OMeGa servlet will be available at http://{url:port}/{context-path}/ -->
+    <servlet-name>OMeGa</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  <mime-mapping>
+    <extension>wsdl</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+  <welcome-file-list id="WelcomeFileList">
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+</web-app>

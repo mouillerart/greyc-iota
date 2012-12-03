@@ -1,0 +1,14 @@
+DS-Xi-Client
+
+Common library interfacing with the xi web service for DS.
+
+Dependencies:
+  libraries:
+    - sunxacml
+    - servlet-api
+    - commons-logging
+
+Usage Dependencies:
+  - Xi
+  - DiscoveryPHI
+  - a DWS

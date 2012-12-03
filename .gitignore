@@ -10,8 +10,16 @@ target
 IoTa-Installer/resources/alfa-*-bin-with-dependencies.tar.gz
 IoTa-Installer/resources/discovery-phi-*.war
 IoTa-Installer/resources/discovery-server-*.war
+IoTa-Installer/resources/dseta-server-*.war
 IoTa-Installer/resources/epcilon-*.war
 IoTa-Installer/resources/epcis-phi-*.war
 IoTa-Installer/resources/eta-*.war
+IoTa-Installer/resources/user-*.war
+IoTa-Installer/resources/eta-callback-receiver-*.war
+IoTa-Installer/resources/eta-callback-filter-*.war
+IoTa-Installer/resources/eta-callback-sender-*.war
+IoTa-Installer/resources/eta-callback-filter-*-bin-with-dependencies.tar.gz
+IoTa-Installer/resources/eta-callback-sender-*-bin-with-dependencies.tar.gz
 IoTa-Installer/resources/omega-*.war
+IoTa-Installer/resources/sigma-*.war
 IoTa-Installer/resources/install.ini

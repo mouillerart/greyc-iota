@@ -24,16 +24,26 @@ from lib.config  import CONFIG
 from lib.common  import GlobalConfigurer
 from lib.tomcat  import TomcatInstaller
 from lib.db      import DBConfigurer
+from lib.cert    import CertConfigurer
+from lib.sigma   import SigMAInstaller
 from lib.epcis   import EpcisInstaller
 from lib.dphi    import DPHIInstaller
 from lib.ds      import DSInstaller
+from lib.dseta   import DSeTaInstaller
 from lib.ldap    import LDAPConfigurer
 from lib.eta     import ETaInstaller
+from lib.activemq import ActiveMQInstaller
+from lib.eta_callback_receiver import ETaCallbackReceiverInstaller
+from lib.eta_callback_filter import ETaCallbackFilterInstaller
+from lib.eta_callback_sender import ETaCallbackSenderInstaller
+from lib.eta_callback_filter_app import ETaCallbackFilterAppInstaller
+from lib.eta_callback_sender_app import ETaCallbackSenderAppInstaller
 from lib.ephi    import EPHIInstaller
 from lib.epcilon import EpcILoNInstaller
 from lib.ons     import ONSConfigurer
 from lib.alfa    import ALfAInstaller
 from lib.omega   import OMeGaInstaller
+from lib.user    import UserInstaller
 
 if __name__ == "__main__":
     if "--accept-defaults" in sys.argv:
@@ -45,12 +55,25 @@ if __name__ == "__main__":
     GlobalConfigurer().run()
     TomcatInstaller().run()
     DBConfigurer().run()
+    CertConfigurer().run()
+    SigMAInstaller().run()
     EpcisInstaller().run()
     LDAPConfigurer().run()
+    UserInstaller().run()
     ETaInstaller().run()
     EPHIInstaller().run()
+    ActiveMQInstaller().run()
+    ETaCallbackReceiverInstaller().run()
+    print "[    ]"
+    if lib.utils.getSetConfigYN("Use webapp versions for ETa Callback Filter and Sender?", "global", "callback_war"):
+        ETaCallbackFilterInstaller().run()
+        ETaCallbackSenderInstaller().run()
+    else:
+        ETaCallbackFilterAppInstaller().run()
+        ETaCallbackSenderAppInstaller().run()
     DPHIInstaller().run()
     DSInstaller().run()
+    DSeTaInstaller().run()
     EpcILoNInstaller().run()
     ONSConfigurer().run()
     ALfAInstaller().run()

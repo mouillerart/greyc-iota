@@ -5,17 +5,16 @@ Agent of access control for the EPCIS.
 Dependencies:
   IoTa modules:
     - LibXACML-EPCIS
+    - EPCIS-Xi-Client
   libraries:
     - epcis-commons
     - epcis-repository
     - epcis-queryclient
     - epcis-captureclient
-    - sunxacml
     - spring
     - cxf
     - servlet-api
     - mysql-connector
-    - xerces
     - commons-logging
     - log4j
 

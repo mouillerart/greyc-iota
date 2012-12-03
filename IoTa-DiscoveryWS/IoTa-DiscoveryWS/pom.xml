@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unicaen.iota.discovery</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>discovery-server</artifactId>
-    <version>1.0</version>
+    <version>1.9-mock</version>
     <packaging>war</packaging>
     <name>IoTa-DiscoveryWS</name>
 
@@ -18,18 +18,24 @@
 
         <!-- IoTa depdencies -->
         <dependency>
-            <groupId>fr.unicaen.iota.xacml</groupId>
-            <artifactId>libxacml-ds</artifactId>
-            <version>1.0</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>ds-xi-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>fr.unicaen.iota.discovery</groupId>
-            <artifactId>discovery-client</artifactId>
-            <version>1.0</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>nu</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
-        <!-- Hibernate & MySQL dependencies -->
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>discovery-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Hibernate dependencies -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -52,12 +58,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.6.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.21</version>
         </dependency>
 
         <!-- Axis2 dependencies -->
@@ -112,11 +112,6 @@
         </dependency>
 
         <!-- Other dependies -->
-        <dependency>
-            <groupId>net.sf.sunxacml</groupId>
-            <artifactId>sunxacml</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>dnsjava</groupId>

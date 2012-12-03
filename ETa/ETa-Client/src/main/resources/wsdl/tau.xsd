@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tau="urn:unicaen:iota:tau:xsd"
+           targetNamespace="urn:unicaen:iota:tau:xsd"
+           elementFormDefault="unqualified" attributeFormDefault="unqualified">
+
+  <xs:element name="identity" type="tau:Identity"/>
+
+  <xs:complexType name="Identity">
+    <xs:sequence>
+      <xs:element name="asString" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="principal" type="tau:Principal"/>
+
+  <xs:complexType name="Principal">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="asString" type="xs:string"/>
+      <xs:element name="hashCode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

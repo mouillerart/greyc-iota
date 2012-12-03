@@ -19,15 +19,14 @@
  */
 package fr.unicaen.iota.application.operations;
 
-import fr.unicaen.iota.application.conf.Constants;
-import fr.unicaen.iota.application.model.DSEvent;
-import fr.unicaen.iota.application.rmi.CallBackClient;
-import fr.unicaen.iota.discovery.client.DsClient;
-import fr.unicaen.iota.discovery.client.model.Event;
-import fr.unicaen.iota.discovery.client.model.Service;
+import fr.unicaen.iota.application.rmi.CallbackClient;
 import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
+import fr.unicaen.iota.ds.model.TEventItem;
+import fr.unicaen.iota.ds.model.TServiceItem;
+import fr.unicaen.iota.ds.model.TServiceType;
+import fr.unicaen.iota.dseta.client.DSeTaClient;
+import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
-import java.sql.Timestamp;
 import java.util.*;
 import org.apache.axis2.databinding.types.URI.MalformedURIException;
 import org.apache.commons.logging.Log;
@@ -36,71 +35,35 @@ import org.apache.commons.logging.LogFactory;
 public class DiscoveryOperation {
 
     private static final Log log = LogFactory.getLog(DiscoveryOperation.class);
-    private final String LOGIN;
-    private final String PASS;
+    private final Identity identity;
     private String DS_SERVICE_ADDRESS;
-    private final CallBackClient client;
-    private final String sessionId;
+    private final CallbackClient client;
+    private final String sessionID;
     private final Set<String> visitedSet = new HashSet<String>();
+    private final DSeTaClient dSClient;
 
-    public DiscoveryOperation(String login, String pass, String ds_service_address) {
+    public DiscoveryOperation(Identity identity, String ds_service_address) {
         super();
-        this.LOGIN = login;
-        this.PASS = pass;
+        this.identity = identity;
         this.DS_SERVICE_ADDRESS = ds_service_address;
         this.client = null;
-        this.sessionId = null;
+        this.sessionID = null;
+        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS);
     }
 
-    public DiscoveryOperation(String login, String pass, String dsAddress, CallBackClient client, String sessionId) {
+    public DiscoveryOperation(Identity identity, String dsAddress, String sessionID, CallbackClient client) {
         super();
-        this.LOGIN = login;
-        this.PASS = pass;
+        this.identity = identity;
         this.DS_SERVICE_ADDRESS = dsAddress;
         this.client = client;
-        this.sessionId = sessionId;
-    }
-    private transient DsClient dSClient = null;
-    private transient String dSSessionID = null;
-
-    private void login() throws RemoteException {
-        log.debug("[DS SESSION START]");
-        log.debug(" -> " + DS_SERVICE_ADDRESS);
-        dSClient = new DsClient(DS_SERVICE_ADDRESS);
-        try {
-            dSSessionID = dSClient.userLogin(Constants.DEFAULT_SESSION, LOGIN, PASS).getSessionId();
-        } catch (RemoteException ex) {
-            log.error("Unable to connect to the DS: login or password error!", ex);
-            throw new RemoteException("Unable to connect to the DS: login or password error!");
-        } catch (EnhancedProtocolException ex) {
-            log.error("Unable to connect to the DS: login or password error!", ex);
-            throw new RemoteException("Unable to connect to the DS: login or password error!");
-        }
-        log.debug(" -> " + dSSessionID);
-        if (dSSessionID == null) {
-            throw new RemoteException("Unable to connect to the DS: login or password error!");
-        }
+        this.sessionID = sessionID;
+        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS);
     }
 
-    private void logout() throws RemoteException {
+    private List<TEventItem> getEvents(String EPC) throws RemoteException {
+        List<TEventItem> dsClientEventList;
         try {
-            dSClient.userLogout(dSSessionID);
-            dSSessionID = null;
-            dSClient = null;
-        } catch (RemoteException ex) {
-            log.error("Unable to logout", ex);
-            throw new RemoteException("Unable to logout");
-        } catch (EnhancedProtocolException ex) {
-            log.error("Unable to logout", ex);
-            throw new RemoteException("Unable to logout");
-        }
-        log.debug("[DS SESSION END]");
-    }
-
-    private List<Event> getEvents(String EPC) throws RemoteException {
-        List<Event> dsClientEventList;
-        try {
-            dsClientEventList = dSClient.eventLookup(dSSessionID, EPC, null, null, null);
+            dsClientEventList = dSClient.eventLookup(EPC, null, null, null);
         } catch (MalformedURIException ex) {
             log.error("Unable to process eventLookup", ex);
             throw new RemoteException("Unable to process eventLookup");
@@ -114,75 +77,67 @@ public class DiscoveryOperation {
 
     public Set<String> discover(String EPC) {
         Set<String> result = new HashSet<String>();
-        Collection<Event> evtList;
+        Collection<TEventItem> evtList;
         try {
-            login();
             evtList = getEvents(EPC);
         } catch (RemoteException e) {
             log.error(null, e);
             return new HashSet<String>();
         }
-        for (Event evt : evtList) {
-            log.trace("Source found: " + evt.getPartnerId());
-            Collection<Service> serviceList = evt.getServiceList();
+        for (TEventItem evt : evtList) {
+            log.trace("Source found: " + evt.getP());
+            Collection<TServiceItem> serviceList = evt.getServiceList().getService();
             log.trace(serviceList.size());
 
-            for (Service s : serviceList) {
-                log.trace("  PartnerID: " + evt.getPartnerId());
+            for (TServiceItem s : serviceList) {
+                log.trace("  PartnerID: " + evt.getP());
                 log.trace("    | service type: " + s.getType());
                 log.trace("    | service address: " + s.getUri());
-                if ("ds".equals(s.getType())) {
+                // TODO: also handle TServiceType.DS (?)
+                if (s.getType() == TServiceType.IDED_DS) {
+                    // TODO: Quick'n'dirty correction
+                    String old_addr = DS_SERVICE_ADDRESS;
                     DS_SERVICE_ADDRESS = s.getUri().toString();
                     result.addAll(discover(EPC));
-                } else {
+                    DS_SERVICE_ADDRESS = old_addr;
+                } else if (s.getType() == TServiceType.IDED_EPCIS) {
                     result.add(s.getUri().toString());
                     if (client != null && !visitedSet.contains(s.getUri().toString())) {
-                        new EpcisRequest(s.getUri().toString(), EPC, LOGIN, PASS, client, sessionId).start();
+                        new EpcisRequest(s.getUri().toString(), EPC, identity, sessionID, client).start();
                         visitedSet.add(s.getUri().toString());
                     }
-                }
+                } // else: do nothing
             }
         }
-        try {
-            logout();
-        } catch (RemoteException ex) {
-            log.fatal(null, ex);
-        }
         return result;
     }
 
-    public List<DSEvent> getDSEvents(String EPC) throws RemoteException {
-        List<DSEvent> result = new ArrayList<DSEvent>();
-        login();
-        for (Event dsClientEvent : getEvents(EPC)) {
-            Service first = dsClientEvent.getServiceList().get(0);
+    public List<TEventItem> getDSEvents(String EPC) throws RemoteException {
+        List<TEventItem> result = new ArrayList<TEventItem>();
+        for (TEventItem dsClientEvent : getEvents(EPC)) {
+            TServiceItem first = dsClientEvent.getServiceList().getService().get(0);
             log.debug(EPC + "      | partnerID: " + first.getId());
-            log.debug(EPC + "             | partner info size: " + dsClientEvent.getServiceList().size());
+            log.debug(EPC + "             | partner info size: " + dsClientEvent.getServiceList().getService().size());
             log.debug(EPC + "             | partner type: " + first.getType());
-            result.add(new DSEvent(EPC, first.getUri().toString(), dsClientEvent.getBizStep(),
-                    new Timestamp(dsClientEvent.getSourceTimeStamp().getTimeInMillis())));
+            result.add(dsClientEvent);
         }
-        logout();
         return result;
     }
 
-    public List<DSEvent> getDSEvents(String EPC, String serviceType) throws RemoteException {
-        List<DSEvent> result = new ArrayList<DSEvent>();
-        login();
-        for (Event dsClientEvent : getEvents(EPC)) {
-            if (!dsClientEvent.getServiceList().isEmpty()) {
-                Service firstService = dsClientEvent.getServiceList().get(0);
+    public List<TEventItem> getDSEvents(String EPC, TServiceType serviceType) throws RemoteException {
+        List<TEventItem> result = new ArrayList<TEventItem>();
+        for (TEventItem dsClientEvent : getEvents(EPC)) {
+            if (!dsClientEvent.getServiceList().getService().isEmpty()) {
+                TServiceItem firstService = dsClientEvent.getServiceList().getService().get(0);
                 log.debug(EPC + "      | partnerID:" + firstService.getId());
-                log.debug(EPC + "             | partner info size:" + dsClientEvent.getServiceList().size());
+                log.debug(EPC + "             | partner info size:" + dsClientEvent.getServiceList().getService().size());
                 log.debug(EPC + "             | partner type: " + firstService.getType());
-                if (firstService.getType().equals(serviceType)) {
-                    result.add(new DSEvent(EPC, firstService.getUri().toString(),
-                            dsClientEvent.getBizStep(), new Timestamp(dsClientEvent.getSourceTimeStamp().getTimeInMillis())));
+                if (firstService.getType() == serviceType) {
+                    result.add(dsClientEvent);
                 }
             }
         }
         log.debug(EPC + " -> dsEvents with corresponding type: " + result.size());
-        logout();
         return result;
     }
 }

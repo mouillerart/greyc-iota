@@ -41,12 +41,14 @@ public class StandingQueryCallbackServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Log LOG = LogFactory.getLog(StandingQueryCallbackServlet.class);
+    private final StandingQueryCallbackModule callbackmodule;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public StandingQueryCallbackServlet() {
         super();
+        callbackmodule = new StandingQueryCallbackModule();
     }
 
     @Override
@@ -55,14 +57,16 @@ public class StandingQueryCallbackServlet extends HttpServlet {
     }
 
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 
     /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * response)
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse rsp) throws ServletException, IOException {
@@ -74,8 +78,7 @@ public class StandingQueryCallbackServlet extends HttpServlet {
             Unmarshaller unmarshaller = context.createUnmarshaller();
             JAXBElement<EPCISQueryDocumentType> queryResults = (JAXBElement<EPCISQueryDocumentType>) unmarshaller.unmarshal(br);
             EPCISQueryDocumentType doc = queryResults.getValue();
-            StandingQueryCallbackModule cm = new StandingQueryCallbackModule();
-            cm.saveEvents(doc);
+            callbackmodule.saveEvents(doc);
         } catch (NullPointerException e) {
             LOG.error(null, e);
         } catch (JAXBException e) {

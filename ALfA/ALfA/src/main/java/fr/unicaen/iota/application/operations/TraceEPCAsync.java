@@ -18,29 +18,28 @@
  */
 package fr.unicaen.iota.application.operations;
 
-import fr.unicaen.iota.application.conf.Constants;
-import fr.unicaen.iota.application.rmi.CallBackClient;
+import fr.unicaen.iota.application.rmi.CallbackClient;
+import fr.unicaen.iota.nu.ONSOperation;
+import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class TraceEPCAsync extends Thread {
 
-    private final CallBackClient client;
-    private final String sessionId;
-    private final String LOGIN;
-    private final String PASS;
+    private final CallbackClient client;
+    private final String sessionID;
+    private final Identity identity;
     private final String EPC;
     private final ONSOperation onsOperation;
     private static final Log log = LogFactory.getLog(TraceEPCAsync.class);
 
-    public TraceEPCAsync(String epc, CallBackClient client, String login, String pass, String sessionId) {
+    public TraceEPCAsync(String epc, String sessionID, CallbackClient client, Identity identity) {
         this.client = client;
-        this.LOGIN = login;
-        this.PASS = pass;
-        this.sessionId = sessionId;
+        this.sessionID = sessionID;
+        this.identity = identity;
         this.EPC = epc;
-        this.onsOperation = new ONSOperation(Constants.ONS_HOSTS);
+        this.onsOperation = new ONSOperation();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class TraceEPCAsync extends Thread {
         log.trace("[TRACE EPC]: " + epc);
         log.trace("CALLED METHOD: <traceEPC>");
         log.trace("Get Referent ds address");
-        String dsAddress = onsOperation.getReferentDS(epc);
+        String dsAddress = onsOperation.getReferentIDedDS(epc);
         if (dsAddress == null) {
             log.warn("Unable to retreive referent ds address for this epc code");
             return;
@@ -64,7 +63,7 @@ public class TraceEPCAsync extends Thread {
             log.trace("referent ds address found: " + dsAddress);
         }
         log.trace("Start discover");
-        DiscoveryOperation dsOp = new DiscoveryOperation(LOGIN, PASS, dsAddress, client, sessionId);
+        DiscoveryOperation dsOp = new DiscoveryOperation(identity, dsAddress, sessionID, client);
         dsOp.discover(epc);
     }
 }

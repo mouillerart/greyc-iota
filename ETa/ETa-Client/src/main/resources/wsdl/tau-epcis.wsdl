@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:apachesoap="http://xml.apache.org/xml-soap"
+                  xmlns:epcis="urn:epcglobal:epcis:xsd:1"
+                  xmlns:epcisq="urn:epcglobal:epcis-query:xsd:1"
+                  xmlns:epcglobal="urn:epcglobal:xsd:1"
+                  xmlns:impl="urn:epcglobal:epcis:wsdl:1"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="urn:unicaen:iota:eta:wsdl"
+                  xmlns:eta="urn:unicaen:iota:eta:wsdl"
+                  xmlns:tau="urn:unicaen:iota:tau:xsd">
+    <wsdl:import namespace="urn:epcglobal:epcis:wsdl:1" location="EPCglobal-epcis-query-1_0.wsdl" />
+    <wsdl:types>
+        <xsd:schema xmlns:impl="urn:epcglobal:epcis:wsdl:1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:epcglobal:epcis:wsdl:1">
+            <xsd:import namespace="urn:unicaen:iota:tau:xsd" schemaLocation="tau.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="IDed_subscribeRequest">
+        <wsdl:part name="parms" element="epcisq:Subscribe"/>
+        <wsdl:part name="id" element="tau:identity"/>
+    </wsdl:message>
+    <wsdl:message name="IDed_unsubscribeRequest">
+        <wsdl:part name="parms" element="epcisq:Unsubscribe"/>
+        <wsdl:part name="id" element="tau:identity"/>
+    </wsdl:message>
+    <wsdl:message name="IDed_getSubscriptionIDsRequest">
+        <wsdl:part name="parms" element="epcisq:GetSubscriptionIDs"/>
+        <wsdl:part name="id" element="tau:identity"/>
+    </wsdl:message>
+    <wsdl:message name="IDed_pollRequest">
+        <wsdl:part name="parms" element="epcisq:Poll"/>
+        <wsdl:part name="id" element="tau:identity"/>
+    </wsdl:message>
+    <wsdl:portType name="IDed_EPCISServicePortType">
+        <wsdl:operation name="IDed_subscribe">
+            <wsdl:input name="IDed_subscribeRequest" message="eta:IDed_subscribeRequest"/>
+            <wsdl:output name="subscribeResponse" message="impl:subscribeResponse"/>
+            <wsdl:fault name="NoSuchNameExceptionFault" message="impl:NoSuchNameExceptionResponse"/>
+            <wsdl:fault name="InvalidURIExceptionFault" message="impl:InvalidURIExceptionResponse"/>
+            <wsdl:fault name="DuplicateSubscriptionExceptionFault" message="impl:DuplicateSubscriptionExceptionResponse"/>
+            <wsdl:fault name="QueryParameterExceptionFault" message="impl:QueryParameterExceptionResponse"/>
+            <wsdl:fault name="QueryTooComplexExceptionFault" message="impl:QueryTooComplexExceptionResponse"/>
+            <wsdl:fault name="SubscriptionControlsExceptionFault" message="impl:SubscriptionControlsExceptionResponse"/>
+            <wsdl:fault name="SubscribeNotPermittedExceptionFault" message="impl:SubscribeNotPermittedExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="impl:SecurityExceptionResponse"/>
+            <wsdl:fault name="ValidationExceptionFault" message="impl:ValidationExceptionResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="impl:ImplementationExceptionResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_unsubscribe">
+            <wsdl:input name="IDed_unsubscribeRequest" message="eta:IDed_unsubscribeRequest"/>
+            <wsdl:output name="unsubscribeResponse" message="impl:unsubscribeResponse"/>
+            <wsdl:fault name="NoSuchSubscriptionExceptionFault" message="impl:NoSuchSubscriptionExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="impl:SecurityExceptionResponse"/>
+            <wsdl:fault name="ValidationExceptionFault" message="impl:ValidationExceptionResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="impl:ImplementationExceptionResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_getSubscriptionIDs">
+            <wsdl:input name="IDed_getSubscriptionIDsRequest" message="eta:IDed_getSubscriptionIDsRequest"/>
+            <wsdl:output name="getSubscriptionIDsResponse" message="impl:getSubscriptionIDsResponse"/>
+            <wsdl:fault name="NoSuchNameExceptionFault" message="impl:NoSuchNameExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="impl:SecurityExceptionResponse"/>
+            <wsdl:fault name="ValidationExceptionFault" message="impl:ValidationExceptionResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="impl:ImplementationExceptionResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_poll">
+            <wsdl:input name="IDed_pollRequest" message="eta:IDed_pollRequest"/>
+            <wsdl:output name="pollResponse" message="impl:pollResponse"/>
+            <wsdl:fault name="QueryParameterExceptionFault" message="impl:QueryParameterExceptionResponse"/>
+            <wsdl:fault name="QueryTooLargeExceptionFault" message="impl:QueryTooLargeExceptionResponse"/>
+            <wsdl:fault name="QueryTooComplexExceptionFault" message="impl:QueryTooComplexExceptionResponse"/>
+            <wsdl:fault name="NoSuchNameExceptionFault" message="impl:NoSuchNameExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="impl:SecurityExceptionResponse"/>
+            <wsdl:fault name="ValidationExceptionFault" message="impl:ValidationExceptionResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="impl:ImplementationExceptionResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="IDed_EPCISServiceBinding" type="eta:IDed_EPCISServicePortType">
+        <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="IDed_subscribe">
+            <wsdlsoap:operation/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="NoSuchNameExceptionFault">
+                <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="InvalidURIExceptionFault">
+                <wsdlsoap:fault name="InvalidURIExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="DuplicateSubscriptionExceptionFault">
+                <wsdlsoap:fault name="DuplicateSubscriptionExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="QueryParameterExceptionFault">
+                <wsdlsoap:fault name="QueryParameterExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="QueryTooComplexExceptionFault">
+                <wsdlsoap:fault name="QueryTooComplexExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SubscribeNotPermittedExceptionFault">
+                <wsdlsoap:fault name="SubscribeNotPermittedExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SubscriptionControlsExceptionFault">
+                <wsdlsoap:fault name="SubscriptionControlsExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ValidationExceptionFault">
+                <wsdlsoap:fault name="ValidationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_unsubscribe">
+            <wsdlsoap:operation/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="NoSuchSubscriptionExceptionFault">
+                <wsdlsoap:fault name="NoSuchSubscriptionExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ValidationExceptionFault">
+                <wsdlsoap:fault name="ValidationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_getSubscriptionIDs">
+            <wsdlsoap:operation/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="NoSuchNameExceptionFault">
+                <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ValidationExceptionFault">
+                <wsdlsoap:fault name="ValidationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_poll">
+            <wsdlsoap:operation/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="QueryParameterExceptionFault">
+                <wsdlsoap:fault name="QueryParameterExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="QueryTooComplexExceptionFault">
+                <wsdlsoap:fault name="QueryTooComplexExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="QueryTooLargeExceptionFault">
+                <wsdlsoap:fault name="QueryTooLargeExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="NoSuchNameExceptionFault">
+                <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ValidationExceptionFault">
+                <wsdlsoap:fault name="ValidationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="IDed_EPCglobalEPCISService">
+        <wsdl:port name="IDed_EPCglobalEPCISServicePort" binding="eta:IDed_EPCISServiceBinding">
+            <!-- The address shown below is an example (default); an implementation MAY specify any port it wishes -->
+            <wsdlsoap:address location="http://localhost:8080/eta/ided_query"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

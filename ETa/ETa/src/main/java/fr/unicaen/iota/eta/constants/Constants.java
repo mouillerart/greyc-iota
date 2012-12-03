@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -28,32 +28,42 @@ import org.apache.commons.logging.LogFactory;
 public final class Constants {
 
     private static final Log log = LogFactory.getLog(Constants.class);
+    public static final String PROP_SERVICE_VERSION = "service-version";
     public static final String PROP_SESSION_TIME_LEASE = "session-time-lease";
     public static final String PROP_SESSION_FAILED_ID = "session-failed-id";
     public static final String PROP_XACML_URL = "xacml-url";
     public static final String PROP_XACML_IHM_URL = "xacml-ihm-url";
+    public static final String PROP_XACML_DEFAULT_USER = "xacml-default-user";
     public static final String PROP_EPCIS_QUERY_URL = "epcis-query-url";
     public static final String PROP_EPCIS_CAPTURE_URL = "epcis-capture-url";
     public static final String PROP_CALLBACK_URL = "eta-callback-url";
     public static final String PROP_EPCIS_SCHEMA_FILE = "epcisSchemaFile";
     public static final String PROP_EPCIS_MASTER_DATA_SCHEMA_FILE = "epcisMasterDataSchemaFile";
+    public static final String PROP_JNDI_DATASOURCE_NAME = "jndi-datasource-name";
     public static final String PROP_LDAP_URL = "ldap-url";
     public static final String PROP_LDAP_BASE_DN = "ldap-basedn";
     public static final String PROP_LDAP_USER = "ldap-user";
     public static final String PROP_LDAP_PASSWORD = "ldap-password";
+    public static final String PROP_SIGMA_URL = "sigma-url";
+    public static final String PROP_SIGMA_VERIFICATION = "sigma-verification";
+    public static final String SERVICE_VERSION;
     public static final int SESSION_TIME_LEASE;
     public static final String SESSION_FAILED_ID;
     public static final String XACML_URL;
     public static final String XACML_IHM_URL;
+    public static final String XACML_DEFAULT_USER;
     public static final String CALLBACK_URL;
     public static final String EPCIS_QUERY_URL;
     public static final String EPCIS_CAPTURE_URL;
     public static final String EPCIS_SCHEMA_FILE;
     public static final String EPCIS_MASTER_DATA_SCHEMA_FILE;
+    public static final String JNDI_DATASOURCE_NAME;
     public static final String LDAP_URL;
     public static final String LDAP_BASE_DN;
     public static final String LDAP_USER;
     public static final String LDAP_PASSWORD;
+    public static final String SIGMA_URL;
+    public static final boolean SIGMA_VERIFICATION;
 
     private Constants() {
     }
@@ -68,18 +78,23 @@ public final class Constants {
         } catch (IOException ex) {
             log.fatal(null, ex);
         }
+        SERVICE_VERSION = properties.getProperty(PROP_SERVICE_VERSION);
         SESSION_TIME_LEASE = Integer.parseInt(properties.getProperty(PROP_SESSION_TIME_LEASE));
         SESSION_FAILED_ID = properties.getProperty(PROP_SESSION_FAILED_ID );
         XACML_URL = properties.getProperty(PROP_XACML_URL);
         XACML_IHM_URL = properties.getProperty(PROP_XACML_IHM_URL);
+        XACML_DEFAULT_USER = properties.getProperty(PROP_XACML_DEFAULT_USER);
         EPCIS_QUERY_URL = properties.getProperty(PROP_EPCIS_QUERY_URL);
         EPCIS_CAPTURE_URL = properties.getProperty(PROP_EPCIS_CAPTURE_URL);
         CALLBACK_URL = properties.getProperty(PROP_CALLBACK_URL);
         EPCIS_SCHEMA_FILE = properties.getProperty(PROP_EPCIS_SCHEMA_FILE);
         EPCIS_MASTER_DATA_SCHEMA_FILE = properties.getProperty(PROP_EPCIS_MASTER_DATA_SCHEMA_FILE);
+        JNDI_DATASOURCE_NAME = properties.getProperty(PROP_JNDI_DATASOURCE_NAME);
         LDAP_URL = properties.getProperty(PROP_LDAP_URL);
         LDAP_BASE_DN = properties.getProperty(PROP_LDAP_BASE_DN);
         LDAP_USER = properties.getProperty(PROP_LDAP_USER);
         LDAP_PASSWORD = properties.getProperty(PROP_LDAP_PASSWORD);
+        SIGMA_URL = properties.getProperty(PROP_SIGMA_URL);
+        SIGMA_VERIFICATION = Boolean.parseBoolean(properties.getProperty(PROP_SIGMA_VERIFICATION));
     }
 }

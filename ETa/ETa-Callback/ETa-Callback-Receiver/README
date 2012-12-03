@@ -9,7 +9,6 @@ Dependencies:
     - activemq-core
     - commons-logging
     - log4j
-    - junit
 
 Configuration:
   (application.properties for this application,

@@ -19,25 +19,28 @@
 #
 import installer
 import utils
-from config import CONFIG
+
 
 class LDAPConfigurer(installer.Configurer):
 
     def __init__(self):
         installer.Configurer.__init__(self, "LDAP", "ldap", [
+                ("Enter the URL to the LDAP directory", "ldap", "url", {}),
                 ("Enter the LDAP's domain name", "ldap", "base_dn", {}),
                 ("Enter the LDAP's login", "ldap", "login", {}),
                 ("Enter the LDAP's password", "ldap", "password", {}),
-                ("Enter the URL to the LDAP directory", "ldap", "url", {}),
                 ("Do you want to create ldif files?", "ldap", "ldif_create", {"type": "YN"}),
-                ("Do you want to automatically add ldif files to LDAP?", "ldap", "ldif_install", {"type": "YN"})
+                ("Do you want to automatically add ldif files to LDAP?", "ldap", "ldif_install",
+                 { "when": ("ldap", "ldif_create"), "type": "YN"})
                 ])
 
+
     def postConfigure(self):
-        if CONFIG.isTrue("ldap", "ldif_create"):
+        if self.cisTrue("ldif_create"):
             self.createLdifs()
-            if CONFIG.isTrue("ldap", "ldif_install"):
+            if self.cisTrue("ldif_install"):
                 self.addLdifs()
+
 
     def createLdifs(self):
         utils.writeFile("Creating the schema as a ldif file (user.ldif)", "user.ldif", """
@@ -53,7 +56,7 @@ objectclass: top
 objectclass: organizationalUnit
 ou: users
 description: users
-""" % CONFIG.get("ldap", "base_dn"))
+""" % self.cget("base_dn"))
         utils.writeFile("Creating the user 'superadmin' as a ldif file (superadmin.ldif)", "superadmin.ldif", """
 dn: uid=superadmin,ou=users,%s
 objectclass: top
@@ -61,7 +64,7 @@ objectclass: user
 uid: superadmin
 partner: superadmin
 userPassword: {SHA}iJo6eRs4dc+uQTV0tT2ku4qQ1T4=
-""" % CONFIG.get("ldap", "base_dn"))
+""" % self.cget("base_dn"))
         utils.writeFile("Creating the user 'anonymous' as ldif file (anonymous.ldif)", "anonymous.ldif", """
 dn: uid=anonymous,ou=users,%s
 objectclass: top
@@ -69,7 +72,7 @@ objectclass: user
 uid: anonymous
 partner: anonymous
 userPassword: {SHA}CpL6syMBNMym6t2YmDJbmyrmeZg=
-""" % CONFIG.get("ldap", "base_dn"))
+""" % self.cget("base_dn"))
 
 
     def addLdifs(self):

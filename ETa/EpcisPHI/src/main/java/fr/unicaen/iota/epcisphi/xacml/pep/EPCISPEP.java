@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import com.sun.xacml.ctx.ResponseCtx;
 import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.epcisphi.utils.MapSessions;
 import fr.unicaen.iota.xacml.pep.MethodNamesAdmin;
-import fr.unicaen.iota.xacml.pep.XACMLResponse;
+import fr.unicaen.iota.xacml.policy.Module;
 import fr.unicaen.iota.xacml.request.EventRequest;
 import java.util.Iterator;
 import org.apache.commons.logging.Log;
@@ -38,72 +38,72 @@ public class EPCISPEP implements MethodNamesAdmin {
     //################## Authentication ##################
     //####################################################
     @Override
-    public int hello(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "hello", partner, module);
+    public int hello(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "hello", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int userLookup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "userLookup", partner, module);
+    public int userLookup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "userLookup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int userCreate(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "userCreate", partner, module);
+    public int userCreate(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "userCreate", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int userInfo(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "userInfo", partner, module);
+    public int userInfo(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "userInfo", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int userUpdate(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "userUpdate", partner, module);
+    public int userUpdate(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "userUpdate", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int userDelete(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "userDelete", partner, module);
+    public int userDelete(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "userDelete", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int partnerInfo(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "partnerInfo", partner, module);
+    public int partnerInfo(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "partnerInfo", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int partnerUpdate(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "partnerUpdate", partner, module);
+    public int partnerUpdate(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "partnerUpdate", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int partnerDelete(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "partnerDelete", partner, module);
+    public int partnerDelete(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "partnerDelete", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
@@ -112,101 +112,101 @@ public class EPCISPEP implements MethodNamesAdmin {
     //####################################################
     //############## Admin Module Section ################
     //####################################################
-    public int superadmin(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "superadmin", partner, module);
+    public int superadmin(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "superadmin", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
-    public int allAdminMethods(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "allAdminMethods", partner, module);
+    public int allAdminMethods(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "allAdminMethods", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
-    public int allQueryMethods(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "allQueryMethods", partner, module);
+    public int allQueryMethods(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "allQueryMethods", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
-    public int allCaptureMethods(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "allCaptureMethods", partner, module);
-        RequestCtx request = eventRequest.createRequest();
-        ResponseCtx result = MapSessions.APM.evaluate(request);
-        return processResult(result);
-    }
-
-    @Override
-    public int createAdminPartnerGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "createAdminPartnerGroup", partner, module);
+    public int allCaptureMethods(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "allCaptureMethods", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int deleteAdminPartnerGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "deleteAdminPartnerGroup", partner, module);
+    public int createAdminPartnerGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "createAdminPartnerGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addAdminPartnerToGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addAdminPartnerToGroup", partner, module);
+    public int deleteAdminPartnerGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "deleteAdminPartnerGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeAdminPartnerFromGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeAdminPartnerFromGroup", partner, module);
+    public int addAdminPartnerToGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addAdminPartnerToGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchAdminUserPermissionPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchAdminUserPermissionPolicy", partner, module);
+    public int removeAdminPartnerFromGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeAdminPartnerFromGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeAdminUserPermission(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeAdminUserPermission", partner, module);
+    public int switchAdminUserPermissionPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchAdminUserPermissionPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addAdminUserPermission(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addAdminUserPermission", partner, module);
+    public int removeAdminUserPermission(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeAdminUserPermission", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int updateAdminGroupName(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "updateAdminGroupName", partner, module);
+    public int addAdminUserPermission(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addAdminUserPermission", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int saveAdminPolicyPartner(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "saveAdminPolicyPartner", partner, module);
+    public int updateAdminGroupName(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "updateAdminGroupName", partner, Module.administrationModule.getValue());
+        RequestCtx request = eventRequest.createRequest();
+        ResponseCtx result = MapSessions.APM.evaluate(request);
+        return processResult(result);
+    }
+
+    @Override
+    public int saveAdminPolicyPartner(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "saveAdminPolicyPartner", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
@@ -216,432 +216,432 @@ public class EPCISPEP implements MethodNamesAdmin {
     //################# Modules Section ##################
     //####################################################
     @Override
-    public int createPartnerGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "createPartnerGroup", partner, module);
+    public int createPartnerGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "createPartnerGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int deletePartnerGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "deletePartnerGroup", partner, module);
+    public int deletePartnerGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "deletePartnerGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addPartnerToGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addPartnerToGroup", partner, module);
+    public int addPartnerToGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addPartnerToGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removePartnerFromGroup(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removePartnerFromGroup", partner, module);
+    public int removePartnerFromGroup(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removePartnerFromGroup", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addBizStepRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addBizStepRestriction", partner, module);
+    public int addBizStepRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addBizStepRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeBizStepRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeBizStepRestriction", partner, module);
+    public int removeBizStepRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeBizStepRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addEpcRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addEpcRestriction", partner, module);
+    public int addEpcRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addEpcRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeEpcRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeEpcRestriction", partner, module);
+    public int removeEpcRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeEpcRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addEventTimeRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addEventTimeRestriction", partner, module);
+    public int addEventTimeRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addEventTimeRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeEventTimeRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeEventTimeRestriction", partner, module);
+    public int removeEventTimeRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeEventTimeRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addRecordTimeRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addRecordTimeRestriction", partner, module);
+    public int addRecordTimeRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addRecordTimeRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeRecordTimeRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeRecordTimeRestriction", partner, module);
+    public int removeRecordTimeRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeRecordTimeRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addOperationRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addOperationRestriction", partner, module);
+    public int addOperationRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addOperationRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeOperationRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeOperationRestriction", partner, module);
+    public int removeOperationRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeOperationRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addEventTypeRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addEventTypeRestriction", partner, module);
+    public int addEventTypeRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addEventTypeRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeEventTypeRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeEventTypeRestriction", partner, module);
+    public int removeEventTypeRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeEventTypeRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addParentIdRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addParentIdRestriction", partner, module);
+    public int addParentIdRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addParentIdRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeParentIdRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeParentIdRestriction", partner, module);
+    public int removeParentIdRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeParentIdRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addChildEpcRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addChildEpcRestriction", partner, module);
+    public int addChildEpcRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addChildEpcRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeChildEpcRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeChildEpcRestriction", partner, module);
+    public int removeChildEpcRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeChildEpcRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addQuantityRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addQuantityRestriction", partner, module);
+    public int addQuantityRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addQuantityRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeQuantityRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeQuantityRestriction", partner, module);
+    public int removeQuantityRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeQuantityRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addReadPointRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addReadPointRestriction", partner, module);
+    public int addReadPointRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addReadPointRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeReadPointRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeReadPointRestriction", partner, module);
+    public int removeReadPointRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeReadPointRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addBizLocRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addBizLocRestriction", partner, module);
+    public int addBizLocRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addBizLocRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeBizLocRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeBizLocRestriction", partner, module);
+    public int removeBizLocRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeBizLocRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addBizTransRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addBizTransRestriction", partner, module);
+    public int addBizTransRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addBizTransRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeBizTransRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeBizTransRestriction", partner, module);
+    public int removeBizTransRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeBizTransRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addDispositionRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addDispositionRestriction", partner, module);
+    public int addDispositionRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addDispositionRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeDispositionRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeDispositionRestriction", partner, module);
+    public int removeDispositionRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeDispositionRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addMasterDataIdRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addMasterDataIdRestriction", partner, module);
+    public int addMasterDataIdRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addMasterDataIdRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeMasterDataIdRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeMasterDataIdRestriction", partner, module);
+    public int removeMasterDataIdRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeMasterDataIdRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addExtensionRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addExtensionRestriction", partner, module);
+    public int addExtensionRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addExtensionRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeExtensionRestriction(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeExtensionRestriction", partner, module);
+    public int removeExtensionRestriction(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeExtensionRestriction", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchBizStepPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchBizStepPolicy", partner, module);
+    public int switchBizStepPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchBizStepPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchEpcPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchEpcPolicy", partner, module);
+    public int switchEpcPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchEpcPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchEventTimePolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchEventTimePolicy", partner, module);
+    public int switchEventTimePolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchEventTimePolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchRecordTimePolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchRecordTimePolicy", partner, module);
+    public int switchRecordTimePolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchRecordTimePolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchOperationPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchOperationPolicy", partner, module);
+    public int switchOperationPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchOperationPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchEventTypePolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchEventTypePolicy", partner, module);
+    public int switchEventTypePolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchEventTypePolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchParentIdPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchParentIdPolicy", partner, module);
+    public int switchParentIdPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchParentIdPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchChildEpcPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchChildEpcPolicy", partner, module);
+    public int switchChildEpcPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchChildEpcPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchQuantityPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchQuantityPolicy", partner, module);
+    public int switchQuantityPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchQuantityPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchReadPointPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchReadPointPolicy", partner, module);
+    public int switchReadPointPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchReadPointPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchBizLocPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchBizLocPolicy", partner, module);
+    public int switchBizLocPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchBizLocPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchBizTransPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchBizTransPolicy", partner, module);
+    public int switchBizTransPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchBizTransPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchDispositionPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchDispositionPolicy", partner, module);
+    public int switchDispositionPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchDispositionPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchMasterDataIdPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchMasterDataIdPolicy", partner, module);
+    public int switchMasterDataIdPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchMasterDataIdPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchExtensionPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchExtensionPolicy", partner, module);
+    public int switchExtensionPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchExtensionPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int switchUserPermissionPolicy(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "switchUserPermissionPolicy", partner, module);
+    public int switchUserPermissionPolicy(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "switchUserPermissionPolicy", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int removeUserPermission(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "removeUserPermission", partner, module);
+    public int removeUserPermission(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "removeUserPermission", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int addUserPermission(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "addUserPermission", partner, module);
+    public int addUserPermission(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "addUserPermission", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int updateGroupName(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "updateGroupName", partner, module);
+    public int updateGroupName(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "updateGroupName", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
     }
 
     @Override
-    public int savePolicyPartner(String user, String partner, String module) {
-        EventRequest eventRequest = new EventRequest(user, "savePolicyPartner", partner, module);
+    public int savePolicyPartner(String user, String partner) {
+        EventRequest eventRequest = new EventRequest(user, "savePolicyPartner", partner, Module.administrationModule.getValue());
         RequestCtx request = eventRequest.createRequest();
         ResponseCtx result = MapSessions.APM.evaluate(request);
         return processResult(result);
@@ -652,7 +652,7 @@ public class EPCISPEP implements MethodNamesAdmin {
         while (it.hasNext()) {
             Result res = (Result) it.next();
             if (res != null) {
-                return new XACMLResponse(res).getResponse();
+                return res.getDecision();
             }
         }
         return Result.DECISION_DENY;

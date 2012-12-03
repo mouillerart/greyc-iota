@@ -28,37 +28,36 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
         installer.DBWebAppInstaller.__init__(self, "EpcILoN web application", "epcilon", [
                 ("Enter the EpcILoN web application name", "epcilon", "name", {}),
                 ("Enter the archive file pathname", "epcilon", "repo", {"type": "file"}),
+                ("Enter this application’s identity", "epcilon", "identity", {}),
                 ("Enter the EpcILoN database name", "epcilon", "db_name", {}),
                 ("Enter the EpcILoN database login", "epcilon", "db_login", {}),
                 ("Enter the EpcILoN database password", "epcilon", "db_password", {}),
                 ("Enter the URL to the Epcis (or ETa) Query service", "epcilon", "subscription_url", {}),
-                ("Enter the URL to the DS", "ds", "url", {}),
-                ("Enter the DS client login", "ds", "login", {}),
-                ("Enter the DS client password", "ds", "password", {})
+                ("Enter the URL to the DS (or DSeTa)", "epcilon", "ds_url", {})
+                # EpcILoN is only a DSeTa client for now
+                # ("Enter the DS client login (not used by DSeTa)", "ds", "login", {}),
+                # ("Enter the DS client password (not used by DSeTa)", "ds", "password", {})
                 ], [
                 ("application",
                  { "query-callback-address": ("epcilon", "callback_url"),
                    "publish": "true",
                    "query-client-address": ("epcilon", "subscription_url"),
-                   "discovery-service-address": ("ds", "url"),
-                   "login": ("ds", "login"),
-                   "password": ("ds", "password") })
+                   "discovery-service-address": ("epcilon", "ds_url") })
+                   #"login": ("ds", "login"),
+                   #"password": ("ds", "password") })
                 ])
 
 
     def postConfigure(self):
-        CONFIG.set("epcilon", "url",
-                   "http://" + CONFIG.get("global", "host") + ":" + CONFIG.get("tomcat", "http_port") +
-                   "/" + CONFIG.get("epcilon", "name"))
-        CONFIG.set("epcilon", "callback_url",
-                   CONFIG.get("epcilon", "url") + "/StandingQueryCallbackServlet")
-        CONFIG.set("epcilon", "db_jndi", "EPCILONDB")
+        self.setURL()
+        self.cset("callback_url", self.cget("url") + "StandingQueryCallbackServlet")
+        self.cset("db_jndi", "EPCILONDB")
 
 
     def postInstall(self):
         installer.DBWebAppInstaller.postInstall(self)
         utils.putWait("Subscribing to the Epcis")
-        url = CONFIG.get("epcilon", "url") + "/SubscribedServlet"
+        url = self.cget("url") + "SubscribedServlet"
         if utils.sh_exec("wget -qO /dev/null " + url):
             utils.putDoneOK()
         else:

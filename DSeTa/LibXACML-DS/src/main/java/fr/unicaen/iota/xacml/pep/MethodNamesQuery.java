@@ -2,7 +2,7 @@
  *  This program is a part of the IoTa project.
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -25,9 +25,12 @@ public interface MethodNamesQuery {
 
     public int hello(String user, String partner, String module);
 
-    public int partnerInfo(String user, String partner, String module);
+    public int partnerInfo(String user, String partner);
 
-    public int eventLookup(String user, XACMLDSEvent dsEvent, String module);
+    public int eventLookup(String user, XACMLDSEvent dsEvent);
 
-    public int eventInfo(String user, XACMLDSEvent dsEvent, String module);
+    public int eventInfo(String user, XACMLDSEvent dsEvent);
+
+    public int canBe(String user, String partner);
+
 }

@@ -30,13 +30,14 @@ class DBConfigurer(installer.Configurer):
                 ("Enter the MySQL port", "db", "port", {}),
                 ("Enter the MySQL login", "db", "login", {}),
                 ("Enter the MySQL password", "db", "password", {}),
+                ("Enter the host part for the users we will create (name, IP, or '%')", "db", "user_host", {}),
                 ("Install the Java MySQL connector?", "db", "jar_install", {"type": "YN"})
                 ])
 
 
     def postConfigure(self):
-        if CONFIG.isTrue("db", "jar_install"):
+        if self.cisTrue("jar_install"):
             lib = CONFIG.get("tomcat", "catalina_home") + "lib/"
-            utils.sh_cp(CONFIG.get("db", "repo"), lib)
+            utils.sh_cp(self.cget("repo"), lib)
             utils.stopTomcat()
             utils.startTomcat()

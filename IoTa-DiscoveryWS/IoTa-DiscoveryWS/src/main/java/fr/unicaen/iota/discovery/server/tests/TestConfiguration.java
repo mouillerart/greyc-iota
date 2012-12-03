@@ -26,6 +26,7 @@ import fr.unicaen.iota.discovery.server.hibernate.Partner;
 import fr.unicaen.iota.discovery.server.hibernate.User;
 import fr.unicaen.iota.discovery.server.query.QueryOperationsModule;
 import fr.unicaen.iota.discovery.server.util.HibernateUtil;
+import fr.unicaen.iota.nu.ONSOperation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -66,8 +67,10 @@ public class TestConfiguration extends HttpServlet {
         "sc_EventTime_Restriction"
     };
 
-    /** 
-     * Processes requests for HTTP <code>GET</code> methods.
+    /**
+     * Processes requests for HTTP
+     * <code>GET</code> methods.
+     *
      * @param request servlet request
      * @param response servlet response
      */
@@ -163,8 +166,10 @@ public class TestConfiguration extends HttpServlet {
         }
     }
 
-    /** 
-     * Processes requests for HTTP <code>POST</code> methods.
+    /**
+     * Processes requests for HTTP
+     * <code>POST</code> methods.
+     *
      * @param request servlet request
      * @param response servlet response
      */
@@ -195,10 +200,11 @@ public class TestConfiguration extends HttpServlet {
                 QueryOperationsModule queryOperationsModule = new QueryOperationsModule();
                 boolean succed = false;
                 for (String ons : ONS_ADDRESSES) {
+                    ONSOperation onsop = new ONSOperation(ons);
                     try {
                         out.println("<span class=\"name\">executing ping ONS (" + ons + ") ...</span> ");
                         out.flush();
-                        queryOperationsModule.pingONS(ons);
+                        onsop.pingONS();
                         out.println("<span class=\"param\">[ DONE ]</span>");
                         out.flush();
                         out.println("<br/>");
@@ -300,28 +306,35 @@ public class TestConfiguration extends HttpServlet {
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processAction(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      */
+    @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>

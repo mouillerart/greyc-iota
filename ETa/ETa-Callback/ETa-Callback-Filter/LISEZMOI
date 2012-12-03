@@ -5,17 +5,21 @@ Module de filtrage des évènements envoyés par un EPCIS (retours d'abonnements
 Dépendances:
   modules IoTa:
     - LibXACML-Epcis
+    - EPCIS-Xi-Client
   bibliothèques:
     - epcis-commons
-    - epcis-repository
     - servlet-api
     - mysql-connector
     - activemq-core
-    - sunxacml
     - commons-logging
     - log4j
-    - junit
 
 Configuration:
+  Voir les fichiers *.properties et java.policy dans le fichier jar ; chacun
+  de ces fichiers peut être remplacé par un fichier du même nom dans le
+  répertoire courant.
   (application.properties pour cette application,
    commons-logging.properties et log4j.properties pour les journaux)
+
+Utilisation:
+  ./eta_callback_filter.sh délai_avant_tâche_en_ms délai_inter-tâches_en_ms

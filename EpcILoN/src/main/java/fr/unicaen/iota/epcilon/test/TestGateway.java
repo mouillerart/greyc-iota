@@ -30,48 +30,46 @@ public class TestGateway {
 
     /**
      * @param args
-     */	
+     */
     public static void main(String[] args) {
         List<String> eventsInEPCIS = new ArrayList<String>();
         List<String> eventsInDS = new ArrayList<String>();
-		
+
         /*
-          long time = 1056875425;
-          String timeStr = java.lang.String.valueOf(time);
-          timeStr = timeStr.substring(timeStr.length()-3, timeStr.length());
-          System.out.println(timeStr);
-        */
+         * long time = 1056875425; String timeStr =
+         * java.lang.String.valueOf(time); timeStr =
+         * timeStr.substring(timeStr.length()-3, timeStr.length());
+         * System.out.println(timeStr);
+         */
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/new_epcis?user=new_epcis&password=new_epcis");
             Statement stmt = conn.createStatement();
             /*
-              String query = "select * from event_ObjectEvent";
-              ResultSet results = stmt.executeQuery(query);
-              while (results.next()){
-              String epc = results.getString("recordTime");
-              System.out.println(epc);
-              }
-            */
-		    	    
+             * String query = "select * from event_ObjectEvent"; ResultSet
+             * results = stmt.executeQuery(query); while (results.next()){
+             * String epc = results.getString("recordTime");
+             * System.out.println(epc); }
+             */
+
             String queryEPCIS = "select * from event_ObjectEvent_EPCs";
             ResultSet results = stmt.executeQuery(queryEPCIS);
             while (results.next()) {
                 String epc = results.getString("epc");
                 eventsInEPCIS.add(epc);
-            }		    
+            }
             Connection conn2 = DriverManager.getConnection("jdbc:mysql://localhost/ds_repository?user=ds&password=ds");
-            Statement stmt2 = conn2.createStatement();	    
+            Statement stmt2 = conn2.createStatement();
             String queryEPCIS2 = "select * from event";
             ResultSet results2 = stmt2.executeQuery(queryEPCIS2);
-            while (results2.next()){
+            while (results2.next()) {
                 String epc = results2.getString("epc");
                 eventsInDS.add(epc);
             }
-            int notPublishCount=0;
+            int notPublishCount = 0;
             for (String eventInEPCIS : eventsInEPCIS) {
                 String eventToRemove = null;
-                for (String eventInDS : eventsInDS){
+                for (String eventInDS : eventsInDS) {
                     if (eventInEPCIS.equals(eventInDS)) {
                         eventToRemove = eventInDS;
                         break;
@@ -81,18 +79,17 @@ public class TestGateway {
                     eventsInDS.remove(eventToRemove);
                 } else {
                     notPublishCount++;
-                    System.out.println("the event with epc: "+eventInEPCIS+" wasn't publish to the DS");
+                    System.out.println("the event with epc: " + eventInEPCIS + " wasn't publish to the DS");
                 }
             }
             for (String eventNotPublish : eventsInDS) {
-                System.out.println("the event with epc: "+eventNotPublish+" wasn't present in the EPCIS");
+                System.out.println("the event with epc: " + eventNotPublish + " wasn't present in the EPCIS");
             }
-            System.out.println("there is "+notPublishCount+" events not publish to the DS");
-            System.out.println("there is "+eventsInDS.size()+" events not present in the EPCIS");
+            System.out.println("there is " + notPublishCount + " events not publish to the DS");
+            System.out.println("there is " + eventsInDS.size() + " events not present in the EPCIS");
         } catch (Exception e) {
             System.out.println("Connection failed: " + e);
-            System.exit(-1);  
+            System.exit(-1);
         }
     }
-
 }

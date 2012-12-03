@@ -35,6 +35,29 @@ SHOW_TRACEBACK = True
 HALT_ON_ERROR = True
 
 
+# ActiveMQ Utilities
+
+def isActiveMQRunning():
+    try:
+        cnx = urllib.urlopen(CONFIG.get("activemq", "admin_url"))
+        cnx.close()
+        return True
+    except IOError:
+        return False
+
+
+def startActiveMQ():
+    putWait("Starting up ActiveMQ")
+    if isActiveMQRunning():
+        putDoneOK("(already running)")
+        return
+    commandStart = ("ACTIVEMQ_OPTS_MEMORY=' ' " + CONFIG.get("activemq", "home") + "/bin/activemq start")
+    if not sh_exec(commandStart):
+        putDoneFail()
+        return
+    putDoneOK()
+
+
 # Tomcat Utilities
 
 def isTomcatRunning():
@@ -127,7 +150,7 @@ def copyWar(webapp_repo, webapp_name, conffile=None):
     webapp_path = CONFIG.get("tomcat", "catalina_home") + "webapps/" + webapp_name
     warfile = webapp_path + ".war"
     if os.path.exists(warfile):
-        if not getYN("Webapp exists. Do you realy want to overwrite it?"):
+        if not getYN("Webapp exists. Do you really want to overwrite it?"):
             return
         sh_rm(warfile)
         sh_rm_r(webapp_path)
@@ -198,14 +221,18 @@ def modifyPropertiesFile(propfilename, dic):
         # replace old values
         for line in lines:
             words = re.split("[=:]", line)
+            # don’t touch lines without = or :
             if len(words) < 2:
                 propfile.write(line)
                 continue
+            # get the key (part before first = or :)
             key = words[0].strip()
             if key in dic:
                 val = dic[key]
                 if not isinstance(val, basestring):
                     val = CONFIG.get(val[0], val[1])
+                # beware =
+                val = val.replace("=", "\\=")
                 propfile.write(key + " = " + val + "\n")
                 del dic[key]
             else:
@@ -215,6 +242,8 @@ def modifyPropertiesFile(propfilename, dic):
             val = dic[key]
             if not isinstance(val, basestring):
                 val = CONFIG.get(val[0], val[1])
+            # beware =
+            val = val.replace("=", "\\=")
             propfile.write(key + " = " + val + "\n")
     putDoneOK()
 
@@ -258,7 +287,7 @@ def createDB(pretty_name, section_name):
     if not execDB("Granting access rights", "mysql",
                   "GRANT SELECT, INSERT, UPDATE, DELETE ON " + 
                   CONFIG.get(section_name, "db_name") + ".* TO " +
-                  CONFIG.get(section_name, "db_login") + "@localhost " +
+                  CONFIG.get(section_name, "db_login") + "@'" + CONFIG.get("db", "user_host") + "' " +
                   "IDENTIFIED BY '" + CONFIG.get(section_name, "db_password") + "';"):
         return
     if not execDB("Creating tables", CONFIG.get(section_name, "db_name"),
@@ -297,6 +326,21 @@ def execLDAP(msg, ldiffile):
        return True
     putDoneFail()
     return False
+
+
+# Key and certificate tool
+def execKeytool(msg, keycmd, storetype, keystore, password, keyalias, keypass, other_opts):
+    putWait(msg)
+    if keypass:
+        keypass = "-keypass \"" + keypass + "\""
+    cmd =  ("keytool " + keycmd + " -storetype \"" + storetype + "\" -keystore \"" + keystore +
+            "\" -storepass \"" + password + "\" -alias \"" + keyalias + "\" " + keypass)
+    for opt, value in other_opts:
+        cmd += " " + opt + " \"" + value + "\""
+    if sh_exec(cmd):
+        putDoneOK()
+    else:
+        putDoneFail()
 
 
 # File and Shell Utilities
@@ -351,7 +395,7 @@ def sh_pwd():
 def sh_exec(cmd):
     with open("install.log", "a") as logfile:
         logfile.write("\n## executing <" + cmd + ">:\n")
-    return os.system(cmd + " 2>&1 >>install.log") == 0
+    return os.system(cmd + " >>install.log 2>&1") == 0
 
 
 def waitForFile(filename):

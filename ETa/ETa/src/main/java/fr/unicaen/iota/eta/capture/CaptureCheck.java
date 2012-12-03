@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,24 +19,22 @@
  */
 package fr.unicaen.iota.eta.capture;
 
-import com.sun.xacml.ctx.Result;
-import fr.unicaen.iota.eta.xacml.EPCISPEP;
 import fr.unicaen.iota.xacml.XACMLConstantsEventType;
 import fr.unicaen.iota.xacml.pep.ExtensionEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISMasterData;
+import fr.unicaen.iota.xi.client.EPCISPEP;
+import fr.unicaen.iota.xi.utils.Utils;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import org.fosstrak.epcis.model.VocabularyElementType;
-import org.fosstrak.epcis.model.VocabularyType;
-import org.fosstrak.epcis.repository.model.*;
+import org.fosstrak.epcis.model.*;
+import org.fosstrak.epcis.utils.TimeParser;
+import org.w3c.dom.Element;
 
 /**
- * This
- * <code>CaptureCheck</code> class initializes the EPCIS PEP to send XACML
- * request to the XACML module and to receive the results used by the
- * <code>CaptureOperationsModule</code>.
+ * This <code>CaptureCheck</code> class initializes the EPCIS PEP to send XACML request
+ * to the XACML module and to receive the results used by the <code>CaptureOperationsModule</code>.
  */
 public class CaptureCheck {
 
@@ -45,194 +43,174 @@ public class CaptureCheck {
      */
     private EPCISPEP epcisPEP;
 
-    public CaptureCheck() {
-        epcisPEP = new EPCISPEP();
+    public CaptureCheck(EPCISPEP epcisPEP) {
+        this.epcisPEP = epcisPEP;
     }
 
     /**
      * Checks the capture events by XACML requests to the XACML module.
      *
-     * @param baseEventList The capture events.
-     * @return
-     * <code>true</code> if the capture is permitted.
+     * @param epcisEventList The capture events.
+     * @return <code>true</code> if the capture is permitted.
      */
-    public boolean xacmlCheck(List<BaseEvent> baseEventList, String user, String owner) {
-        Iterator<BaseEvent> iterBaseEvent = baseEventList.iterator();
-        boolean onePermit = true;
-        while (iterBaseEvent.hasNext() && onePermit) {
-            BaseEvent baseEvent = iterBaseEvent.next();
-            if (baseEvent instanceof AggregationEvent) {
-                onePermit = aggregationCaptureCheck((AggregationEvent) baseEvent, user, owner);
-            } else if (baseEvent instanceof ObjectEvent) {
-                onePermit = objectCaptureCheck((ObjectEvent) baseEvent, user, owner);
-            } else if (baseEvent instanceof QuantityEvent) {
-                onePermit = quantityCaptureCheck((QuantityEvent) baseEvent, user, owner);
-            } else if (baseEvent instanceof TransactionEvent) {
-                onePermit = transactionCaptureCheck((TransactionEvent) baseEvent, user, owner);
+    public boolean xacmlCheck(List<EPCISEventType> epcisEventList, String user, String owner) {
+        for (EPCISEventType epcisEvent : epcisEventList) {
+            if (epcisEvent instanceof ObjectEventType) {
+                if (!checkObjectEvent((ObjectEventType) epcisEvent, user, owner)) {
+                    return false;
+                }
+            } else if (epcisEvent instanceof AggregationEventType) {
+                if (!checkAggregationEvent((AggregationEventType) epcisEvent, user, owner)) {
+                    return false;
+                }
+            } else if (epcisEvent instanceof QuantityEventType) {
+                if (!checkQuantityEvent((QuantityEventType) epcisEvent, user, owner)) {
+                    return false;
+                }
+            } else if (epcisEvent instanceof TransactionEventType) {
+                if (!checkTransactionEvent((TransactionEventType) epcisEvent, user, owner)) {
+                    return false;
+                }
             }
         }
-        return onePermit;
+        return true;
     }
 
     /**
-     * Checks an aggregation capture event.
+     * Checks access rights to an aggregation event.
      *
      * @param baseEvent The aggregation capture event to check.
-     * @return
-     * <code>true</code> if the aggregation capture event is permitted.
+     * @return <code>true</code> if the aggregation capture event is permitted.
      */
-    private boolean aggregationCaptureCheck(AggregationEvent aggregationEvent, String user, String owner) {
-        Date eventTime = aggregationEvent.getEventTime();
+    private boolean checkAggregationEvent(AggregationEventType aggregationEvent, String user, String owner) {
+        Date eventTime = (aggregationEvent.getEventTime() != null) ? aggregationEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = new Date();
         String eventType = XACMLConstantsEventType.AGGREGATION;
-        String operation = (aggregationEvent.getAction() != null) ? aggregationEvent.getAction().name() : null;
-        String readPoint = (aggregationEvent.getReadPoint() != null) ? aggregationEvent.getReadPoint().getUri() : null;
-        String bizLoc = (aggregationEvent.getBizLocation() != null) ? aggregationEvent.getBizLocation().getUri() : null;
-        String bizStep = (aggregationEvent.getBizStep() != null) ? aggregationEvent.getBizStep().getUri() : null;
-        String disposition = (aggregationEvent.getDisposition() != null) ? aggregationEvent.getDisposition().getUri() : null;
-        String parentId = aggregationEvent.getParentId();
+        String operation = (aggregationEvent.getAction() != null) ? aggregationEvent.getAction().value() : null;
+        String readPoint = (aggregationEvent.getReadPoint() != null) ? aggregationEvent.getReadPoint().getId() : null;
+        String bizLoc = (aggregationEvent.getBizLocation() != null) ? aggregationEvent.getBizLocation().getId() : null;
+        String bizStep = aggregationEvent.getBizStep();
+        String disposition = aggregationEvent.getDisposition();
+        String parentId = aggregationEvent.getParentID();
         Long quantity = null;
         String epc = null;
         String childEpc = null;
         String bizTrans = null;
         ExtensionEvent extension = null;
 
-        boolean onePermit = false;
-
-        if (aggregationEvent.getChildEpcs() == null || aggregationEvent.getChildEpcs().isEmpty()) {
-            if (aggregationEvent.getBizTransList() == null || aggregationEvent.getBizTransList().isEmpty()) {
+        if (aggregationEvent.getChildEPCs() == null || aggregationEvent.getChildEPCs().getEpc() == null || aggregationEvent.getChildEPCs().getEpc().isEmpty()) {
+            if (aggregationEvent.getBizTransactionList() == null || aggregationEvent.getBizTransactionList().getBizTransaction() == null
+                    || aggregationEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
                 XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                         eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                if (xacmlCheck(xacmlEvent, user)) {
-                    onePermit = true;
+                if (!xacmlCheck(xacmlEvent, user)) {
+                    return false;
                 }
             } else {
-                Iterator<BusinessTransaction> iterBizTrans = aggregationEvent.getBizTransList().iterator();
-                while (iterBizTrans.hasNext()) {
-                    bizTrans = iterBizTrans.next().getBizTransaction().getUri();
+                for (BusinessTransactionType bizTransType : aggregationEvent.getBizTransactionList().getBizTransaction()) {
+                    bizTrans = bizTransType.getValue();
                     XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                             eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                    if (xacmlCheck(xacmlEvent, user)) {
-                        onePermit = true;
-                    } else {
-                        iterBizTrans.remove();
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             }
         } else {
-            if (aggregationEvent.getBizTransList() == null || aggregationEvent.getBizTransList().isEmpty()) {
-                Iterator<String> iterChildEpc = aggregationEvent.getChildEpcs().iterator();
-                while (iterChildEpc.hasNext()) {
-                    childEpc = iterChildEpc.next();
+            if (aggregationEvent.getBizTransactionList() == null || aggregationEvent.getBizTransactionList().getBizTransaction() == null
+                    || aggregationEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
+                for (EPC epcType : aggregationEvent.getChildEPCs().getEpc()) {
+                    childEpc = epcType.getValue();
                     XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                             eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                    if (xacmlCheck(xacmlEvent, user)) {
-                        onePermit = true;
-                    } else {
-                        iterChildEpc.remove();
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             } else {
-                String allowedChildEpc = null;
-                String allowedBizTrans = null;
-                Iterator<String> iterChildEpc = aggregationEvent.getChildEpcs().iterator();
-                while (iterChildEpc.hasNext()) {
-                    childEpc = iterChildEpc.next();
-                    Iterator<BusinessTransaction> iterBizTrans = aggregationEvent.getBizTransList().iterator();
-                    while (iterBizTrans.hasNext()) {
-                        bizTrans = iterBizTrans.next().getBizTransaction().getUri();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (xacmlCheck(xacmlEvent, user)) {
-                            allowedChildEpc = childEpc;
-                            allowedBizTrans = bizTrans;
-                            onePermit = true;
-                            break;
-                        }
+                Iterator<BusinessTransactionType> iterBizTransType = aggregationEvent.getBizTransactionList().getBizTransaction().iterator();
+                for (EPC epcType : aggregationEvent.getChildEPCs().getEpc()) {
+                    childEpc = epcType.getValue();
+                    if (iterBizTransType.hasNext()) {
+                        bizTrans = iterBizTransType.next().getValue();
                     }
-                    if (allowedChildEpc == null) {
-                        iterChildEpc.remove();
-                    } else {
-                        break;
+                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
-                if (allowedChildEpc != null) {
-                    Iterator<BusinessTransaction> iterBizTrans = aggregationEvent.getBizTransList().iterator();
-                    while (iterBizTrans.hasNext()) {
-                        bizTrans = iterBizTrans.next().getBizTransaction().getUri();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (!xacmlCheck(xacmlEvent, user)) {
-                            iterBizTrans.remove();
-                        }
-                    }
-                }
-                if (allowedBizTrans != null) {
-                    iterChildEpc = aggregationEvent.getChildEpcs().iterator();
-                    while (iterChildEpc.hasNext()) {
-                        childEpc = iterChildEpc.next();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (!xacmlCheck(xacmlEvent, user)) {
-                            iterChildEpc.remove();
-                        }
+                while (iterBizTransType.hasNext()) {
+                    bizTrans = iterBizTransType.next().getValue();
+                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             }
         }
-        if (onePermit && aggregationEvent.getExtensions() != null) {
-            bizTrans = null;
-            childEpc = null;
-            Iterator<EventFieldExtension> iter = aggregationEvent.getExtensions().iterator();
-            while (iter.hasNext()) {
-                EventFieldExtension extensionField = iter.next();
-                String extensionId = extensionField.getFieldname();
-                String extensionValueType = extensionField.getValueColumnName();
-                Object extensionValue;
+        childEpc = null;
+        bizTrans = null;
+        for (Object obj: aggregationEvent.getAny()) {
+            Element element = (Element) obj;
+            String namespace = element.getNamespaceURI();
+            String extensionName = element.getLocalName();
+            String value = element.getTextContent();
+
+            // Gets the extension value
+            Object extensionValue = null;
+            try {
+                extensionValue = new Integer(Integer.parseInt(value));
+            } catch (Exception ex) {
+                // Extension value is not an integer
                 try {
-                    if ("intValue".equals(extensionValueType)) {
-                        extensionValue = new Integer(extensionField.getIntValue());
-                    } else if ("floatValue".equals(extensionValueType)) {
-                        extensionValue = new Float(extensionField.getFloatValue());
-                    } else if ("dateValue".equals(extensionValueType)) {
-                        extensionValue = new Date(extensionField.getDateValue().getTime());
-                    } else if ("strValue".equals(extensionValueType)) {
-                        extensionValue = extensionField.getStrValue();
-                    } else {
-                        iter.remove();
-                        continue;
+                    extensionValue = new Float(Float.parseFloat(value));
+                } catch (Exception exF) {
+                    // Extension value is not a float
+                    try {
+                        extensionValue = new Double(Double.parseDouble(value));
+                    } catch (Exception exD) {
+                        // Extension value is not a double
+                        try {
+                            extensionValue = TimeParser.parseAsDate(value);
+                        } catch (Exception exP) {
+                            // Extension value is not a date
+                        }
                     }
-                } catch (Exception ex) {
-                    iter.remove();
-                    continue;
-                }
-                extension = new ExtensionEvent(extensionId, extensionValue);
-                XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                        eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                if (!xacmlCheck(xacmlEvent, user)) {
-                    iter.remove();
                 }
             }
+            // Extension value is a string
+            if (extensionValue == null) {
+                extensionValue = value;
+            }
+
+            extension = new ExtensionEvent(namespace, extensionName, extensionValue);
+            XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                    eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+            if (!xacmlCheck(xacmlEvent, user)) {
+                return false;
+            }
+
         }
-        return onePermit;
+        return true;
     }
 
     /**
-     * Checks an object capture event.
+     * Checks access rights to an object event.
      *
      * @param objectEvent The object capture event to check.
-     * @return
-     * <code>true</code> if the object capture event is permitted.
+     * @return <code>true</code> if the object capture event is permitted.
      */
-    private boolean objectCaptureCheck(ObjectEvent objectEvent, String user, String owner) {
-        Date eventTime = objectEvent.getEventTime();
+    private boolean checkObjectEvent(ObjectEventType objectEvent, String user, String owner) {
+        Date eventTime = (objectEvent.getEventTime() != null) ? objectEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = new Date();
         String eventType = XACMLConstantsEventType.OBJECT;
-        String operation = (objectEvent.getAction() != null) ? objectEvent.getAction().name() : null;
-        String readPoint = (objectEvent.getReadPoint() != null) ? objectEvent.getReadPoint().getUri() : null;
-        String bizLoc = (objectEvent.getBizLocation() != null) ? objectEvent.getBizLocation().getUri() : null;
-        String bizStep = (objectEvent.getBizStep() != null) ? objectEvent.getBizStep().getUri() : null;
-        String disposition = (objectEvent.getDisposition() != null) ? objectEvent.getDisposition().getUri() : null;
+        String bizStep = objectEvent.getBizStep();
+        String operation = (objectEvent.getAction() != null) ? objectEvent.getAction().value() : null;
+        String bizLoc = (objectEvent.getBizLocation() != null) ? objectEvent.getBizLocation().getId() : null;
+        String readPoint = (objectEvent.getReadPoint() != null) ? objectEvent.getReadPoint().getId() : null;
+        String disposition = objectEvent.getDisposition();
         Long quantity = null;
         String parentId = null;
         String childEpc = null;
@@ -240,338 +218,305 @@ public class CaptureCheck {
         String bizTrans = null;
         ExtensionEvent extension = null;
 
-
-        boolean onePermit = false;
-
-        if (objectEvent.getEpcList() == null || objectEvent.getEpcList().isEmpty()) {
-            if (objectEvent.getBizTransList() == null || objectEvent.getBizTransList().isEmpty()) {
+        if (objectEvent.getEpcList().getEpc() == null || objectEvent.getEpcList().getEpc().isEmpty()) {
+            if (objectEvent.getBizTransactionList() == null || objectEvent.getBizTransactionList().getBizTransaction() == null
+                    || objectEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
                 XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                         eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                if (xacmlCheck(xacmlEvent, user)) {
-                    onePermit = true;
+                if (!xacmlCheck(xacmlEvent, user)) {
+                    return false;
                 }
             } else {
-                Iterator<BusinessTransaction> iterBizTrans = objectEvent.getBizTransList().iterator();
-                while (iterBizTrans.hasNext()) {
-                    bizTrans = iterBizTrans.next().getBizTransaction().getUri();
+                for (BusinessTransactionType bizTransType : objectEvent.getBizTransactionList().getBizTransaction()) {
+                    bizTrans = bizTransType.getValue();
                     XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                             eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                    if (xacmlCheck(xacmlEvent, user)) {
-                        onePermit = true;
-                    } else {
-                        iterBizTrans.remove();
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             }
         } else {
-            if (objectEvent.getBizTransList() == null || objectEvent.getBizTransList().isEmpty()) {
-                Iterator<String> iterEpc = objectEvent.getEpcList().iterator();
-                while (iterEpc.hasNext()) {
-                    epc = iterEpc.next();
+            if (objectEvent.getBizTransactionList() == null || objectEvent.getBizTransactionList().getBizTransaction() == null
+                    || objectEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
+                for (EPC epcType : objectEvent.getEpcList().getEpc()) {
+                    epc = epcType.getValue();
                     XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                             eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                    if (xacmlCheck(xacmlEvent, user)) {
-                        onePermit = true;
-                    } else {
-                        iterEpc.remove();
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             } else {
-                String allowedEpc = null;
-                String allowedBizTrans = null;
-                Iterator<String> iterEpc = objectEvent.getEpcList().iterator();
-                while (iterEpc.hasNext()) {
-                    epc = iterEpc.next();
-                    Iterator<BusinessTransaction> iterBizTrans = objectEvent.getBizTransList().iterator();
-                    while (iterBizTrans.hasNext()) {
-                        bizTrans = iterBizTrans.next().getBizTransaction().getUri();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (xacmlCheck(xacmlEvent, user)) {
-                            allowedEpc = epc;
-                            allowedBizTrans = bizTrans;
-                            onePermit = true;
-                            break;
-                        }
+                Iterator<BusinessTransactionType> iterBizTransType = objectEvent.getBizTransactionList().getBizTransaction().iterator();
+                for (EPC epcType : objectEvent.getEpcList().getEpc()) {
+                    epc = epcType.getValue();
+                    if (iterBizTransType.hasNext()) {
+                        bizTrans = iterBizTransType.next().getValue();
                     }
-                    if (allowedEpc == null) {
-                        iterEpc.remove();
-                    } else {
-                        break;
+                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
-                if (allowedEpc != null) {
-                    Iterator<BusinessTransaction> iterBizTrans = objectEvent.getBizTransList().iterator();
-                    while (iterBizTrans.hasNext()) {
-                        bizTrans = iterBizTrans.next().getBizTransaction().getUri();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (!xacmlCheck(xacmlEvent, user)) {
-                            iterBizTrans.remove();
-                        }
-                    }
-                }
-                if (allowedBizTrans != null) {
-                    iterEpc = objectEvent.getEpcList().iterator();
-                    while (iterEpc.hasNext()) {
-                        epc = iterEpc.next();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (!xacmlCheck(xacmlEvent, user)) {
-                            iterEpc.remove();
-                        }
+                while (iterBizTransType.hasNext()) {
+                    bizTrans = iterBizTransType.next().getValue();
+                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             }
         }
-        if (onePermit && objectEvent.getExtensions() != null) {
-            epc = null;
-            bizTrans = null;
-            Iterator<EventFieldExtension> iter = objectEvent.getExtensions().iterator();
-            while (iter.hasNext()) {
-                EventFieldExtension extensionField = iter.next();
-                String extensionId = extensionField.getFieldname();
-                String extensionValueType = extensionField.getValueColumnName();
-                Object extensionValue;
+        epc = null;
+        bizTrans = null;
+        for (Object obj : objectEvent.getAny()) {
+            Element element = (Element) obj;
+            String namespace = element.getNamespaceURI();
+            String extensionName = element.getLocalName();
+            String value = element.getTextContent();
+
+            // Gets the extension value
+            Object extensionValue = null;
+            try {
+                extensionValue = new Integer(Integer.parseInt(value));
+            } catch (Exception ex) {
+                // Extension value is not an integer
                 try {
-                    if ("intValue".equals(extensionValueType)) {
-                        extensionValue = new Integer(extensionField.getIntValue());
-                    } else if ("floatValue".equals(extensionValueType)) {
-                        extensionValue = new Float(extensionField.getFloatValue());
-                    } else if ("dateValue".equals(extensionValueType)) {
-                        extensionValue = new Date(extensionField.getDateValue().getTime());
-                    } else if ("strValue".equals(extensionValueType)) {
-                        extensionValue = extensionField.getStrValue();
-                    } else {
-                        iter.remove();
-                        continue;
+                    extensionValue = new Float(Float.parseFloat(value));
+                } catch (Exception exF) {
+                    // Extension value is not a float
+                    try {
+                        extensionValue = new Double(Double.parseDouble(value));
+                    } catch (Exception exD) {
+                        // Extension value is not a double
+                        try {
+                            extensionValue = TimeParser.parseAsDate(value);
+                        } catch (Exception exP) {
+                            // Extension value is not a date
+                        }
                     }
-                } catch (Exception ex) {
-                    iter.remove();
-                    continue;
-                }
-                extension = new ExtensionEvent(extensionId, extensionValue);
-                XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                        eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                if (!xacmlCheck(xacmlEvent, user)) {
-                    iter.remove();
                 }
             }
+            // Extension value is a string
+            if (extensionValue == null) {
+                extensionValue = value;
+            }
+
+            extension = new ExtensionEvent(namespace, extensionName, extensionValue);
+            XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                    eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+            if (!xacmlCheck(xacmlEvent, user)) {
+                return false;
+            }
         }
-        return onePermit;
+        return true;
     }
 
     /**
-     * Checks an quantity capture event.
+     * Checks access rights to a quantity event.
      *
      * @param quantityEvent The quantity capture event to check.
-     * @return
-     * <code>true</code> if the quantity capture event is permitted.
+     * @return <code>true</code> if the quantity capture event is permitted.
      */
-    private boolean quantityCaptureCheck(QuantityEvent quantityEvent, String user, String owner) {
-        Date eventTime = quantityEvent.getEventTime();
+    private boolean checkQuantityEvent(QuantityEventType quantityEvent, String user, String owner) {
+        Date eventTime = (quantityEvent.getEventTime() != null) ? quantityEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = new Date();
         String eventType = XACMLConstantsEventType.QUANTITY;
-        String readPoint = (quantityEvent.getReadPoint() != null) ? quantityEvent.getReadPoint().getUri() : null;
-        String bizLoc = (quantityEvent.getBizLocation() != null) ? quantityEvent.getBizLocation().getUri() : null;
-        String bizStep = (quantityEvent.getBizStep() != null) ? quantityEvent.getBizStep().getUri() : null;
-        String disposition = (quantityEvent.getDisposition() != null) ? quantityEvent.getDisposition().getUri() : null;
-        Long quantity = quantityEvent.getQuantity();
-        String epc = (quantityEvent.getEpcClass() != null) ? quantityEvent.getEpcClass().getUri() : null;
+        String readPoint = (quantityEvent.getReadPoint() != null) ? quantityEvent.getReadPoint().getId() : null;
+        String bizLoc = (quantityEvent.getBizLocation() != null) ? quantityEvent.getBizLocation().getId() : null;
+        String bizStep = quantityEvent.getBizStep();
+        String disposition = quantityEvent.getDisposition();
+        String epc = quantityEvent.getEpcClass();
+        Long quantity = new Long(quantityEvent.getQuantity());
         String operation = null;
         String parentId = null;
         String childEpc = null;
         String bizTrans = null;
         ExtensionEvent extension = null;
 
-        boolean onePermit = false;
-
-        Iterator<BusinessTransaction> iterBizTrans = quantityEvent.getBizTransList().iterator();
-        while (iterBizTrans.hasNext()) {
-            bizTrans = iterBizTrans.next().getType().getUri();
+        if (quantityEvent.getBizTransactionList() == null || quantityEvent.getBizTransactionList().getBizTransaction() == null
+                || quantityEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
             XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                     eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-            if (xacmlCheck(xacmlEvent, user)) {
-                onePermit = true;
-            } else {
-                iterBizTrans.remove();
+            if (!xacmlCheck(xacmlEvent, user)) {
+                return false;
             }
-        }
-        if (onePermit && quantityEvent.getExtensions() != null) {
-            bizTrans = null;
-            Iterator<EventFieldExtension> iter = quantityEvent.getExtensions().iterator();
-            while (iter.hasNext()) {
-                EventFieldExtension extensionField = iter.next();
-                String extensionId = extensionField.getFieldname();
-                String extensionValueType = extensionField.getValueColumnName();
-                Object extensionValue;
-                try {
-                    if ("intValue".equals(extensionValueType)) {
-                        extensionValue = new Integer(extensionField.getIntValue());
-                    } else if ("floatValue".equals(extensionValueType)) {
-                        extensionValue = new Float(extensionField.getFloatValue());
-                    } else if ("dateValue".equals(extensionValueType)) {
-                        extensionValue = new Date(extensionField.getDateValue().getTime());
-                    } else if ("strValue".equals(extensionValueType)) {
-                        extensionValue = extensionField.getStrValue();
-                    } else {
-                        iter.remove();
-                        continue;
-                    }
-                } catch (Exception ex) {
-                    iter.remove();
-                    continue;
-                }
-                extension = new ExtensionEvent(extensionId, extensionValue);
+        } else {
+            for (BusinessTransactionType bizTransType : quantityEvent.getBizTransactionList().getBizTransaction()) {
+                bizTrans = bizTransType.getValue();
                 XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                         eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
                 if (!xacmlCheck(xacmlEvent, user)) {
-                    iter.remove();
+                    return false;
                 }
             }
         }
-        return onePermit;
+
+        bizTrans = null;
+        for (Object obj : quantityEvent.getAny()) {
+            Element element = (Element) obj;
+            String namespace = element.getNamespaceURI();
+            String extensionName = element.getLocalName();
+            String value = element.getTextContent();
+
+            // Gets the extension value
+            Object extensionValue = null;
+            try {
+                extensionValue = new Integer(Integer.parseInt(value));
+            } catch (Exception ex) {
+                // Extension value is not an integer
+                try {
+                    extensionValue = new Float(Float.parseFloat(value));
+                } catch (Exception exF) {
+                    // Extension value is not a float
+                    try {
+                        extensionValue = new Double(Double.parseDouble(value));
+                    } catch (Exception exD) {
+                        // Extension value is not a double
+                        try {
+                            extensionValue = TimeParser.parseAsDate(value);
+                        } catch (Exception exP) {
+                            // Extension value is not a date
+                        }
+                    }
+                }
+            }
+            // Extension value is a string
+            if (extensionValue == null) {
+                extensionValue = value;
+            }
+
+            extension = new ExtensionEvent(namespace, extensionName, extensionValue);
+            XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                    eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+            if (!xacmlCheck(xacmlEvent, user)) {
+                return false;
+            }
+
+        }
+        return true;
     }
 
     /**
-     * Checks a transaction capture event.
+     * Checks access rights to a transaction event.
      *
      * @param transactionEvent The transaction capture event to check.
-     * @return
-     * <code>true</code> if the transaction capture event is permitted.
+     * @return <code>true</code> if the transaction capture event is permitted.
      */
-    private boolean transactionCaptureCheck(TransactionEvent transactionEvent, String user, String owner) {
-        Date eventTime = transactionEvent.getEventTime();
+    private boolean checkTransactionEvent(TransactionEventType transactionEvent, String user, String owner) {
+        Date eventTime = (transactionEvent.getEventTime() != null) ? transactionEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = new Date();
         String eventType = XACMLConstantsEventType.TRANSACTION;
-        String operation = (transactionEvent.getAction() != null) ? transactionEvent.getAction().name() : null;
-        String readPoint = (transactionEvent.getReadPoint() != null) ? transactionEvent.getReadPoint().getUri() : null;
-        String bizLoc = (transactionEvent.getBizLocation() != null) ? transactionEvent.getBizLocation().getUri() : null;
-        String bizStep = (transactionEvent.getBizStep() != null) ? transactionEvent.getBizStep().getUri() : null;
-        String disposition = (transactionEvent.getDisposition() != null) ? transactionEvent.getDisposition().getUri() : null;
-        String parentId = transactionEvent.getParentId();
+        String operation = (transactionEvent.getAction() != null) ? transactionEvent.getAction().value() : null;
+        String readPoint = (transactionEvent.getReadPoint() != null) ? transactionEvent.getReadPoint().getId() : null;
+        String bizLoc = (transactionEvent.getBizLocation() != null) ? transactionEvent.getBizLocation().getId() : null;
+        String bizStep = transactionEvent.getBizStep();
+        String disposition = transactionEvent.getDisposition();
+        String parentId = transactionEvent.getParentID();
         Long quantity = null;
         String childEpc = null;
         String epc = null;
         String bizTrans = null;
         ExtensionEvent extension = null;
 
-        boolean onePermit = false;
-
-        if (transactionEvent.getEpcList() == null || transactionEvent.getEpcList().isEmpty()) {
-            if (transactionEvent.getBizTransList() == null || transactionEvent.getBizTransList().isEmpty()) {
+        if (transactionEvent.getEpcList() == null || transactionEvent.getEpcList().getEpc() == null || transactionEvent.getEpcList().getEpc().isEmpty()) {
+            if (transactionEvent.getBizTransactionList() == null || transactionEvent.getBizTransactionList().getBizTransaction() == null
+                    || transactionEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
                 XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                         eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                if (xacmlCheck(xacmlEvent, user)) {
-                    onePermit = true;
+                if (!xacmlCheck(xacmlEvent, user)) {
+                    return false;
                 }
             } else {
-                Iterator<BusinessTransaction> iterBizTrans = transactionEvent.getBizTransList().iterator();
-                while (iterBizTrans.hasNext()) {
-                    bizTrans = iterBizTrans.next().getBizTransaction().getUri();
+                for (BusinessTransactionType bizTransType : transactionEvent.getBizTransactionList().getBizTransaction()) {
+                    bizTrans = bizTransType.getValue();
                     XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                             eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                    if (xacmlCheck(xacmlEvent, user)) {
-                        onePermit = true;
-                    } else {
-                        iterBizTrans.remove();
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             }
         } else {
-            if (transactionEvent.getBizTransList() == null || transactionEvent.getBizTransList().isEmpty()) {
-                Iterator<String> iterEpc = transactionEvent.getEpcList().iterator();
-                while (iterEpc.hasNext()) {
-                    epc = iterEpc.next();
-                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                    if (xacmlCheck(xacmlEvent, user)) {
-                        onePermit = true;
-                    } else {
-                        iterEpc.remove();
-                    }
-                }
-            } else {
-                String allowedEpc = null;
-                String allowedBizTrans = null;
-                Iterator<String> iterEpc = transactionEvent.getEpcList().iterator();
-                while (iterEpc.hasNext()) {
-                    epc = iterEpc.next();
-                    Iterator<BusinessTransaction> iterBizTrans = transactionEvent.getBizTransList().iterator();
-                    while (iterBizTrans.hasNext()) {
-                        bizTrans = iterBizTrans.next().getType().getUri();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (xacmlCheck(xacmlEvent, user)) {
-                            allowedEpc = epc;
-                            allowedBizTrans = bizTrans;
-                            onePermit = true;
-                            break;
-                        }
-                    }
-                    if (allowedEpc == null) {
-                        iterEpc.remove();
-                    } else {
-                        break;
-                    }
-                }
-                if (allowedEpc != null) {
-                    Iterator<BusinessTransaction> iterBizTrans = transactionEvent.getBizTransList().iterator();
-                    while (iterBizTrans.hasNext()) {
-                        bizTrans = iterBizTrans.next().getType().getUri();
-                        XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                                eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                        if (!xacmlCheck(xacmlEvent, user)) {
-                            iterBizTrans.remove();
-                        }
-                    }
-                }
-                if (allowedBizTrans != null) {
-                    iterEpc = transactionEvent.getEpcList().iterator();
-                    epc = iterEpc.next();
+            if (transactionEvent.getBizTransactionList() == null || transactionEvent.getBizTransactionList().getBizTransaction() == null
+                    || transactionEvent.getBizTransactionList().getBizTransaction().isEmpty()) {
+                for (EPC epcType : transactionEvent.getEpcList().getEpc()) {
+                    epc = epcType.getValue();
                     XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
                             eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
                     if (!xacmlCheck(xacmlEvent, user)) {
-                        iterEpc.remove();
+                        return false;
+                    }
+                }
+            } else {
+                Iterator<BusinessTransactionType> iterBizTransType = transactionEvent.getBizTransactionList().getBizTransaction().iterator();
+                for (EPC epcType : transactionEvent.getEpcList().getEpc()) {
+                    epc = epcType.getValue();
+                    if (iterBizTransType.hasNext()) {
+                        bizTrans = iterBizTransType.next().getValue();
+                    }
+                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
+                    }
+                }
+                while (iterBizTransType.hasNext()) {
+                    bizTrans = iterBizTransType.next().getValue();
+                    XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                            eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+                    if (!xacmlCheck(xacmlEvent, user)) {
+                        return false;
                     }
                 }
             }
         }
-        if (onePermit && transactionEvent.getExtensions() != null) {
-            epc = null;
-            bizTrans = null;
-            Iterator<EventFieldExtension> iter = transactionEvent.getExtensions().iterator();
-            while (iter.hasNext()) {
-                EventFieldExtension extensionField = iter.next();
-                String extensionId = extensionField.getFieldname();
-                String extensionValueType = extensionField.getValueColumnName();
-                Object extensionValue;
+        epc = null;
+        bizTrans = null;
+        for (Object obj : transactionEvent.getAny()) {
+            Element element = (Element) obj;
+            String namespace = element.getNamespaceURI();
+            String extensionName = element.getLocalName();
+            String value = element.getTextContent();
+
+            // Gets the extension value
+            Object extensionValue = null;
+            try {
+                extensionValue = new Integer(Integer.parseInt(value));
+            } catch (Exception ex) {
+                // Extension value is not an integer
                 try {
-                    if ("intValue".equals(extensionValueType)) {
-                        extensionValue = new Integer(extensionField.getIntValue());
-                    } else if ("floatValue".equals(extensionValueType)) {
-                        extensionValue = new Float(extensionField.getFloatValue());
-                    } else if ("dateValue".equals(extensionValueType)) {
-                        extensionValue = new Date(extensionField.getDateValue().getTime());
-                    } else if ("strValue".equals(extensionValueType)) {
-                        extensionValue = extensionField.getStrValue();
-                    } else {
-                        iter.remove();
-                        continue;
+                    extensionValue = new Float(Float.parseFloat(value));
+                } catch (Exception exF) {
+                    // Extension value is not a float
+                    try {
+                        extensionValue = new Double(Double.parseDouble(value));
+                    } catch (Exception exD) {
+                        // Extension value is not a double
+                        try {
+                            extensionValue = TimeParser.parseAsDate(value);
+                        } catch (Exception exP) {
+                            // Extension value is not a date
+                        }
                     }
-                } catch (Exception ex) {
-                    iter.remove();
-                    continue;
-                }
-                extension = new ExtensionEvent(extensionId, extensionValue);
-                XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
-                        eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
-                if (!xacmlCheck(xacmlEvent, user)) {
-                    iter.remove();
                 }
             }
+            // Extension value is a string
+            if (extensionValue == null) {
+                extensionValue = value;
+            }
+
+            extension = new ExtensionEvent(namespace, extensionName, extensionValue);
+            XACMLEPCISEvent xacmlEvent = new XACMLEPCISEvent(owner, bizStep, epc, eventTime, recordTime, operation,
+                    eventType, parentId, childEpc, quantity, readPoint, bizLoc, bizTrans, disposition, extension);
+            if (!xacmlCheck(xacmlEvent, user)) {
+                return false;
+            }
         }
-        return onePermit;
+        return true;
     }
 
     /**
@@ -579,15 +524,11 @@ public class CaptureCheck {
      *
      * @param xacmlEvent The EPCIS event to check
      * @param user The user name
-     * @return
-     * <code>true</code> if permitted.
+     * @return <code>true</code> if permitted.
      */
     public boolean xacmlCheck(XACMLEPCISEvent xacmlEvent, String user) {
-        int baseEventResponse = epcisPEP.captureEvent(user, xacmlEvent, "Capture");
-        if (baseEventResponse == Result.DECISION_PERMIT) {
-            return true;
-        }
-        return false;
+        int xacmlResponse = epcisPEP.captureEvent(user, xacmlEvent);
+        return Utils.responseIsPermit(xacmlResponse);
     }
 
     /**
@@ -596,8 +537,7 @@ public class CaptureCheck {
      * @param vocList The list of master data to filter.
      * @param user The user name to check.
      * @param owner The owner to check.
-     * @return
-     * <code>true</code> if permitted.
+     * @return <code>true</code> if permitted.
      */
     public boolean xacmlCheckMasterD(List<VocabularyType> vocList, String user, String owner) {
         boolean onePermit = false;
@@ -615,8 +555,7 @@ public class CaptureCheck {
      * @param vocElList The list of master data to filter.
      * @param user The user name to check
      * @param owner The owner to check.
-     * @return
-     * <code>true</code> if permitted.
+     * @return <code>true</code> if permitted.
      */
     private boolean xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user, String owner) {
         Iterator<VocabularyElementType> iterVoc = vocElList.iterator();
@@ -639,14 +578,10 @@ public class CaptureCheck {
      *
      * @param xacmlMasterData The Master Data to check.
      * @param user The user name to check.
-     * @return
-     * <code>true</code> if permitted.
+     * @return <code>true</code> if permitted.
      */
     private boolean xacmlCheckMasterData(XACMLEPCISMasterData xacmlMasterData, String user) {
-        int xacmlResponse = epcisPEP.captureMasterData(user, xacmlMasterData, "Capture");
-        if (xacmlResponse == Result.DECISION_PERMIT) {
-            return true;
-        }
-        return false;
+        int xacmlResponse = epcisPEP.captureMasterData(user, xacmlMasterData);
+        return Utils.responseIsPermit(xacmlResponse);
     }
 }

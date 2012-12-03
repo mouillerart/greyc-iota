@@ -20,6 +20,7 @@ package fr.unicaen.iota.validator.operations;
 
 import fr.unicaen.iota.application.model.DSEvent;
 import fr.unicaen.iota.application.rmi.AccessInterface;
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.Controler;
 import fr.unicaen.iota.validator.IOTA;
@@ -42,23 +43,24 @@ import org.w3c.dom.Document;
  */
 public class Analyser extends Thread implements Runnable {
 
-    private String XMLPath;
+    private final String XMLPath;
     private AccessInterface server;
-    private IOTA iota;
+    private final IOTA iota;
+    private final Identity identity;
     private ThreadManager threadManager;
-    private AnalyserStatus analyserStatus;
+    private final AnalyserStatus analyserStatus;
     
     private static final Log log = LogFactory.getLog(Analyser.class);
 
-    public Analyser(String XMLPath, IOTA iota, AnalyserStatus analyserStatus) {
+    public Analyser(String XMLPath, Identity identity, IOTA iota, AnalyserStatus analyserStatus) {
         this.iota = iota;
         this.XMLPath = XMLPath;
         this.analyserStatus = analyserStatus;
+        this.identity = identity;
         try {
-            server = (AccessInterface) Naming.lookup(Configuration.RMI_SERVER_URL);
+            this.server = (AccessInterface) Naming.lookup(Configuration.RMI_SERVER_URL);
         } catch (Exception e) {
             log.fatal("Failed to setup for RMI", e);
-            return;
         }
     }
 
@@ -81,7 +83,7 @@ public class Analyser extends Thread implements Runnable {
             List<EPC> containerList = parseEPCSimulated(documentJDOM.getRootElement());
             Map<EPC, List<BaseEvent>> epcisResults = null;
             if (Configuration.ANALYSE_EPCIS_EVENTS) {
-                EPCISEntryComparator epcisComparator = new EPCISEntryComparator(server, iota);
+                EPCISEntryComparator epcisComparator = new EPCISEntryComparator(identity, server, iota);
                 epcisResults = epcisComparator.getEventNotVerified(containerList);
                 if (Configuration.DEBUG) {
                     log.debug("\n\n");
@@ -89,7 +91,7 @@ public class Analyser extends Thread implements Runnable {
             }
             DSEntryComparator dsComparator = null;
             if (Configuration.ANALYSE_DS_TO_DS_EVENTS || Configuration.ANALYSE_EPCIS_TO_DS_EVENTS) {
-                dsComparator = new DSEntryComparator(server, iota);
+                dsComparator = new DSEntryComparator(identity, server, iota);
             }
             Map<EPC, List<DSEvent>> dsResults = null;
             if (Configuration.ANALYSE_EPCIS_TO_DS_EVENTS) {

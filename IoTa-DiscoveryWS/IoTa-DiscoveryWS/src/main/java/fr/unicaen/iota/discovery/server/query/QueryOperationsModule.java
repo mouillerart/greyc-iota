@@ -23,18 +23,17 @@ import fr.unicaen.iota.discovery.server.hibernate.*;
 import fr.unicaen.iota.discovery.server.util.Constants;
 import fr.unicaen.iota.discovery.server.util.HibernateUtil;
 import fr.unicaen.iota.discovery.server.util.Util;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.xbill.DNS.*;
 
 public class QueryOperationsModule {
 
@@ -683,27 +682,6 @@ public class QueryOperationsModule {
         return events;
     }
 
-    @Deprecated
-    public List<Event> eventLookup(String epc, Partner p) {
-        log.trace(epc + ": ");
-        p.getId();
-        List<Event> events;
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            log.trace(epc + ": ");
-            String req = "select e FROM Event e, Scassociation sca WHERE e.Epc='" + epc + "' AND (e.Partner.Id='" + p.getId() + "' OR (sca.Sc.Partner.Id = e.Partner.Id AND sca.Partner.Id='" + p.getId() + "'))";
-            events = new ArrayList<Event>(session.createQuery(req).list());
-            log.trace(epc + ": ");
-            session.close();
-        } catch (HibernateException e) {
-            log.error(null, e);
-            session.close();
-            return null;
-        }
-        return events;
-    }
-
     public boolean scassociationCreate(Scassociation scasso) {
         Session session = null;
         try {
@@ -792,87 +770,6 @@ public class QueryOperationsModule {
             return null;
         }
         return scasso;
-    }
-
-    public Map<String, String> queryONS(String formatedEpc, String[] ONSAddresses) {
-        Map<String, String> result = new HashMap<String, String>();
-        Record[] records;
-        try {
-            records = reverseDns(formatedEpc, ONSAddresses);
-        } catch (IOException e) {
-            log.error(null, e);
-            return null;
-        }
-        if (records == null) {
-            return null;
-        }
-        for (Record record : records) {
-            String entry = record.rdataToString();
-            if (entry.split(Constants.EPCIS_ONS_TYPE).length > 1) {
-                String[] tab = entry.split("\\!\\^\\.\\*\\$\\!|\\!");
-                result.put(Constants.EPCIS_SERVICE_TYPE, tab[1]);
-            }
-            if (entry.split(Constants.SPEC_ONS_TYPE).length > 1) {
-                String[] tab = entry.split("\\!\\^\\.\\*\\$\\!|\\!");
-                result.put(Constants.SPEC_SERVICE_TYPE, tab[1]);
-            }
-            if (entry.split(Constants.DS_ONS_TYPE).length > 1) {
-                String[] tab = entry.split("\\!\\^\\.\\*\\$\\!|\\!");
-                result.put(Constants.DS_SERVICE_TYPE, tab[1]);
-            }
-        }
-        return result;
-    }
-
-    public void pingONS(String ONSAddresses) throws TextParseException, UnknownHostException {
-        Lookup l = new Lookup("version.bind.", Type.TXT, DClass.CH);
-        l.setResolver(new SimpleResolver(ONSAddresses));
-        l.run();
-        if (l.getResult() == Lookup.SUCCESSFUL) {
-            log.trace("PING ONS: " + l.getAnswers()[0].rdataToString());
-        } else {
-            throw new UnknownHostException("ONS addresse unreachable");
-        }
-    }
-
-    private String printTab(String[] tab) {
-        StringBuilder result = new StringBuilder("[");
-        for (String s : tab) {
-            result.append(" ");
-            result.append(s);
-        }
-        result.append(" ]");
-        return result.toString();
-    }
-
-    private Record[] reverseDns(String hostIp, String[] ONSAddresses) throws IOException {
-        log.trace("resolve ons: " + hostIp + ": " + printTab(ONSAddresses));
-        Record opt = null;
-        Resolver res = new ExtendedResolver(ONSAddresses);
-
-        Name name = new Name(hostIp);
-        int type = Type.NAPTR;
-        int dclass = DClass.IN;
-        Record rec = Record.newRecord(name, type, dclass);
-        Message query = Message.newQuery(rec);
-        Message response;
-        try {
-            response = res.send(query);
-        } catch (SocketTimeoutException e) {
-            log.error("ONS not answering!", e);
-            return null;
-        }
-        Record[] answers = response.getSectionArray(Section.ANSWER);
-        if (answers.length == 0) {
-            return null;
-        } else {
-            for (Record r : answers) {
-                if (r.getType() == Type.CNAME) {
-                    log.trace("Domain changed to: " + r.rdataToString());
-                }
-            }
-            return answers;
-        }
     }
 
     public BizStepId bizStepLookup(String uri) {

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 public class Main {
 
     private static final Log log = LogFactory.getLog(Main.class);
-    
+
     public static void main(String[] args) throws RemoteException {
         log.info("Starting GUI ...");
         String policyFile = Main.class.getClassLoader().getResource("java.policy").toString();
@@ -40,10 +40,9 @@ public class Main {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
         }
-        GUI gui = new GUI();
-        CallBackClientImpl cbci = new CallBackClientImpl();
+        CallbackClientImpl cbci = new CallbackClientImpl();
         UnicastRemoteObject.exportObject(cbci, Configuration.RMI_CALLBACK_PORT);
-        gui.setCallBackHandler(cbci);
+        GUI gui = new GUI(cbci);
         gui.setVisible(true);
     }
 }

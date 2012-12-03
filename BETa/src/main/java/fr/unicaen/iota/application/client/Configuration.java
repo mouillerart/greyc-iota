@@ -28,14 +28,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class Configuration {
 
-    private Configuration() {}
-
+    private Configuration() {
+    }
     public static final String PROPERTIES_CONFIG_FILE = "/application.properties";
-
     public static String SOAP_SERVICE_URL;
     public static String RMI_SERVICE_URL;
     public static String RMI_CALLBACK_HOST;
-    public static int    RMI_CALLBACK_PORT;
+    public static int RMI_CALLBACK_PORT;
+    public static String DEFAULT_IDENTITY;
 
     static {
         try {
@@ -44,6 +44,7 @@ public final class Configuration {
             RMI_SERVICE_URL = props.getProperty("rmi-service-url", "//localhost:1099/ALfA");
             RMI_CALLBACK_HOST = props.getProperty("rmi-callback-host", "localhost");
             RMI_CALLBACK_PORT = Integer.parseInt(props.getProperty("rmi-callback-port", "1099"));
+            DEFAULT_IDENTITY = props.getProperty("default-identity", "anonymous");
         } catch (IOException ex) {
             LogFactory.getLog(Configuration.class).fatal(null, ex);
         }

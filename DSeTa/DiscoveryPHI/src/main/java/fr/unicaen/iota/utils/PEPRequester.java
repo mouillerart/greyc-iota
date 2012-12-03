@@ -2,7 +2,7 @@
  *  This program is a part of the IoTa project.
  *
  *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -68,7 +68,6 @@ public final class PEPRequester {
         ArrayList<String> args = new ArrayList<String>();
         args.add(userS);
         args.add(partner);
-        args.add(fr.unicaen.iota.xacml.policy.Module.administrationModule.getValue());
         DSPEP dspep = new DSPEP();
         return (Integer) runMethod(dspep, args.toArray(), methodName);
     }

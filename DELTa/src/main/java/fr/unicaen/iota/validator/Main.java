@@ -18,6 +18,7 @@
  */
 package fr.unicaen.iota.validator;
 
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.gui.GUI;
 import java.io.File;
 import java.io.IOException;
@@ -62,8 +63,10 @@ public class Main {
             log.error(null, e);
         }
         AnalyserResult analyserResult = new AnalyserResult();
-        Controler controler = new Controler(f, iota);
-        GUI gui = new GUI(controler, iota);
+        Identity identity = new Identity();
+        identity.setAsString(Configuration.IDENTITY);
+        Controler controler = new Controler(identity, f, iota);
+        GUI gui = new GUI(controler);
         controler.getAnalyserStatus().addListener(gui);
         controler.getAnalyserStatus().addListener(analyserResult);
         gui.setResults(analyserResult);

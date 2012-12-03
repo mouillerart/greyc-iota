@@ -29,11 +29,6 @@ class ONSConfigurer(installer.Configurer):
         installer.Configurer.__init__(self, "Object Name Server", "ons", [
                 ("Enter the ONS server name (FDQN)", "ons", "server", {}),
                 ("Enter the ONS Domain Prefix", "ons", "domain_prefix", {}),
-                ("Enter the ONS Spec Level", "ons", "spec_level", {}),
-                ("Enter the ONS DS Entry", "ons", "ds_entry", {}),
-                ("Enter the ONS Epcis Entry", "ons", "epcis_entry", {}),
-                ("Enter the ONS Spec Entry", "ons", "spec_entry", {}),
-                ("Enter the ONS Entry regular expression", "ons", "entry_regex", {}),
                 ("Create the zone file template?", "ons", "create_file", {"type":"YN"}),
                 ("Enter the Vendor dmain prefix", "ons", "vendor_prefix",
                  {"when": ("ons", "create_file")}),
@@ -49,15 +44,16 @@ class ONSConfigurer(installer.Configurer):
 
 
     def postConfigure(self):
-        if CONFIG.get("ons", "create_file"):
-            zone = CONFIG.get("ons", "vendor_prefix") + "." + CONFIG.get("ons", "domain_prefix")
-            email = CONFIG.get("ons", "email")
+        if self.cget("create_file"):
+            zone = self.cget("vendor_prefix") + "." + self.cget("domain_prefix")
+            email = self.cget("email")
             date = datetime.date.today()
             serial = "%04d%02d%02d00" % (date.year, date.month, date.day)
-            server = CONFIG.get("ons", "server")
-            comurl = CONFIG.get("ons", "home_page")
+            server = self.cget("server")
+            comurl = self.cget("home_page")
             dsurl = CONFIG.get("ds", "url")
-            utils.writeFile("Creating ONS zone template", CONFIG.get("ons", "filename"),
+            dsetaurl = CONFIG.get("dseta", "url") + "ided_ds/"
+            utils.writeFile("Creating ONS zone template", self.cget("filename"),
 """
 ;; 
 $TTL 1d
@@ -81,6 +77,7 @@ $ORIGIN %s
 ;;                 order pref flags service    regex                                                   replacement
 ;2.1.0.9.8  IN NAPTR 0     0    "u"   "epc+html" "!^.*$!%s!"                  .
 ;           IN NAPTR 1     0    "u"   "epc+ds"   "!^.*$!%s!" .
+;           IN NAPTR 2     0    "u"   "epc+ided_ds"   "!^.*$!%s!" .
 """
-                            % (zone, email, serial, server, comurl, dsurl)) 
+                            % (zone, email, serial, server, comurl, dsurl, dsetaurl)) 
             utils.putWarning("This is just a template. You need to complete it with products ids.")

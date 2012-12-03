@@ -19,6 +19,7 @@
 package fr.unicaen.iota.validator.gui;
 
 import fr.unicaen.iota.application.model.DSEvent;
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.*;
 import fr.unicaen.iota.validator.listener.AnalyserListener;
 import fr.unicaen.iota.validator.model.BaseEvent;
@@ -46,9 +47,10 @@ public class GUI extends javax.swing.JFrame implements AnalyserListener, WindowL
 
     private static final Log log = LogFactory.getLog(GUI.class);
     private int nbFiles;
-    private Controler controler;
+    private final Controler controler;
     private int tableId = 0;
-    private IOTA iota;
+    private final IOTA iota;
+    private final Identity identity;
     private AnalyserResult analyserResult;
     private JPanel tree;
     private JTabbedPane jTabbedPane;
@@ -56,20 +58,14 @@ public class GUI extends javax.swing.JFrame implements AnalyserListener, WindowL
     /**
      * Creates new form GUI
      */
-    public GUI() {
+    public GUI(Controler controler) {
         initComponents();
         this.setTitle("DELTa");
+        this.iota = controler.getIota();
+        this.identity = controler.getIdentity();
         nbFiles = new File(Configuration.XML_EVENT_FOLDER).list().length;
         jLabel6.setText(nbFiles + "");
-    }
-
-    public GUI(Controler controleur, IOTA iota) {
-        initComponents();
-        this.setTitle("DELTa");
-        this.iota = iota;
-        nbFiles = new File(Configuration.XML_EVENT_FOLDER).list().length;
-        jLabel6.setText(nbFiles + "");
-        this.controler = controleur;
+        this.controler = controler;
         initAnalyserRestricions();
         createTable();
         createTabbedPane();
@@ -654,10 +650,10 @@ public class GUI extends javax.swing.JFrame implements AnalyserListener, WindowL
     }
 
     /**
-     * @param iota the iota to set
+     * @return the identity
      */
-    public void setIota(IOTA iota) {
-        this.iota = iota;
+    public Identity getIdentity() {
+        return identity;
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -65,11 +65,12 @@ public interface QueryOperationsBackend {
      * @param session The QueryOperationsSession wrapping a database connection.
      * @param dest The destination URL of the client.
      * @param subscrId The subscription ID of the subscription.
+     * @param user The user name of the client.
      * @throws SQLException If an error with the database occurred.
      * @throws ImplementationExceptionResponse If an implementation specific
      * error occurred.
      */
-    public void storeSubscription(final QueryOperationsSession session, String subscrId, String dest)
+    public void storeSubscription(final QueryOperationsSession session, String subscrId, String dest, String user)
             throws SQLException;
 
     /**

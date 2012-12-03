@@ -18,27 +18,27 @@
  */
 package fr.unicaen.iota.simulator.server.util;
 
-import org.apache.xerces.parsers.DOMParser;
 import fr.unicaen.iota.simulator.server.model.PlaceFIFO;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.parsers.DOMParser;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  *
  */
 public final class PipeSpecParser {
 
-    private PipeSpecParser() {}
-
+    private PipeSpecParser() {
+    }
     private static final Log log = LogFactory.getLog(PipeSpecParser.class);
 
     public static Map<String, PlaceFIFO> parse(String file) {
@@ -68,7 +68,7 @@ public final class PipeSpecParser {
             } catch (NumberFormatException ex) {
                 log.error(file + " pipeSize must be a number !");
             }
-            PlaceFIFO placeFIFO = new PlaceFIFO(key, pipeSize,Long.parseLong(travelTime));
+            PlaceFIFO placeFIFO = new PlaceFIFO(key, pipeSize, Long.parseLong(travelTime));
             pipes.put(key, placeFIFO);
         }
         return pipes;

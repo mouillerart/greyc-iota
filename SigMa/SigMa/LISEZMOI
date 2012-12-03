@@ -1,0 +1,17 @@
+SigMa - SIGnature verification Module
+
+Service Web de vérification de signatures éléctroniques.
+
+Dépendances:
+  modules IoTa:
+    - SigMa-Client
+    - SigMa-Commons
+  bibliothèques:
+    - spring
+    - Apache cxf
+    - epcis-commons
+    - commons-logging
+    - log4j
+
+Installation et Configuration:
+  IoTa-Installer installe et configure SigMa.

@@ -18,8 +18,8 @@
  */
 package fr.unicaen.iota.validator.model;
 
-import fr.unicaen.iota.application.model.DSEvent;
-import fr.unicaen.iota.application.model.EPCISEvent;
+import fr.unicaen.iota.ds.model.*;
+import org.fosstrak.epcis.model.EPCISEventType;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.IOTA;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class EPC {
     private static final Log log = LogFactory.getLog(EPC.class);
     private String epc;
     private List<BaseEvent> eventList;
-    private List<DSEvent> dsToDsReferentList;
+    private List<TEventItem> dsToDsReferentList;
     private String parentId;
 
     public EPC(String epc) {
@@ -59,21 +59,33 @@ public class EPC {
         return res;
     }
 
-    public List<DSEvent> getDSEvents(List<EPC> containerList) throws Exception {
+    public List<TEventItem> getDSEvents(List<EPC> containerList) throws Exception {
         List<BaseEvent> eventListClone = new ArrayList<BaseEvent>();
         eventListClone.addAll(this.eventList);
         if (this.parentId != null) {
             BaseEvent parentEvent = getParentEvent(parentId, containerList);
             eventListClone.add(parentEvent);
         }
-        List<DSEvent> events = new ArrayList<DSEvent>();
+        List<TEventItem> events = new ArrayList<TEventItem>();
         for (BaseEvent be : eventListClone) {
-            events.add(new DSEvent(this.epc, be.getInfrastructure().getServiceAddress(), be.getBizStep(), null));
+            TEventItem evt = new TEventItem();
+            TServiceItemList serviceList = new TServiceItemList();
+            TServiceItem service = new TServiceItem();
+            service.setUri(be.getInfrastructure().getServiceAddress());
+            serviceList.getService().add(service);
+            evt.setServiceList(serviceList);
+            evt.setC(epc);
+            evt.setLcs(be.getBizStep());
+            events.add(evt);
+            //new DSEvent(this.epc,
+            //        be.getInfrastructure().getServiceAddress(), 
+             //       be.getBizStep(), 
+               //     null));
         }
         return events;
     }
 
-    public Iterable<DSEvent> getDSToDSEvents(List<EPC> containerList) {
+    public Iterable<TEventItem> getDSToDSEvents(List<EPC> containerList) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -146,7 +158,7 @@ public class EPC {
         return events;
     }
 
-    public List<BaseEvent> verifyEPCISEvents(List<EPCISEvent> list, IOTA iota) {
+    public List<BaseEvent> verifyEPCISEvents(List<EPCISEventType> list, IOTA iota) {
         List<BaseEvent> res = new ArrayList<BaseEvent>();
         for (BaseEvent be : this.eventList) {
             if (!iota.get(be.getInfrastructure().getBizLoc()).isActiveAnalyse()) {

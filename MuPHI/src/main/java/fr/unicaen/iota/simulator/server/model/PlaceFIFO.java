@@ -18,14 +18,15 @@
  */
 package fr.unicaen.iota.simulator.server.model;
 
-import fr.unicaen.iota.simulator.server.util.MD5;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,7 +61,6 @@ public class PlaceFIFO {
         reserverdID = new ArrayList<String>();
         travelTimeInMilis = travelTime;
     }
-
     private boolean fullTruck = false;
 
     public synchronized String reserve(int canalSize) {
@@ -109,18 +109,26 @@ public class PlaceFIFO {
         arrival();
         return list;
     }
-    private long autoIncrementId = 0;
 
     private String generateId() {
         autoIncrementId++;
         try {
-            return MD5.MD5_Algo(String.valueOf(new Date().getTime())) + String.valueOf(autoIncrementId);
-        } catch (NoSuchAlgorithmException ex) {
-            log.error(null, ex);
-            return null;
+            String text = String.valueOf(new Date().getTime()) + String.valueOf(autoIncrementId);
+            byte[] digest = MD5.digest(text.getBytes("UTF-8"));
+            return new BigInteger(1, digest).toString(16);
         } catch (UnsupportedEncodingException ex) {
             log.error(null, ex);
             return null;
+        }
+    }
+    private long autoIncrementId = 0;
+    private static MessageDigest MD5;
+
+    static {
+        try {
+            MD5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            log.fatal("MD5 not avalaible", e);
         }
     }
 

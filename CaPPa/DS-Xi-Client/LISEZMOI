@@ -1,0 +1,14 @@
+DS-Xi-Client
+
+Bibliothèque client pour l'interfaçage avec le service web Xi pour DS.
+
+Dépendances:
+  bibliothèques:
+    - sunxacml
+    - servlet-api
+    - commons-logging
+
+Dépendances d’utilisation:
+  - Xi
+  - DiscoveryPHI
+  - un DWS

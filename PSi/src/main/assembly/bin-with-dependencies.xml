@@ -11,12 +11,12 @@
         <include>LICENSE</include>
         <include>psi.sh</include>
         <include>play.png</include>
-        <include>config/*</include>
-        <include>eventSpecification/*</include>
-        <include>netTypeSpecifications/*</include>
-        <include>pictures/*</include>
-        <include>sampleNets/*</include>
-        <include>toolSpecifications/*</include>
+        <include>config/**</include>
+        <include>eventSpecification/**</include>
+        <include>netTypeSpecifications/**</include>
+        <include>pictures/**</include>
+        <include>sampleNets/**</include>
+        <include>toolSpecifications/**</include>
       </includes>
     </fileSet>
     <fileSet>

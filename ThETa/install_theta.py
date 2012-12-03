@@ -29,10 +29,9 @@ class ThETaInstaller(lib.installer.Installer):
 
     def __init__(self):
         lib.installer.Installer.__init__(self, "ThETa", "theta", [
-                #("Enter the DS login", "theta", "rho_login", {}),
-                #("Enter the DS password", "theta", "rho_password", {}),
                 ("Enter RHO (REST/HTTP Object JSON interface) URL", "theta", "rho_url", {}),
-                ("Enter EPC code", "theta", "epc", {}),
+                ("Enter your identity", "theta", "identity", {}),
+                ("Enter the EPC code", "theta", "epc", {}),
                 ("Enter the CSV file for readpoints lat/lon path", "theta", "csv_repo", {"type": "file"}),
                 ("Enter the archive file path", "theta", "repo", {"type": "file"}),
                 ("Enter the path where you want to unpack it", "theta", "directory",
@@ -40,24 +39,22 @@ class ThETaInstaller(lib.installer.Installer):
                 ("Enter the name of the directory", "theta", "name", {})
                 ], [
                 ("theta",
-                 { #"rho.login": ("theta", "rho_login"),
-                   #"rho.password": ("theta", "rho_password"),
-                   "IoTa.sortDataStorage.ds1.ds.csvFile": ("theta", "csv_file"),
+                 { "IoTa.sortDataStorage.ds1.ds.csvFile": ("theta", "csv_file"),
                    "IoTa.sortDataStorage.ds0.url": ("theta", "rho_url_epc"),
                    })
                 ])
 
 
     def postConfigure(self):
-        CONFIG.set("theta", "rho_url_epc", CONFIG.get("theta", "rho_url") + "?epc=" + CONFIG.get("theta", "epc"))
-        CONFIG.set("theta", "csv_file", CONFIG.get("theta", "directory") + CONFIG.get("theta", "name") + "/" + "readpoints.csv")
+        self.cset("rho_url_epc", self.cget("rho_url") + "?theta=true&id=" + self.cget("identity") + "&epc=" + self.cget("epc"))
+        self.cset("csv_file", self.cget("directory") + self.cget("name") + "/" + "readpoints.csv")
 
 
     def postUnpack(self):
-        theta_dir = CONFIG.get("theta", "directory") + CONFIG.get("theta", "name")
+        theta_dir = self.cget("directory") + self.cget("name")
         lib.utils.sh_cp("resources/theta.properties", theta_dir)
         lib.utils.sh_cp("resources/theta.sh", theta_dir)
-        lib.utils.sh_cp(CONFIG.get("theta", "csv_repo"), CONFIG.get("theta", "csv_file"))
+        lib.utils.sh_cp(self.cget("csv_repo"), self.cget("csv_file"))
 
 
 if __name__ == "__main__":

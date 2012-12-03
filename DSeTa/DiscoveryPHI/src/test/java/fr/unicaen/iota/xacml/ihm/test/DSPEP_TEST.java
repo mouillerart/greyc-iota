@@ -1,16 +1,34 @@
+/*
+ *  This program is a part of the IoTa project.
+ *
+ *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  <http://www.gnu.org/licenses/>
+ *
+ *  See AUTHORS for a list of contributors.
+ */
 package fr.unicaen.iota.xacml.ihm.test;
 
 import com.sun.xacml.ctx.RequestCtx;
-import fr.unicaen.iota.xacml.ihm.Module;
-import fr.unicaen.iota.xacml.pep.MethodNamesCapture;
-import fr.unicaen.iota.xacml.pep.MethodNamesQuery;
+import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.xacml.pep.XACMLDSEvent;
 import fr.unicaen.iota.xacml.request.EventRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Socket;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,9 +37,12 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DSPEP_TEST {
 
+    private static String url;
+
     private static final Log log = LogFactory.getLog(DSPEP_TEST.class);
 
     public static void main(String[] args) {
+        url = args[0];
         XACMLDSEvent dSEvent = new XACMLDSEvent("epcistest", "bizstep", "urn:epc:id:sgtin:1.3.325", "object", new Date());
         int result = eventLookup("epcistest", dSEvent, "Query");
         log.trace(result);
@@ -151,22 +172,45 @@ public class DSPEP_TEST {
         return processXACMLRequest(eventRequest);
     }
 
-    private static String sendXACMLRequest(RequestCtx xacmlReq) throws IOException {
-        Socket socket = new Socket("localhost", 9999);
-        BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        xacmlReq.encode(socket.getOutputStream());
-        String response = socketReader.readLine();
-        socket.close();
+    private static int processXACMLRequest(EventRequest eventRequest) {
+        int response = Result.DECISION_DENY;
+        try {
+            String respInString = sendXACMLRequest(eventRequest.createRequest());
+            response = Integer.parseInt(respInString);
+        } catch (Exception ex) {
+            log.error("", ex);
+        }
         return response;
     }
 
-    private static int processXACMLRequest(EventRequest eventRequest) {
-        String response = "DENY";
-        try {
-            response = sendXACMLRequest(eventRequest.createRequest());
-        } catch (IOException ex) {
-            log.error(null, ex);
+    private static String sendXACMLRequest(RequestCtx xacmlReq) throws IOException {
+        HttpURLConnection httpConnection = getConnection("text/plain");
+        log.debug("Sending XACML request...");
+        xacmlReq.encode(httpConnection.getOutputStream());
+        log.debug("Getting XACML response...");
+        int responseCode = httpConnection.getResponseCode();
+        if (responseCode == HttpServletResponse.SC_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+            return sb.toString();
+        } else {
+            log.error("XACML module servlet response: " + responseCode);
+            return "DENY";
         }
-        return XACMLUtils.createXACMLResponse(response);
+    }
+
+    private static HttpURLConnection getConnection(final String contentType) throws IOException {
+        URL serviceUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
+        connection.setRequestProperty("content-type", contentType);
+        connection.setRequestMethod("POST");
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        return connection;
     }
 }

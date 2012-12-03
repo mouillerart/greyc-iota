@@ -29,7 +29,6 @@ class DPHIInstaller(installer.WebAppInstaller):
                 ("Enter the DiscoveryPHI web application name", "dphi", "name", {}),
                 ("Enter the archive file pathname", "dphi", "repo", {"type": "file"}),
                 ("Enter the path where the policies will be saved", "ds_policies", "dir", {}), # not "type": "path" as the directories are created
-                ("Enter the port that will be used between DSeTa (the DS) and XACML module", "ds_policies", "xacml_port", {}),
                 ("Enter the URL of the Discovery Web Services", "ds", "url", {})
                 ], [
                 ("xacml_configuration",
@@ -37,17 +36,15 @@ class DPHIInstaller(installer.WebAppInstaller):
                    "capture-policy-directory": ("ds_policies", "capture_dir"),
                    "admin-policy-directory": ("ds_policies", "admin_dir") }),
                 ("application", 
-                 { "xacml-service-port": ("ds_policies", "xacml_port"),
-                   "ds-address": ("ds", "url") })
+                 { "ds-address": ("ds", "url") })
                 ] )
 
 
     def postConfigure(self):
         # set default urls (for DSeTa)
-        url = "http://" + CONFIG.get("global", "host") + ":" + CONFIG.get("tomcat", "http_port") + "/" + CONFIG.get("dphi", "name")
-        CONFIG.set("dphi", "url", url + "/index.jsp")
-        CONFIG.set("ds_policies", "xacml_url", url + "/xacml")
-        CONFIG.set("ds_policies", "xacml_host", CONFIG.get("global", "host"))
+        url = self.setURL()
+        self.cset("url", url + "index.jsp")
+        CONFIG.set("ds_policies", "xacml_url", url + "xi")
 
         # set policies directories (for DSeTa)
         policies_dir = CONFIG.get("ds_policies", "dir")

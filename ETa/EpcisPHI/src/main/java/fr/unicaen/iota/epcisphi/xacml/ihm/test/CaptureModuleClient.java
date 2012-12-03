@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,12 @@
  */
 package fr.unicaen.iota.epcisphi.xacml.ihm.test;
 
+import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.epcisphi.utils.InterfaceHelper;
 import fr.unicaen.iota.epcisphi.utils.MapSessions;
 import fr.unicaen.iota.epcisphi.xacml.pep.EPCISPEP;
 import fr.unicaen.iota.xacml.pep.MethodNamesCapture;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
-import fr.unicaen.iota.xacml.pep.XACMLResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -156,10 +156,11 @@ public class CaptureModuleClient extends javax.swing.JFrame {
         args.add(fr.unicaen.iota.xacml.policy.Module.captureModule.getValue());
         try {
             EPCISPEP dspep = new EPCISPEP();
-            XACMLResponse res = (XACMLResponse) runMethod(dspep, args.toArray(), action);
+            int response = (Integer) runMethod(dspep, args.toArray(), action);
+            String res = (response == Result.DECISION_PERMIT)? "ACCEPT": "DENY";
             AccessResponseDialog dialog = new AccessResponseDialog(this, true);
             dialog.setLocationRelativeTo(this);
-            dialog.setResponse(res.toString());
+            dialog.setResponse(res);
             dialog.setVisible(true);
         } catch (InvocationTargetException ex) {
             AccessResponseDialog dialog = new AccessResponseDialog(this, true);

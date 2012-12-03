@@ -7,6 +7,8 @@ Construction
 IoTa utilise Apache Maven pour l’automatisation de la production
 (http://maven.apache.org).
 
+Un scrit utilitaire pour la construction est fourni : make-all.sh.
+
 La compilation de chaque module est réalisé à l’aide de cette commande :
 
   mvn compile
@@ -53,8 +55,8 @@ Installation
 
 (Toutes les valeurs entre chevrons `<nom>` sont à substituer.)
 
-Le programme IoTa-Installer peut vous aider à installer et configurer tous les
-serveurs et bases de données.
+**Le programme IoTa-Installer peut vous aider à installer et configurer tous
+les serveurs et bases de données.**
 
 Toutes les applications et applications webs ont un fichier `log4j.properties`
 pour configurer les journaux (fichier, format, niveau de log, etc.).
@@ -71,7 +73,7 @@ commentaires).
 Un fichier dans le répertoire courant remplace la version par défaut qui est
 intégrée au fichier jar.
 Vous pouvez extraire la version par défaut commentée de ces fichiers depuis le
-fichier jar:
+fichier jar :
 
     jar xf <application>-<version>.jar application.properties
 
@@ -79,9 +81,7 @@ ou
 
     unzip <application>-<version>.jar application.properties
 
-Utilisez le script fourni pour lancer l’application:
-
-    ./launch.sh
+Utilisez le script fourni pour lancer l’application.
 
 
 ### Applications webs
@@ -90,7 +90,7 @@ Récupérez le fichier war de l’application web `<application>-<version>.war`.
 
 Déployez-le dans votre conteneur de servlets (voir la documentation du
 conteneur pour plus d’information). Pour Apache Tomcat, cela peut être fait de
-plusieurs manières:
+plusieurs manières :
 
   1. déjarez manuellement le fichier war dans  `$CATALINA_HOME/webapps`
   2. copiez le fichier war dans `$CATALINA_HOME/webapps` et laissez Tomcat le
@@ -111,17 +111,17 @@ Rechargez l’application web ou relancez le conteneur de servlet.
 
 1. La base de données
 
-    Créez la base de données pour l’application:
+    Créez la base de données pour l’application :
 
         CREATE DATABASE <app_db>;
 
     Créez un utilisateur spécifique et accordez-lui les droits d’accès à la
-    base:
+    base :
 
         GRANT SELECT, INSERT, UPDATE, DELETE ON <app_db>.*
         TO <app_db_user>@localhost IDENTIFIED BY <app_db_password>;
 
-    Créez les tables:
+    Créez les tables :
 
         use <app_db>;
         source <app>_schema.sql;
@@ -161,7 +161,7 @@ Voici un fichier de zone typique pour le produit
     $TTL 1d
     
     ;; la zone, l’Id du fabricant
-    $ORIGIN 7.6.5.4.3.2.1.sgtin.ons-peer.com.
+    $ORIGIN 7.6.5.4.3.2.1.sgtin.id.ons-peer.com.
     
     @ IN SOA localhost info.example.com ( ; info@example.com
                             2012010101 ; numéro de version du fichier
@@ -172,15 +172,24 @@ Voici un fichier de zone typique pour le produit
                             )
     
     ;; le nom de ce serveur
-      IN NS ons.example.com
+      IN NS ons.example.com.
     
     ; NAPTR pour les produits
     ; produit exemple
     ;                 order pref flags service    regex
     2.1.0.9.8  IN NAPTR 0     0    "u"   "epc+html" "!^.*$!http://www.example.com/!" .
-               IN NAPTR 1     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/ds/services/ESDS_Service!" .
+               IN NAPTR 1     0    "u"   "epc+epcis"   "!^.*$!http://epcis.example.com/epcis/!" .
+               IN NAPTR 2     0    "u"   "epc+ided_epcis"   "!^.*$!http://epcis.example.com/eta/!" .
+               IN NAPTR 3     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/ds/services/ESDS_Service!" .
+               IN NAPTR 4     0    "u"   "epc+ds"   "!^.*$!http://ds.example.com/dseta/ds/!" .
+               IN NAPTR 5     0    "u"   "epc+ided_ds"   "!^.*$!http://ds.example.com/dseta/ided_ds/!" .
     ; en premier, la page web HTML pour des informations sur le produit
-    ; en second, le web service Discovery associé à cet EPC
+    ; ensuite, le web service EPCIS-repository associé à cet EPC
+    ; ensuite, le web service EPCIS-repository identifié (ETa) associé à cet EPC
+    ; ensuite, le web service Discovery (Wings) associé à cet EPC
+    ; ensuite, le web service Discovery associé à cet EPC
+    ; finallement, le web service Discovery identifié associé à cet EPC
+    ; l’ordre est libre
 
 
 Sur les systèmes utilisant une distribution Debian ou dérivée, il suffit
@@ -188,7 +197,7 @@ d’installer le paquet `bind9`, de créer un ou plusieurs fichiers de zone sur
 le modèle précédent et d’activer ces zones, c’est-à-dire d’ajouter ce genre de
 clause dans `named.conf.local` :
 
-    zone "7.6.5.4.3.2.1.sgtin.ons-peer.com" {
+    zone "7.6.5.4.3.2.1.sgtin.id.ons-peer.com" {
          type master;
          file "/etc/bind/db.ons.peer.com";
     };
@@ -197,9 +206,22 @@ clause dans `named.conf.local` :
 Rappelons que pour éviter d’avoir un serveur relais récursif, il faut ajouter
 ces options (dans la clause `options` de `named.conf.options`) :
 
-    allow-transfer { none };
-    allow-recursion { none };
+    allow-transfer { none; };
+    allow-recursion { none; };
     recursion no;
+
+
+### DNSSEC
+
+Activez DNSSEC dans bind9 avec ces options (dans la clause `options` de
+`named.conf.options`) :
+
+    dnssec-enable yes;
+    dnssec-validation auto;
+    dnssec-lookaside auto;
+
+Vous pouvez générer des clefs et signer vos fichiers de zone avec, par
+exemple, le programme `zonesigner` des `dnssec-tools`.
 
 
 ### LDAP
@@ -213,3 +235,29 @@ utilisateurs superadmin et anonymous.
 Sur les distributions Debian et dérivées, il suffit d’installer les paquets
 `slapd` et `ldap-utils`. Il est nécessaire de lancer `dpkg-reconfigure slapd`
 pour compléter la configuration.
+
+
+### ActiveMQ
+
+Certaines applications (ETa-Callback*) ont besoin d’un courtir JMS ActiveMQ.
+
+Sur les distributions Debian et dérivées, il suffit d’installer le paquet
+`activemq`.
+
+
+### Problèmes de mémoire
+
+Du fait d’un usage intensif de l’introspection (p.ex. par Hibernate et CXF),
+et si vous voulez installer toutes les applications web sur le même serveur,
+la mémoire « PermGen » de la JVM doit être augmentée. Pour Apache Tomcat, cela
+peut être fait via la variable d’environnement JAVA_OPTS. Dans les shells
+POSIX, il suffit d’une ligne de commande similaire à celle-ci:
+
+    export JAVA_OPTS='-Xms2048m -Xmx4096m -XX:MaxPermSize=512m'
+
+Cette variable d’environnement doit être positionnée avant le lancement de
+Apache Tomcat, donc avant le lancement de l’installateur IoTa (celui-ci
+lançant Apache Tomcat)
+
+Ceci n’est nécessaire que si vous installez toutes (ou presque toutes) les
+applications web dans un même conteneur de servlet.

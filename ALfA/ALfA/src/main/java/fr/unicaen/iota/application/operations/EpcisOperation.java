@@ -19,7 +19,8 @@
  */
 package fr.unicaen.iota.application.operations;
 
-import java.net.URL;
+import fr.unicaen.iota.eta.query.ETaQueryControlClient;
+import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,14 +30,15 @@ import javax.xml.bind.JAXBElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.*;
-import org.fosstrak.epcis.queryclient.QueryControlClient;
 
 public class EpcisOperation {
 
     private final String EPCIS_SERVICE_ADDRESS;
+    private final Identity IDENTITY;
     private static final Log log = LogFactory.getLog(EpcisOperation.class);
 
-    public EpcisOperation(String epcis_service_address) throws Exception {
+    public EpcisOperation(Identity identity, String epcis_service_address) {
+        IDENTITY = identity;
         EPCIS_SERVICE_ADDRESS = epcis_service_address;
     }
 
@@ -49,11 +51,10 @@ public class EpcisOperation {
         return queryParam;
     }
 
-    private List<EPCISEventType> getFilteredEvent(Map<String, String> filters) throws RemoteException {
+    public List<EPCISEventType> getFilteredEvent(Map<String, String> filters) throws RemoteException {
         log.trace("getFilteredEvent");
         try {
-            QueryControlClient client = new QueryControlClient();
-            client.configureService(new URL(EPCIS_SERVICE_ADDRESS), null);
+            ETaQueryControlClient client = new ETaQueryControlClient(IDENTITY, EPCIS_SERVICE_ADDRESS);
             QueryParams queryParams = new QueryParams();
             for (Map.Entry<String, String> entry : filters.entrySet()) {
                 queryParams.getParam().add(createEPCISParameter(entry.getKey(), entry.getValue()));
@@ -74,25 +75,44 @@ public class EpcisOperation {
 
     public List<EPCISEventType> getEventFromEPC(String EPC) throws RemoteException {
         log.trace("getEventFromEPC: " + EPC);
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("MATCH_epc", EPC);
-        return getFilteredEvent(map);
+        List<EPCISEventType> res = new ArrayList<EPCISEventType>();
+        res.addAll(getObjectEventFromEPC(EPC, new HashMap<String, String>()));
+        res.addAll(getAggregationEventFromEPC(EPC, new HashMap<String, String>()));
+        res.addAll(getQuantityEventFromEPC(EPC, new HashMap<String, String>()));
+        res.addAll(getTransactionEventFromEPC(EPC, new HashMap<String, String>()));
+        return res;
     }
 
-    public List<EPCISEventType> getObjectEventFromEPC(String EPC) throws RemoteException {
+    public List<EPCISEventType> getObjectEventFromEPC(String EPC, Map<String, String> filters) throws RemoteException {
         log.trace("getObjectEventFromEPC: " + EPC);
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("MATCH_epc", EPC);
-        map.put("eventType", "ObjectEvent");
-        return getFilteredEvent(map);
+        Map<String, String> allFilters = new HashMap<String, String>(filters);
+        allFilters.put("MATCH_epc", EPC);
+        allFilters.put("eventType", "ObjectEvent");
+        return getFilteredEvent(allFilters);
     }
 
-    public List<EPCISEventType> getAggregationEventFromEPC(String EPC) throws RemoteException {
+    public List<EPCISEventType> getTransactionEventFromEPC(String EPC, Map<String, String> filters) throws RemoteException {
+        log.trace("getObjectEventFromEPC: " + EPC);
+        Map<String, String> allFilters = new HashMap<String, String>(filters);
+        allFilters.put("MATCH_parentID", EPC);
+        allFilters.put("eventType", "TransactionEvent");
+        return getFilteredEvent(allFilters);
+    }
+
+    public List<EPCISEventType> getQuantityEventFromEPC(String EPC, Map<String, String> filters) throws RemoteException {
+        log.trace("getObjectEventFromEPC: " + EPC);
+        Map<String, String> allFilters = new HashMap<String, String>(filters);
+        allFilters.put("MATCH_epc", EPC);
+        allFilters.put("eventType", "QuantityEvent");
+        return getFilteredEvent(allFilters);
+    }
+
+    public List<EPCISEventType> getAggregationEventFromEPC(String EPC, Map<String, String> filters) throws RemoteException {
         log.trace("getAggregationEventFromEPC: " + EPC);
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("MATCH_parentID", EPC);
-        map.put("eventType", "AggregationEvent");
-        return getFilteredEvent(map);
+        Map<String, String> allFilters = new HashMap<String, String>(filters);
+        allFilters.put("MATCH_parentID", EPC);
+        allFilters.put("eventType", "AggregationEvent");
+        return getFilteredEvent(allFilters);
     }
 
     private List<EPCISEventType> getEvents(EventListType eventListType) {

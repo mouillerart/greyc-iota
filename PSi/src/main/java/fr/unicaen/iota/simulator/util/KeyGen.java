@@ -31,7 +31,7 @@ public final class KeyGen {
     private KeyGen() {
     }
     private static final Log log = LogFactory.getLog(KeyGen.class);
-    private final static String XMLFile = "eventSpecification/epcs.xml";
+    private final static String epcFile = "epcs.lst";
 
     public static String generateEPC(String barCode) {
         FileWriter fw = null;
@@ -46,7 +46,7 @@ public final class KeyGen {
                 result.append(".");
                 result.append(generateID());
             }
-            fw = new FileWriter(XMLFile, true);
+            fw = new FileWriter(epcFile, true);
             fw.write(result.toString());
             fw.write("\n");
             return result.toString();

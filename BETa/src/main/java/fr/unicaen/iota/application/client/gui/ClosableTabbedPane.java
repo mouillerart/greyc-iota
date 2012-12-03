@@ -29,7 +29,7 @@ public class ClosableTabbedPane extends JTabbedPane {
     public TabComponent addClosableTabComponent(Component c) {
         this.add(c);
         int index = this.indexOfComponent(c);
-        TabComponent tb = new TabComponent(c.getName(),this);
+        TabComponent tb = new TabComponent(c.getName(), this);
         this.setTabComponentAt(index, tb);
         return tb;
     }

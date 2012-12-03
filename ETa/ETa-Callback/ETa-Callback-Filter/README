@@ -5,17 +5,20 @@ Filtering module of events sent by an EPCIS (callbacks).
 Dependencies:
   IoTa modules:
     - LibXACML-Epcis
+    - EPCIS-Xi-Client
   libraries:
     - epcis-commons
-    - epcis-repository
     - servlet-api
     - mysql-connector
     - activemq-core
-    - sunxacml
     - commons-logging
     - log4j
-    - junit
 
 Configuration:
+  See the files *.properties and java.policy in the jar file (each of those
+  can be overriden by a file with the same name in the current directory).
   (application.properties for this application,
    commons-logging.properties and log4j.properties for the logs)
+
+Usage:
+  ./eta_callback_filter.sh pre_task_delay_in_ms inter_task_delay_in_ms

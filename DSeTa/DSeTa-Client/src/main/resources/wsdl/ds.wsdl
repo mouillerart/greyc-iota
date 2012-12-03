@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DS"
+                  targetNamespace="urn:unicaen:iota:ds:wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wds="urn:unicaen:iota:ds:wsdl"
+                  xmlns:xds="urn:unicaen:iota:ds:xsd">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="urn:unicaen:iota:ds:xsd" schemaLocation="ds.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="multipleEventCreateReq">
+        <wsdl:part name="parms" element="xds:MultipleEventCreate">
+        </wsdl:part>
+    </wsdl:message>
+    
+    <wsdl:message name="multipleEventCreateRsp">
+        <wsdl:part name="result" element="xds:MultipleEventCreateResult">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:message name="eventLookupReq">
+        <wsdl:part name="parms" element="xds:EventLookup">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:message name="eventLookupRsp">
+        <wsdl:part name="result" element="xds:EventLookupResult">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:message name="eventCreateReq">
+        <wsdl:part name="parms" element="xds:EventCreate">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:message name="eventCreateRsp">
+        <wsdl:part name="result" element="xds:EventCreateResult">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:portType name="DSServicePortType">
+
+        <wsdl:operation name="eventLookup">
+            <wsdl:input name="eventLookupReq" message="wds:eventLookupReq">
+            </wsdl:input>
+            <wsdl:output name="eventLookupRsp" message="wds:eventLookupRsp">
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="multipleEventCreate">
+            <wsdl:input name="multipleEventCreateReq" message="wds:multipleEventCreateReq">
+            </wsdl:input>
+            <wsdl:output name="multipleEventCreateRsp" message="wds:multipleEventCreateRsp">
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="eventCreate">
+            <wsdl:input name="eventCreateReq" message="wds:eventCreateReq">
+            </wsdl:input>
+            <wsdl:output name="eventCreateRsp" message="wds:eventCreateRsp">
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:portType>
+
+    <wsdl:binding name="DS" type="wds:DSServicePortType">
+        <wsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="eventLookup">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="eventLookupReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="eventLookupRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="eventCreate">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="eventCreateReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="eventCreateRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="multipleEventCreate">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="multipleEventCreateReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="multipleEventCreateRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:binding>
+
+    <wsdl:service name="DS_Service">
+        <wsdl:port name="DS_Service" binding="wds:DS">
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

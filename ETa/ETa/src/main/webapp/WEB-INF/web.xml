@@ -8,7 +8,7 @@
   </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>META-INF/applicationContext.xml</param-value>
+    <param-value>WEB-INF/applicationContext.xml</param-value>
   </context-param>
   
   <listener>
@@ -37,34 +37,20 @@
     <servlet-class>fr.unicaen.iota.eta.capture.CaptureOperationsServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
-  <!--
-  <servlet>
-    <servlet-name>epcisRepository</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  -->
 
-    <servlet>
-        <servlet-name>TestConfiguration</servlet-name>
-        <servlet-class>fr.unicaen.iota.eta.discovery.tests.TestConfiguration</servlet-class>
-    </servlet>
-    <servlet-mapping>
+  <servlet-mapping>
     <!-- The capture servlet will be available at http://{url:port}/{context-path}/capture -->
     <servlet-name>ETaCaptureInterface</servlet-name>
     <url-pattern>/capture</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <!-- The query Web service will be available at http://{url:port}/{context-path}/query -->
+    <!-- The query Web service will be available at http://{url:port}/{context-path}/query
+                                           and http://{url:port}/{context-path}/ided_query -->
     <servlet-name>ETaQueryInterface</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>TestConfiguration</servlet-name>
-        <url-pattern>/test</url-pattern>
-    </servlet-mapping>
-    <session-config>
+  <session-config>
     <session-timeout>5</session-timeout>
   </session-config>
 

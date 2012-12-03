@@ -19,16 +19,13 @@
  */
 package fr.unicaen.iota.epcilon.discovery;
 
-import fr.unicaen.iota.discovery.client.DsClient;
 import fr.unicaen.iota.discovery.client.model.Event;
 import fr.unicaen.iota.discovery.client.model.EventInfo;
-import fr.unicaen.iota.discovery.client.model.Session;
-import fr.unicaen.iota.discovery.client.model.UserInfo;
-import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
+import fr.unicaen.iota.dseta.client.DSeTaClient;
 import fr.unicaen.iota.epcilon.conf.Configuration;
 import fr.unicaen.iota.epcilon.model.EventToPublish;
 import fr.unicaen.iota.epcilon.util.SQLQueryModule;
-import java.rmi.RemoteException;
+import fr.unicaen.iota.tau.model.Identity;
 import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,13 +36,15 @@ import org.apache.commons.logging.LogFactory;
 public class XPublisher extends Thread {
 
     private static final Log log = LogFactory.getLog(XPublisher.class);
-    private Session session;
     private SQLQueryModule queryOperationsModule;
-    private DsClient dsClient;
+    private DSeTaClient dsetaClient;
+    private Identity identity;
 
     public XPublisher() {
         queryOperationsModule = new SQLQueryModule();
-        dsClient = new DsClient(Configuration.DISCOVERY_SERVICE_ADDRESS);
+        identity = new Identity();
+        identity.setAsString(Configuration.IDENTITY);
+        dsetaClient = new DSeTaClient(identity, Configuration.DISCOVERY_SERVICE_ADDRESS);
     }
 
     @Override
@@ -84,18 +83,7 @@ public class XPublisher extends Thread {
         List<EventToPublish> blackList = new ArrayList<EventToPublish>();
         String dsAddress = Configuration.DISCOVERY_SERVICE_ADDRESS;
         try {
-            if (login().equals(Configuration.SESSION_FAILED_ID)) {
-                log.warn("Can't connect to the DS with these login/password " + dsAddress);
-                blackList.addAll(toPublishList);
-                return blackList;
-            }
             log.debug("connected to " + dsAddress);
-            log.debug("USER INFO");
-            if (session == null) {
-                throw new Exception("unloged user try to publish");
-            }
-            UserInfo uInfo = dsClient.userInfo(session.getSessionId(), Configuration.LOGIN);
-            String partnerId = uInfo.getPartnerId();
             int tmp = 0;
             while (tmp < toPublishList.size()) {
                 List<EventInfo> list = new ArrayList<EventInfo>();
@@ -105,51 +93,31 @@ public class XPublisher extends Thread {
                     }
                     EventToPublish e = toPublishList.get(i);
                     Calendar ets = Calendar.getInstance();
-                    Calendar sts = Calendar.getInstance();
                     ets.setTime(e.getEventTime());
+                    Calendar sts = Calendar.getInstance();
                     sts.setTime(new Date());
                     Event event = new Event(0,
                             e.getEpc(),
-                            partnerId,
-                            uInfo.getUserId(),
+                            null, // userInfo.partnerID, not used by server
+                            null, // userInfo.userID, not used by server
                             e.getBizStep(),
-                            e.getEventType(), e.getEventClass(), ets, sts,
+                            e.getEventType(),
+                            e.getEventClass(),
+                            ets,
+                            sts,
                             new HashMap<String, String>());
                     EventInfo eInfo = new EventInfo(event, 1, 30);
                     list.add(eInfo);
                 }
                 tmp += Configuration.SIMULTANEOUS_PUBLISH_LIMIT;
-                dsClient.multipleEventCreate(session.getSessionId(), partnerId, list);
+                dsetaClient.multipleEventCreate(identity.getAsString(), list);
                 log.info(list.size() + " events published at " + dsAddress);
-                Thread.sleep(1);
             }
-            logout();
-        } catch (RemoteException ex) {
-            log.error("Events not published, the DS does not answer", ex);
-            blackList.addAll(toPublishList);
         } catch (Exception ex) {
             log.error("Publisher thread interrupted", ex);
             blackList.addAll(toPublishList);
         }
         return blackList;
-    }
-
-    private String login() throws Exception {
-        log.debug("LOGIN");
-        session = dsClient.userLogin(fr.unicaen.iota.discovery.client.util.Configuration.DEFAULT_SESSION, Configuration.LOGIN, Configuration.PASS);
-        if (session == null) {
-            log.error("BAD LOGIN OR PASSWORD => END");
-            return null;
-        }
-        return session.getSessionId();
-    }
-
-    private void logout() throws RemoteException, EnhancedProtocolException {
-        log.debug("LOGOUT");
-        if (session != null) {
-            dsClient.userLogout(session.getSessionId());
-            session = null;
-        }
     }
 
     public String epcToEpcClass(String epc) {

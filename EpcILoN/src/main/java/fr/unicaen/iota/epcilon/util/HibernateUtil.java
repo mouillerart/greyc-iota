@@ -9,8 +9,8 @@ import org.hibernate.cfg.Configuration;
 
 public final class HibernateUtil {
 
-    private HibernateUtil() {}
-
+    private HibernateUtil() {
+    }
     private static final SessionFactory sessionFactory;
 
     static {

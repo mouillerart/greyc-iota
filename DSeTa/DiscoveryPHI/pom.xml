@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unicaen.iota.discovery</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>discovery-phi</artifactId>
-    <version>1.0</version>
+    <version>1.9-mock</version>
     <packaging>war</packaging>
 
     <name>DiscoveryPHI</name>
@@ -17,15 +17,15 @@
 
         <!-- IoTa depdencies -->
         <dependency>
-            <groupId>fr.unicaen.iota.xacml</groupId>
+            <groupId>fr.unicaen.iota</groupId>
             <artifactId>libxacml-ds</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>fr.unicaen.iota.discovery</groupId>
+            <groupId>fr.unicaen.iota</groupId>
             <artifactId>discovery-client</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- XACML dependecy -->

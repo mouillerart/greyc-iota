@@ -20,13 +20,16 @@
 package fr.unicaen.iota.epcisphi.xacml.ihm.test;
 
 import com.sun.xacml.ctx.RequestCtx;
+import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
 import fr.unicaen.iota.xacml.request.EventRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Socket;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,7 +40,10 @@ public class EPCISPEP_TEST {
 
     private static final Log log = LogFactory.getLog(EPCISPEP_TEST.class);
 
+    private static String url;
+
     public static void main(String[] args) {
+        url = args[0];
         XACMLEPCISEvent epcisEvent = new XACMLEPCISEvent("anonym", "bizstep", "urn:epc:id:sgtin:1.3.325", new Date(), new Date(), "add", "object", "parent", "child", new Long(2), "readpoint", "bizLoc", "bizTrans", "disposition", null);
         int result = eventLookup("anonym", epcisEvent, "Query");
         log.trace(result);
@@ -167,22 +173,45 @@ public class EPCISPEP_TEST {
         return processXACMLRequest(eventRequest);
     }
 
-    private static String sendXACMLRequest(RequestCtx xacmlReq) throws IOException {
-        Socket socket = new Socket("localhost", 9998);
-        BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        xacmlReq.encode(socket.getOutputStream());
-        String response = socketReader.readLine();
-        socket.close();
+    private static int processXACMLRequest(EventRequest eventRequest) {
+        int response = Result.DECISION_DENY;
+        try {
+            String respInString = sendXACMLRequest(eventRequest.createRequest());
+            response = Integer.parseInt(respInString);
+        } catch (Exception ex) {
+            log.error("", ex);
+        }
         return response;
     }
 
-    private static int processXACMLRequest(EventRequest eventRequest) {
-        String response = "DENY";
-        try {
-            response = sendXACMLRequest(eventRequest.createRequest());
-        } catch (IOException ex) {
-            log.error(null, ex);
+    private static String sendXACMLRequest(RequestCtx xacmlReq) throws IOException {
+        HttpURLConnection httpConnection = getConnection("text/plain");
+        log.debug("Sending XACML request...");
+        xacmlReq.encode(httpConnection.getOutputStream());
+        log.debug("Getting XACML response...");
+        int responseCode = httpConnection.getResponseCode();
+        if (responseCode == HttpServletResponse.SC_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+            return sb.toString();
+        } else {
+            log.error("XACML module servlet response: " + responseCode);
+            return "DENY";
         }
-        return XACMLUtils.createXACMLResponse(response);
+    }
+
+    private static HttpURLConnection getConnection(final String contentType) throws IOException {
+        URL serviceUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
+        connection.setRequestProperty("content-type", contentType);
+        connection.setRequestMethod("POST");
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        return connection;
     }
 }

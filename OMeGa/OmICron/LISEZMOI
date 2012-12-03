@@ -4,7 +4,7 @@ Bibliothèque client pour OMeGa et client SOAP simple pour IoTa.
 
 Dépendances:
   bibliothèques:
-    - axis2
+    - cxf
     - commons-logging
     - log4j
 

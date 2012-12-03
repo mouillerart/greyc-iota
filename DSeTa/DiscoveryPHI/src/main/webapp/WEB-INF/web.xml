@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>DS Policy Human interface</display-name>
+
     <servlet>
         <servlet-name>AccessControlPolicy</servlet-name>
         <servlet-class>fr.unicaen.iota.xacml.servlet.AccessControlPolicy</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>InitialisationServlet</servlet-name>
-        <servlet-class>fr.unicaen.iota.xacml.servlet.InitialisationServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>PartnerAdminServlet</servlet-name>
-        <servlet-class>fr.unicaen.iota.xacml.servlet.PartnerAdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AccessControlPolicy</servlet-name>
         <url-pattern>/AccessControlPolicy</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>RootAccountAuth</servlet-name>
         <servlet-class>fr.unicaen.iota.xacml.servlet.RootAccountAuth</servlet-class>
@@ -25,14 +19,17 @@
         <servlet-name>RootAccountAuth</servlet-name>
         <url-pattern>/RootAccountAuth</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>XACMLInterface</servlet-name>
+        <servlet-class>fr.unicaen.iota.xacml.servlet.XiServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>InitialisationServlet</servlet-name>
-        <url-pattern>/InitialisationServlet</url-pattern>
+        <servlet-name>XACMLInterface</servlet-name>
+        <url-pattern>/xi</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PartnerAdminServlet</servlet-name>
-        <url-pattern>/PartnerAdminServlet</url-pattern>
-    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30

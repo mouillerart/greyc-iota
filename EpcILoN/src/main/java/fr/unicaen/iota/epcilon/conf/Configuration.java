@@ -19,11 +19,12 @@
  */
 package fr.unicaen.iota.epcilon.conf;
 
-import fr.unicaen.iota.epcilon.util.MD5;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -36,8 +37,7 @@ public final class Configuration {
     public static long PUBLISHER_MAX_WAIT;
     public static int PUBLISHER_MONITOR_FREQUENCY;
     public static int EPCIS_TO_DS_POOL_EVENT;
-    public static String LOGIN;
-    public static String PASS;
+    public static String IDENTITY;
     public static String DISCOVERY_SERVICE_ADDRESS;
     public static String DEFAULT_EVENT_BUSINESS_STEP;
     public static String DEFAULT_EVENT_CLASS;
@@ -45,7 +45,6 @@ public final class Configuration {
     public static String DEFAULT_EVENT_SC;
     public static String DEFAULT_EVENT_TTL;
     public static int DEFAULT_EVENT_PRIORITY;
-    public static Configuration instance = new Configuration();
     public static int PUBLISHER_FREQUENCY;
     public static String DEFAULT_EVENT_EPC;
     public static String DEFAULT_QUERY_CLIENT_ADDRESS;
@@ -69,13 +68,15 @@ public final class Configuration {
             Properties properties = new Properties();
             properties.load(is);
             is.close();
-            SUBSCRIPTION_KEY = properties.getProperty("subscription_key");
+            SUBSCRIPTION_KEY = properties.getProperty("subscription_key", "");
             if (SUBSCRIPTION_KEY.isEmpty()) {
-                Date date = new Date();
-                long key = date.getTime();
+                long key = new Date().getTime();
                 Random random = new Random();
                 int rInt = random.nextInt(100);
-                String subKey = MD5.MD5_Algo(String.valueOf(key).concat(String.valueOf(rInt)));
+                String text = String.valueOf(key).concat(String.valueOf(rInt));
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                byte[] digest = md.digest(text.getBytes("UTF-8"));
+                String subKey = new BigInteger(1, digest).toString(16);
                 File f = new File(Configuration.class.getClassLoader().getResource(resource).getFile());
                 FileWriter op = new FileWriter(f);
                 op.write("subscription_key = " + subKey);
@@ -97,8 +98,7 @@ public final class Configuration {
             PUBLISHER_MAX_WAIT = Long.parseLong(properties.getProperty("publisher-max-wait"));
             PUBLISHER_MONITOR_FREQUENCY = Integer.parseInt(properties.getProperty("publisher-monitor-frequency"));
             EPCIS_TO_DS_POOL_EVENT = Integer.parseInt(properties.getProperty("epcis-to-ds-pool-event"));
-            LOGIN = properties.getProperty("login");
-            PASS = properties.getProperty("password");
+            IDENTITY = properties.getProperty("identity");
             DISCOVERY_SERVICE_ADDRESS = properties.getProperty("discovery-service-address");
             DEFAULT_EVENT_BUSINESS_STEP = properties.getProperty("default-event-business-step");
             DEFAULT_EVENT_CLASS = properties.getProperty("default-event-class");

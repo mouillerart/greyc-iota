@@ -41,16 +41,25 @@ end
 # Write file Version
 IOTA_VERSION = ARGV[0]
 STDOUT.puts("Setting version to #{IOTA_VERSION} ...")
-File.write('Version', IOTA_VERSION + "\n")
+if RUBY_VERSION < '1.9'
+  File.open('Version', 'w') do |f|
+    f.puts(IOTA_VERSION)
+  end
+else
+  File.write('Version', IOTA_VERSION + "\n")
+end
 
 # Modify all Maven project files
-IOTA_MODS = %w[ alfa-pi libxacml-ds libxacml-epcis discovery-client omicron eta-client ]
-
 %w[
   ALfA/ALfA-PI
   ALfA/ALfA
+  ALfA/ALfA-RMI
   BETa
+  CaPPa/DS-Xi-Client
+  CaPPa/EPCIS-Xi-Client
   DELTa
+  DSeTa/DSeTa-Client
+  DSeTa/DSeTa
   DSeTa/DiscoveryPHI
   DSeTa/LibXACML-DS
   ETa/ETa-Callback/ETa-Callback-Filter
@@ -60,13 +69,23 @@ IOTA_MODS = %w[ alfa-pi libxacml-ds libxacml-epcis discovery-client omicron eta-
   ETa/ETa
   ETa/EpcisPHI
   ETa/LibXACML-EPCIS
+  ETa/User
+  ETa/User-Client
   EpcILoN
   IoTa-DiscoveryWS/IoTa-DiscoveryWS-Client
   IoTa-DiscoveryWS/IoTa-DiscoveryWS
+  Mu
   MuPHI
+  Nu/Nu
+  Nu/Nu-PI
   OMeGa/OMeGa
   OMeGa/OmICron
   PSi
+  SigMa/SigMa
+  SigMa/SigMa-Client
+  SigMa/SigMa-Commons
+  SigMa/SigMa-Test
+  TAu
 ].each do |project|
   project.strip!
   STDOUT.print("Changing version of #{project} ...")
@@ -75,13 +94,6 @@ IOTA_MODS = %w[ alfa-pi libxacml-ds libxacml-epcis discovery-client omicron eta-
   doc = Nokogiri::XML(open(pomname))
   (doc/'project/version').each do |version|
     version.content = IOTA_VERSION
-  end
-  (doc/'project/dependencies/dependency').each do |dep|
-    aid = dep.search('artifactId').first
-    if IOTA_MODS.member?(aid.text.strip)
-      version = aid.parent.search('version').first
-      version.content = IOTA_VERSION
-    end
   end
   File.open(pomname, 'w') do |file|
     doc.write_to(file, :encoding => 'utf-8', :indent => 4)

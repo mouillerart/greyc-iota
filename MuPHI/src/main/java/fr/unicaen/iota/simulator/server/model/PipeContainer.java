@@ -28,14 +28,15 @@ import java.util.*;
 public class PipeContainer {
 
     private Map<String, PlaceFIFO> pipes;
-
     private static final PipeContainer instance = new PipeContainer();
 
-    private PipeContainer(){
+    private PipeContainer() {
         Map<String, PlaceFIFO> pipesTmp = PipeSpecParser.parse(Configuration.XML_PIPE_CONFIG_FILE);
         List<String> keySet = new ArrayList<String>();
         keySet.addAll(pipesTmp.keySet());
-        Collections.sort(keySet,new Comparator<String>() {
+        Collections.sort(keySet, new Comparator<String>() {
+
+            @Override
             public int compare(String o1, String o2) {
                 String[] tab1 = o1.split("_");
                 String[] tab2 = o2.split("_");
@@ -45,12 +46,12 @@ public class PipeContainer {
             }
         });
         pipes = new LinkedHashMap<String, PlaceFIFO>();
-        for (String k : keySet){
+        for (String k : keySet) {
             pipes.put(k, pipesTmp.get(k));
         }
     }
 
-    public static PipeContainer getInstance(){
+    public static PipeContainer getInstance() {
         return instance;
     }
 
@@ -58,11 +59,13 @@ public class PipeContainer {
         return pipes;
     }
 
-    public void init(){
+    public void init() {
         Map<String, PlaceFIFO> pipesTmp = PipeSpecParser.parse(Configuration.XML_PIPE_CONFIG_FILE);
         List<String> keySet = new ArrayList<String>();
         keySet.addAll(pipesTmp.keySet());
         Collections.sort(keySet, new Comparator<String>() {
+
+            @Override
             public int compare(String o1, String o2) {
                 String[] tab1 = o1.split("_");
                 String[] tab2 = o2.split("_");
@@ -70,9 +73,9 @@ public class PipeContainer {
                 int i2 = Integer.parseInt(tab2[1]);
                 return new Integer(i1).compareTo(i2);
             }
-        } );
+        });
         instance.setPipes(new LinkedHashMap<String, PlaceFIFO>());
-        for (String k : keySet){
+        for (String k : keySet) {
             instance.getPipes().put(k, pipesTmp.get(k));
         }
     }

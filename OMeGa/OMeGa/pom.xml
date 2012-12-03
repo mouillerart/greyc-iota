@@ -2,62 +2,88 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unicaen.iota.application</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>omega</artifactId>
-    <version>1.0</version>
+    <version>1.9-mock</version>
     <packaging>war</packaging>
 
     <name>OMeGa</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <axis2-version>1.5.6</axis2-version>
+        <lib-cxf-version>2.2.12</lib-cxf-version>
+        <lib-spring-version>2.5.6.SEC03</lib-spring-version>
     </properties>
 
     <dependencies>
 
         <!-- IoTa dependencies -->
         <dependency>
-            <groupId>fr.unicaen.iota.application</groupId>
-            <artifactId>alfa-pi</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <!-- Axis2 dependencies -->
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-kernel</artifactId>
-            <version>${axis2-version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>alfa</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-adb</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>mu</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-http</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>omicron</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${lib-spring-version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-local</artifactId>
-            <version>${axis2-version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${lib-spring-version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-transport-tcp</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${lib-spring-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${lib-spring-version}</version>
+        </dependency>
+
+        <!-- CXF dependencies -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${lib-cxf-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${lib-cxf-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-local</artifactId>
+            <version>${lib-cxf-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-databinding-jaxb</artifactId>
+            <version>${lib-cxf-version}</version>
         </dependency>
 
         <!-- Log dependencies -->
@@ -92,35 +118,6 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.axis2</groupId>
-                <artifactId>axis2-wsdl2code-maven-plugin</artifactId>
-                <version>${axis2-version}</version>
-                <executions>
-                    <execution>
-                        <id>wsdl2code</id>
-                        <goals>
-                            <goal>wsdl2code</goal>
-                        </goals>
-                        <configuration>
-                            <packageName>fr.unicaen.iota.application.soap.server</packageName>
-                            <wsdlFile>src/main/resources/wsdl/IoTaWSInterface.wsdl</wsdlFile>
-                            <generateServerSide>true</generateServerSide>
-                            <generateServerSideInterface>true</generateServerSideInterface>
-                            <namespaceURIs>
-                                <namespaceURI>
-                                    <uri>urn:fr:unicaen:params:xsd:ns:iota-1.0</uri>
-                                    <packageName>fr.unicaen.iota.application.soap.model</packageName>
-                                </namespaceURI>
-                            </namespaceURIs>
-                            <!--<generateServicesXml>true</generateServicesXml>
-                            <outputDirectory>target/generated-sources/axis2</outputDirectory>
-                            <flattenFiles>true</flattenFiles>-->
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

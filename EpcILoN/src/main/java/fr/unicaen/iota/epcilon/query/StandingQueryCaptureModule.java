@@ -77,5 +77,4 @@ public class StandingQueryCaptureModule {
         subscribe.setSubscriptionID(subID);
         return subscribe;
     }
-
 }

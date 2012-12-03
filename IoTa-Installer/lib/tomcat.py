@@ -21,7 +21,6 @@ import os
 import shutil
 import xml.dom.minidom
 
-from config import CONFIG
 import utils
 import installer
 
@@ -30,20 +29,6 @@ class TomcatInstaller(installer.Installer):
 
     def __init__(self):
         installer.Installer.__init__(self, "Apache Tomcat", "tomcat", [
-                ("Use the manager webapp?", "tomcat", "use_manager", {"type": "YN"}),
-                ("Enter the manager’s path", "tomcat", "manager_path",
-                 {"when": ("tomcat", "use_manager")}),
-                ("Enter the manager’s login (manager or manager-script role)", "tomcat", "login",
-                 {"when": ("tomcat", "use_manager")}),
-                ("Enter the manager’s password", "tomcat", "password",
-                 {"when": ("tomcat", "use_manager")}),
-                ("Enter the HTTP port", "tomcat", "http_port", {}),
-                ("Enter the server shutdown port", "tomcat", "shutdown_port",
-                 {"when": ("tomcat", "install")}),
-                ("Enter the AJP port", "tomcat", "ajp_port",
-                 {"when": ("tomcat", "install")}),
-                ("Enter the redirect port", "tomcat", "redirect_port",
-                 {"when": ("tomcat", "install")}),
                 ("Enter the archive file pathname", "tomcat", "repo",
                  {"when": ("tomcat", "install"), "type": "file"}),
                 ("Enter the path where you want to unpack it", "tomcat", "directory",
@@ -52,6 +37,20 @@ class TomcatInstaller(installer.Installer):
                  {"when": ("tomcat", "install")}),
                 ("Enter the Catalina Home directory", "tomcat", "catalina_home",
                  {"unless": ("tomcat", "install"), "type": "path"}),
+                ("Enter the HTTP port", "tomcat", "http_port", {}),
+                ("Enter the server shutdown port", "tomcat", "shutdown_port",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the AJP port", "tomcat", "ajp_port",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the redirect port", "tomcat", "redirect_port",
+                 {"when": ("tomcat", "install")}),
+                ("Use the manager webapp?", "tomcat", "use_manager", {"type": "YN"}),
+                ("Enter the manager’s path", "tomcat", "manager_path",
+                 {"when": ("tomcat", "use_manager")}),
+                ("Enter the manager’s login (manager or manager-script role)", "tomcat", "login",
+                 {"when": ("tomcat", "use_manager")}),
+                ("Enter the manager’s password", "tomcat", "password",
+                 {"when": ("tomcat", "use_manager")}),
                 ("Is autodeploy enabled?", "tomcat", "autodeploy",
                  {"unless": ("tomcat", "install"), "type": "YN"})
                 ])
@@ -60,38 +59,38 @@ class TomcatInstaller(installer.Installer):
     def postConfigure(self):
         catalina_home = ""
         if self.installp:
-            tomcat_repo = CONFIG.get("tomcat", "repo")
-            tomcat_dir = CONFIG.get("tomcat", "directory")
-            tomcat_name = CONFIG.get("tomcat", "name")
+            tomcat_repo = self.cget("repo")
+            tomcat_dir = self.cget("directory")
+            tomcat_name = self.cget("name")
             catalina_home = tomcat_dir + tomcat_name + "/"
-            CONFIG.set("tomcat", "catalina_home", catalina_home)
+            self.cset("catalina_home", catalina_home)
             utils.putMessage("The Catalina Home directory will be: " + catalina_home)
         else:
-            catalina_home = CONFIG.get("tomcat", "catalina_home")
-            CONFIG.set("tomcat", "name", catalina_home.rstrip("/").rpartition("/")[2])
+            catalina_home = self.cget("catalina_home")
+            self.cset("name", catalina_home.rstrip("/").rpartition("/")[2])
 
     
     def postUnpack(self):
         utils.putWait("Configuring Apache Tomcat’s ports")
-        serverConfigFile = CONFIG.get("tomcat", "catalina_home") + "conf/server.xml"
+        serverConfigFile = self.cget("catalina_home") + "conf/server.xml"
         doc = xml.dom.minidom.parse(serverConfigFile)
         configuration = doc.getElementsByTagName("Server")[0]
-        configuration.setAttribute("port", CONFIG.get("tomcat", "shutdown_port"))
+        configuration.setAttribute("port", self.cget("shutdown_port"))
         properties = configuration.getElementsByTagName("Connector")
         for prop in properties:
             if prop.getAttribute("protocol") == "HTTP/1.1":
-                prop.setAttribute("port", CONFIG.get("tomcat", "http_port"))
-                prop.setAttribute("redirectPort", CONFIG.get("tomcat", "redirect_port"))
+                prop.setAttribute("port", self.cget("http_port"))
+                prop.setAttribute("redirectPort", self.cget("redirect_port"))
             elif prop.getAttribute("protocol") == "AJP/1.3":
-                prop.setAttribute("port", CONFIG.get("tomcat", "ajp_port"))
-                prop.setAttribute("redirectPort", CONFIG.get("tomcat", "redirect_port"))
+                prop.setAttribute("port", self.cget("ajp_port"))
+                prop.setAttribute("redirectPort", self.cget("redirect_port"))
         with open(serverConfigFile, "w") as scf:
             scf.write(doc.toxml())
         utils.putDoneOK()
         
-        if CONFIG.isTrue("tomcat", "use_manager"):
+        if self.cisTrue("use_manager"):
             utils.putWait("Configuring Apache Tomcat’s managering account")
-            usersConfigFile = CONFIG.get("tomcat", "catalina_home") + "conf/tomcat-users.xml"
+            usersConfigFile = self.cget("catalina_home") + "conf/tomcat-users.xml"
             doc = xml.dom.minidom.parse(usersConfigFile)
             configuration = doc.getElementsByTagName("tomcat-users")[0]
             role = doc.createElement("role")
@@ -101,8 +100,8 @@ class TomcatInstaller(installer.Installer):
             role.setAttribute("rolename", "manager")
             configuration.appendChild(role)
             user = doc.createElement("user")
-            user.setAttribute("username", CONFIG.get("tomcat", "login"))
-            user.setAttribute("password", CONFIG.get("tomcat", "password"))
+            user.setAttribute("username", self.cget("login"))
+            user.setAttribute("password", self.cget("password"))
             user.setAttribute("roles", "manager,manager-script")
             configuration.appendChild(user)
             with open(usersConfigFile, "w") as scf:

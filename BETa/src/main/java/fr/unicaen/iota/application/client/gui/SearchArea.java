@@ -19,9 +19,9 @@
 package fr.unicaen.iota.application.client.gui;
 
 import fr.unicaen.iota.application.client.listener.EPCEventListener;
-import fr.unicaen.iota.application.model.EPCISEvent;
 import fr.unicaen.iota.application.util.TimeParser;
 import fr.unicaen.iota.application.util.TravelTimeTuple;
+import fr.unicaen.iota.mu.EPCISEventTypeHelper;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -30,6 +30,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
  *
@@ -141,12 +142,19 @@ public class SearchArea extends JPanel implements EPCEventListener {
     }
 
     @Override
-    public void eventReveived(String session, EPCISEvent e) {
+    public void eventReveived(String session, EPCISEventType e) {
         if (!session.equals(this.sessionId)) {
             return;
         }
         currentIndex++;
-        ((DefaultTableModel) getJTableGenerated().getModel()).addRow(new String[]{currentIndex + "", formatEPC(e), e.getType().toString(), e.getBizLoc(), e.getBizStep(), TimeParser.format(e.getEventTime())});
+        EPCISEventTypeHelper he = new EPCISEventTypeHelper(e);
+        ((DefaultTableModel) getJTableGenerated().getModel()).addRow(new String[]{
+                    currentIndex + "",
+                    formatEPC(he),
+                    he.getType().toString(),
+                    he.getBizLocation(),
+                    he.getBizStep(),
+                    TimeParser.format(he.getEventTime())});
     }
 
     public void setTerminated() {
@@ -159,9 +167,9 @@ public class SearchArea extends JPanel implements EPCEventListener {
         setTitle(newTitle);
     }
 
-    private String formatEPC(EPCISEvent e) {
+    private String formatEPC(EPCISEventTypeHelper e) {
         List<String> res = new ArrayList<String>();
-        List<String> l = e.getEpcs();
+        List<String> l = e.getEpcList();
         for (String s : l) {
             res.add(" EPC: " + s + " \n");
         }

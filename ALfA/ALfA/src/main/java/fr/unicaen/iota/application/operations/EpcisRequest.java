@@ -19,9 +19,8 @@
  */
 package fr.unicaen.iota.application.operations;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
-import fr.unicaen.iota.application.rmi.CallBackClient;
-import fr.unicaen.iota.application.util.EpcisUtil;
+import fr.unicaen.iota.application.rmi.CallbackClient;
+import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import org.apache.commons.logging.Log;
@@ -29,25 +28,23 @@ import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.AggregationEventType;
 import org.fosstrak.epcis.model.EPC;
 import org.fosstrak.epcis.model.EPCISEventType;
+import org.fosstrak.epcis.model.TransactionEventType;
 
 public class EpcisRequest extends Thread {
 
     private final String serviceAddress;
     private final String epc;
-    private final String LOGIN;
-    private final String PASS;
-    private final CallBackClient client;
-    private final String sessionId;
+    private final Identity identity;
+    private final String sessionID;
+    private final CallbackClient client;
     private static final boolean isDebug = true; // TODO: hard value
     private static final Log log = LogFactory.getLog(EpcisRequest.class);
 
-    public EpcisRequest(String serviceAddress, String epc, String LOGIN,
-            String PASS, CallBackClient client, String sessionId) {
-        this.LOGIN = LOGIN;
-        this.PASS = PASS;
+    public EpcisRequest(String serviceAddress, String epc, Identity identity, String sessionID, CallbackClient client) {
+        this.identity = identity;
         this.epc = epc;
+        this.sessionID = sessionID;
         this.client = client;
-        this.sessionId = sessionId;
         this.serviceAddress = serviceAddress;
     }
 
@@ -64,28 +61,16 @@ public class EpcisRequest extends Thread {
                 debug.append("\n");
                 debug.append("Events: \n");
             }
-            EpcisOperation epcisOperation = null;
-            while (epcisOperation == null) {
+            EpcisOperation epcisOperation = new EpcisOperation(identity, serviceAddress);
+            Collection<EPCISEventType> evts = epcisOperation.getEventFromEPC(epc);
+            for (EPCISEventType evt : evts) {
                 try {
-                    epcisOperation = new EpcisOperation(serviceAddress);
-                } catch (Exception e) {
-                    epcisOperation = null;
-                    log.warn("Unable to create service proxy port. Will retry ...");
-                }
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException ex) {
-                }
-            }
-            for (EPCISEventType o : epcisOperation.getObjectEventFromEPC(epc)) {
-                try {
-                    EPCISEvent e = EpcisUtil.processEvent(o);
                     if (isDebug) {
                         debug.append("------------------------------------------\n");
-                        debug.append(e.toString());
+                        debug.append(evt.toString());
                         debug.append("\n------------------------------------------\n");
                     }
-                    client.pushEvent(sessionId, e);
+                    client.pushEvent(sessionID, evt);
                 } catch (RemoteException ex) {
                     log.fatal(null, ex);
                 }
@@ -93,30 +78,18 @@ public class EpcisRequest extends Thread {
             if (isDebug) {
                 debug.append("Aggregation: \n");
             }
-            Collection<EPCISEventType> aggregationEvents = epcisOperation.getAggregationEventFromEPC(epc);
-            for (EPCISEventType o : aggregationEvents) {
-                try {
-                    EPCISEvent e = EpcisUtil.processEvent(o);
-                    if (isDebug) {
-                        debug.append("------------------------------------------\n");
-                        debug.append(e.toString());
-                        debug.append("\n------------------------------------------\n");
-                    }
-                    client.pushEvent(sessionId, e);
-                } catch (RemoteException ex) {
-                    log.fatal(null, ex);
-                }
-            }
-            if (isDebug) {
-                debug.append("\n\n");
-                log.debug(debug);
-            }
-            if (aggregationEvents != null) {
-                for (EPCISEventType o : aggregationEvents) {
+            for (EPCISEventType o : evts) {
+                if (o instanceof AggregationEventType) {
                     AggregationEventType event = (AggregationEventType) o;
-                    for (EPC epc2 : event.getChildEPCs().getEpc()) {
-                        log.trace("new traceEPC: " + epc2.getValue());
-                        new TraceEPCAsync(epc2.getValue(), client, LOGIN, PASS, sessionId).start();
+                    for (EPC childEpc : event.getChildEPCs().getEpc()) {
+                        log.trace("new traceEPC: " + childEpc.getValue());
+                        new TraceEPCAsync(childEpc.getValue(), sessionID, client, identity).start();
+                    }
+                } else if (o instanceof TransactionEventType) {
+                    TransactionEventType event = (TransactionEventType) o;
+                    for (EPC childEpc : event.getEpcList().getEpc()) {
+                        log.trace("new traceEPC: " + childEpc.getValue());
+                        new TraceEPCAsync(childEpc.getValue(), sessionID, client, identity).start();
                     }
                 }
             }

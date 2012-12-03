@@ -1,0 +1,15 @@
+IoTa-DiscoveryWS-Client
+
+Client library for the DSeTa web service.
+
+Dependencies:
+  libraries:
+    - cxf
+    - commons-logging
+    - log4j
+
+Usage Dependencies:
+  - DSeTa
+
+Usage:
+  see ALfA or EpcILoN for examples

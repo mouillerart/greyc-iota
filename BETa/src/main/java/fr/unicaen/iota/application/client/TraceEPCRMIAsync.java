@@ -18,7 +18,8 @@
  */
 package fr.unicaen.iota.application.client;
 
-import fr.unicaen.iota.application.rmi.AccessInterface;
+import fr.unicaen.iota.application.AccessInterface;
+import fr.unicaen.iota.tau.model.Identity;
 import java.net.URI;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -34,11 +35,13 @@ public class TraceEPCRMIAsync extends Thread {
     private static final Log log = LogFactory.getLog(TraceEPCRMIAsync.class);
     private String epc;
     private String sessionId;
-    private CallBackClientImpl callBackHandler;
+    private CallbackClientImpl callBackHandler;
+    private Identity identity;
 
-    public TraceEPCRMIAsync(String epc, String sessionId, CallBackClientImpl callBackHandler) {
+    public TraceEPCRMIAsync(String epc, Identity identity, String sessionID, CallbackClientImpl callBackHandler) {
         this.epc = epc;
-        this.sessionId = sessionId;
+        this.sessionId = sessionID;
+        this.identity = identity;
         this.callBackHandler = callBackHandler;
     }
 
@@ -61,7 +64,7 @@ public class TraceEPCRMIAsync extends Thread {
         }
         try {
             log.trace("Calling server.traceEPCAsync");
-            server.traceEPCAsync(sessionId, callBackHandler, epc);
+            server.traceEPCAsync(identity, sessionId, callBackHandler, epc);
         } catch (RemoteException ex) {
             log.fatal(null, ex);
         }

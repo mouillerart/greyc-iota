@@ -18,18 +18,36 @@
  */
 package fr.unicaen.iota.application.client.listener;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
 import fr.unicaen.iota.application.util.TravelTimeTuple;
 import java.util.EventListener;
+import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
  *
  */
 public interface EPCEventListener extends EventListener {
 
-    public void eventReveived(String session, EPCISEvent e);
+    /**
+     * Called when a new event is received for a request.
+     *
+     * @param sessionID the session ID of the request
+     * @param evt the event
+     */
+    public void eventReveived(String sessionID, EPCISEventType evt);
 
-    public void travelTimeChanged(String session, TravelTimeTuple ttt);
+    /**
+     * Called when the travel time tuple changed.
+     *
+     * @param sessionID the session ID of the request
+     * @param ttt the travel time tuple
+     */
+    public void travelTimeChanged(String sessionID, TravelTimeTuple ttt);
 
-    public void usedObjectsChanged(String session, int objects);
+    /**
+     * Called when object have changed.
+     *
+     * @param sessionID the session ID of the request
+     * @param objects the number of changed objects
+     */
+    public void usedObjectsChanged(String sessionID, int objects);
 }

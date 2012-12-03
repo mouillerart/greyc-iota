@@ -3,19 +3,18 @@ ETa - Epcis Trusted Agent
 Agent de contrôle d'accès pour l'EPCIS.
 
 Dépendances:
-  modules IoTa: 
+  modules IoTa:
     - LibXACML-EPCIS
+    - EPCIS-Xi-Client
   bibliothèques:
     - epcis-commons
     - epcis-repository
     - epcis-queryclient
     - epcis-captureclient
-    - sunxacml
     - spring
     - cxf
     - servlet-api
     - mysql-connector
-    - xerces
     - commons-logging
     - log4j
 

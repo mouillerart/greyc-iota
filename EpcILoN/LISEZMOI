@@ -5,12 +5,11 @@ Interface entre les événements EPC (couche information) et les événements DS
 
 Dépendances:
   modules IoTa:
-    - IoTa-DiscoveryWS-Client
+    - DSeTa-Client
   bibliothèques:
     - epcis-query-client
     - hibernate
     - mysql-connector
-    - axis2-adb
     - servlet-api
     - commons-logging
     - log4j

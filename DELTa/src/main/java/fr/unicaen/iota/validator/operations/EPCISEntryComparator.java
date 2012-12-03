@@ -18,8 +18,8 @@
  */
 package fr.unicaen.iota.validator.operations;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
 import fr.unicaen.iota.application.rmi.AccessInterface;
+import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.IOTA;
 import fr.unicaen.iota.validator.model.BaseEvent;
@@ -30,6 +30,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
  *
@@ -37,12 +38,14 @@ import org.apache.commons.logging.LogFactory;
 public class EPCISEntryComparator {
 
     private static final Log log = LogFactory.getLog(EPCISEntryComparator.class);
-    private AccessInterface applicationLevelInterface;
-    private IOTA iota;
+    private final AccessInterface applicationLevelInterface;
+    private final IOTA iota;
+    private final Identity identity;
 
-    public EPCISEntryComparator(AccessInterface applicationLevelInterface, IOTA iota) {
+    public EPCISEntryComparator(Identity identity, AccessInterface applicationLevelInterface, IOTA iota) {
         this.applicationLevelInterface = applicationLevelInterface;
         this.iota = iota;
+        this.identity = identity;
     }
 
     public Map<EPC, List<BaseEvent>> getEventNotVerified(List<EPC> list) throws RemoteException {
@@ -57,14 +60,14 @@ public class EPCISEntryComparator {
     }
 
     private List<BaseEvent> verifyEPCISEntry(EPC container) throws RemoteException {
-        List<EPCISEvent> eventList = new ArrayList<EPCISEvent>();
+        List<EPCISEventType> eventList = new ArrayList<EPCISEventType>();
         for (Infrastructure infra : container.getInfrastructures()) {
             Link link = iota.get(infra.getBizLoc());
             if (!link.isActiveAnalyse()) {
                 continue;
             }
             Date d1 = new Date();
-            eventList.addAll(applicationLevelInterface.queryEPCIS(container.getEpc(), link.getServiceAddress()));
+            eventList.addAll(applicationLevelInterface.queryEPCIS(identity, container.getEpc(), link.getServiceAddress()));
             Date d2 = new Date();
             link.addTimeResponse(d2.getTime() - d1.getTime());
         }

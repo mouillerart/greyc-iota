@@ -8,11 +8,14 @@ Dependencies:
     - OmICron
 
 Configuration:
-  See the file java.policy in the jar file (it can be overriden by a file with
-  the same name in the current directory).
+  See the files *.properties and java.policy in the jar file (each of those
+  can be overriden by a file with the same name in the current directory).
+  (application.properties for this application,
+   commons-logging.properties and log4j.properties for the logs)
 
 Usage Dependencies:
-  - ALfA
+  - ALfA-RMI
+  - or OMeGa
 
 Usage:
   ./beta.sh

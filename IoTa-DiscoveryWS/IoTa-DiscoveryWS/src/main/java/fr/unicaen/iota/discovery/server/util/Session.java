@@ -21,7 +21,10 @@ package fr.unicaen.iota.discovery.server.util;
 
 import fr.unicaen.iota.discovery.server.hibernate.User;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -33,18 +36,30 @@ public final class Session {
     }
     private static final Log log = LogFactory.getLog(Session.class);
     private static final Map<String, User> sessions = new HashMap<String, User>();
+    private static MessageDigest MD5;
+
+    static {
+        try {
+            MD5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            log.fatal(null, e);
+        }
+    }
 
     public static synchronized String openSession(User user) {
+        if (MD5 == null) {
+            log.error("MD5 not avalaible");
+            return null;
+        }
         log.debug("opening session for user " + user.getUserID());
         String sessionID;
-        java.util.Date today = new java.util.Date();
+        long today = new Date().getTime();
         try {
             do {
-                sessionID = MD5.MD5_Algo(Long.toString(today.getTime()) + user.getLogin() + (today.getTime() * Math.random())); // TODO add login+pass
+                String text = Long.toString(today) + user.getLogin() + (today * Math.random()); // TODO add login+pass
+                byte[] digest = MD5.digest(text.getBytes("UTF-8"));
+                sessionID = new BigInteger(1, digest).toString(16);
             } while (sessions.containsKey(sessionID));
-        } catch (NoSuchAlgorithmException e) {
-            log.error(null, e);
-            return null;
         } catch (UnsupportedEncodingException e) {
             log.error(null, e);
             return null;

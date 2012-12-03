@@ -18,12 +18,13 @@
  */
 package fr.unicaen.iota.validator.model;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
+import fr.unicaen.iota.mu.EPCISEventTypeHelper;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.fosstrak.epcis.model.ActionType;
+import org.fosstrak.epcis.model.EPCISEventType;
 import org.jdom.Element;
 
 /**
@@ -101,15 +102,16 @@ public class AggregationEvent extends BaseEvent {
     }
 
     @Override
-    public boolean isContainedIn(Collection<EPCISEvent> list) {
-        for (EPCISEvent event : list) {
+    public boolean isContainedIn(Collection<EPCISEventType> list) {
+        for (EPCISEventType evt : list) {
+            EPCISEventTypeHelper event = new EPCISEventTypeHelper(evt);
             for (String epc : event.getChildren()) {
                 if (!getChildEpcs().contains(epc)) {
                     return false;
                 }
             }
-            return event.getAction().equals(getAction().value())
-                && event.getBizLoc().equals(getInfrastructure().getBizLoc())
+            return event.getAction() == getAction()
+                && event.getBizLocation().equals(getInfrastructure().getBizLoc())
                 && event.getBizStep().equals(getBizStep())
                 && event.getDisposition().equals(getDisposition())
                 && event.getParentID().equals(getParentId());
@@ -132,7 +134,7 @@ public class AggregationEvent extends BaseEvent {
                     return false;
                 }
             }
-            return aggEvt.getAction().value().equals(getAction().value())
+            return aggEvt.getAction() == getAction()
                 && aggEvt.getInfrastructure().getBizLoc().equals(getInfrastructure().getBizLoc())
                 && aggEvt.getBizStep().equals(getBizStep())
                 && aggEvt.getDisposition().equals(getDisposition())

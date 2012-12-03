@@ -1,12 +1,12 @@
 OMeGa - Object MEthod GAteway
 
-Interface web service pour le server RMI ALfA.
+Interface web service pour la plateforme IoTa.
 
 Dépendances:
   modules IoTa:
-    - ALfA-PI
+    - ALfA
   bibliothèques:
-    - axis2
+    - cxf
     - commons-logging
     - log4j
 
@@ -16,7 +16,10 @@ Installation et Configuration:
    commons-logging.properties et log4j.properties pour les journaux)
 
 Dépendances d’utilisation:
-  - ALfA
+  - ONS
+  - DSeTa
+  - ETa
+  - Xi
 
 Utilisation:
   voir OmICron, BETa ou ThETa pour des exemples

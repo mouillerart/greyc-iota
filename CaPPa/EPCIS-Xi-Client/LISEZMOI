@@ -1,0 +1,15 @@
+EPCIS-Xi-Client
+
+Bibliothèque client pour l'interfaçage avec le service web Xi pour EPCIS.
+
+Dépendances:
+  bibliothèques:
+    - sunxacml
+    - servlet-api
+    - commons-logging
+
+Dépendances d’utilisation:
+  - Xi
+  - EpcisPHI
+  - ETa
+  - un EPCIS

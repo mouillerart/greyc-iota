@@ -1,0 +1,28 @@
+<?xml version="1.0"?><svg width="328.95081" height="404.51804" xmlns="http://www.w3.org/2000/svg">
+ <title>rfid reader</title>
+ <defs>
+  <linearGradient id="linearGradient7259">
+   <stop stop-color="#ff0400" id="stop7261" offset="0"/>
+   <stop stop-color="#ff0400" stop-opacity="0" id="stop7263" offset="1"/>
+  </linearGradient>
+ </defs>
+ <metadata id="metadata7">image/svg+xml</metadata>
+ <g>
+  <title>Layer 1</title>
+  <rect fill="#000000" stroke="#000000" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="4" stroke-dashoffset="0" transform="matrix(0 -1 1 0 0 0)" rx="1.144958" y="-28.410431" x="48.52641" height="0" width="4.579832" id="rect3683"/>
+  <g transform="matrix(-0.430242 0.902714 0.902714 0.430242 218.059 -107.121)" id="g2031">
+   <g id="g3701">
+    <path fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="4" d="m220.184631,165.107178c83.00946,23.471649 164.301453,0 164.301453,0" id="path2778"/>
+    <path fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2.835217" stroke-linejoin="round" stroke-miterlimit="4" d="m230.102478,143.770401c72.987915,23.842407 144.465759,0 144.465759,0" id="path3665"/>
+    <path fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2.655757" stroke-linejoin="round" stroke-miterlimit="4" d="m240.012726,122.426239c62.974091,24.24617 124.645233,0 124.645233,0" id="path3667"/>
+    <path fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2.457936" stroke-linejoin="round" stroke-miterlimit="4" d="m249.913818,101.072906c52.969513,24.691284 104.843079,0 104.843079,0" id="path3669"/>
+    <path fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2.236241" stroke-linejoin="round" stroke-miterlimit="4" d="m259.802979,79.707626c42.976959,25.190094 85.064758,0 85.064758,0" id="path3671"/>
+    <path fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="1.981735" stroke-linejoin="round" stroke-miterlimit="4" d="m269.675751,58.325958c33.001007,25.762741 65.319244,0 65.319244,0" id="path3673"/>
+   </g>
+   <g transform="matrix(0 -1 1 0 29.0902 369.069)" id="g3695">
+    <rect fill="#000000" stroke="#000000" stroke-width="10" stroke-linejoin="round" stroke-miterlimit="4" stroke-dashoffset="0" id="rect3679" width="34.34874" height="147.69958" x="353.823995" y="199.395336" ry="8.587185"/>
+    <path fill="#000000" stroke="#000000" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="4" stroke-dashoffset="0" id="path3681" d="m343.955048,345.471375a22.518785,72.516418 0 0 1 -0.006165,-145.024887l0.239136,72.512344l-0.232971,72.512543z"/>
+   </g>
+  </g>
+ </g>
+</svg>

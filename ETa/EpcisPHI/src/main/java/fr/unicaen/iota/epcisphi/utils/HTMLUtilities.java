@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -51,18 +51,24 @@ public class HTMLUtilities {
     public static String createMethodSelect(Module m) {
         StringBuilder res = new StringBuilder();
         Method[] methods = null;
+        String methodId = "";
         switch (m) {
             case adminModule:
                 methods = MethodNamesAdmin.class.getMethods();
+                methodId = "methodNameAdmin";
                 break;
             case queryModule:
                 methods = MethodNamesQuery.class.getMethods();
+                methodId = "methodNameQuery";
                 break;
             case captureModule:
                 methods = MethodNamesCapture.class.getMethods();
+                methodId = "methodNameCapture";
                 break;
         }
-        res.append("<select class=\"methodSelector\" id=\"methodNameAdmin\">");
+        res.append("<select class=\"methodSelector\" id=\"");
+        res.append(methodId);
+        res.append("\">");
         for (Method method : methods) {
             String name = method.getName();
             res.append("<option label=\"method: ");

@@ -18,7 +18,8 @@
  */
 package fr.unicaen.iota.validator.model;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
+import fr.unicaen.iota.mu.EPCISEventTypeHelper;
+import org.fosstrak.epcis.model.EPCISEventType;
 import java.util.Collection;
 import org.jdom.Element;
 
@@ -94,9 +95,10 @@ public class QuantityEvent extends BaseEvent {
     }
 
     @Override
-    public boolean isContainedIn(Collection<EPCISEvent> list) {
-        for (EPCISEvent event : list) {
-            if (event.getBizLoc().equals(getInfrastructure().getBizLoc())
+    public boolean isContainedIn(Collection<EPCISEventType> list) {
+        for (EPCISEventType evt : list) {
+            EPCISEventTypeHelper event = new EPCISEventTypeHelper(evt);
+            if (event.getBizLocation().equals(getInfrastructure().getBizLoc())
                     && event.getBizStep().equals(getBizStep())
                     && event.getDisposition().equals(getDisposition())
                     && event.getEPCClass().equals(getEpcClass())

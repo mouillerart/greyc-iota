@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -20,17 +20,19 @@
 package fr.unicaen.iota.eta.capture;
 
 import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.sigma.client.SigMaClient;
+import fr.unicaen.iota.sigma.xsd.Verification;
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.text.ParseException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,15 +47,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.captureclient.CaptureClient;
 import org.fosstrak.epcis.captureclient.CaptureClientException;
-import org.fosstrak.epcis.model.VocabularyElementListType;
-import org.fosstrak.epcis.model.VocabularyElementType;
-import org.fosstrak.epcis.model.VocabularyType;
+import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.repository.EpcisConstants;
 import org.fosstrak.epcis.repository.InternalBusinessException;
 import org.fosstrak.epcis.repository.InvalidFormatException;
-import org.fosstrak.epcis.repository.model.*;
-import org.fosstrak.epcis.utils.TimeParser;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -82,6 +82,19 @@ public class CaptureOperationsModule {
      * The client used to capture EPCIS events or masterdata.
      */
     private CaptureClient epcisCaptureClient;
+    /**
+     * The SigMAClient used to check the signature of each events in the
+     * capture.
+     */
+    private SigMaClient sigmaClient;
+
+    public SigMaClient getSigMaClient() {
+        return sigmaClient;
+    }
+
+    public void setSigMaClient(SigMaClient sigmaClient) {
+        this.sigmaClient = sigmaClient;
+    }
 
     public CaptureCheck getCaptureCheck() {
         return captureCheck;
@@ -162,8 +175,10 @@ public class CaptureOperationsModule {
      * Performs database reset by querying EPCIS.
      *
      * @param rsp The HTTP response
+     * @param out 
      * @throws IOException if an error occurred while configuring EPCIS capture
      * client.
+     * @throws Exception  
      */
     public void doDbReset(final HttpServletResponse rsp, final PrintWriter out) throws IOException, Exception {
         String msg;
@@ -204,14 +219,17 @@ public class CaptureOperationsModule {
     /**
      * Performs EPCIS capture after XACML check.
      *
-     * @param in The input to process.
+     * @param req 
      * @param rsp The response.
      * @throws SAXException If the document parsing failed.
      * @throws IOException If an error occurred while validating the request or
      * writing the response.
      * @throws InternalBusinessException If unable to read from input.
      */
-    public void doCapture(InputStream in, HttpServletResponse rsp) throws SAXException, IOException, InternalBusinessException {
+    public void doCapture(HttpServletRequest req, HttpServletResponse rsp) throws SAXException, IOException, InternalBusinessException {
+        Principal authId = req.getUserPrincipal();
+        String user = authId != null ? authId.toString() : Constants.XACML_DEFAULT_USER;
+        InputStream in = req.getInputStream();
         Document document = null;
         try {
             // parse the input into a DOM
@@ -230,9 +248,9 @@ public class CaptureOperationsModule {
         String msg;
         try {
             if (isEPCISDocument(document)) {
-                processEvents(document, rsp);
+                processEvents(user, document, rsp);
             } else if (isEPCISMasterDataDocument(document)) {
-                processMasterData(document, rsp);
+                processMasterData(user, document, rsp);
             }
         } catch (SAXException ex) {
             msg = "An error processing the XML document occurred";
@@ -348,21 +366,29 @@ public class CaptureOperationsModule {
      *
      * @param document The document to capture.
      * @param rsp The HTTP response.
-     * @throws IOException If unable to configure EPCIS capture client.
-     * @throws DOMException If an error processing XML nodes occurred.
      * @throws SAXException If an error processing the XML document occurred.
-     * @throws InvalidFormatException If an error parsing the XML document
-     * occurred.
-     * @throws TransformerConfigurationException If an error while transforming
-     * document occurred.
-     * @throws TransformerException If an error while transforming document
-     * occurred.
+     * @throws JAXBException If an error parsing from the XML document to objects occurred.
+     * @throws IOException If unable to configure EPCIS capture client.
+     * @throws TransformerConfigurationException If an error while transforming document occurred.
+     * @throws TransformerException If an error while transforming document occurred.
      * @throws CaptureClientException If the capture failed.
      * @throws Exception If an unexpected error occurred.
      */
-    private void processEvents(Document document, HttpServletResponse rsp) throws IOException, DOMException, SAXException,
-            InvalidFormatException, TransformerConfigurationException, TransformerException, CaptureClientException, Exception {
-        List<BaseEvent> captureEventList = extractsCaptureEventList(document);
+    private void processEvents(String user, Document document, HttpServletResponse rsp) throws SAXException, JAXBException,
+            IOException, TransformerConfigurationException, TransformerException, CaptureClientException, Exception {
+        List<EPCISEventType> captureEventList = extractsCaptureEventList(document);
+
+        if (Constants.SIGMA_VERIFICATION) {
+            for (EPCISEventType event : captureEventList) {
+                Verification res = sigmaClient.verify(event);
+                if (res.getVerifyResponse().isValue()) {
+                    LOG.info("Event signature verified by the SigMA server.");
+                } else {
+                    LOG.info("Event signature is not correct. Please verify your partner capturer.");
+                }
+            }
+        }
+
         PrintWriter out = rsp.getWriter();
         String msg;
 
@@ -370,11 +396,7 @@ public class CaptureOperationsModule {
         LOG.debug("START OF XACML check");
         //TODO reset allowed after tests
         // TODO user + owner
-        String user = "anonymous";
         String owner = "anonymous";
-        if (captureCheck == null) {
-            captureCheck = new CaptureCheck();
-        }
         boolean allowed = captureCheck.xacmlCheck(captureEventList, user, owner);
         if (allowed) {
             msg = "XACML check result: PERMITTED";
@@ -433,27 +455,24 @@ public class CaptureOperationsModule {
      *
      * @param document The XML document to parse.
      * @return The capture events list from the document.
-     * @throws DOMException If an error processing XML nodes occurred.
      * @throws SAXException If an error processing the XML document occurred.
-     * @throws InvalidFormatException If an error parsing the XML document
-     * occurred.
+     * @throws JAXBException If an error parsing from the XML document to objects occurred.
      */
-    private List<BaseEvent> extractsCaptureEventList(Document document)
-            throws DOMException, SAXException, InvalidFormatException {
+    private List<EPCISEventType> extractsCaptureEventList(Document document)
+            throws SAXException, JAXBException {
         NodeList eventList = document.getElementsByTagName("EventList");
         NodeList events = eventList.item(0).getChildNodes();
-        List<BaseEvent> captureEventList = new ArrayList<BaseEvent>();
+        List<EPCISEventType> captureEventList = new ArrayList<EPCISEventType>();
 
         for (int i = 0; i < events.getLength(); i++) {
             Node eventNode = events.item(i);
             String nodeName = eventNode.getNodeName();
-
             if (EpcisConstants.OBJECT_EVENT.equals(nodeName)
                     || EpcisConstants.AGGREGATION_EVENT.equals(nodeName)
                     || EpcisConstants.QUANTITY_EVENT.equals(nodeName)
                     || EpcisConstants.TRANSACTION_EVENT.equals(nodeName)) {
                 LOG.debug("processing event " + i + ": '" + nodeName + "'.");
-                BaseEvent captureEvent = extractsCaptureEvent(eventNode, nodeName);
+                EPCISEventType captureEvent = extractsCaptureEvent(eventNode, nodeName);
                 if (captureEvent != null) {
                     captureEventList.add(captureEvent);
                 }
@@ -470,417 +489,45 @@ public class CaptureOperationsModule {
      * @param eventNode The XML node.
      * @param eventType The type of the event.
      * @return The capture event.
-     * @throws DOMException If an error processing the XML document occurred.
      * @throws SAXException If an error parsing the XML document occurred.
-     * @throws InvalidFormatException If an error parsing the XML document
+     * @throws JAXBException If an error parsing the XML document to object occurred.
      * occurred.
      */
-    private BaseEvent extractsCaptureEvent(Node eventNode, String eventType)
-            throws DOMException, SAXException, InvalidFormatException {
+    private EPCISEventType extractsCaptureEvent(Node eventNode, String eventType) throws SAXException, JAXBException {
         if (eventNode == null) {
             // nothing to do
             return null;
         } else if (eventNode.getChildNodes().getLength() == 0) {
             throw new SAXException("Event element '" + eventNode.getNodeName() + "' has no children elements.");
         }
-        Node curEventNode = null;
-
-        Timestamp eventTime = null;
-        Timestamp recordTime = new Timestamp(System.currentTimeMillis());
-        String eventTimeZoneOffset = null;
-        String action = null;
-        String parentId = null;
-        Long quantity = null;
-        String bizStep = null;
-        String disposition = null;
-        String readPoint = null;
-        String bizLocation = null;
-        String epcClassStr = null;
-
-        List<String> epcs = null;
-        List<BusinessTransaction> bizTransList = null;
-        List<EventFieldExtension> fieldNameExtList = new ArrayList<EventFieldExtension>();
-
-        for (int i = 0; i < eventNode.getChildNodes().getLength(); i++) {
-            curEventNode = eventNode.getChildNodes().item(i);
-            String nodeName = curEventNode.getNodeName();
-
-            if ("#text".equals(nodeName) || "#comment".equals(nodeName)) {
-                // ignore text or comments
-                LOG.debug("  ignoring text or comment: '" + curEventNode.getTextContent().trim() + "'");
-                continue;
-            }
-
-            LOG.debug("  handling event field: '" + nodeName + "'");
-            if ("eventTime".equals(nodeName)) {
-                String xmlTime = curEventNode.getTextContent();
-                LOG.debug("    eventTime in xml is '" + xmlTime + "'");
-                try {
-                    eventTime = TimeParser.parseAsTimestamp(xmlTime);
-                } catch (ParseException e) {
-                    throw new SAXException("Invalid date/time (must be ISO8601).", e);
-                }
-                LOG.debug("    eventTime parsed as '" + eventTime + "'");
-            } else if ("recordTime".equals(nodeName)) {
-                // ignore recordTime
-            } else if ("eventTimeZoneOffset".equals(nodeName)) {
-                eventTimeZoneOffset = checkEventTimeZoneOffset(curEventNode.getTextContent());
-            } else if ("epcList".equals(nodeName) || "childEPCs".equals(nodeName)) {
-                epcs = handleEpcs(eventType, curEventNode);
-            } else if ("bizTransactionList".equals(nodeName)) {
-                bizTransList = handleBizTransactions(curEventNode);
-            } else if ("action".equals(nodeName)) {
-                action = curEventNode.getTextContent();
-                if (!"ADD".equals(action) && !"OBSERVE".equals(action) && !"DELETE".equals(action)) {
-                    throw new SAXException("Encountered illegal 'action' value: " + action);
-                }
-            } else if ("bizStep".equals(nodeName)) {
-                bizStep = curEventNode.getTextContent();
-            } else if ("disposition".equals(nodeName)) {
-                disposition = curEventNode.getTextContent();
-            } else if ("readPoint".equals(nodeName)) {
-                Element attrElem = (Element) curEventNode;
-                Node id = attrElem.getElementsByTagName("id").item(0);
-                readPoint = id.getTextContent();
-            } else if ("bizLocation".equals(nodeName)) {
-                Element attrElem = (Element) curEventNode;
-                Node id = attrElem.getElementsByTagName("id").item(0);
-                bizLocation = id.getTextContent();
-            } // TODO epc class filter?
-            else if ("epcClass".equals(nodeName)) {
-                epcClassStr = curEventNode.getTextContent();
-            } else if ("quantity".equals(nodeName)) {
-                quantity = Long.valueOf(curEventNode.getTextContent());
-            } else if ("parentID".equals(nodeName)) {
-                checkEpcOrUri(curEventNode.getTextContent(), false);
-                parentId = curEventNode.getTextContent();
-            } else {
-                String[] parts = nodeName.split(":");
-                if (parts.length == 2) {
-                    LOG.debug("    treating unknown event field as extension.");
-                    String prefix = parts[0];
-                    String localname = parts[1];
-                    // String namespace =
-                    // document.getDocumentElement().getAttribute("xmlns:" +
-                    // prefix);
-                    String namespace = curEventNode.lookupNamespaceURI(prefix);
-                    String value = curEventNode.getTextContent();
-                    EventFieldExtension evf = new EventFieldExtension(prefix, namespace, localname, value);
-                    fieldNameExtList.add(evf);
-                } else {
-                    // this is not a valid extension
-                    throw new SAXException("    encountered unknown event field: '" + nodeName + "'.");
-                }
-            }
-        }
-
+        EPCISEventType captureEvent;
         if (EpcisConstants.AGGREGATION_EVENT.equals(eventType)) {
-            // for AggregationEvents, the parentID is only optional for
-            // action=OBSERVE
-            if (parentId == null && ("ADD".equals(action) || "DELETE".equals(action))) {
-                throw new InvalidFormatException("'parentID' is required if 'action' is ADD or DELETE");
-            }
-        }
-
-        String nodeName = eventNode.getNodeName();
-        BaseEvent captureEvent;
-
-        BusinessStepId bizStepId = new BusinessStepId();
-        bizStepId.setUri(bizStep);
-        DispositionId dispositionId = new DispositionId();
-        dispositionId.setUri(disposition);
-        BusinessLocationId bizLocationId = new BusinessLocationId();
-        bizLocationId.setUri(bizLocation);
-        ReadPointId readPointId = new ReadPointId();
-        readPointId.setUri(readPoint);
-        EPCClass epcClass = new EPCClass();
-        epcClass.setUri(epcClassStr);
-
-
-
-        if (EpcisConstants.AGGREGATION_EVENT.equals(nodeName)) {
-            AggregationEvent ae = new AggregationEvent();
-            ae.setParentId(parentId);
-            ae.setChildEpcs(epcs);
-            ae.setAction(Action.valueOf(action));
-            captureEvent = ae;
-        } else if (EpcisConstants.OBJECT_EVENT.equals(nodeName)) {
-            ObjectEvent oe = new ObjectEvent();
-            oe.setAction(Action.valueOf(action));
-            if (epcs != null && epcs.size() > 0) {
-                oe.setEpcList(epcs);
-            }
-            captureEvent = oe;
-        } else if (EpcisConstants.QUANTITY_EVENT.equals(nodeName)) {
-            QuantityEvent qe = new QuantityEvent();
-            qe.setEpcClass(epcClass);
-            if (quantity != null) {
-                qe.setQuantity(quantity);
-            }
-            captureEvent = qe;
-        } else if (EpcisConstants.TRANSACTION_EVENT.equals(nodeName)) {
-            TransactionEvent te = new TransactionEvent();
-            te.setParentId(parentId);
-            te.setEpcList(epcs);
-            te.setAction(Action.valueOf(action));
-            captureEvent = te;
+            JAXBContext context = JAXBContext.newInstance(AggregationEventType.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            JAXBElement<AggregationEventType> jElement = unmarshaller.unmarshal(eventNode, AggregationEventType.class);
+            captureEvent = jElement.getValue();
+        } else if (EpcisConstants.OBJECT_EVENT.equals(eventType)) {
+            JAXBContext context = JAXBContext.newInstance(ObjectEventType.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            JAXBElement<ObjectEventType> jElement = unmarshaller.unmarshal(eventNode, ObjectEventType.class);
+            captureEvent = jElement.getValue();
+        } else if (EpcisConstants.QUANTITY_EVENT.equals(eventType)) {
+            JAXBContext context = JAXBContext.newInstance(QuantityEventType.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            JAXBElement<QuantityEventType> jElement = unmarshaller.unmarshal(eventNode, QuantityEventType.class);
+            captureEvent = jElement.getValue();
+        } else if (EpcisConstants.TRANSACTION_EVENT.equals(eventType)) {
+            JAXBContext context = JAXBContext.newInstance(TransactionEventType.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            JAXBElement<TransactionEventType> jElement = unmarshaller.unmarshal(eventNode, TransactionEventType.class);
+            captureEvent = jElement.getValue();
         } else {
-            throw new SAXException("Encountered unknown event element '" + nodeName + "'.");
+            throw new SAXException("Encountered unknown event element '" + eventType + "'.");
         }
-
-        captureEvent.setEventTime(eventTime);
-        captureEvent.setRecordTime(recordTime);
-        captureEvent.setEventTimeZoneOffset(eventTimeZoneOffset);
-        captureEvent.setBizStep(bizStepId);
-        captureEvent.setDisposition(dispositionId);
-        captureEvent.setBizLocation(bizLocationId);
-        captureEvent.setReadPoint(readPointId);
-        if (bizTransList != null && bizTransList.size() > 0) {
-            captureEvent.setBizTransList(bizTransList);
-        }
-        if (!fieldNameExtList.isEmpty()) {
-            captureEvent.setExtensions(fieldNameExtList);
-        }
-
         return captureEvent;
     }
 
-    /**
-     * Parses the xml tree for epc nodes and returns a list of EPC URIs.
-     *
-     * @param eventType The event type.
-     * @param epcNode The parent Node from which EPC URIs should be extracted.
-     * @return An array of vocabularies containing all the URIs found in the
-     * given node.
-     * @throws SAXException If an unknown tag (no &lt;epc&gt;) is encountered.
-     * @throws InvalidFormatException If an EPC is invalid.
-     * @throws DOMException If an error processing the XML document occurred.
-     */
-    private List<String> handleEpcs(final String eventType, final Node epcNode)
-            throws SAXException, DOMException, InvalidFormatException {
-        List<String> epcList = new ArrayList<String>();
-
-        boolean isEpc = false;
-        boolean epcRequired = false;
-        boolean atLeastOneNonEpc = false;
-        for (int i = 0; i < epcNode.getChildNodes().getLength(); i++) {
-            Node curNode = epcNode.getChildNodes().item(i);
-            if ("epc".equals(curNode.getNodeName())) {
-                isEpc = checkEpcOrUri(curNode.getTextContent(), epcRequired);
-                if (isEpc) {
-                    // if one of the values is an EPC, then all of them must be
-                    // valid EPCs
-                    epcRequired = true;
-                } else {
-                    atLeastOneNonEpc = true;
-                }
-                epcList.add(curNode.getTextContent());
-            } else {
-                if ("#text".equals(curNode.getNodeName()) && "#comment".equals(curNode.getNodeName())) {
-                    throw new SAXException("Unknown XML tag: " + curNode.getNodeName(), null);
-                }
-            }
-        }
-        if (atLeastOneNonEpc && isEpc) {
-            throw new InvalidFormatException(
-                    "One of the provided EPCs was a 'pure identity' EPC, so all of them must be 'pure identity' EPCs");
-        }
-        return epcList;
-    }
-
-    /**
-     * Parses the xml tree for epc nodes and returns a List of BizTransaction
-     * URIs with their corresponding type.
-     *
-     * @param bizNode The parent Node from which BizTransaction URIs should be
-     * extracted.
-     * @return A list of BizTransaction.
-     * @throws SAXException If an unknown tag (no &lt;epc&gt;) is encountered.
-     */
-    private List<BusinessTransaction> handleBizTransactions(Node bizNode) throws SAXException {
-        List<BusinessTransaction> bizTransactionList = new ArrayList<BusinessTransaction>();
-
-        for (int i = 0; i < bizNode.getChildNodes().getLength(); i++) {
-            Node curNode = bizNode.getChildNodes().item(i);
-            if ("bizTransaction".equals(curNode.getNodeName())) {
-                String bizTransTypeUri = curNode.getAttributes().item(0).getTextContent();
-                String bizTransUri = curNode.getTextContent();
-
-                BusinessTransactionId bizTransId = new BusinessTransactionId();
-                bizTransId.setUri(bizTransUri);
-                BusinessTransactionTypeId bizTransTypeId = new BusinessTransactionTypeId();
-                bizTransTypeId.setUri(bizTransTypeUri);
-                BusinessTransaction bizTransaction = new BusinessTransaction();
-                bizTransaction.setBizTransaction(bizTransId);
-                bizTransaction.setType(bizTransTypeId);
-
-                bizTransactionList.add(bizTransaction);
-
-            } else {
-                if (!"#text".equals(curNode.getNodeName()) && !"#comment".equals(curNode.getNodeName())) {
-                    throw new SAXException("Unknown XML tag: " + curNode.getNodeName(), null);
-                }
-            }
-        }
-        return bizTransactionList;
-    }
-
-    /**
-     * Checks the event time zone.
-     *
-     * @param textContent The event time zone to check.
-     * @return The checked event time zone.
-     * @throws InvalidFormatException If the event time zone format is invalid.
-     */
-    private String checkEventTimeZoneOffset(String textContent) throws InvalidFormatException {
-        // first check the provided String against the expected pattern
-        Pattern p = Pattern.compile("[+-]\\d\\d:\\d\\d");
-        Matcher m = p.matcher(textContent);
-        boolean matches = m.matches();
-        if (matches) {
-            // second check the values (hours and minutes)
-            int h = Integer.parseInt(textContent.substring(1, 3));
-            int min = Integer.parseInt(textContent.substring(4, 6));
-            if ((h < 0) || (h > 14)) {
-                matches = false;
-            } else if (h == 14 && min != 0) {
-                matches = false;
-            } else if ((min < 0) || (min > 59)) {
-                matches = false;
-            }
-        }
-        if (matches) {
-            return textContent;
-        } else {
-            throw new InvalidFormatException("'eventTimeZoneOffset' has invalid format: " + textContent);
-        }
-    }
-
-    /**
-     * Checks an EPC or an URI.
-     *
-     * @param epcOrUri The EPC or URI to check
-     * @param epcRequired
-     * <code>true</code> if an EPC is required (will throw an
-     * InvalidFormatException if the given
-     * <code>epcOrUri</code> is an invalid EPC, but might be a valid URI),
-     * <code>false</code> otherwise.
-     * @return
-     * <code>true</code> if the given
-     * <code>epcOrUri</code> is a valid EPC,
-     * <code>false</code> otherwise.
-     * @throws InvalidFormatException If the EPC is invalid.
-     */
-    private boolean checkEpcOrUri(String epcOrUri, boolean epcRequired) throws InvalidFormatException {
-        boolean isEpc = false;
-        if (epcOrUri.startsWith("urn:epc:id:")) {
-            // check if it is a valid EPC
-            checkEpc(epcOrUri);
-            isEpc = true;
-        } else {
-            // childEPCs in AggregationEvents, and epcList in
-            // TransactionEvents might also be simple URIs
-            if (epcRequired) {
-                throw new InvalidFormatException(
-                        "One of the provided EPCs was a 'pure identity' EPC, so all of them must be 'pure identity' EPCs");
-            }
-            checkUri(epcOrUri);
-        }
-        return isEpc;
-    }
-
-    /**
-     * Checks an EPC according to 'pure identity' URI as specified in Tag Data
-     * Standard.
-     *
-     * @param textContent The EPC to check.
-     * @throws InvalidFormatException If the 'pure identity' EPC format is
-     * invalid.
-     */
-    private void checkEpc(String textContent) throws InvalidFormatException {
-        String uri = textContent;
-        if (!uri.startsWith("urn:epc:id:")) {
-            throw new InvalidFormatException("Invalid 'pure identity' EPC format: must start with \"urn:epc:id:\"");
-        }
-        uri = uri.substring("urn:epc:id:".length());
-
-        // check the patterns for the different EPC types
-        String epcType = uri.substring(0, uri.indexOf(":"));
-        uri = uri.substring(epcType.length() + 1);
-        LOG.debug("Checking pattern for EPC type " + epcType + ": " + uri);
-        Pattern p;
-        if ("gid".equals(epcType)) {
-            p = Pattern.compile("((0|[1-9][0-9]*)\\.){2}(0|[1-9][0-9]*)");
-        } else if ("sgtin".equals(epcType) || "sgln".equals(epcType) || "grai".equals(epcType)) {
-            p = Pattern.compile("([0-9]+\\.){2}([0-9]|[A-Z]|[a-z]|[\\!\\(\\)\\*\\+\\-',:;=_]|(%(([0-9]|[A-F])|[a-f]){2}))+");
-        } else if ("sscc".equals(epcType)) {
-            p = Pattern.compile("[0-9]+\\.[0-9]+");
-        } else if ("giai".equals(epcType)) {
-            p = Pattern.compile("[0-9]+\\.([0-9]|[A-Z]|[a-z]|[\\!\\(\\)\\*\\+\\-',:;=_]|(%(([0-9]|[A-F])|[a-f]){2}))+");
-        } else {
-            throw new InvalidFormatException("Invalid 'pure identity' EPC format: unknown EPC type: " + epcType);
-        }
-        Matcher m = p.matcher(uri);
-        if (!m.matches()) {
-            throw new InvalidFormatException("Invalid 'pure identity' EPC format: pattern \"" + uri
-                    + "\" is invalid for EPC type \"" + epcType + "\" - check with Tag Data Standard");
-        }
-
-        // check the number of digits for the different EPC types
-        boolean exceeded = false;
-        int count1 = uri.indexOf(".");
-        if ("sgtin".equals(epcType)) {
-            int count2 = uri.indexOf(".", count1 + 1) - (count1 + 1);
-            if (count1 + count2 > 13) {
-                exceeded = true;
-            }
-        } else if ("sgln".equals(epcType)) {
-            int count2 = uri.indexOf(".", count1 + 1) - (count1 + 1);
-            if (count1 + count2 > 12) {
-                exceeded = true;
-            }
-        } else if ("grai".equals(epcType)) {
-            int count2 = uri.indexOf(".", count1 + 1) - (count1 + 1);
-            if (count1 + count2 > 12) {
-                exceeded = true;
-            }
-        } else if ("sscc".equals(epcType)) {
-            int count2 = uri.length() - (count1 + 1);
-            if (count1 + count2 > 17) {
-                exceeded = true;
-            }
-        } else if ("giai".equals(epcType)) {
-            int count2 = uri.length() - (count1 + 1);
-            if (count1 + count2 > 30) {
-                exceeded = true;
-            }
-        } else {
-            // nothing to count
-        }
-        if (exceeded) {
-            throw new InvalidFormatException(
-                    "Invalid 'pure identity' EPC format: check allowed number of characters for EPC type '" + epcType + "'");
-        }
-    }
-
-    /**
-     * Checks the URI.
-     *
-     * @param textContent The URI to check.
-     * @return
-     * <code>true</code> if the URI is valid.
-     * @throws InvalidFormatException If the URI format is invalid.
-     */
-    private boolean checkUri(String textContent) throws InvalidFormatException {
-        try {
-            new URI(textContent);
-        } catch (URISyntaxException e) {
-            throw new InvalidFormatException(e.getMessage(), e);
-        }
-        return true;
-    }
-
-    private void processMasterData(Document document, HttpServletResponse rsp) throws SAXException, IOException,
+    private void processMasterData(String user, Document document, HttpServletResponse rsp) throws SAXException, IOException,
             CaptureClientException, TransformerConfigurationException, TransformerException {
         List<VocabularyType> vocList = extractsVocabularies(document);
         PrintWriter out = rsp.getWriter();
@@ -890,11 +537,7 @@ public class CaptureOperationsModule {
         LOG.debug("START OF XACML check");
         //TODO reset allowed after tests
         // TODO user + owner
-        String user = "ppda";
-        String owner = "test";
-        if (captureCheck == null) {
-            captureCheck = new CaptureCheck();
-        }
+        String owner = "anonymous";
         boolean allowed = captureCheck.xacmlCheckMasterD(vocList, user, owner);
         if (allowed) {
             msg = "XACML check result: PERMITTED";
@@ -957,8 +600,8 @@ public class CaptureOperationsModule {
      */
     private List<VocabularyType> extractsVocabularies(Document document) throws SAXException {
         NodeList vocabularyList = document.getElementsByTagName("VocabularyList");
+        List<VocabularyType> vocTypeList = new ArrayList<VocabularyType>();
         if (vocabularyList.item(0).hasChildNodes()) {
-            List<VocabularyType> vocTypeList = new ArrayList<VocabularyType>();
             NodeList vocabularys = vocabularyList.item(0).getChildNodes();
             for (int i = 0; i < vocabularys.getLength(); i++) {
                 Node vocabularyNode = vocabularys.item(i);
@@ -979,7 +622,7 @@ public class CaptureOperationsModule {
                 }
             }
         }
-        return null;
+        return vocTypeList;
     }
 
     /**

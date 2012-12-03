@@ -18,7 +18,7 @@
  */
 package fr.unicaen.iota.validator.model;
 
-import fr.unicaen.iota.application.model.EPCISEvent;
+import org.fosstrak.epcis.model.EPCISEventType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -145,5 +145,5 @@ public abstract class BaseEvent {
         }
     }
 
-    public abstract boolean isContainedIn(Collection<EPCISEvent> list);
+    public abstract boolean isContainedIn(Collection<EPCISEventType> list);
 }

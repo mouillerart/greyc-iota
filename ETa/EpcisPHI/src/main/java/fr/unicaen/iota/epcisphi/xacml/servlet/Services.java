@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa Project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -935,14 +935,14 @@ public class Services {
     }
 
     public void removeUserPermission(String sessionId, User user, Module module, String objectId, String groupId) throws ServiceException {
-        String method = module == Module.adminModule ? "removeAdminUserPermission" : "removeUsePermission";
+        String method = module == Module.adminModule ? "removeAdminUserPermission" : "removeUserPermission";
         checkAccess(user, module, method);
         String partner = user.getPartnerID();
         InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeAdminActionFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeQueryActionFilter(partner, groupId, objectId);
                 break;
             case captureModule:
                 resp = interfaceHelper.APMSession.removeCaptureActionFilter(partner, groupId, objectId);

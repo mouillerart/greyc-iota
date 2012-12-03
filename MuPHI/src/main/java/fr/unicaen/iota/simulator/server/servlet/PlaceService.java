@@ -95,7 +95,7 @@ public class PlaceService extends HttpServlet {
             }
             PlaceFIFO place = pipes.get(placeId);
             boolean res = place.put(reservedId, epc);
-            out.write(buildPutXmlResponse(res,place.getContentOccupation()));
+            out.write(buildPutXmlResponse(res, place.getContentOccupation()));
             out.flush();
         } else if ("peek".equals(request.getParameter("action"))) {
             String placeId;
@@ -120,8 +120,10 @@ public class PlaceService extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -133,8 +135,10 @@ public class PlaceService extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -146,8 +150,9 @@ public class PlaceService extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
@@ -196,7 +201,7 @@ public class PlaceService extends HttpServlet {
         res.append("</simulator>\n");
         return res.toString();
     }
-    
+
     private String buildPutXmlResponse(boolean report, double volume) {
         StringBuilder res = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         res.append("<simulator>\n");

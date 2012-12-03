@@ -19,7 +19,10 @@
 package fr.unicaen.iota.application.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,23 +32,27 @@ import org.apache.commons.logging.LogFactory;
 public final class Utils {
 
     private static final Log log = LogFactory.getLog(Utils.class);
-    
+
     private Utils() {
     }
 
-    public static String generateSessionId(){
-        String sessionID;
-        java.util.Date today = new java.util.Date();
+    public static String generateSessionId() {
         try {
-            sessionID = MD5.MD5_Algo(Long.toString(today.getTime()));
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Can't generate SessionId", e);
-            return null;
+            String date = Long.toString(new Date().getTime());
+            byte[] digest = MD5.digest(date.getBytes("UTF-8"));
+            return new BigInteger(1, digest).toString(16);
         } catch (UnsupportedEncodingException e) {
             log.error("Can't generate SessionId", e);
             return null;
         }
-        return sessionID;
     }
+    private static MessageDigest MD5;
 
+    static {
+        try {
+            MD5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            log.fatal("MD5 not avalaible", e);
+        }
+    }
 }

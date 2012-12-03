@@ -47,5 +47,4 @@ public final class StandingQueryCaptureSubscribe {
             LOG.error("Error during the subscribe method", e);
         }
     }
-
 }

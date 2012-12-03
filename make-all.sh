@@ -116,39 +116,68 @@ p_bold "Fosstrak Epcis\n"
 do_compile "bug-free Epcis repository webapp" lib/epcis-0.5.0
 p_info "\n"
 
-p_bold "Epcis Trust Agency (η)\n"
+p_bold "TLS and Authentication library (τ)\n"
+do_compile TAu TAu
+p_info "\n"
+
+p_bold "Signature verification Module (ς)\n"
+do_compile SigMa-Commons SigMa/SigMa-Commons
+do_compile SigMa-Client SigMa/SigMa-Client
+do_compile SigMa SigMa/SigMa
+p_info "\n"
+
+p_bold "User checking (user, eφ and κ-ξ)\n"
+do_compile User-Client ETa/User-Client
 do_compile LibXACML-EPCIS ETa/LibXACML-EPCIS
-do_compile ETa-Client ETa/ETa-Client
+do_compile EPCIS-Xi-Client CaPPa/EPCIS-Xi-Client
+do_compile User ETa/User
 do_compile EpcisPHI ETa/EpcisPHI
+p_info "\n"
+
+p_bold "Epcis Trust Agency (η)\n"
+do_compile ETa-Client ETa/ETa-Client
 do_compile ETa-Callback-Filter ETa/ETa-Callback/ETa-Callback-Filter
 do_compile ETa-Callback-Receiver ETa/ETa-Callback/ETa-Callback-Receiver
 do_compile ETa-Callback-Sender ETa/ETa-Callback/ETa-Callback-Sender
 do_compile ETa ETa/ETa
 p_info "\n"
 
-p_bold "Discovery Services and Trust Agency (ds and ζ)\n"
+p_bold "Naming services Utilities (ν)\n"
+do_compile Nu-PI Nu/Nu-PI
+do_compile Nu Nu/Nu
+p_info "\n"
+
+p_bold "Discovery Services and Trust Agency (ds, ζ, dφ and κ-ξ)\n"
 do_compile IoTa-DiscoveryWS-Client IoTa-DiscoveryWS/IoTa-DiscoveryWS-Client
 do_compile LibXACML-DS DSeTa/LibXACML-DS
+do_compile DS-Xi-Client CaPPa/DS-Xi-Client
 do_compile DiscoveryPHI DSeTa/DiscoveryPHI
 do_compile IoTa-DiscoveryWS IoTa-DiscoveryWS/IoTa-DiscoveryWS
+do_compile DSeTa-Client DSeTa/DSeTa-Client
+do_compile DSeTa DSeTa/DSeTa
 p_info "\n"
 
 p_bold "Epcis to DS bridge (ε)\n"
 do_compile EpcILoN EpcILoN
 p_info "\n"
 
-p_bold "Application Interface (α and ω)\n"
+p_bold "Application Interface (α, μ, ο, ω, ρ)\n"
 do_compile ALfA-PI ALfA/ALfA-PI
 do_compile ALfA ALfA/ALfA
+do_compile Mu Mu
+do_compile ALfA-RMI ALfA/ALfA-RMI
 do_compile_pack OmICron OMeGa/OmICron
 do_compile OMeGa OMeGa/OMeGa
 p_info "\n"
 
-p_bold "Applications\n"
+p_bold "Applications (β, ψ, μφ)\n"
 do_compile_pack BETa BETa
-do_compile_pack DELTa DELTa
+# DELTa needs DS
+#do_compile_pack DELTa DELTa
 do_compile_pack PSi PSi
 do_compile MuPHI MuPHI
+do_compile_pack SigMa-Test SigMa/SigMa-Test
+
 p_info "\n"
 
 p_bold "Creating installation tarballs\n"

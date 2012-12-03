@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unicaen.iota.eta</groupId>
+    <groupId>fr.unicaen.iota</groupId>
     <artifactId>eta</artifactId>
-    <version>1.0</version>
     <packaging>war</packaging>
-    <name>ETa</name>
+    <name>ETa Server</name>
+    <version>1.9-mock</version>
 
     <properties>
         <epcis-version>0.5.0</epcis-version>
@@ -18,11 +18,36 @@
 
     <dependencies>
 
-        <!-- IoTa dependency -->
+        <!-- IoTa dependencies -->
         <dependency>
-            <groupId>fr.unicaen.iota.xacml</groupId>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>tau</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>eta-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
             <artifactId>libxacml-epcis</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>epcis-xi-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>sigma-client</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
 
         <!-- Fosstrak dependencies -->
@@ -48,13 +73,6 @@
             <groupId>org.fosstrak.epcis</groupId>
             <artifactId>epcis-captureclient</artifactId>
             <version>${epcis-version}</version>
-        </dependency>
-
-        <!-- XACML dependency -->
-        <dependency>
-            <groupId>net.sf.sunxacml</groupId>
-            <artifactId>sunxacml</artifactId>
-            <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Spring dependencies -->
@@ -115,18 +133,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.21</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-
         <!-- Log dependencies -->
         <dependency>
             <groupId>commons-logging</groupId>
@@ -154,30 +160,6 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-codegen-plugin</artifactId>
-                <version>2.6.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-sources</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
-                            <wsdlOptions>
-                                <wsdlOption>
-                                    <wsdl>src/main/resources/wsdl/UserService.wsdl</wsdl>
-                                    <wsdlLocation>classpath:wsdl/UserService.wsdl</wsdlLocation>
-                                </wsdlOption>
-                            </wsdlOptions>
-                        </configuration>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

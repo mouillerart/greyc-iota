@@ -1,0 +1,15 @@
+SigMa-Client - SIGnature verification Module Client
+
+Bibliothèque cliente pour l'interfaçage avec le web service SigMa.
+
+Dépendances:
+  bibliothèques:
+    - Apache cxf
+    - commons-logging
+    - log4j
+
+Dépendances d’utilisation:
+  - SigMa
+
+Utilisation:
+  Voir SigMa-Test pour un exemple.

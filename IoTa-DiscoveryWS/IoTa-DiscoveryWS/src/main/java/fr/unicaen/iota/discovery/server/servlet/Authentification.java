@@ -31,7 +31,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class for Servlet: Authentification
- * 
+ *
  */
 public class Authentification extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
 
@@ -50,7 +50,7 @@ public class Authentification extends javax.servlet.http.HttpServlet implements 
      * (non-Java-doc)
      *
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest request,
-     *      HttpServletResponse response)
+     * HttpServletResponse response)
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,12 +60,12 @@ public class Authentification extends javax.servlet.http.HttpServlet implements 
      * (non-Java-doc)
      *
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest request,
-     *      HttpServletResponse response)
+     * HttpServletResponse response)
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        String sessionId = null;
+        String sessionId;
         try {
             sessionId = new DSControler().userLogin(request.getParameter("login"), request.getParameter("passwd"));
             if (sessionId == null) {

@@ -456,7 +456,7 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="UserLoginIn">
+    <xs:complexType name="UserBasicLoginIn">
         <xs:sequence>
             <xs:element
                 name="userID"
@@ -465,6 +465,12 @@
                 name="password"
                 type="usvc:tPassword"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="UserCertLoginIn">
+        <xs:element
+            name="userID"
+            type="usvc:tUserID"/>
     </xs:complexType>
 
     <xs:complexType name="UserLoginOut">
@@ -540,8 +546,11 @@
         name="UserDeleteResult"
         type="usvc:UserDeleteOut"/>
     <xs:element
-        name="UserLogin"
-        type="usvc:UserLoginIn"/>
+        name="UserBasicLogin"
+        type="usvc:UserBasicLoginIn"/>
+    <xs:element
+        name="UserCertLogin"
+        type="usvc:UserCertLoginIn"/>
     <xs:element
         name="UserLoginResult"
         type="usvc:UserLoginOut"/>
@@ -581,7 +590,8 @@
             <xs:element ref="usvc:UserUpdateResult"/>
             <xs:element ref="usvc:UserDelete"/>
             <xs:element ref="usvc:UserDeleteResult"/>
-            <xs:element ref="usvc:UserLogin"/>
+            <xs:element ref="usvc:UserBasicLogin"/>
+            <xs:element ref="usvc:UserCertLogin"/>
             <xs:element ref="usvc:UserLoginResult"/>
             <xs:element ref="usvc:UserLogout"/>
             <xs:element ref="usvc:UserLogoutResult"/>

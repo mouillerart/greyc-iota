@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -33,8 +33,8 @@ public class AccessModule implements RMIAccessInterface {
 
     private ALfA controler;
 
-    public AccessModule() throws RemoteException {
-        controler = new ALfA();
+    public AccessModule(String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws RemoteException {
+        controler = new ALfA(pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
     @Override

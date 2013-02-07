@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -20,6 +20,7 @@
 package fr.unicaen.iota.epcilon.query;
 
 import fr.unicaen.iota.epcilon.conf.Configuration;
+import fr.unicaen.iota.eta.query.QueryControlClientTLS;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.servlet.ServletException;
@@ -28,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.fosstrak.epcis.queryclient.QueryControlClient;
 import org.fosstrak.epcis.soap.ImplementationExceptionResponse;
 import org.fosstrak.epcis.soap.NoSuchSubscriptionExceptionResponse;
 import org.fosstrak.epcis.soap.SecurityExceptionResponse;
@@ -54,7 +54,9 @@ public class UnsubscribedServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            QueryControlClient client = new QueryControlClient(Configuration.DEFAULT_QUERY_CLIENT_ADDRESS);
+            QueryControlClientTLS client = new QueryControlClientTLS(Configuration.DEFAULT_QUERY_CLIENT_ADDRESS,
+                    Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD,
+                    Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
             try {
                 client.unsubscribe(Configuration.SUBSCRIPTION_KEY);
                 LOG.info("Subscription stoppped");

@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -38,7 +38,18 @@ import org.fosstrak.epcis.model.EPCISEventType;
 
 public class ALfA implements AccessInterface {
 
+    private final String pksFilename;
+    private final String pksPassword;
+    private final String trustPksFilename;
+    private final String trustPksPassword;
     private static final Log LOG = LogFactory.getLog(ALfA.class);
+
+    public ALfA(String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
+    }
 
     @Override
     public Map<ONSEntryType, String> queryONS(String EPC) {
@@ -59,14 +70,14 @@ public class ALfA implements AccessInterface {
     public List<EPCISEventType> traceEPC(Identity identity, String EPC) throws RemoteException {
         LOG.trace("[COMMAND]--[TRACE EPC]");
         LOG.trace(EPC);
-        return new TraceEPC(identity).traceEPC(EPC);
+        return new TraceEPC(identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).traceEPC(EPC);
     }
 
     @Override
     public List<EPCISEventType> traceEPC(Identity identity, String EPC, Map<String, String> filters) throws RemoteException {
         LOG.trace("[COMMAND]--[FILTERED TRACE]");
         LOG.trace(EPC);
-        return new TraceEPC(identity).filteredTrace(EPC, filters);
+        return new TraceEPC(identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).filteredTrace(EPC, filters);
     }
 
     @Override
@@ -79,7 +90,7 @@ public class ALfA implements AccessInterface {
     @Override
     public void traceEPCAsync(Identity identity, String sessionID, CallbackClient client, String EPC) throws RemoteException {
         LOG.trace("[COMMAND]--[TRACE EPC ASYNC]");
-        new TraceEPCAsync(EPC, sessionID, client, identity).start();
+        new TraceEPCAsync(EPC, sessionID, client, identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).start();
     }
 
     @Override
@@ -88,7 +99,7 @@ public class ALfA implements AccessInterface {
         EpcisOperation epcisOperation = null;
         while (epcisOperation == null) {
             try {
-                epcisOperation = new EpcisOperation(identity, EPCISAddress);
+                epcisOperation = new EpcisOperation(identity, EPCISAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
             } catch (Exception e) {
                 epcisOperation = null;
                 LOG.warn("Unable to create service proxy port! [RETRY]", e);
@@ -103,7 +114,7 @@ public class ALfA implements AccessInterface {
         EpcisOperation epcisOperation = null;
         while (epcisOperation == null) {
             try {
-                epcisOperation = new EpcisOperation(identity, EPCISAddress);
+                epcisOperation = new EpcisOperation(identity, EPCISAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
             } catch (Exception e) {
                 epcisOperation = null;
                 LOG.warn("Unable to create service proxy port! [RETRY]", e);
@@ -116,7 +127,7 @@ public class ALfA implements AccessInterface {
     @Override
     public List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException {
         LOG.trace("[COMMAND]--[QUERY DS]");
-        DiscoveryOperation dsOperation = new DiscoveryOperation(identity, DSAddress);
+        DiscoveryOperation dsOperation = new DiscoveryOperation(identity, DSAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
         List<TEventItem> list = dsOperation.getDSEvents(EPC);
         return list;
     }
@@ -125,7 +136,7 @@ public class ALfA implements AccessInterface {
     public List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress, TServiceType serviceType) throws RemoteException {
         LOG.trace("[COMMAND]--[QUERY DS]");
         try {
-            DiscoveryOperation dsOperation = new DiscoveryOperation(identity, DSAddress);
+            DiscoveryOperation dsOperation = new DiscoveryOperation(identity, DSAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
             List<TEventItem> list = dsOperation.getDSEvents(EPC, serviceType);
             return list;
         } catch (Exception e) {

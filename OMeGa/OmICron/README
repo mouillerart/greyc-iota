@@ -3,7 +3,12 @@ OmICron - OMeGa Internet Client
 OMeGa client library and simple SOAP client to IoTa.
 
 Dependencies:
+  IoTa modules:
+    - Nu-Pi
+    - Mu
+    - TAu
   libraries:
+    - epcis-commons
     - cxf
     - commons-logging
     - log4j

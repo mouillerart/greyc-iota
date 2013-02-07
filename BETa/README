@@ -5,7 +5,13 @@ Top-level application query client example.
 Dependencies:
   IoTa modules:
     - ALfA-PI
+    - Mu
     - OmICron
+    - TAu
+  librairies:
+    - epcis-commons
+    - commons-logging
+    - log4j
 
 Configuration:
   See the files *.properties and java.policy in the jar file (each of those

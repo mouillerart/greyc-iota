@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,8 +46,13 @@ public final class Config {
     public static String ONS_ADDRESS;
     public static String ONS_TLD_DOMAIN;
     public static boolean sign;
-    public static String keystore;
-    public static String keystore_password;
+    public static String sigma_keystore;
+    public static String sigma_keystore_password;
+    public static String pks_filename;
+    public static String pks_password;
+    public static String trust_pks_filename;
+    public static String trust_pks_password;
+    public static String eventOwner;
 
     static {
         try {
@@ -66,8 +71,13 @@ public final class Config {
             ONS_ADDRESS = props.getProperty("ons-address", "localhost");
             ONS_TLD_DOMAIN = props.getProperty("ons-tld-domain", "ons-peer.com.");
             sign = Boolean.valueOf(props.getProperty("sign"));
-            keystore = props.getProperty("keystore");
-            keystore_password = props.getProperty("keystore-password");
+            sigma_keystore = props.getProperty("sigma-keystore");
+            sigma_keystore_password = props.getProperty("sigma-keystore-password");
+            pks_filename = props.getProperty("pks-filename", "privatekeys.jks");
+            pks_password = props.getProperty("pks-password", "changeit");
+            trust_pks_filename = props.getProperty("trust-pks-filename", "publickeys.jks");
+            trust_pks_password = props.getProperty("trust-pks-password", "changeit");
+            eventOwner = props.getProperty("event-owner", "anonymous");
         } catch (Throwable e) {
             LogFactory.getLog(Config.class).fatal("Problem while reading 'config/PTNet.properties'", e);
         }

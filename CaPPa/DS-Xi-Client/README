@@ -3,6 +3,8 @@ DS-Xi-Client
 Common library interfacing with the xi web service for DS.
 
 Dependencies:
+  IoTa modules:
+    - LibXACML-DS
   libraries:
     - sunxacml
     - servlet-api

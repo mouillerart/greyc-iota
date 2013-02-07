@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,17 @@ import fr.unicaen.iota.sigma.wsdl.SigMaService;
 import fr.unicaen.iota.sigma.wsdl.SigMaServicePortType;
 import fr.unicaen.iota.sigma.xsd.Principal;
 import fr.unicaen.iota.sigma.xsd.Verification;
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
@@ -44,14 +51,24 @@ public class SigMaClient {
     private SigMaServicePortType port;
 
     public SigMaClient(String address) {
+        this(address, null, null, null, null);
+    }
+
+    public SigMaClient(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         try {
-            this.configureService(address);
+            this.configureService(address, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
         } catch (MalformedURLException ex) {
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
+        } catch (Exception e) {
+            throw new RuntimeException("Can’t configure service: " + e.getMessage(), e);
         }
     }
 
-    public void configureService(String address) throws MalformedURLException {
+    public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws MalformedURLException, Exception {
+        System.setProperty("javax.net.ssl.keyStore", pksFilename);
+        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
         URL wsdlUrl = new URL(address + "?wsdl");
         SigMaService service = new SigMaService(wsdlUrl);
         port = service.getPort(SigMaServicePortType.class);
@@ -62,6 +79,31 @@ public class SigMaClient {
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         httpClientPolicy.setAllowChunking(false);
         httpConduit.setClient(httpClientPolicy);
+
+        if (pksFilename != null) {
+            log.debug("Authenticating with certificate in file: " + pksFilename);
+
+            if (!wsdlUrl.getProtocol().equalsIgnoreCase("https")) {
+                throw new Exception("Authentication method requires the use of HTTPS");
+            }
+
+            KeyStore keyStore = KeyStore.getInstance(pksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            keyStore.load(new FileInputStream(new File(pksFilename)), pksPassword.toCharArray());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+            keyManagerFactory.init(keyStore, pksPassword.toCharArray());
+
+            KeyStore trustStore = KeyStore.getInstance(trustPksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            trustStore.load(new FileInputStream(new File(trustPksFilename)), trustPksPassword.toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(trustStore);
+
+            TLSClientParameters tlscp = new TLSClientParameters();
+            tlscp.setSecureRandom(new SecureRandom());
+            tlscp.setKeyManagers(keyManagerFactory.getKeyManagers());
+            tlscp.setTrustManagers(trustManagerFactory.getTrustManagers());
+
+            httpConduit.setTlsClientParameters(tlscp);
+        }
     }
 
     public Verification verify(Principal principal) {

@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -42,7 +42,21 @@ class TomcatInstaller(installer.Installer):
                  {"when": ("tomcat", "install")}),
                 ("Enter the AJP port", "tomcat", "ajp_port",
                  {"when": ("tomcat", "install")}),
-                ("Enter the redirect port", "tomcat", "redirect_port",
+                ("Enter the secure port", "tomcat", "secure_port",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the TLS keystore filename", "tomcat", "keystore_file",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the password for this keystore", "tomcat", "keystore_password",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the key alias (empty means first key)", "tomcat", "key_alias",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the key password (empty means no password)", "tomcat", "key_password",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the TLS truststore filename", "tomcat", "truststore_file",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the password for this truststore", "tomcat", "truststore_password",
+                 {"when": ("tomcat", "install")}),
+                ("Enter the revocation list filename (empty means none)", "tomcat", "revocations_file",
                  {"when": ("tomcat", "install")}),
                 ("Use the manager webapp?", "tomcat", "use_manager", {"type": "YN"}),
                 ("Enter the manager’s path", "tomcat", "manager_path",
@@ -76,14 +90,37 @@ class TomcatInstaller(installer.Installer):
         doc = xml.dom.minidom.parse(serverConfigFile)
         configuration = doc.getElementsByTagName("Server")[0]
         configuration.setAttribute("port", self.cget("shutdown_port"))
-        properties = configuration.getElementsByTagName("Connector")
-        for prop in properties:
-            if prop.getAttribute("protocol") == "HTTP/1.1":
-                prop.setAttribute("port", self.cget("http_port"))
-                prop.setAttribute("redirectPort", self.cget("redirect_port"))
-            elif prop.getAttribute("protocol") == "AJP/1.3":
-                prop.setAttribute("port", self.cget("ajp_port"))
-                prop.setAttribute("redirectPort", self.cget("redirect_port"))
+        service = configuration.getElementsByTagName("Service")[0]
+        connectors = service.getElementsByTagName("Connector")
+        for connector in connectors:
+            if connector.getAttribute("protocol") == "HTTP/1.1":
+                connector.setAttribute("port", self.cget("http_port"))
+                connector.setAttribute("redirectPort", self.cget("secure_port"))
+            elif connector.getAttribute("protocol") == "AJP/1.3":
+                connector.setAttribute("port", self.cget("ajp_port"))
+                connector.setAttribute("redirectPort", self.cget("secure_port"))
+        sslconnector = doc.createElement("Connector")
+        sslconnector.setAttribute("protocol", "HTTP/1.1")
+        sslconnector.setAttribute("port", self.cget("secure_port"))
+        sslconnector.setAttribute("maxThreads", "100")
+        sslconnector.setAttribute("scheme", "https")
+        sslconnector.setAttribute("secure", "true")
+        sslconnector.setAttribute("SSLEnabled", "true")
+        if self.cget("keystore_file").endswith(".p12"):
+            sslconnector.setAttribute("keystoreType", "PKCS12")
+        sslconnector.setAttribute("keystoreFile", self.cget("keystore_file"))
+        sslconnector.setAttribute("keystorePass", self.cget("keystore_password"))
+        if self.cget("key_alias"):
+            sslconnector.setAttribute("keyAlias", self.cget("key_alias"))
+        if self.cget("key_password"):
+            sslconnector.setAttribute("keyPass", self.cget("key_password"))
+        sslconnector.setAttribute("truststoreFile", self.cget("truststore_file"))
+        sslconnector.setAttribute("truststorePass", self.cget("truststore_password"))
+        if self.cget("revocations_file"):
+            sslconnector.setAttribute("crlFile", self.cget("revocations_file"))
+        sslconnector.setAttribute("clientAuth", "true")
+        sslconnector.setAttribute("sslProtocol", "TLS")
+        service.appendChild(sslconnector)
         with open(serverConfigFile, "w") as scf:
             scf.write(doc.toxml())
         utils.putDoneOK()

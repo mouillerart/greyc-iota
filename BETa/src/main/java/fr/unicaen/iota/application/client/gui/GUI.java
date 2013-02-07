@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -197,7 +197,7 @@ public class GUI extends javax.swing.JFrame implements ChangeListener, Observer 
         log.trace("Processing omegaTraceEPC ...");
         Identity identity = new Identity();
         identity.setAsString(Configuration.DEFAULT_IDENTITY);
-        OmICron client = new OmICron(identity, Configuration.SOAP_SERVICE_URL);
+        OmICron client = new OmICron(identity, Configuration.SOAP_SERVICE_URL, Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
         try {
             List<EPCISEventType> events = client.traceEPC(epc);
             if (!events.isEmpty()) {

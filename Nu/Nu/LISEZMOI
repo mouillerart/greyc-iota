@@ -6,7 +6,6 @@ Dépendances:
   bibliothèques:
     - dnsjava
     - commons-logging
-    - log4j
 
 Configuration:
   Voir les fichiers *.properties dans le fichier jar ; chacun de ces fichiers

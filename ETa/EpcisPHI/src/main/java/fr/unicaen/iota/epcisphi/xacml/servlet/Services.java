@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ package fr.unicaen.iota.epcisphi.xacml.servlet;
 import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.epcisphi.utils.*;
 import fr.unicaen.iota.epcisphi.xacml.ihm.Module;
-import fr.unicaen.iota.eta.user.client.GatewayClient;
+import fr.unicaen.iota.eta.user.client.UserClient;
 import fr.unicaen.iota.eta.user.userservice_wsdl.ImplementationExceptionResponse;
 import fr.unicaen.iota.eta.user.userservice_wsdl.SecurityExceptionResponse;
 import fr.unicaen.iota.xacml.pep.MethodNamesAdmin;
@@ -1049,7 +1049,8 @@ public class Services {
         try {
             String partner = user.getPartnerID();
             String hashPass = SHA1.makeSHA1Hash(pass);
-            GatewayClient client = new GatewayClient(Constants.USERSERVICE_ADDRESS);
+            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             client.userCreate(sessionId, login, hashPass, partner, 30);
         } catch (NoSuchAlgorithmException ex) {
             log.error("Algorithm error", ex);
@@ -1066,7 +1067,8 @@ public class Services {
     public void deleteUser(String sessionId, User user, String login) throws ServiceException {
         checkAccess(user, Module.adminModule, "userDelete");
         try {
-            GatewayClient client = new GatewayClient(Constants.USERSERVICE_ADDRESS);
+            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             client.userDelete(sessionId, login);
         } catch (ImplementationExceptionResponse ex) {
             log.error("Internal error", ex);
@@ -1110,7 +1112,8 @@ public class Services {
     public boolean createAccount(String sessionId, User user, String partnerId, String login, String pass) throws ServiceException {
         checkAccess(user, Module.adminModule, "superadmin");
         try {
-            GatewayClient client = new GatewayClient(Constants.USERSERVICE_ADDRESS);
+            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             boolean found = false;
             try {
                 client.userInfo(sessionId, login);

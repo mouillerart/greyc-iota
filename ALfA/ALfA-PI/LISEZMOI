@@ -3,7 +3,14 @@ ALfA-PI - ALfA Programming Interface
 Interface de programmation RMI commune entre ALfA et des applications de haut
 niveau.
 
-Dépendances: aucune
+Dépendances:
+  modules IoTa:
+    - DSeTa-Client
+    - Nu-PI
+    - TAu
+  bibliothèques:
+    - epcis-commons
+    - commons-logging
 
 Configuration: aucune
 

@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -23,6 +23,9 @@
  */
 package fr.unicaen.iota.eta.query;
 
+import fr.unicaen.iota.eta.utils.Constants;
+import fr.unicaen.iota.tau.model.Identity;
+import java.security.Principal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.*;
@@ -36,13 +39,32 @@ import org.fosstrak.epcis.soap.*;
 public class QueryOperationsWebService extends IDedQueryOperationsWebService implements EPCISServicePortType {
 
     private static final Log LOG = LogFactory.getLog(QueryOperationsWebService.class);
+    private final Identity default_user;
+    private final Identity anonymous;
 
     public QueryOperationsWebService() {
-        super();
+        this(null);
     }
 
     public QueryOperationsWebService(QueryOperationsModule queryModule) {
         super(queryModule);
+        default_user = new Identity();
+        default_user.setAsString(Constants.XACML_DEFAULT_USER);
+        anonymous = new Identity();
+        anonymous.setAsString(Constants.XACML_ANONYMOUS_USER);
+    }
+
+    private Identity getClientId() {
+        Principal authId = wsContext.getUserPrincipal();
+        if (authId == null) {
+            return anonymous;
+        }
+        if (Constants.XACML_USE_TLS_ID) {
+            Identity id = new Identity();
+            id.setAsString(authId.getName());
+            return id;
+        }
+        return default_user;
     }
 
     /**
@@ -74,7 +96,7 @@ public class QueryOperationsWebService extends IDedQueryOperationsWebService imp
     @Override
     public ArrayOfString getSubscriptionIDs(GetSubscriptionIDs req) throws ImplementationExceptionResponse,
             SecurityExceptionResponse, ValidationExceptionResponse, NoSuchNameExceptionResponse {
-        return iDedGetSubscriptionIDs(req, anonymous);
+        return iDedGetSubscriptionIDs(req, getClientId());
     }
 
     /**
@@ -95,7 +117,7 @@ public class QueryOperationsWebService extends IDedQueryOperationsWebService imp
     public QueryResults poll(Poll poll) throws ImplementationExceptionResponse, QueryTooComplexExceptionResponse,
             QueryTooLargeExceptionResponse, SecurityExceptionResponse, ValidationExceptionResponse,
             NoSuchNameExceptionResponse, QueryParameterExceptionResponse {
-        return iDedPoll(poll, anonymous);
+        return iDedPoll(poll, getClientId());
     }
 
     /**
@@ -107,7 +129,7 @@ public class QueryOperationsWebService extends IDedQueryOperationsWebService imp
             ImplementationExceptionResponse, QueryTooComplexExceptionResponse, SecurityExceptionResponse,
             InvalidURIExceptionResponse, ValidationExceptionResponse, SubscribeNotPermittedExceptionResponse,
             NoSuchNameExceptionResponse, SubscriptionControlsExceptionResponse, QueryParameterExceptionResponse {
-        return iDedSubscribe(subscribe, anonymous);
+        return iDedSubscribe(subscribe, getClientId());
     }
 
     /**
@@ -117,6 +139,6 @@ public class QueryOperationsWebService extends IDedQueryOperationsWebService imp
     @Override
     public VoidHolder unsubscribe(Unsubscribe unsubscribe) throws ImplementationExceptionResponse,
             SecurityExceptionResponse, ValidationExceptionResponse, NoSuchSubscriptionExceptionResponse {
-        return iDedUnsubscribe(unsubscribe, anonymous);
+        return iDedUnsubscribe(unsubscribe, getClientId());
     }
 }

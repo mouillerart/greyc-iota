@@ -7,11 +7,11 @@ Dépendances:
     - SigMa-Client
     - SigMa-Commons
   bibliothèques:
-    - spring
-    - Apache cxf
     - epcis-commons
+    - spring
     - commons-logging
     - log4j
 
 Installation et Configuration:
   IoTa-Installer installe et configure SigMa.
+  Voir LISEZMOI de SigMa-Commons.

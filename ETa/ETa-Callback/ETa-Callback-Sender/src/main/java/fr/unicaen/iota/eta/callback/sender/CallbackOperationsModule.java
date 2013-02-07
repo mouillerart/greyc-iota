@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -65,12 +65,10 @@ public class CallbackOperationsModule {
     private Schema schema;
     private java.sql.Connection dbConnection;
     private CallbackOperationsBackendSQL backend;
-    private boolean trustAllCertificates;
     private static final Log LOG = LogFactory.getLog(CallbackOperationsModule.class);
 
     public CallbackOperationsModule() {
         this.schema = initEpcisSchema(Constants.EPCIS_SCHEMA_PATH);
-        this.trustAllCertificates = Boolean.parseBoolean(Constants.TRUST_ALL_CERTIFICATES);
         backend = new CallbackOperationsBackendSQL();
         dbConnection = loadDatabaseConnection();
         LOG.info("CallbackModule sender is successfully loaded");
@@ -273,17 +271,7 @@ public class CallbackOperationsModule {
         HttpURLConnection connection;
         int response = -1;
         try {
-            if ("HTTPS".equalsIgnoreCase(serviceUrl.getProtocol()) && trustAllCertificates) {
-                connection = getAllTrustingConnection(serviceUrl);
-            } else {
-                connection = getConnection(serviceUrl);
-            }
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("content-type", "text/xml");
-            connection.setRequestProperty("content-length", "" + data.length());
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setReadTimeout(200);
+            connection = getConnection(dest);
 
             // send data
             Writer out = new OutputStreamWriter(connection.getOutputStream());
@@ -293,10 +281,7 @@ public class CallbackOperationsModule {
 
             // disconnect and return
             // TODO response code
-            try {
-                response = connection.getResponseCode();
-            } catch (IOException e) {
-            }
+            response = connection.getResponseCode();
             connection.disconnect();
             return response;
         } catch (SocketTimeoutException e) {
@@ -308,63 +293,23 @@ public class CallbackOperationsModule {
     }
 
     /**
-     * Opens a connection to the given URL. <p> The URL.openConnection() method
-     * returns an instance of javax.net.ssl.HttpsURLConnection, which extends
-     * java.net.HttpURLConnection, if the HTTPS protocol is used in the URL.
-     * Thus, we support both the HTTP and HTTPS binding of the query callback
-     * interface. <p> Note: By default, accessing an HTTPS URL using the URL
-     * class results in an exception if the destination's certificate chain
-     * cannot be validated. In this case you can manually import the
-     * destination's certificate into the Java runtime's trust store, or, if you
-     * want to disable the validation of certificates for testing purposes, use
-     * {@link getAllTrustingConnection(URL)}.
-     *
-     * @param url The URL on which a connection will be opened.
-     * @return A HttpURLConnection connection object.
-     * @throws IOException If an I/O error occurred.
+     * Opens a connection to the EPCIS capture interface.
+     * @param url The address on which a connection will be opened.
+     * @return The HTTP connection object.
      */
-    private HttpURLConnection getConnection(URL url) throws IOException {
-        return (HttpURLConnection) url.openConnection();
-    }
-
-    /**
-     * Retrieves an "all-trusting" HTTP URL connection object, by disabling the
-     * validation of certificates and overriding the default trust manager with
-     * one that trusts all certificates.
-     *
-     * @param url The URL on which a connection will be opened.
-     * @return A HttpURLConnection connection object.
-     * @throws IOException If an I/O error occurred.
-     */
-    private HttpURLConnection getAllTrustingConnection(URL url) throws IOException {
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                }
-            }
-        };
-
-        // Install the all-trusting trust manager
-        try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (Exception e) {
-            LOG.error("Unable to install the all-trusting trust manager", e);
-        }
-        return getConnection(url);
+    private HttpURLConnection getConnection(String url) throws IOException {
+        System.setProperty("javax.net.ssl.keyStore", Constants.PKS_FILENAME);
+        System.setProperty("javax.net.ssl.keyStorePassword", Constants.PKS_PASSWORD);
+        System.setProperty("javax.net.ssl.trustStore", Constants.TRUST_PKS_FILENAME);
+        System.setProperty("javax.net.ssl.trustStorePassword", Constants.TRUST_PKS_PASSWORD);
+        URL serviceUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
+        connection.setRequestProperty("content-type", "text/xml");
+        connection.setRequestMethod("POST");
+        connection.setReadTimeout(200);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        return connection;
     }
 
     /**

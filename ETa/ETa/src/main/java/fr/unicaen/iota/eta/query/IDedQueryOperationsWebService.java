@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  */
 package fr.unicaen.iota.eta.query;
 
-import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.eta.utils.Constants;
 import fr.unicaen.iota.eta.soap.IDedEPCISServicePortType;
 import fr.unicaen.iota.tau.model.Identity;
 import java.security.Principal;
@@ -39,17 +39,13 @@ public class IDedQueryOperationsWebService implements IDedEPCISServicePortType {
 
     private static final Log LOG = LogFactory.getLog(IDedQueryOperationsWebService.class);
     @Resource
-    private WebServiceContext wsContext;
+    protected WebServiceContext wsContext;
     protected QueryOperationsModule queryModule;
-    protected final Identity anonymous;
 
     public IDedQueryOperationsWebService() {
-        anonymous = new Identity();
-        anonymous.setAsString(Constants.XACML_DEFAULT_USER);
     }
 
     public IDedQueryOperationsWebService(QueryOperationsModule queryModule) {
-        this();
         this.queryModule = queryModule;
     }
 
@@ -69,11 +65,15 @@ public class IDedQueryOperationsWebService implements IDedEPCISServicePortType {
 
     private void checkAuth(Identity id) throws SecurityExceptionResponse {
         Principal authId = wsContext.getUserPrincipal();
-        if (authId == null || id == anonymous) {
-            return;
-        }
-        if (!queryModule.canBe(authId, id)) {
-            throw new SecurityExceptionResponse(authId.getName() + " isn't allowed to pass as " + id.getAsString());
+        if (authId == null) { // no TLS
+            if (!Constants.XACML_ANONYMOUS_USER.equals(id.getAsString())) {
+                throw new SecurityExceptionResponse("Can't allowed to pass as " + id.getAsString() +
+                        " without authentication. Only " + Constants.XACML_ANONYMOUS_USER + " is allowed.");
+            }
+        } else { // TLS
+            if (!queryModule.canBe(authId, id)) {
+                throw new SecurityExceptionResponse(authId.getName() + " isn't allowed to pass as " + id.getAsString());
+            }
         }
     }
 

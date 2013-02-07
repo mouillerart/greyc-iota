@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>alfa</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>ALfA</name>
@@ -25,6 +25,12 @@
 
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
+            <artifactId>tau</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
             <artifactId>nu</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -37,8 +43,15 @@
 
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
-            <artifactId>eta-client</artifactId>
+            <artifactId>eta-query-client</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- Fosstrak dependencies -->
+        <dependency>
+            <groupId>org.fosstrak.epcis</groupId>
+            <artifactId>epcis-commons</artifactId>
+            <version>${epcis-version}</version>
         </dependency>
 
         <!-- Log dependencies -->

@@ -6,7 +6,10 @@ Dependencies:
   IoTa modules:
     - DSeTa-Client
     - IoTa-DiscoveryWS-Client
+    - TAu
   libraries:
+    - Apache cxf
+    - spring
     - commons-logging
     - log4j
 

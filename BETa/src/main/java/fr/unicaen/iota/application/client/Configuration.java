@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -32,6 +32,10 @@ public final class Configuration {
     }
     public static final String PROPERTIES_CONFIG_FILE = "/application.properties";
     public static String SOAP_SERVICE_URL;
+    public static String PKS_FILENAME;
+    public static String PKS_PASSWORD;
+    public static String TRUST_PKS_FILENAME;
+    public static String TRUST_PKS_PASSWORD;
     public static String RMI_SERVICE_URL;
     public static String RMI_CALLBACK_HOST;
     public static int RMI_CALLBACK_PORT;
@@ -41,6 +45,10 @@ public final class Configuration {
         try {
             Properties props = loadProperties();
             SOAP_SERVICE_URL = props.getProperty("soap-service-url", "http://localhost:8080/omega/services/IOTA_Service/");
+            PKS_FILENAME = props.getProperty("pks-filename", "privatekeys.jks");
+            PKS_PASSWORD = props.getProperty("pks-password", "changeit");
+            TRUST_PKS_FILENAME = props.getProperty("trustpks-filename", "publickeys.jks");
+            TRUST_PKS_PASSWORD = props.getProperty("trustpks-password", "changeit");
             RMI_SERVICE_URL = props.getProperty("rmi-service-url", "//localhost:1099/ALfA");
             RMI_CALLBACK_HOST = props.getProperty("rmi-callback-host", "localhost");
             RMI_CALLBACK_PORT = Integer.parseInt(props.getProperty("rmi-callback-port", "1099"));

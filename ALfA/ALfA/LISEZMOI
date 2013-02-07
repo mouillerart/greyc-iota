@@ -6,12 +6,12 @@ niveau.
 Dépendances:
   modules IoTa:
     - ALfA-PI
+    - TAu
     - Nu
     - DSeTa-Client
-    - ETa-Client
+    - ETa-Query-Client
   bibliothèques:
     - epcis-commons
-    - dnsjava
     - commons-logging
     - log4j
 

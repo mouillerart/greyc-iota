@@ -6,7 +6,7 @@
     <artifactId>eta</artifactId>
     <packaging>war</packaging>
     <name>ETa Server</name>
-    <version>1.9-mock</version>
+    <version>1.9</version>
 
     <properties>
         <epcis-version>0.5.0</epcis-version>
@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
-            <artifactId>eta-client</artifactId>
+            <artifactId>eta-query-client</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -48,6 +48,12 @@
             <artifactId>sigma-client</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>mu</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Fosstrak dependencies -->

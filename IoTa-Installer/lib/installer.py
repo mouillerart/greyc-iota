@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -208,6 +208,11 @@ class WebAppInstaller(Installer):
     def setURL(self):
         return self.cset("url", "http://" + CONFIG.get("global", "host") + ":" +
                          CONFIG.get("tomcat", "http_port") + "/" + self.cget("name") + "/")
+
+
+    def setSecuredURL(self):
+        return self.cset("url", "https://" + CONFIG.get("global", "host") + ":" +
+                         CONFIG.get("tomcat", "secure_port") + "/" + self.cget("name") + "/")
 
 
     # default implementation, beware when overrinding

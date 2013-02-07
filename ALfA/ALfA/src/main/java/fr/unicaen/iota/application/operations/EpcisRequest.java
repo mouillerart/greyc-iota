@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -35,17 +35,25 @@ public class EpcisRequest extends Thread {
     private final String serviceAddress;
     private final String epc;
     private final Identity identity;
+    private final String pksFilename;
+    private final String pksPassword;
+    private final String trustPksFilename;
+    private final String trustPksPassword;
     private final String sessionID;
     private final CallbackClient client;
     private static final boolean isDebug = true; // TODO: hard value
     private static final Log log = LogFactory.getLog(EpcisRequest.class);
 
-    public EpcisRequest(String serviceAddress, String epc, Identity identity, String sessionID, CallbackClient client) {
+    public EpcisRequest(String serviceAddress, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword, String epc, Identity identity, String sessionID, CallbackClient client) {
         this.identity = identity;
         this.epc = epc;
         this.sessionID = sessionID;
         this.client = client;
         this.serviceAddress = serviceAddress;
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
     }
 
     @Override
@@ -61,7 +69,7 @@ public class EpcisRequest extends Thread {
                 debug.append("\n");
                 debug.append("Events: \n");
             }
-            EpcisOperation epcisOperation = new EpcisOperation(identity, serviceAddress);
+            EpcisOperation epcisOperation = new EpcisOperation(identity, serviceAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
             Collection<EPCISEventType> evts = epcisOperation.getEventFromEPC(epc);
             for (EPCISEventType evt : evts) {
                 try {
@@ -83,13 +91,13 @@ public class EpcisRequest extends Thread {
                     AggregationEventType event = (AggregationEventType) o;
                     for (EPC childEpc : event.getChildEPCs().getEpc()) {
                         log.trace("new traceEPC: " + childEpc.getValue());
-                        new TraceEPCAsync(childEpc.getValue(), sessionID, client, identity).start();
+                        new TraceEPCAsync(childEpc.getValue(), sessionID, client, identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).start();
                     }
                 } else if (o instanceof TransactionEventType) {
                     TransactionEventType event = (TransactionEventType) o;
                     for (EPC childEpc : event.getEpcList().getEpc()) {
                         log.trace("new traceEPC: " + childEpc.getValue());
-                        new TraceEPCAsync(childEpc.getValue(), sessionID, client, identity).start();
+                        new TraceEPCAsync(childEpc.getValue(), sessionID, client, identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).start();
                     }
                 }
             }

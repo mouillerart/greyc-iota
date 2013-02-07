@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -32,11 +32,19 @@ class UserInstaller(installer.WebAppInstaller):
                 ("application",
                  { "xacml-url": ("epcis_policies", "xacml_url"),
                    "xacml-ihm-url": ("ephi", "url"),
+                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-password": ("cert", "password"),
+                   "trust-pks-filename": ("cert", "truststore"),
+                   "trust-pks-password": ("cert", "trustpassword"),
                    "epcis-query-url": ("epcis", "query_url"),
                    "epcis-capture-url": ("epcis", "capture_url"),
                    "eta-userservice-url": ("user", "url"),
                    "ldap-url": ("ldap", "url"),
                    "ldap-basedn": ("ldap", "base_dn"),
                    "ldap-user": ("ldap", "login"),
-                   "ldap-password": ("ldap", "password"), })
+                   "ldap-password": ("ldap", "password") })
                 ] )
+
+
+    def postConfigure(self):
+        self.setSecuredURL()

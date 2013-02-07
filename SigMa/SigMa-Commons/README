@@ -6,3 +6,13 @@ Dependencies:
    - epcis-commons
    - bouncycastle
    - commons-logging
+   - xmlsec
+
+Usage:
+  The signature is created and inserted in the event with an
+    extension (see Mu for name and namespace of this extension).
+    A second extension, the alias of the public key used to sign,
+    is added at the same time. This extension is used by SigMa
+    to get the right public key.
+    The alias must be the same that DN (Distinguished Name) of
+    the certificate used to sign.

@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -27,13 +27,7 @@ import fr.unicaen.iota.xi.utils.Utils;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import org.fosstrak.epcis.model.AggregationEventType;
-import org.fosstrak.epcis.model.BusinessTransactionType;
-import org.fosstrak.epcis.model.EPC;
-import org.fosstrak.epcis.model.EPCISEventType;
-import org.fosstrak.epcis.model.ObjectEventType;
-import org.fosstrak.epcis.model.QuantityEventType;
-import org.fosstrak.epcis.model.TransactionEventType;
+import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.utils.TimeParser;
 import org.w3c.dom.Element;
 
@@ -50,7 +44,7 @@ public class CallbackCheck {
     private EPCISPEP epcisPEP;
 
     public CallbackCheck() {
-        epcisPEP = new EPCISPEP(Constants.XACML_URL);
+        epcisPEP = new EPCISPEP(Constants.XACML_URL, Constants.PKS_FILENAME, Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
     }
 
     public boolean xacmlCheck(XACMLEPCISEvent xacmlEvent, String user) {

@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>sigma-commons</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>SigMa-Commons</name>
@@ -18,6 +18,13 @@
 
     <dependencies>
 
+        <!-- IoTa dependencies -->
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>mu</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Fosstrak dependency -->
         <dependency>
             <groupId>org.fosstrak.epcis</groupId>
@@ -30,6 +37,13 @@
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>140</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>1.5.2</version>
+            <type>jar</type>
         </dependency>
 
         <!-- Log dependencies -->

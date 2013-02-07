@@ -4,12 +4,13 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>psi</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>PSi</name>
 
     <properties>
+        <epcis-version>0.5.0</epcis-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -22,17 +23,29 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>eta-capture-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>mu</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
       <!-- Fosstrak dependencies -->
         <dependency>
             <groupId>org.fosstrak.epcis</groupId>
             <artifactId>epcis-commons</artifactId>
-            <version>0.5.0</version>
+            <version>${epcis-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.fosstrak.epcis</groupId>
             <artifactId>epcis-captureclient</artifactId>
-            <version>0.5.0</version>
+            <version>${epcis-version}</version>
         </dependency>
 
       <!-- Other dependencies -->

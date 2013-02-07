@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -33,13 +33,11 @@ import org.fosstrak.epcis.model.*;
 
 public class EpcisOperation {
 
-    private final String EPCIS_SERVICE_ADDRESS;
-    private final Identity IDENTITY;
+    private final ETaQueryControlClient etaClient;
     private static final Log log = LogFactory.getLog(EpcisOperation.class);
 
-    public EpcisOperation(Identity identity, String epcis_service_address) {
-        IDENTITY = identity;
-        EPCIS_SERVICE_ADDRESS = epcis_service_address;
+    public EpcisOperation(Identity identity, String epcis_service_address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
+        etaClient = new ETaQueryControlClient(identity, epcis_service_address, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
     public QueryParam createEPCISParameter(String name, String value) {
@@ -54,7 +52,6 @@ public class EpcisOperation {
     public List<EPCISEventType> getFilteredEvent(Map<String, String> filters) throws RemoteException {
         log.trace("getFilteredEvent");
         try {
-            ETaQueryControlClient client = new ETaQueryControlClient(IDENTITY, EPCIS_SERVICE_ADDRESS);
             QueryParams queryParams = new QueryParams();
             for (Map.Entry<String, String> entry : filters.entrySet()) {
                 queryParams.getParam().add(createEPCISParameter(entry.getKey(), entry.getValue()));
@@ -64,7 +61,7 @@ public class EpcisOperation {
             poll.setQueryName("SimpleEventQuery");
             poll.setParams(queryParams);
 
-            QueryResults results = client.poll(poll);
+            QueryResults results = etaClient.poll(poll);
             EventListType eventListType = results.getResultsBody().getEventList();
             return getEvents(eventListType);
         } catch (Exception ex) {

@@ -1,7 +1,8 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,12 +33,23 @@ import org.apache.commons.logging.LogFactory;
 
 public class PEP {
 
-    private String url;
-
+    private final String url;
+    private final String pksFilename;
+    private final String pksPassword;
+    private final String trustPksFilename;
+    private final String trustPksPassword;
     private static final Log log = LogFactory.getLog(PEP.class);
 
     public PEP(String url) {
+        this(url, null, null, null, null);
+    }
+
+    public PEP(String url, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         this.url = url;
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
     }
 
     /**
@@ -94,6 +106,10 @@ public class PEP {
      * @throws IOException If an error occurred connecting to the XACML module.
      */
     private HttpURLConnection getConnection(final String contentType, String url) throws IOException {
+        System.setProperty("javax.net.ssl.keyStore", pksFilename);
+        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
         URL serviceUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
         connection.setRequestProperty("content-type", contentType);

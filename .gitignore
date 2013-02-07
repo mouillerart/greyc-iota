@@ -23,3 +23,11 @@ IoTa-Installer/resources/eta-callback-sender-*-bin-with-dependencies.tar.gz
 IoTa-Installer/resources/omega-*.war
 IoTa-Installer/resources/sigma-*.war
 IoTa-Installer/resources/install.ini
+#
+PSi/eventSpecification/epcs.xml
+
+# NetBeans
+nbproject
+nbactions.xml
+build
+dist

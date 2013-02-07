@@ -1,5 +1,5 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
  *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
  *

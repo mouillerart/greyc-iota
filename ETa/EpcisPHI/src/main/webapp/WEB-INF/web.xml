@@ -38,4 +38,26 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>EpcisPHiSecure</web-resource-name>
+            <url-pattern>/RootAccountAuth</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ephi_user</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transporting-guarantee>CONFIDENTIAL</transporting-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>CLIENT-CERT</auth-method>
+    </login-config>
+    <security-role>
+        <role-name>ephi_user</role-name>
+    </security-role>
+
 </web-app>

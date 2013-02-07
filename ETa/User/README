@@ -1,33 +1,27 @@
-ETa - Epcis Trusted Agent
+User
 
-Agent of access control for the EPCIS.
+Web service for the user management.
 
 Dependencies:
   IoTa modules:
-    - LibXACML-EPCIS
+    - EPCIS-Xi-Client
+    - User-Client
   libraries:
-    - sunxacml
     - spring
     - cxf
-    - mysql-connector
     - commons-logging
     - log4j
 
 Installation and Configuration:
-  IoTa-Installer installs and configures ETa.
+  IoTa-Installer installs and configures User.
   (application.properties for this application,
    commons-logging.properties and log4j.properties for the logs)
   Use the script ldap.sh in IoTa-Installer/lib (root privileges required) to
    configure the LDAP directory.
 
 Usage Dependencies:
-  - a MySQL server
   - a LDAP server
-  - an Epcis
   - EpcisPHI
-  - a DWS
-  - EpcILoN
-  - an ONS
 
 Usage:
   like an Epcis

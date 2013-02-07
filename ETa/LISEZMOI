@@ -5,7 +5,8 @@ Agents de gestion des politiques de permission pour l'EPCIS.
 ETa/                      agent de contrôle d'accès
 EpcisPHI/                 application web de gestion des droits d'accès
 ETa-Callback/             modules de gestion des retours d'abonnements
-ETa-Client/               bibliothèque cliente
+ETa-Capture-Client/       bibliothèque client pour le service Capture
+ETa-Query-Client/         bibliothèque cliente pour le service Query
 LibXACML-EPCIS/           bibliothèque XACML
 
 Dépendances d’utilisation:

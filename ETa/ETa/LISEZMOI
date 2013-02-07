@@ -6,6 +6,7 @@ Dépendances:
   modules IoTa:
     - LibXACML-EPCIS
     - EPCIS-Xi-Client
+    - Mu
   bibliothèques:
     - epcis-commons
     - epcis-repository
@@ -14,7 +15,6 @@ Dépendances:
     - spring
     - cxf
     - servlet-api
-    - mysql-connector
     - commons-logging
     - log4j
 
@@ -24,10 +24,11 @@ Installation et Configuration:
    commons-logging.properties et log4j.properties pour les journaux)
   Utiliser le script ldap.sh dans IoTa-Installer/lib (droits root requis) pour configurer
    l'annuaire LDAP.
+  Modifier le fichier tomcat-users.xml de Tomcat pour la gestion des
+   identités en TLS. Voir le fichier INSTALL.fr
 
 Dépendances d’utilisation:
   - un serveur MySQL
-  - un serveur LDAP
   - un EPCIS
   - EpcisPHI
   - un DWS

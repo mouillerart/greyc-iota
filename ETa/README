@@ -5,7 +5,8 @@ Capabilities and permissions policy agent for EPCIS.
 ETa/                        agent of access control
 EpcisPHI/                   permissions management web application
 ETa-Callback/               modules of callback management
-ETa-Client/                 bibliothèque cliente
+ETa-Capture-Client/         client library for the capture service
+ETa-Query-Client/           client library for the Query service
 LibXACML-EPCIS/             XACML library
 
 Usage Dependencies:

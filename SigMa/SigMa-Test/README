@@ -6,9 +6,12 @@ Dependencies:
   IoTa modules:
     - SigMa-Client
     - SigMa-Commons
+    - ETa-Capture-Client
   libraries:
     - epcis-commons
     - epcis-captureclient
+    - commons-logging
+    - log4j
 
 Usage dependencies:
   - SigMa

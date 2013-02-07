@@ -11,6 +11,8 @@ accept_defaults = false
 host = localhost
 callback_war = true
 anonymous_user = anonymous
+use_tls_id = true
+default_user = default-id
 
 [ldap]
 login = admin
@@ -34,7 +36,7 @@ repo = resources/apache-tomcat-7.0.33.tar.gz
 name = apache-tomcat
 directory = /srv/
 catalina_home = /srv/apache-tomcat/
-redirect_port = 8443
+secure_port = 8443
 shutdown_port = 8005
 http_port = 8080
 ajp_port = 8009
@@ -43,6 +45,13 @@ use_manager = true
 login = admin
 password = admin
 manager_path = manager/text
+keystore_file = \${catalina.home}/conf/ssl/keystore.jks
+keystore_password = changeit
+key_alias =
+key_password =
+truststore_file = \${catalina.home}/conf/ssl/keystore.jks
+truststore_password = changeit
+revocations_file = \${catalina.home}/conf/ssl/revocations_list.pem
 install = false
 
 [activemq]
@@ -222,12 +231,19 @@ entry_regex = \\\\!\\\\^\\\\.\\\\*\\\\$\\\\!|\\\\!
 name = sigma
 repo = resources/sigma-1.9-mock.war
 install = True
-key-store-file-path = resources/certs/sslcert/test-cert.p12
-key-store-password = skanka
 url = http://localhost:8080/sigma/
+
+[sigma_cert]
+create_keystore = True
+keystore = /srv/sigma-cert.p12
+password = store_pw
+distinguished_name = CN=anonymous
+keyalias = key
+keypassword =
 
 [cert]
 keystore = /srv/keystore.p12
+jks_keystore = /srv/keystore.jks
 password = store_pw
 distinguished_name = CN=anonymous
 keyalias = key
@@ -240,6 +256,7 @@ trust_keypassword =
 create_keystore = True
 create_certfile = True
 create_truststore = True
+exportkeystore_tojks = True
 
 EOS
 

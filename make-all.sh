@@ -116,6 +116,10 @@ p_bold "Fosstrak Epcis\n"
 do_compile "bug-free Epcis repository webapp" lib/epcis-0.5.0
 p_info "\n"
 
+p_bold "Model Utilities for Epcis events (μ)\n"
+do_compile Mu Mu
+p_info "\n"
+
 p_bold "TLS and Authentication library (τ)\n"
 do_compile TAu TAu
 p_info "\n"
@@ -135,7 +139,8 @@ do_compile EpcisPHI ETa/EpcisPHI
 p_info "\n"
 
 p_bold "Epcis Trust Agency (η)\n"
-do_compile ETa-Client ETa/ETa-Client
+do_compile ETa-Query-Client ETa/ETa-Query-Client
+do_compile ETa-Capture-Client ETa/ETa-Capture-Client
 do_compile ETa-Callback-Filter ETa/ETa-Callback/ETa-Callback-Filter
 do_compile ETa-Callback-Receiver ETa/ETa-Callback/ETa-Callback-Receiver
 do_compile ETa-Callback-Sender ETa/ETa-Callback/ETa-Callback-Sender
@@ -161,10 +166,9 @@ p_bold "Epcis to DS bridge (ε)\n"
 do_compile EpcILoN EpcILoN
 p_info "\n"
 
-p_bold "Application Interface (α, μ, ο, ω, ρ)\n"
+p_bold "Application Interface (α, ο, ω, ρ)\n"
 do_compile ALfA-PI ALfA/ALfA-PI
 do_compile ALfA ALfA/ALfA
-do_compile Mu Mu
 do_compile ALfA-RMI ALfA/ALfA-RMI
 do_compile_pack OmICron OMeGa/OmICron
 do_compile OMeGa OMeGa/OMeGa

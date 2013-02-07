@@ -9,7 +9,6 @@ Dépendances:
   bibliothèques:
     - epcis-commons
     - servlet-api
-    - mysql-connector
     - activemq-core
     - commons-logging
     - log4j

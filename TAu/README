@@ -7,7 +7,6 @@ Dependencies:
   librairies:
     - cxf
     - commons-logging
-    - log4j
 
 Usage:
   see DSeTa, EpcILoN, and ETa for examples.

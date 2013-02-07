@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -20,12 +20,17 @@ package fr.unicaen.iota.application.rest;
 
 import fr.unicaen.iota.application.AccessInterface;
 import fr.unicaen.iota.application.Configuration;
+import fr.unicaen.iota.application.soap.IoTaException;
+import fr.unicaen.iota.application.soap.client.IoTaFault;
 import fr.unicaen.iota.mu.EPCISEventTypeHelper;
 import fr.unicaen.iota.mu.ExtensionTypeHelper;
 import fr.unicaen.iota.tau.model.Identity;
+import fr.unicaen.iota.xi.client.EPCISPEP;
+import fr.unicaen.iota.xi.utils.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +50,24 @@ public abstract class BaseRHO extends HttpServlet {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     protected AccessInterface controler;
+    private final Identity anonymous;
+    private final EPCISPEP xiclient;
+
+    public BaseRHO() {
+        anonymous = new Identity();
+        anonymous.setAsString(Configuration.DEFAULT_IDENTITY);
+        xiclient = new EPCISPEP(Configuration.XI_URL, Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
+    }
+
+    private void checkAuth(Principal authId, Identity id) throws IoTaException {
+        if (authId == null && id == anonymous) {
+            return;
+        }
+        int chk = xiclient.canBe(authId.getName(), id.getAsString());
+        if (!Utils.responseIsPermit(chk)) {
+            throw new IoTaException(authId.getName() + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
+        }
+    }
 
     protected abstract AccessInterface getControler() throws Exception;
 
@@ -76,7 +99,11 @@ public abstract class BaseRHO extends HttpServlet {
                 Identity id = new Identity();
                 String pid = request.getParameter("id");
                 id.setAsString(pid == null ? Configuration.DEFAULT_IDENTITY : pid);
+                checkAuth(request.getUserPrincipal(), id);
                 list = controler.traceEPC(id, request.getParameter("epc"));
+            } catch (IoTaException ex) {
+                out.println("{ \"error\": \"" + IoTaFault.explain(ex) + ": " + ex.getMessage() + "\" }");
+                return;
             } catch (RemoteException ex) {
                 out.println("{ \"error\": \"" + ex.getMessage() + "\" }");
                 return;

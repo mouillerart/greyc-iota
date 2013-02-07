@@ -5,12 +5,12 @@ Interface library between EPCglobal/IoTa and top-level applications.
 Dependencies:
   IoTa modules:
     - ALfA-PI
+    - TAu
     - Nu
     - DSeTa-Client
-    - ETa-Client
+    - ETa-Query-Client
   libraries:
     - epcis-commons
-    - dnsjava
     - commons-logging
     - log4j
 

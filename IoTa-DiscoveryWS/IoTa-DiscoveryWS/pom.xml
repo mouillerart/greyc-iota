@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>discovery-server</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>war</packaging>
     <name>IoTa-DiscoveryWS</name>
 
@@ -20,6 +20,12 @@
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
             <artifactId>ds-xi-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>libxacml-ds</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -46,12 +52,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
             <version>${hibernate-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.16.1-GA</version>
         </dependency>
 
         <dependency>
@@ -112,12 +112,6 @@
         </dependency>
 
         <!-- Other dependies -->
-
-        <dependency>
-            <groupId>dnsjava</groupId>
-            <artifactId>dnsjava</artifactId>
-            <version>2.1.1</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>

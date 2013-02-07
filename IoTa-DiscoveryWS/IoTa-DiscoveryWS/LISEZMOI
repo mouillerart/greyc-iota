@@ -14,9 +14,7 @@ Dépendances:
     - IoTa-DiscoveryWS-Client
   bibliothèques:
     - hibernate
-    - mysql-connector
     - axis2
-    - dnsjava
     - servlet-api
     - commons-logging
     - log4j

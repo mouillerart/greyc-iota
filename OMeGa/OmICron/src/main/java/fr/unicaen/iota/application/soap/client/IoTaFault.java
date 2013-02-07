@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,8 @@ public enum IoTaFault {
     ons(0x100, "ONS Error"),
     ds(0x200, "DS Error"),
     epcis(0x400, "EPCIS Error"),
-    alfa(0x700, "Access Layer Error");
+    alfa(0x700, "Access Layer Error"),
+    tau(0x800, "Identity Error");
     private final int code;
     private final String explanation;
 

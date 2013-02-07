@@ -10,10 +10,10 @@ Dépendances:
     - ALfA-PI
     - Nu
     - DSeTa-Client
-    - ETa-Client
+    - ETa-Query-Client
+    - TAu
   bibliothèques:
     - epcis-commons
-    - dnsjava
     - commons-logging
     - log4j
 

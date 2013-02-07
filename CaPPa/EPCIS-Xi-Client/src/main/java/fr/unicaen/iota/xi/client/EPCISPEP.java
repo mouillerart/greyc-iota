@@ -1,7 +1,8 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2012  Oranges Labs
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,8 +32,8 @@ public class EPCISPEP extends PEP implements MethodNamesQuery, MethodNamesCaptur
 
     private static final Log log = LogFactory.getLog(EPCISPEP.class);
 
-    public EPCISPEP(String url) {
-        super(url);
+    public EPCISPEP(String url, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
+        super(url, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
     @Override

@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -18,8 +18,8 @@
  */
 package fr.unicaen.iota.application.rest;
 
-import fr.unicaen.iota.application.Configuration;
 import fr.unicaen.iota.application.AccessInterface;
+import fr.unicaen.iota.application.Configuration;
 import java.net.URI;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

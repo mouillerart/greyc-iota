@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -58,6 +58,10 @@ public final class Configuration {
     public static String SUBSCRIPTION_VALUE;
     public static String PUBLISHER_CLASS_NAME;
     public static boolean PUBLISH;
+    public static String PKS_FILENAME;
+    public static String PKS_PASSWORD;
+    public static String TRUST_PKS_FILENAME;
+    public static String TRUST_PKS_PASSWORD;
     // read application properties from classpath
     private static final String PROPERTIES_CONFIG_FILE = "/application.properties";
 
@@ -114,6 +118,10 @@ public final class Configuration {
             SUBSCRIPTION_VALUE = properties.getProperty("subscription-value");
             PUBLISHER_CLASS_NAME = properties.getProperty("publisher-class-name");
             PUBLISH = Boolean.parseBoolean(properties.getProperty("publish"));
+            PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
+            PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
+            TRUST_PKS_FILENAME = properties.getProperty("trust-pks-filename", "publickeys.jks");
+            TRUST_PKS_PASSWORD = properties.getProperty("trust-pks-password", "changeit");
             is.close();
         } catch (IOException e) {
             LogFactory.getLog(Configuration.class).fatal(null, e);

@@ -89,11 +89,18 @@
             element="usvc:UserDeleteResult"/>
     </wsdl:message>
 
-    <wsdl:message name="userLoginReq">
+    <wsdl:message name="userBasicLoginReq">
         <wsdl:part
             name="parms"
-            element="usvc:UserLogin"/>
+            element="usvc:UserBasicLogin"/>
     </wsdl:message>
+
+    <wsdl:message name="userCertLoginReq">
+        <wsdl:part
+            name="parms"
+            element="usvc:UserCertLogin"/>
+    </wsdl:message>
+
     <wsdl:message name="userLoginRsp">
         <wsdl:part
             name="result"
@@ -214,10 +221,25 @@
                 message="usvcw:SecurityExceptionResponse"/>
         </wsdl:operation>
 
-        <wsdl:operation name="userLogin">
+        <wsdl:operation name="userBasicLogin">
             <wsdl:input
-                message="usvcw:userLoginReq"
-                name="userLoginReq"/>
+                message="usvcw:userBasicLoginReq"
+                name="userBasicLoginReq"/>
+            <wsdl:output
+                message="usvcw:userLoginRsp"
+                name="userLoginRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="usvcw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="usvcw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCertLogin">
+            <wsdl:input
+                message="usvcw:userCertLoginReq"
+                name="userCertLoginReq"/>
             <wsdl:output
                 message="usvcw:userLoginRsp"
                 name="userLoginRsp"/>
@@ -350,9 +372,25 @@
             </wsdl:fault>
         </wsdl:operation>
 
-        <wsdl:operation name="userLogin">
+        <wsdl:operation name="userBasicLogin">
             <wsoap:operation soapAction=""/>
-            <wsdl:input name="userLoginReq">
+            <wsdl:input name="userBasicLoginReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLoginRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCertLogin">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userCertLoginReq">
                 <wsoap:body use="literal"/>
             </wsdl:input>
             <wsdl:output name="userLoginRsp">

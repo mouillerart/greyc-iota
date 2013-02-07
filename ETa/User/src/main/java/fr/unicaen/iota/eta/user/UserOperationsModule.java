@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ public class UserOperationsModule {
 
     public UserOperationsModule() {
         this.backend = new UserOperations();
-        this.userPep = new UserPEP(Constants.XACML_URL);
+        this.userPep = new UserPEP(Constants.XACML_URL, Constants.PKS_FILENAME, Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
     }
 
     /**
@@ -119,8 +119,7 @@ public class UserOperationsModule {
     }
 
     /**
-     * Fetchs
-     * <code>User</code> corresponding to login and password.
+     * Fetchs <code>User</code> corresponding to login and password.
      *
      * @param login The user login.
      * @param password The user password.
@@ -129,7 +128,7 @@ public class UserOperationsModule {
      * occurred.
      * @throws SecurityExceptionResponse If login or password is incorrect.
      */
-    public User userLogin(String login, String password)
+    public User userBasicLogin(String login, String password)
             throws ImplementationExceptionResponse, SecurityExceptionResponse {
         try {
             /*
@@ -137,9 +136,53 @@ public class UserOperationsModule {
              * newCtx.lookup("java:comp/env"); DirContext dirCtxt = (DirContext)
              * envCtx.lookup("ldap/gatewayldap");
              */
-            List<User> userList = backend.userLogin(login, password);
+            List<User> userList = backend.userBasicLogin(login, password);
             if (userList.isEmpty()) {
                 String msg = "A LDAP error occurred: login or password is incorrect.";
+                SecurityException se = new SecurityException();
+                se.setReason(msg);
+                se.setQueryName("userLogin");
+                SecurityExceptionResponse ser = new SecurityExceptionResponse(msg, se);
+                LOG.error(msg, ser);
+                throw ser;
+            }
+            return userList.get(0);
+        } catch (SecurityExceptionResponse ser) {
+            throw ser;
+        } catch (ImplementationExceptionResponse ier) {
+            throw ier;
+        } catch (Exception ex) {
+            String msg = "An unexpected error occurred.";
+            ImplementationException ie = new ImplementationException();
+            ie.setReason(msg);
+            ie.setQueryName("userLogin");
+            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
+            LOG.error(msg, ier);
+            throw ier;
+        }
+    }
+
+    /**
+     * Fetchs <code>User</code> corresponding to login.
+     *
+     * @param login The user login.
+     * @return The user corresponding to the login.
+     * @throws ImplementationExceptionResponse If an error involving the base
+     * occurred.
+     * @throws SecurityExceptionResponse If login or password is incorrect.
+     */
+    public User userCertLogin(String login)
+            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+        try {
+            /*
+             * Context newCtx = new InitialContext(); Context envCtx = (Context)
+             * newCtx.lookup("java:comp/env"); DirContext dirCtxt = (DirContext)
+             * envCtx.lookup("ldap/gatewayldap");
+             */
+            List<User> userList = backend.userCertLogin(login);
+            if (userList.isEmpty()) {
+                String msg = "A LDAP error occurred: login is incorrect.";
                 SecurityException se = new SecurityException();
                 se.setReason(msg);
                 se.setQueryName("userLogin");

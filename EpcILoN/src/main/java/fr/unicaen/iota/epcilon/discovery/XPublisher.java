@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -44,7 +44,6 @@ public class XPublisher extends Thread {
         queryOperationsModule = new SQLQueryModule();
         identity = new Identity();
         identity.setAsString(Configuration.IDENTITY);
-        dsetaClient = new DSeTaClient(identity, Configuration.DISCOVERY_SERVICE_ADDRESS);
     }
 
     @Override
@@ -84,6 +83,11 @@ public class XPublisher extends Thread {
         String dsAddress = Configuration.DISCOVERY_SERVICE_ADDRESS;
         try {
             log.debug("connected to " + dsAddress);
+            if (dsetaClient == null) {
+                dsetaClient = new DSeTaClient(identity, Configuration.DISCOVERY_SERVICE_ADDRESS,
+                        Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD,
+                        Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
+            }
             int tmp = 0;
             while (tmp < toPublishList.size()) {
                 List<EventInfo> list = new ArrayList<EventInfo>();

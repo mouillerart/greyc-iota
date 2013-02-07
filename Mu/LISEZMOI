@@ -6,7 +6,6 @@ Dépendances:
   bibliothèques:
     - epcis-commons
     - commons-logging
-    - log4j
 
 Utilisation:
   Voir BETa et OMeGa pour des exemples.

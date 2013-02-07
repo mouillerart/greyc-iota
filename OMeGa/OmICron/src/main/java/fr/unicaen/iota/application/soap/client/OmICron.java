@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,14 +32,11 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -54,29 +51,31 @@ import org.fosstrak.epcis.model.QueryParams;
 
 /**
  */
-public class OmICron implements X509TrustManager {
+public class OmICron {
 
     private Identity identity;
     private IoTaServicePortType port;
     private static final Log log = LogFactory.getLog(OmICron.class);
 
     public OmICron(Identity id, String oAddress) {
-        this(id, oAddress, null, null);
+        this(id, oAddress, null, null, null, null);
     }
 
-    public OmICron(Identity id, String address, String pksFilename, String pksPassword) {
+    public OmICron(Identity id, String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         log.trace("new OmICron: " + id + " @ " + address);
         this.identity = id;
-        // TODO: TLS
         try {
-            configureService(address, pksFilename, pksPassword);
+            configureService(address, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
         } catch (Exception e) {
             throw new RuntimeException("Can’t configure service: " + e.getMessage(), e);
         }
     }
 
-    // TODO: TLS
-    public void configureService(String address, String pksFilename, String pksPassword) throws Exception {
+    public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws Exception {
+        System.setProperty("javax.net.ssl.keyStore", pksFilename);
+        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
         URL wsdlUrl = new URL(address + "?wsdl");
         IoTaService service = new IoTaService(wsdlUrl);
         port = service.getPort(IoTaServicePortType.class);
@@ -88,9 +87,8 @@ public class OmICron implements X509TrustManager {
         httpClientPolicy.setAllowChunking(false);
         httpConduit.setClient(httpClientPolicy);
 
-        // TODO: TLS
         if (pksFilename != null) {
-            //log.debug("Authenticating with certificate in file: " + pksFilename);
+            log.debug("Authenticating with certificate in file: " + pksFilename);
 
             if (!wsdlUrl.getProtocol().equalsIgnoreCase("https")) {
                 throw new Exception("Authentication method requires the use of HTTPS");
@@ -101,11 +99,15 @@ public class OmICron implements X509TrustManager {
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keyStore, pksPassword.toCharArray());
 
+            KeyStore trustStore = KeyStore.getInstance(trustPksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            trustStore.load(new FileInputStream(new File(trustPksFilename)), trustPksPassword.toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(trustStore);
+
             TLSClientParameters tlscp = new TLSClientParameters();
-            tlscp.setKeyManagers(keyManagerFactory.getKeyManagers());
             tlscp.setSecureRandom(new SecureRandom());
-            tlscp.setDisableCNCheck(true);
-            tlscp.setTrustManagers(new TrustManager[]{this});
+            tlscp.setKeyManagers(keyManagerFactory.getKeyManagers());
+            tlscp.setTrustManagers(trustManagerFactory.getTrustManagers());
 
             httpConduit.setTlsClientParameters(tlscp);
         }
@@ -226,38 +228,36 @@ public class OmICron implements X509TrustManager {
         return out.getEventList().getEvent();
     }
 
-    @Override
-    public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public X509Certificate[] getAcceptedIssuers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public static void main(String args[]) throws Exception {
         String serviceURL = "http://localhost:8080/omega";
         String sid = "anonymous";
         String epc = "urn:epc:id:sgtin:40000.00002.1298283877319";
-        if (args.length != 3) {
-            System.err.println("Usage: OmICron <OMeGa Web Service URL> <IDENTITY> <EPC URN ID>");
-            System.err.println();
-            System.err.println("example: OmICron " + serviceURL + " " + sid + " " + epc);
-            System.exit(-1);
-        } else {
-            serviceURL = args[0];
-            sid = args[1];
-            epc = args[2];
+        String ksFile = null;
+        String ksPass = null;
+        String tsFile = null;
+        String tsPass = null;
+        switch (args.length) {
+            case 7:
+                ksFile = args[3];
+                ksPass = args[4];
+                tsFile = args[5];
+                tsPass = args[6];
+            // fall-through
+            case 3:
+                serviceURL = args[0];
+                sid = args[1];
+                epc = args[2];
+                break;
+            default:
+                System.err.println("Usage: OmICron <OMeGa Web Service URL> <IDENTITY> <EPC URN ID>");
+                System.err.println();
+                System.err.println("example: OmICron " + serviceURL + " " + sid + " " + epc);
+                System.exit(-1);
+                break;
         }
         Identity id = new Identity();
         id.setAsString(sid);
-        OmICron client = new OmICron(id, serviceURL);
+        OmICron client = new OmICron(id, serviceURL, ksFile, ksPass, tsFile, tsPass);
 
         System.out.println("Processing traceEPC ...");
         List<EPCISEventType> eventList = client.traceEPC(epc);

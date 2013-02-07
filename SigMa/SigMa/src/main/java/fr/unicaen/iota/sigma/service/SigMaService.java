@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,11 +51,11 @@ public class SigMaService implements SigMaServicePortType {
         boolean value;
         try {
             SigMaFunctions sigMAFunctions = new SigMaFunctions(Constants.KEY_STORE_FILE_PATH, Constants.KEY_STORE_PASSWORD);
-            //value = sigMAFunctions.verify(event);
-            value = true;
+            value = sigMAFunctions.verify(event);
+//            value = true;
             response.setValue(value);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Error during verification", e);
             response.setMessage(e.getMessage());
         }
         verification.setVerifyResponse(response);

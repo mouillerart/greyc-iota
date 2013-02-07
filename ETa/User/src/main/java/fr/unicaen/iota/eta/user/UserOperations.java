@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -75,8 +75,7 @@ public class UserOperations {
     }
 
     /**
-     * Fetchs list of
-     * <code>User</code> corresponding to login and password from the LDAP base.
+     * Fetchs list of <code>User</code> corresponding to login and password from the LDAP base.
      *
      * @param login The user login.
      * @param password The user password.
@@ -84,7 +83,7 @@ public class UserOperations {
      * @throws ImplementationExceptionResponse If an error involving the LDAP
      * base occurred.
      */
-    public List<User> userLogin(String login, String password)
+    public List<User> userBasicLogin(String login, String password)
             throws ImplementationExceptionResponse {
         try {
             DirContext dirCtxt = getContext();
@@ -133,6 +132,57 @@ public class UserOperations {
     }
 
     /**
+     * Fetchs list of <code>User</code> corresponding to criterion from the LDAP base.
+     *
+     * @param userCriterion The criterion to search user.
+     * @return The list of users corresponding to the criterion.
+     * @throws ImplementationExceptionResponse If an error involving the LDAP
+     * base occurred.
+     */
+    public List<User> userCertLogin(String userCriterion)
+            throws ImplementationExceptionResponse {
+        try {
+            DirContext dirCtxt = getContext();
+            try {
+                SearchControls ContrainteRecherche = new SearchControls();
+                ContrainteRecherche.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                NamingEnumeration answer = dirCtxt.search("", userCriterion.toLowerCase(), ContrainteRecherche);
+                List<User> userList = new ArrayList<User>();
+                while (answer.hasMore()) {
+                    Binding currentElement = (Binding) answer.next();
+                    Attributes attrs = dirCtxt.getAttributes(currentElement.getName());
+                    User user = new User();
+                    user.setUserID(userCriterion);
+                    String partner = (attrs.get("partner") != null) ? attrs.get("partner").get().toString() : "";
+                    user.setPartnerID(partner);
+                    userList.add(user);
+                }
+                return userList;
+            } finally {
+                dirCtxt.close();
+            }
+        } catch (NamingException ex) {
+            String msg = "An error occurred during the LDAP connection.";
+            ImplementationException ie = new ImplementationException();
+            ie.setReason(msg);
+            ie.setQueryName("userLogin");
+            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
+            LOG.error(msg, ier);
+            throw ier;
+        } catch (Exception ex) {
+            String msg = "An unexpected error occurred.";
+            ImplementationException ie = new ImplementationException();
+            ie.setReason(msg);
+            ie.setQueryName("userLogin");
+            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
+            LOG.error(msg, ier);
+            throw ier;
+        }
+    }
+
+    /**
      * Fetchs list of
      * <code>User</code> corresponding to user ID from the LDAP base.
      *
@@ -149,7 +199,7 @@ public class UserOperations {
             try {
                 SearchControls ContrainteRecherche = new SearchControls();
                 ContrainteRecherche.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                String critere = "uid=" + userId;
+                String critere = (userId.contains("="))? userId : "uid=" + userId;
                 NamingEnumeration answer = dirCtxt.search("", critere, ContrainteRecherche);
                 while (answer.hasMore()) {
                     Binding currentElement = (Binding) answer.next();

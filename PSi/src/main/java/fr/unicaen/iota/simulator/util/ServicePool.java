@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  */
 package fr.unicaen.iota.simulator.util;
 
-import org.fosstrak.epcis.captureclient.CaptureClient;
+import fr.unicaen.iota.eta.capture.ETaCaptureClient;
 
 /**
  * Not a real pool since, from Fosstrak Epcis Capture Client version 0.4.2, a
@@ -41,16 +41,17 @@ public class ServicePool {
         return servicePool;
     }
 
-    public synchronized CaptureClient getServiceInstance(String EndPointEPR) throws InterruptedException {
+    public synchronized ETaCaptureClient getServiceInstance(String EndPointEPR) throws InterruptedException {
         if (available == 0) {
             wait();
         }
         available--;
-        CaptureClient service = new CaptureClient(EndPointEPR);
+        ETaCaptureClient service = new ETaCaptureClient(EndPointEPR,
+                Config.pks_filename, Config.pks_password, Config.trust_pks_filename, Config.trust_pks_password);
         return service;
     }
 
-    public synchronized void releaseInstance(CaptureClient service) throws InterruptedException {
+    public synchronized void releaseInstance(ETaCaptureClient service) throws InterruptedException {
         available++;
         notifyAll();
     }

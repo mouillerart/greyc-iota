@@ -6804,7 +6804,7 @@
     <path
        inkscape:connector-curvature="0"
        id="path4389"
-       d="m 700,822.36214 -55,70"
+       d="m 700.10255,821.87025 -78,70.00002"
        style="fill:none;stroke:#ffbc29;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mstarta)"
        sodipodi:nodetypes="cc" />
     <g
@@ -7170,7 +7170,7 @@
          style="fill:none;stroke:#ffb52a;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
     </g>
     <g
-       transform="translate(130,-30.000037)"
+       transform="translate(111,-30.000037)"
        id="g63642">
       <rect
          style="fill:#ffffff;fill-opacity:1;stroke:#ffb52a;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
@@ -8517,6 +8517,34 @@
        id="path26104"
        d="m 1220,384.09444 c 8.2746,-7.90904 65.261,-13.21933 70,-30"
        style="fill:none;stroke:#297fff;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none;display:inline" />
+    <g
+       id="g10253"
+       transform="translate(144,61.73228)"
+       style="display:inline">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#2a7fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect10255"
+         width="40"
+         height="20"
+         x="500"
+         y="532.36218"
+         ry="9.621212" />
+      <text
+         xml:space="preserve"
+         style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         x="520"
+         y="542.36218"
+         id="text10257"
+         sodipodi:linespacing="100%"><tspan
+           sodipodi:role="line"
+           x="520"
+           y="542.36218"
+           id="tspan10261">SigMa</tspan><tspan
+           sodipodi:role="line"
+           x="520"
+           y="550.36218"
+           id="tspan10260">library</tspan></text>
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -21301,7 +21329,7 @@
          d="m 155.87714,915.74733 c -0.0908,0.54607 -2.61404,0.78699 -5.71589,0.78699 -3.10161,0 -5.62504,-0.24115 -5.71589,-0.78699 l 11.43178,0 z" />
     </g>
     <g
-       transform="matrix(0.7380978,0,0,0.7380978,556.66631,182.64478)"
+       transform="matrix(0.7380978,0,0,0.7380978,546.66631,181.88163)"
        id="g82038">
       <path
          inkscape:connector-curvature="0"
@@ -35913,7 +35941,7 @@
     </g>
     <g
        style="display:inline"
-       transform="translate(475,684.99998)"
+       transform="translate(462,684.99998)"
        id="g41265">
       <g
          style="display:inline"
@@ -36484,7 +36512,7 @@
                    id="stop41483" />
               </linearGradient>
               <polygon
-                 points="107.572,162.186 116.258,160.611 116.255,150.508 98.884,150.51 98.884,160.615 98.884,160.615 "
+                 points="116.255,150.508 98.884,150.51 98.884,160.615 98.884,160.615 107.572,162.186 116.258,160.611 "
                  style="fill:url(#linearGradient41921)"
                  id="polygon41485" />
               <linearGradient
@@ -36585,11 +36613,11 @@
                    id="stop41527" />
               </linearGradient>
               <polygon
-                 points="107.729,161.537 115.591,160.082 115.591,150.705 99.861,150.709 99.861,160.082 99.861,160.082 "
+                 points="115.591,150.705 99.861,150.709 99.861,160.082 99.861,160.082 107.729,161.537 115.591,160.082 "
                  style="fill:url(#linearGradient41925)"
                  id="polygon41529" />
               <polygon
-                 points="100.187,159.369 107.41,160.658 114.631,159.365 114.631,159.078 108.854,160.148 108.854,160.148 101.633,158.811 101.633,151.105 100.184,151.105 "
+                 points="114.631,159.365 114.631,159.078 108.854,160.148 108.854,160.148 101.633,158.811 101.633,151.105 100.184,151.105 100.187,159.369 107.41,160.658 "
                  style="fill:#dcf0ff"
                  id="polygon41531" />
               <path
@@ -36745,7 +36773,7 @@
                    id="stop41587" />
               </linearGradient>
               <polygon
-                 points="89.398,118.447 89.398,118.447 86.345,123.738 83.292,118.449 "
+                 points="86.345,123.738 83.292,118.449 89.398,118.447 89.398,118.447 "
                  style="fill:url(#linearGradient41937)"
                  id="polygon41589" />
             </g>

@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -35,11 +35,19 @@ import org.fosstrak.epcis.model.TransactionEventType;
 public class TraceEPC {
 
     private final Identity identity;
+    private final String pksFilename;
+    private final String pksPassword;
+    private final String trustPksFilename;
+    private final String trustPksPassword;
     private final ONSOperation onsOperation;
     private static final Log log = LogFactory.getLog(TraceEPC.class);
 
-    public TraceEPC(Identity identity) {
+    public TraceEPC(Identity identity, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         this.identity = identity;
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
         this.onsOperation = new ONSOperation();
     }
 
@@ -64,7 +72,7 @@ public class TraceEPC {
             log.trace("referent ds address found: " + dsAddress);
         }
         log.trace("Start discover");
-        DiscoveryOperation dsOp = new DiscoveryOperation(identity, dsAddress);
+        DiscoveryOperation dsOp = new DiscoveryOperation(identity, dsAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
         return traceEPC(dsOp, EPC, filters);
     }
 
@@ -74,7 +82,7 @@ public class TraceEPC {
             EpcisOperation epcisOperation = null;
             while (epcisOperation == null) {
                 try {
-                    epcisOperation = new EpcisOperation(identity, EPCIS_SERVICE_ADDRESS);
+                    epcisOperation = new EpcisOperation(identity, EPCIS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
                 } catch (Exception ex) {
                     epcisOperation = null;
                     log.warn("Unable to create service proxy port! [RETRYING]", ex);

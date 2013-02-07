@@ -1,0 +1,13 @@
+ETa-Capture-Client
+
+Common library interfacing with the capture web service of ETa.
+
+Dependencies:
+  libraries:
+    - epcis-commons
+    - epcis-captureclient
+    - commons-logging
+
+Usage Dependencies:
+  - ETa
+  - an EPCIS

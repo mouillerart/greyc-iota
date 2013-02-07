@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -51,7 +51,6 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 //import org.fosstrak.epcis.utils.AuthenticationType;
-
 /**
  *
  */
@@ -62,22 +61,24 @@ public class DSeTaClient implements X509TrustManager {
     private static final Log log = LogFactory.getLog(DSeTaClient.class);
 
     public DSeTaClient(Identity id, String dsAddress) {
-        this(id, dsAddress, null, null);
+        this(id, dsAddress, null, null, null, null);
     }
-    
-    public DSeTaClient(Identity id, String address, String pksFilename, String pksPassword) {
+
+    public DSeTaClient(Identity id, String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         log.trace("new DSeTaClient: " + id + " @ " + address);
         this.identity = id;
-        // TODO: TLS
         try {
-            configureService(address, pksFilename, pksPassword);
+            configureService(address, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
         } catch (Exception e) {
             throw new RuntimeException("Can’t configure service: " + e.getMessage(), e);
         }
     }
 
-    // TODO: TLS
-    public void configureService(String address, String pksFilename, String pksPassword) throws Exception {
+    public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws Exception {
+        System.setProperty("javax.net.ssl.keyStore", pksFilename);
+        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
         URL wsdlUrl = new URL(address + "?wsdl");
         IDedDSService service = new IDedDSService(wsdlUrl);
         port = service.getPort(IDedDSServicePortType.class);
@@ -89,9 +90,8 @@ public class DSeTaClient implements X509TrustManager {
         httpClientPolicy.setAllowChunking(false);
         httpConduit.setClient(httpClientPolicy);
 
-        // TODO: TLS
         if (pksFilename != null) {
-            //log.debug("Authenticating with certificate in file: " + pksFilename);
+            log.debug("Authenticating with certificate in file: " + pksFilename);
 
             if (!wsdlUrl.getProtocol().equalsIgnoreCase("https")) {
                 throw new Exception("Authentication method requires the use of HTTPS");
@@ -102,11 +102,15 @@ public class DSeTaClient implements X509TrustManager {
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keyStore, pksPassword.toCharArray());
 
+            KeyStore trustStore = KeyStore.getInstance(trustPksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            trustStore.load(new FileInputStream(new File(trustPksFilename)), trustPksPassword.toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(trustStore);
+
             TLSClientParameters tlscp = new TLSClientParameters();
-            tlscp.setKeyManagers(keyManagerFactory.getKeyManagers());
             tlscp.setSecureRandom(new SecureRandom());
-            tlscp.setDisableCNCheck(true);
-            tlscp.setTrustManagers(new TrustManager[] { this });
+            tlscp.setKeyManagers(keyManagerFactory.getKeyManagers());
+            tlscp.setTrustManagers(trustManagerFactory.getTrustManagers());
 
             httpConduit.setTlsClientParameters(tlscp);
         }
@@ -232,17 +236,17 @@ public class DSeTaClient implements X509TrustManager {
             TExtension exts = new TExtension();
             for (Map.Entry<String, String> idval : extensions.entrySet()) {
                 /*
-                ESDS_ServiceStub.TExtension tExtension = new ESDS_ServiceStub.TExtension();
-                OMFactory factory = OMAbstractFactory.getOMFactory();
-                OMElement elemExtension = factory.createOMElement(new QName("fr:unicaen:extension"));
-                OMElement key = factory.createOMElement(new QName("fr:unicaen:key"));
-                key.setText(idval.getKey());
-                OMElement value = factory.createOMElement(new QName("fr:unicaen:value"));
-                value.setText(idval.getValue());
-                elemExtension.addChild(key);
-                elemExtension.addChild(value);
-                tExtension.addExtraElement(elemExtension);
-                */
+                 * ESDS_ServiceStub.TExtension tExtension = new
+                 * ESDS_ServiceStub.TExtension(); OMFactory factory =
+                 * OMAbstractFactory.getOMFactory(); OMElement elemExtension =
+                 * factory.createOMElement(new QName("fr:unicaen:extension"));
+                 * OMElement key = factory.createOMElement(new
+                 * QName("fr:unicaen:key")); key.setText(idval.getKey());
+                 * OMElement value = factory.createOMElement(new
+                 * QName("fr:unicaen:value")); value.setText(idval.getValue());
+                 * elemExtension.addChild(key); elemExtension.addChild(value);
+                 * tExtension.addExtraElement(elemExtension);
+                 */
             }
             tObjectEvent.setExtension(exts);
         }

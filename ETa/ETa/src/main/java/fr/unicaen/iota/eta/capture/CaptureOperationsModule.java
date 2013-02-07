@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,8 @@
  */
 package fr.unicaen.iota.eta.capture;
 
-import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.eta.utils.Constants;
+import fr.unicaen.iota.eta.utils.Utils;
 import fr.unicaen.iota.sigma.client.SigMaClient;
 import fr.unicaen.iota.sigma.xsd.Verification;
 import java.io.*;
@@ -175,10 +176,10 @@ public class CaptureOperationsModule {
      * Performs database reset by querying EPCIS.
      *
      * @param rsp The HTTP response
-     * @param out 
+     * @param out
      * @throws IOException if an error occurred while configuring EPCIS capture
      * client.
-     * @throws Exception  
+     * @throws Exception
      */
     public void doDbReset(final HttpServletResponse rsp, final PrintWriter out) throws IOException, Exception {
         String msg;
@@ -219,7 +220,7 @@ public class CaptureOperationsModule {
     /**
      * Performs EPCIS capture after XACML check.
      *
-     * @param req 
+     * @param req
      * @param rsp The response.
      * @throws SAXException If the document parsing failed.
      * @throws IOException If an error occurred while validating the request or
@@ -228,7 +229,7 @@ public class CaptureOperationsModule {
      */
     public void doCapture(HttpServletRequest req, HttpServletResponse rsp) throws SAXException, IOException, InternalBusinessException {
         Principal authId = req.getUserPrincipal();
-        String user = authId != null ? authId.toString() : Constants.XACML_DEFAULT_USER;
+        String user = authId != null ? authId.getName() : Constants.XACML_DEFAULT_USER;
         InputStream in = req.getInputStream();
         Document document = null;
         try {
@@ -364,6 +365,7 @@ public class CaptureOperationsModule {
      * Processes the given document, performs access control and sends this
      * document to the EPCIS if permited.
      *
+     * @param user The user name.
      * @param document The document to capture.
      * @param rsp The HTTP response.
      * @throws SAXException If an error processing the XML document occurred.
@@ -378,26 +380,34 @@ public class CaptureOperationsModule {
             IOException, TransformerConfigurationException, TransformerException, CaptureClientException, Exception {
         List<EPCISEventType> captureEventList = extractsCaptureEventList(document);
 
+        PrintWriter out = rsp.getWriter();
+        String msg;
+
         if (Constants.SIGMA_VERIFICATION) {
+            if (sigmaClient == null) {
+                sigmaClient = new SigMaClient(Constants.SIGMA_URL, Constants.PKS_FILENAME, Constants.PKS_PASSWORD,
+                        Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+            }
             for (EPCISEventType event : captureEventList) {
                 Verification res = sigmaClient.verify(event);
                 if (res.getVerifyResponse().isValue()) {
-                    LOG.info("Event signature verified by the SigMA server.");
-                } else {
-                    LOG.info("Event signature is not correct. Please verify your partner capturer.");
+                    LOG.debug("Event signature verified by the SigMA server.");
+                }
+                else {
+                    msg = "Event signature is not correct.";
+                    LOG.info(msg);
+                    rsp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    out.println(msg);
+                    return;
                 }
             }
         }
 
-        PrintWriter out = rsp.getWriter();
-        String msg;
-
-        // XACML check start
+        for (EPCISEventType event : captureEventList) {
+            Utils.insertEventOwnerIfMissing(event, user);
+        }
         LOG.debug("START OF XACML check");
-        //TODO reset allowed after tests
-        // TODO user + owner
-        String owner = "anonymous";
-        boolean allowed = captureCheck.xacmlCheck(captureEventList, user, owner);
+        boolean allowed = captureCheck.xacmlCheck(captureEventList, user);
         if (allowed) {
             msg = "XACML check result: PERMITTED";
             LOG.debug(msg);
@@ -536,9 +546,7 @@ public class CaptureOperationsModule {
         // XACML check start
         LOG.debug("START OF XACML check");
         //TODO reset allowed after tests
-        // TODO user + owner
-        String owner = "anonymous";
-        boolean allowed = captureCheck.xacmlCheckMasterD(vocList, user, owner);
+        boolean allowed = captureCheck.xacmlCheckMasterD(vocList, user);
         if (allowed) {
             msg = "XACML check result: PERMITTED";
             LOG.debug(msg);

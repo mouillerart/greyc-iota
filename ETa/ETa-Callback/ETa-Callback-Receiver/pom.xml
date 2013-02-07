@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>eta-callback-receiver</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>war</packaging>
 
     <name>ETa-Callback-Receiver</name>

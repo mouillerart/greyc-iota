@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  */
 package fr.unicaen.iota.sigma.test;
 
+import fr.unicaen.iota.eta.capture.ETaCaptureClient;
 import fr.unicaen.iota.sigma.SigMaFunctions;
 import fr.unicaen.iota.sigma.client.SigMaClient;
 import fr.unicaen.iota.sigma.xsd.VerifyResponse;
@@ -28,7 +29,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.fosstrak.epcis.captureclient.CaptureClient;
 import org.fosstrak.epcis.model.*;
 
 /**
@@ -40,14 +40,20 @@ import org.fosstrak.epcis.model.*;
 public class SigMaTest {
 
     public static void main(String[] args) {
-        if (args.length != 4) {
-            System.err.println("usage: SigMaTest keystore password EpcisCaptureURL SigMaURL");
+        if (args.length != 8) {
+            System.err.println("usage: SigMaTest ETaCaptureURL SigMaURL keystoreTLS ksPasswordTLS truststoreTLS tsPasswordTLS keystoreSign ksPasswordSign");
+            System.err.println();
+            System.err.println("example: SigMaTest https://localhost:8443/eta/capture https://localhost:8443/sigma /srv/keystore.jks store_pw /srv/truststore.jks trust_pw /srv/sigma-cert.p12 store_pw");
             System.exit(1);
         }
-        String keyStore = args[0];
-        String ksPassword = args[1];
-        String captureUrl = args[2];
-        String sigmaAddress = args[3];
+        String captureUrl = args[0];
+        String sigmaAddress = args[1];
+        String keystoreTLS = args[2];
+        String ksPasswordTLS = args[3];
+        String truststoreTLS = args[4];
+        String tsPasswordTLS = args[5];
+        String keystoreSign = args[6];
+        String ksPasswordSign = args[7];
 
         ObjectEventType objEvent = new ObjectEventType();
         XMLGregorianCalendar now = null;
@@ -85,7 +91,7 @@ public class SigMaTest {
         EventListType eventList = new EventListType();
 
         try {
-            SigMaFunctions sigMAFunctions = new SigMaFunctions(keyStore, ksPassword);
+            SigMaFunctions sigMAFunctions = new SigMaFunctions(keystoreSign, ksPasswordSign);
             sigMAFunctions.sign(objEvent);
             JAXBElement<ObjectEventType> jaxbevt = new ObjectFactory().createEventListTypeObjectEvent(objEvent);
 
@@ -95,13 +101,13 @@ public class SigMaTest {
             epcisDoc.setSchemaVersion(new BigDecimal("1.0"));
             epcisDoc.setCreationDate(now);
 
-            CaptureClient client = new CaptureClient(captureUrl);
+            ETaCaptureClient client = new ETaCaptureClient(captureUrl, keystoreTLS, ksPasswordTLS, truststoreTLS, tsPasswordTLS);
             int httpResponseCode = client.capture(epcisDoc);
             if (httpResponseCode != 200) {
                 System.err.println("The event could NOT be captured!");
             }
 
-            SigMaClient sigMaClient = new SigMaClient(sigmaAddress);
+            SigMaClient sigMaClient = new SigMaClient(sigmaAddress, keystoreTLS, ksPasswordTLS, truststoreTLS, tsPasswordTLS);
             VerifyResponse response = sigMaClient.verify(objEvent).getVerifyResponse();
             boolean verification = response.isValue();
             System.out.println("This signature is " + verification);

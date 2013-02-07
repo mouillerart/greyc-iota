@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -336,7 +336,25 @@ def execKeytool(msg, keycmd, storetype, keystore, password, keyalias, keypass, o
     cmd =  ("keytool " + keycmd + " -storetype \"" + storetype + "\" -keystore \"" + keystore +
             "\" -storepass \"" + password + "\" -alias \"" + keyalias + "\" " + keypass)
     for opt, value in other_opts:
-        cmd += " " + opt + " \"" + value + "\""
+        if value:
+            value = " \"" + value + "\""
+        cmd += " " + opt + value
+    if sh_exec(cmd):
+        putDoneOK()
+    else:
+        putDoneFail()
+
+
+def execSrcToDestKeyTool(msg, keycmd, srcstoretype, srckeystore, srcstorepass, srcalias, deststoretype, destkeystore, deststorepass, deststorealias, other_opts):
+    putWait(msg)
+    cmd = ("keytool " + keycmd + " -srcstoretype \"" + srcstoretype + "\" -srckeystore \"" + srckeystore +
+           "\" -srcstorepass \"" + srcstorepass + "\" -srcalias \""+ srcalias +
+           "\" -deststoretype \"" + deststoretype + "\" -destkeystore \"" + destkeystore +
+           "\" -deststorepass \"" + deststorepass + "\" -destalias \"" + deststorealias + "\"")
+    for opt, value in other_opts:
+        if value:
+            value = " \"" + value + "\""
+        cmd += " " + opt + value
     if sh_exec(cmd):
         putDoneOK()
     else:

@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -33,7 +33,12 @@ public final class Configuration {
     }
     private static final Log log = LogFactory.getLog(Configuration.class);
     private static final String CONFIG_FILE = "application.properties";
+    public static final String PKS_FILENAME;
+    public static final String PKS_PASSWORD;
+    public static final String TRUST_PKS_FILENAME;
+    public static final String TRUST_PKS_PASSWORD;
     public static final String RMI_URL;
+    public static final String XI_URL;
     public static final String DEFAULT_IDENTITY;
 
     static {
@@ -46,7 +51,12 @@ public final class Configuration {
         } catch (IOException ex) {
             log.error("Unable to load " + CONFIG_FILE);
         }
+        PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
+        PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
+        TRUST_PKS_FILENAME = properties.getProperty("trustpks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = properties.getProperty("trustpks-password", "changeit");
         RMI_URL = properties.getProperty("alfa-rmi-url", "//localhost:1099/alfa");
+        XI_URL = properties.getProperty("xi-url", "//localhost:1099/ephi/xi");
         DEFAULT_IDENTITY = properties.getProperty("default-identity", "anonymous");
     }
 }

@@ -7,7 +7,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>EPCIS ACCESS CONTROL CENTER</title>
         <link rel="stylesheet" type="text/css" href="style/style_DS.css" />
-        <script type="text/javascript" src="script/check_form.js"> </script>
     </head>
     <body>
         <h2>EPCIS ACCESS CONTROL CENTER</h2>
@@ -19,9 +18,7 @@
             }
         %>
         <div id="logForm">
-            <form method="post" action="RootAccountAuth?action=login" onSubmit="return verifFormLog(this);">
-                <span>login : </span><input class="inputText" type="text" name="login" value="" /><br/>
-                <span>password : </span><input class="inputText" type="password" name="passwd" value="" />
+            <form method="post" action="RootAccountAuth?action=login">
                 <div><input type="image" src="./pics/login.jpg"/></div>
             </form>
         </div>

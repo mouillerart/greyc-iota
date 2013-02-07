@@ -5,8 +5,12 @@ Interface web service pour la plateforme IoTa.
 Dépendances:
   modules IoTa:
     - ALfA
+    - Mu
+    - OmICron
+    - EPCIS-Xi-Client
   bibliothèques:
     - cxf
+    - spring
     - commons-logging
     - log4j
 
@@ -14,6 +18,8 @@ Installation et Configuration:
   IoTa-Installer installe et configure OMeGa.
   (application.properties pour cette application,
    commons-logging.properties et log4j.properties pour les journaux)
+  Modifier le fichier tomcat-users.xml de Tomcat pour la gestion des
+   identités en TLS. Voir le fichier INSTALL.fr
 
 Dépendances d’utilisation:
   - ONS

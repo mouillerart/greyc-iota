@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>epcilon</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>war</packaging>
 
     <name>EpcILoN</name>
@@ -12,7 +12,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate-version>3.6.10.Final</hibernate-version>
-        <lib-cxf-version>2.2.12</lib-cxf-version>
         <epcis-version>0.5.0</epcis-version>
     </properties>
 
@@ -25,6 +24,18 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>eta-query-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>tau</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Fosstrak dependencies -->
         <dependency>
             <groupId>org.fosstrak.epcis</groupId>
@@ -32,7 +43,13 @@
             <version>${epcis-version}</version>
         </dependency>
 
-        <!-- Hibernate & MySQL dependencies -->
+        <dependency>
+            <groupId>org.fosstrak.epcis</groupId>
+            <artifactId>epcis-commons</artifactId>
+            <version>${epcis-version}</version>
+        </dependency>
+
+        <!-- Hibernate dependencies -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -62,31 +79,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
-        </dependency>
-
-        <!-- CXF dependencies -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${lib-cxf-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-            <version>${lib-cxf-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-local</artifactId>
-            <version>${lib-cxf-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-databinding-jaxb</artifactId>
-            <version>${lib-cxf-version}</version>
         </dependency>
 
     </dependencies>

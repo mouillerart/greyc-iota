@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>dseta-server</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>war</packaging>
     <name>DSeTa Server</name>
 
@@ -25,6 +25,12 @@
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
             <artifactId>discovery-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>tau</artifactId>
             <version>${project.version}</version>
         </dependency>
 

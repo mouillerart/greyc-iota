@@ -4,7 +4,6 @@ Web server for reception of callbacks to an EPCIS.
 
 Dependencies:
   libraries:
-    - epcis-commons
     - servlet-api
     - activemq-core
     - commons-logging

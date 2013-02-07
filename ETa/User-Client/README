@@ -1,12 +1,11 @@
-ETa-Client
+User-Client
 
-Common library for interfacing with the ETa web service (user management).
+Common library for interfacing with the User web service (user management).
 
 Dependencies:
   libraries:
     - Apache cxf
-
-Configuration: ?
+    - commons-logging
 
 Usage Dependencies:
-  - ETa
+  - User

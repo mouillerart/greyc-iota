@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>omega</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>war</packaging>
 
     <name>OMeGa</name>
@@ -34,6 +34,13 @@
             <groupId>fr.unicaen.iota</groupId>
             <artifactId>omicron</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>epcis-xi-client</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
 
         <!-- Spring dependencies -->

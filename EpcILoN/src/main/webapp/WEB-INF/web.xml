@@ -14,14 +14,6 @@
         <url-pattern>/InitServlet</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>TestSubscriptionServlet</servlet-name>
-        <servlet-class>fr.unicaen.iota.epcilon.test.TestSubscriptionServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestSubscriptionServlet</servlet-name>
-        <url-pattern>/TestSubscriptionServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>SubscribedServlet</servlet-name>
         <servlet-class>fr.unicaen.iota.epcilon.query.SubscribedServlet</servlet-class>
     </servlet>
@@ -37,15 +29,6 @@
     <servlet-mapping>
         <servlet-name>UnsubscribedServlet</servlet-name>
         <url-pattern>/UnsubscribedServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <display-name>TestConfiguration</display-name>
-        <servlet-name>TestConfiguration</servlet-name>
-        <servlet-class>fr.unicaen.iota.epcilon.test.TestConfiguration</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestConfiguration</servlet-name>
-        <url-pattern>/test</url-pattern>
     </servlet-mapping>
     <servlet>
         <display-name>StandingQueryCallbackServlet</display-name>

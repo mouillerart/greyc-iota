@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,13 @@ package fr.unicaen.iota.epcisphi.xacml.servlet;
 
 import fr.unicaen.iota.epcisphi.utils.Constants;
 import fr.unicaen.iota.epcisphi.utils.MapSessions;
-import fr.unicaen.iota.epcisphi.utils.SHA1;
 import fr.unicaen.iota.epcisphi.utils.SessionLoader;
-import fr.unicaen.iota.eta.user.client.GatewayClient;
+import fr.unicaen.iota.eta.user.client.UserClient;
 import fr.unicaen.iota.eta.user.userservice.UserLoginOut;
 import fr.unicaen.iota.eta.user.userservice_wsdl.ImplementationExceptionResponse;
 import fr.unicaen.iota.eta.user.userservice_wsdl.SecurityExceptionResponse;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -38,44 +37,42 @@ import org.apache.commons.logging.LogFactory;
 
 public class RootAccountAuth extends HttpServlet {
 
+    private static final Log LOG = LogFactory.getLog(RootAccountAuth.class);
+
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
      */
-    public static final String PROP_FILE = "root-account.properties";
-    private static final Log LOG = LogFactory.getLog(RootAccountAuth.class);
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String message = "";
         if ("login".equals(request.getParameter("action"))) {
-            String login = (String) request.getParameter("login");
-            String pass = (String) request.getParameter("passwd");
-            UserLoginOut userLoginOut;
-            try {
-                String hashPass = SHA1.makeSHA1Hash(pass);
-                GatewayClient client = new GatewayClient(Constants.USERSERVICE_ADDRESS);
-                userLoginOut = client.userLogin(login, hashPass);
-                request.setAttribute("session-id", userLoginOut.getSid());
-                message = SessionLoader.loadSession(userLoginOut.getSid(), login, request.getSession());
-            } catch (NoSuchAlgorithmException ex) {
-                message = "?message=" + ex.getMessage();
-                LOG.error("nosuch", ex);
-            } catch (ImplementationExceptionResponse ex) {
-                message = "?message=" + ex.getMessage();
-                LOG.error("impl", ex);
-            } catch (SecurityExceptionResponse ex) {
-                message = "?message=" + ex.getMessage();
-                LOG.error("secur", ex);
+            String login = (request.getUserPrincipal() != null)? request.getUserPrincipal().getName() : null;
+            if (login == null || login.isEmpty()) {
+                message = "?message=You are not authenticated.";
+            } else {
+                UserLoginOut userLoginOut;
+                try {
+                    UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+                    userLoginOut = client.userCertLogin(login);
+                    request.setAttribute("session-id", userLoginOut.getSid());
+                    message = SessionLoader.loadSession(userLoginOut.getSid(), login, request.getSession());
+                } catch (ImplementationExceptionResponse ex) {
+                    message = "?message=" + ex.getMessage();
+                    LOG.error("impl", ex);
+                } catch (SecurityExceptionResponse ex) {
+                    message = "?message=" + ex.getMessage();
+                    LOG.error("secur", ex);
+                }
             }
         } else if ("logout".equals(request.getParameter("action"))) {
             String sessionId = (String) (request.getSession().getAttribute("session-id"));
             try {
-                GatewayClient client = new GatewayClient(Constants.USERSERVICE_ADDRESS);
+                UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
                 client.userLogout(sessionId);
                 SessionLoader.clearSession(request.getSession());
                 MapSessions.releaseSession(sessionId);

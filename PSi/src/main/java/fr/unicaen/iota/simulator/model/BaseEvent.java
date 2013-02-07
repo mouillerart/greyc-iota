@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,9 @@
  */
 package fr.unicaen.iota.simulator.model;
 
+import fr.unicaen.iota.eta.capture.ETaCaptureClient;
+import fr.unicaen.iota.mu.Constants;
+import fr.unicaen.iota.mu.Utils;
 import fr.unicaen.iota.sigma.SigMaFunctions;
 import fr.unicaen.iota.simulator.util.Config;
 import fr.unicaen.iota.simulator.util.ServicePool;
@@ -30,13 +33,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.fosstrak.epcis.captureclient.CaptureClient;
 import org.fosstrak.epcis.captureclient.CaptureClientException;
 import org.fosstrak.epcis.model.EPCISBodyType;
 import org.fosstrak.epcis.model.EPCISDocumentType;
@@ -223,8 +224,14 @@ public abstract class BaseEvent {
         }
         setExtensionsObjects(event, extensionsObjects);
 
+        try {
+            Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_OWNER_ID, Config.eventOwner);
+        } catch (ParserConfigurationException ex) {
+            log.error("An error during insertion of the owner of the event occurred", ex);
+        }
+
         if (Config.sign) {
-            SigMaFunctions sigMaFunctions = new SigMaFunctions(Config.keystore, Config.keystore_password);
+            SigMaFunctions sigMaFunctions = new SigMaFunctions(Config.sigma_keystore, Config.sigma_keystore_password);
             try {
                 sigMaFunctions.sign(event);
             } catch (Exception ex) {
@@ -249,7 +256,7 @@ public abstract class BaseEvent {
         }
         // get the capture client and capture the event
         String captureUrl = getInfrastructure().getServiceAddress();
-        CaptureClient client;
+        ETaCaptureClient client;
         try {
             client = ServicePool.getInstance().getServiceInstance(captureUrl);
         } catch (InterruptedException ex) {

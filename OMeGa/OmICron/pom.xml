@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>omicron</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>OmICron</name>
@@ -29,6 +29,13 @@
             <groupId>fr.unicaen.iota</groupId>
             <artifactId>mu</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- Fosstrak dependencies -->
+        <dependency>
+            <groupId>org.fosstrak.epcis</groupId>
+            <artifactId>epcis-commons</artifactId>
+            <version>${epcis-version}</version>
         </dependency>
 
         <!-- CXF dependencies -->

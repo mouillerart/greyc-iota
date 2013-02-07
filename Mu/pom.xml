@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>mu</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>Mu</name>
@@ -28,12 +28,6 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
         </dependency>
 
     </dependencies>

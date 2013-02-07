@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -41,6 +41,10 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
                 ("application",
                  { "query-callback-address": ("epcilon", "callback_url"),
                    "publish": "true",
+                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-password": ("cert", "password"),
+                   "trust-pks-filename": ("cert", "truststore"),
+                   "trust-pks-password": ("cert", "trustpassword"),
                    "query-client-address": ("epcilon", "subscription_url"),
                    "discovery-service-address": ("epcilon", "ds_url") })
                    #"login": ("ds", "login"),

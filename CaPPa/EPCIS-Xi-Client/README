@@ -3,6 +3,8 @@ EPCIS-Xi-Client
 Common library interfacing with the xi web service for EPCIS.
 
 Dependencies:
+  IoTa modules:
+    - LibXACML-EPCIS
   libraries:
     - sunxacml
     - servlet-api

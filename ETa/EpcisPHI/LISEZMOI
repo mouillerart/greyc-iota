@@ -5,7 +5,7 @@ Web service d’édition des politiques XACML pour l’Epcis.
 Dépendances:
   modules IoTa:
     - LibXACML-EPCIS
-    - ETa-Client
+    - User-Client
   bibliothèques:
     - commons-codec
     - servlet-api
@@ -16,9 +16,20 @@ Installation et Configuration:
   IoTa-Installer installe et configure EpcisPHI.
   (xacml_configuration.properties pour la bibliothèque cliente LibXACML-DS,
    commons-logging.properties et log4j.properties pour les journaux)
+  Un utilisateur doit utiliser une paire de clés publique/privée pour se
+   connecter à l'interface web. IoTa-Installer peut générer ces clés.
+   La clé publique devra ensuite être ajoutée aux clés de confiance du serveur.
+   Le DN (Distinguished Name) devra être similaire à celui utilisé par
+   l'annuaire LDAP géré par le service User. Cette manipulation devra être
+   faite pour l'utilisateur "superadmin" qui gère les comptes utilisateurs
+   via l'interface web.
+   Modifier le fichier tomcat-users.xml de Tomcat pour la gestion des
+   identités en TLS.
+   Voir le fichier INSTALL.fr
 
 Dépendances d’utilisation:
   - ETa
+  - User
   - Un EPCIS
 
 Utilisation:

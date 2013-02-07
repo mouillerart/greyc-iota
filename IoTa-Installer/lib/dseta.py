@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -44,5 +44,5 @@ class DSeTaInstaller(installer.WebAppInstaller):
 
 
     def postConfigure(self):
-        self.setURL()
+        self.setSecuredURL()
         CONFIG.set("epcilon", "ds_url", self.cget("url") + "ided_ds")

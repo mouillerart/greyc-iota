@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -19,13 +19,22 @@
 package fr.unicaen.iota.application.soap;
 
 import fr.unicaen.iota.application.AccessInterface;
+import fr.unicaen.iota.application.Configuration;
 import fr.unicaen.iota.application.model.*;
 import fr.unicaen.iota.application.soap.client.IoTaFault;
 import fr.unicaen.iota.ds.model.TEventItem;
 import fr.unicaen.iota.ds.model.TEventItemList;
 import fr.unicaen.iota.nu.ONSEntryType;
+import fr.unicaen.iota.tau.model.Identity;
+import fr.unicaen.iota.xi.client.EPCISPEP;
+import fr.unicaen.iota.xi.utils.Utils;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.xml.ws.WebServiceContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.EPC;
@@ -39,11 +48,24 @@ import org.fosstrak.epcis.model.QueryParam;
 public abstract class BaseOMeGa implements IoTaServicePortType {
 
     private static final Log log = LogFactory.getLog(BaseOMeGa.class);
+    @Resource
+    private WebServiceContext wsContext;
+    private final EPCISPEP xiclient;
 
     public BaseOMeGa() {
+        xiclient = new EPCISPEP(Configuration.XI_URL, Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
     }
 
     protected abstract AccessInterface getAI();
+
+    private void checkAuth(Identity id) throws IoTaException {
+        Principal authId = wsContext.getUserPrincipal();
+        String tlsId = authId == null ? null : authId.getName();
+        int chk = xiclient.canBe(tlsId, id.getAsString());
+        if (!Utils.responseIsPermit(chk)) {
+            throw new IoTaException(tlsId + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
+        }
+    }
 
     private Map<String, String> filters(List<QueryParam> qps) {
         Map<String, String> filters = new HashMap<String, String>();
@@ -55,6 +77,7 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
 
     @Override
     public QueryEPCISResponse queryEPCIS(QueryEPCISRequest queryEPCISRequest) throws IoTaException {
+        checkAuth(queryEPCISRequest.getIdentity());
         AccessInterface controler = getAI();
         List<EPCISEventType> list;
         try {
@@ -77,6 +100,7 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
 
     @Override
     public QueryDSResponse queryDS(QueryDSRequest queryDSRequest) throws IoTaException {
+        checkAuth(queryDSRequest.getIdentity());
         AccessInterface controler = getAI();
         List<TEventItem> list;
         try {
@@ -98,6 +122,7 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
 
     @Override
     public TraceEPCResponse traceEPC(TraceEPCRequest traceEPCRequest) throws IoTaException {
+        checkAuth(traceEPCRequest.getIdentity());
         AccessInterface controler = getAI();
         List<EPCISEventType> list;
         try {

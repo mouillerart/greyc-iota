@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -23,17 +23,14 @@
  */
 package fr.unicaen.iota.eta.query;
 
-import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.eta.utils.Constants;
 import fr.unicaen.iota.tau.model.Identity;
-import fr.unicaen.iota.xacml.XACMLConstantsEventType;
-import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
@@ -41,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.queryclient.QueryControlClient;
-import org.fosstrak.epcis.repository.EpcisConstants;
 import org.fosstrak.epcis.soap.*;
 
 /**
@@ -190,56 +186,6 @@ public class QueryOperationsModule {
             throw new ImplementationExceptionResponse(msg, ie, e);
         }
 
-        /**
-         * TODO: add user and owner in the XACMLEPCISEvent owner =
-         * ((ObjectEventType)result).getAny(); user =
-         */
-        String owner = "anonymous";
-
-        if ("SimpleEventQuery".equals(queryName)) {
-            for (QueryParam queryParam : queryParams.getParam()) {
-                if (queryParam.getName() != null && "eventType".equals(queryParam.getName())) {
-                    try {
-                        ArrayOfString aos = (ArrayOfString) queryParam.getValue();
-                        if (aos == null || aos.getString() == null) {
-                            continue;
-                        }
-                        List<String> eventTypes = aos.getString();
-                        Iterator<String> iterType = eventTypes.iterator();
-                        while (iterType.hasNext()) {
-                            String eventType = iterType.next();
-                            if (EpcisConstants.AGGREGATION_EVENT.equals(eventType)) {
-                                XACMLEPCISEvent e = new XACMLEPCISEvent(owner, null, null, null, null, null,
-                                        XACMLConstantsEventType.AGGREGATION, null, null, null, null, null, null, null, null);
-                                if (!queryCheck.xacmlCheck(e, user)) {
-                                    iterType.remove();
-                                }
-                            } else if (EpcisConstants.OBJECT_EVENT.equals(eventType)) {
-                                XACMLEPCISEvent e = new XACMLEPCISEvent(owner, null, null, null, null, null,
-                                        XACMLConstantsEventType.OBJECT, null, null, null, null, null, null, null, null);
-                                if (!queryCheck.xacmlCheck(e, user)) {
-                                    iterType.remove();
-                                }
-                            } else if (EpcisConstants.QUANTITY_EVENT.equals(eventType)) {
-                                XACMLEPCISEvent e = new XACMLEPCISEvent(owner, null, null, null, null, null,
-                                        XACMLConstantsEventType.QUANTITY, null, null, null, null, null, null, null, null);
-                                if (!queryCheck.xacmlCheck(e, user)) {
-                                    iterType.remove();
-                                }
-                            } else if (EpcisConstants.TRANSACTION_EVENT.equals(eventType)) {
-                                XACMLEPCISEvent e = new XACMLEPCISEvent(owner, null, null, null, null, null,
-                                        XACMLConstantsEventType.TRANSACTION, null, null, null, null, null, null, null, null);
-                                if (!queryCheck.xacmlCheck(e, user)) {
-                                    iterType.remove();
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                    }
-                }
-            }
-        }
-
         LOG.debug("Invoking 'poll'");
         Poll poll = new Poll();
         poll.setQueryName(queryName);
@@ -247,13 +193,10 @@ public class QueryOperationsModule {
 
         results = epcisQueryClient.poll(poll);
 
-        //TODO xacml_active
-        boolean xacml_active = true;
-
-        if (xacml_active && "SimpleEventQuery".equals(results.getQueryName())) {
-            queryCheck.xacmlCheck(results.getResultsBody().getEventList().getObjectEventOrAggregationEventOrQuantityEvent(), user, owner);
+        if ("SimpleEventQuery".equals(results.getQueryName())) {
+            queryCheck.xacmlCheck(results.getResultsBody().getEventList().getObjectEventOrAggregationEventOrQuantityEvent(), user);
         } else if ("SimpleMasterDataQuery".equals(results.getQueryName())) {
-            queryCheck.xacmlCheckMasterD(results.getResultsBody().getVocabularyList().getVocabulary(), user, owner);
+            queryCheck.xacmlCheckMasterD(results.getResultsBody().getVocabularyList().getVocabulary(), user);
         }
         return results;
 
@@ -279,7 +222,14 @@ public class QueryOperationsModule {
             throw new InvalidURIExceptionResponse(msg, e);
         }
         try {
-            new URL(dest.toString());
+            URL url = new URL(dest.toString());
+            if (!"https".equalsIgnoreCase(url.getProtocol())) {
+                String msg = "Destination URI is not HTTPS. TLS mutual authentication is required to send events.";
+                LOG.warn("QueryParameterException: " + msg);
+                InvalidURIException e = new InvalidURIException();
+                e.setReason(msg);
+                throw new InvalidURIExceptionResponse(msg, e);
+            }
         } catch (MalformedURLException ex) {
             String msg = "Destination URI is invalid: " + ex.getMessage();
             LOG.warn("InvalidURIException: " + msg);

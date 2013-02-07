@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -27,6 +27,10 @@ import org.apache.commons.logging.LogFactory;
 
 public class TraceEPCAsync extends Thread {
 
+    private final String pksFilename;
+    private final String pksPassword;
+    private final String trustPksFilename;
+    private final String trustPksPassword;
     private final CallbackClient client;
     private final String sessionID;
     private final Identity identity;
@@ -34,7 +38,12 @@ public class TraceEPCAsync extends Thread {
     private final ONSOperation onsOperation;
     private static final Log log = LogFactory.getLog(TraceEPCAsync.class);
 
-    public TraceEPCAsync(String epc, String sessionID, CallbackClient client, Identity identity) {
+    public TraceEPCAsync(String epc, String sessionID, CallbackClient client, Identity identity,
+            String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
         this.client = client;
         this.sessionID = sessionID;
         this.identity = identity;
@@ -63,7 +72,7 @@ public class TraceEPCAsync extends Thread {
             log.trace("referent ds address found: " + dsAddress);
         }
         log.trace("Start discover");
-        DiscoveryOperation dsOp = new DiscoveryOperation(identity, dsAddress, sessionID, client);
+        DiscoveryOperation dsOp = new DiscoveryOperation(identity, dsAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword, sessionID, client);
         dsOp.discover(epc);
     }
 }

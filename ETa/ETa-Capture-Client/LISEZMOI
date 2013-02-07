@@ -1,0 +1,13 @@
+ETa-Capture-Client
+
+Bibliothèque client pour l'interfaçage avec le service web de capture d'ETa.
+
+Dépendances:
+  bibliothèques:
+    - epcis-commons
+    - epcis-captureclient
+    - commons-logging
+
+Dépendances d’utilisation:
+  - ETa
+  - un EPCIS

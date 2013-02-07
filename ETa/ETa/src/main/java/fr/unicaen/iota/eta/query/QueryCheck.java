@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,13 @@
  */
 package fr.unicaen.iota.eta.query;
 
+import fr.unicaen.iota.eta.utils.Utils;
+import fr.unicaen.iota.mu.Constants;
 import fr.unicaen.iota.xacml.XACMLConstantsEventType;
 import fr.unicaen.iota.xacml.pep.ExtensionEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISMasterData;
 import fr.unicaen.iota.xi.client.EPCISPEP;
-import fr.unicaen.iota.xi.utils.Utils;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +61,7 @@ public class QueryCheck {
      */
     public boolean xacmlCheck(XACMLEPCISEvent xacmlEvent, String user) {
         int xacmlResponse = epcisPEP.queryEvent(user, xacmlEvent);
-        return Utils.responseIsPermit(xacmlResponse);
+        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 
     /**
@@ -71,7 +72,7 @@ public class QueryCheck {
      * @param user The user name to check.
      * @return The filtered list.
      */
-    public List<Object> xacmlCheck(List<Object> objects, String user, String owner) {
+    public List<Object> xacmlCheck(List<Object> objects, String user) {
         Iterator<Object> iterObject = objects.iterator();
         while (iterObject.hasNext()) {
             Object result = iterObject.next();
@@ -81,19 +82,19 @@ public class QueryCheck {
             }
 
             if (result instanceof ObjectEventType) {
-                if (!checkObjectEvent((ObjectEventType) result, user, owner)) {
+                if (!checkObjectEvent((ObjectEventType) result, user)) {
                     iterObject.remove();
                 }
             } else if (result instanceof AggregationEventType) {
-                if (!checkAggregationEvent((AggregationEventType) result, user, owner)) {
+                if (!checkAggregationEvent((AggregationEventType) result, user)) {
                     iterObject.remove();
                 }
             } else if (result instanceof QuantityEventType) {
-                if (!checkQuantityEvent((QuantityEventType) result, user, owner)) {
+                if (!checkQuantityEvent((QuantityEventType) result, user)) {
                     iterObject.remove();
                 }
             } else if (result instanceof TransactionEventType) {
-                if (!checkTransactionEvent((TransactionEventType) result, user, owner)) {
+                if (!checkTransactionEvent((TransactionEventType) result, user)) {
                     iterObject.remove();
                 }
             }
@@ -106,10 +107,13 @@ public class QueryCheck {
      *
      * @param objectEvent The object event to filter by XACML requests.
      * @param user The user to check.
-     * @param owner The owner to check.
      * @return <code>true</code> if the object event is permitted.
      */
-    private boolean checkObjectEvent(ObjectEventType objectEvent, String user, String owner) {
+    private boolean checkObjectEvent(ObjectEventType objectEvent, String user) {
+        String owner = Utils.getEventOwner(objectEvent);
+        if (owner == null) {
+            return false;
+        }
         Date eventTime = (objectEvent.getEventTime() != null) ? objectEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (objectEvent.getRecordTime() != null) ? objectEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.OBJECT;
@@ -185,6 +189,13 @@ public class QueryCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -230,7 +241,11 @@ public class QueryCheck {
      * @param owner The owner to check.
      * @return <code>true</code> if the aggregation event is permitted.
      */
-    private boolean checkAggregationEvent(AggregationEventType aggregationEvent, String user, String owner) {
+    private boolean checkAggregationEvent(AggregationEventType aggregationEvent, String user) {
+        String owner = Utils.getEventOwner(aggregationEvent);
+        if (owner == null) {
+            return false;
+        }
         Date eventTime = (aggregationEvent.getEventTime() != null) ? aggregationEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (aggregationEvent.getRecordTime() != null) ? aggregationEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.AGGREGATION;
@@ -306,6 +321,13 @@ public class QueryCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -352,7 +374,11 @@ public class QueryCheck {
      * @param owner The owner to check.
      * @return <code>true</code> if the quantity event is permitted.
      */
-    private boolean checkQuantityEvent(QuantityEventType quantityEvent, String user, String owner) {
+    private boolean checkQuantityEvent(QuantityEventType quantityEvent, String user) {
+        String owner = Utils.getEventOwner(quantityEvent);
+        if (owner == null) {
+            return false;
+        }
         Date eventTime = (quantityEvent.getEventTime() != null) ? quantityEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (quantityEvent.getRecordTime() != null) ? quantityEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.QUANTITY;
@@ -392,6 +418,13 @@ public class QueryCheck {
             String namespace = element.getNamespaceURI();
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
+
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
 
             // Gets the extension value
             Object extensionValue = null;
@@ -439,7 +472,11 @@ public class QueryCheck {
      * @param owner The owner to check.
      * @return <code>true</code> if the transaction event is permitted.
      */
-    private boolean checkTransactionEvent(TransactionEventType transactionEvent, String user, String owner) {
+    private boolean checkTransactionEvent(TransactionEventType transactionEvent, String user) {
+        String owner = Utils.getEventOwner(transactionEvent);
+        if (owner == null) {
+            return false;
+        }
         Date eventTime = (transactionEvent.getEventTime() != null) ? transactionEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (transactionEvent.getRecordTime() != null) ? transactionEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.TRANSACTION;
@@ -515,6 +552,13 @@ public class QueryCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -560,7 +604,7 @@ public class QueryCheck {
      */
     public boolean checkSubscribe(String user, String partner) {
         int xacmlResponse = epcisPEP.subscribe(user, partner);
-        return Utils.responseIsPermit(xacmlResponse);
+        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 
     /**
@@ -572,7 +616,7 @@ public class QueryCheck {
      */
     public boolean canBe(String user, String partner) {
         int xacmlResponse = epcisPEP.canBe(user, partner);
-        return Utils.responseIsPermit(xacmlResponse);
+        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 
     /**
@@ -580,11 +624,10 @@ public class QueryCheck {
      *
      * @param vocList The list of master data to filter.
      * @param user The user name to check.
-     * @param owner The owner to check.
      */
-    public void xacmlCheckMasterD(List<VocabularyType> vocList, String user, String owner) {
+    public void xacmlCheckMasterD(List<VocabularyType> vocList, String user) {
         for (VocabularyType voc : vocList) {
-            xacmlCheckMasterDType(voc.getVocabularyElementList().getVocabularyElement(), user, owner);
+            xacmlCheckMasterDType(voc.getVocabularyElementList().getVocabularyElement(), user);
         }
     }
 
@@ -593,15 +636,26 @@ public class QueryCheck {
      *
      * @param vocElList The list of master data to filter.
      * @param user The user name to check
-     * @param owner The owner to check.
      */
-    private void xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user, String owner) {
+    private void xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user) {
         Iterator<VocabularyElementType> iterVoc = vocElList.iterator();
         while (iterVoc.hasNext()) {
+            boolean allowed = false;
             VocabularyElementType vocEl = iterVoc.next();
             String id = vocEl.getId();
-            XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
-            if (!xacmlCheckMasterData(xacmlMasterData, user)) {
+            for (Object object : vocEl.getAny()) {
+                JAXBElement elem = (JAXBElement) object;
+                if (Constants.URN_IOTA.equals(elem.getName().getNamespaceURI()) &&
+                        Constants.EXTENSION_OWNER_ID.equals(elem.getName().getLocalPart())) {
+                    String owner = elem.getValue().toString();
+                    XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
+                    if (xacmlCheckMasterData(xacmlMasterData, user)) {
+                        allowed = true;
+                    }
+                    break;
+                }
+            }
+            if (!allowed) {
                 iterVoc.remove();
             }
         }
@@ -616,6 +670,6 @@ public class QueryCheck {
      */
     private boolean xacmlCheckMasterData(XACMLEPCISMasterData xacmlMasterData, String user) {
         int xacmlResponse = epcisPEP.queryMasterData(user, xacmlMasterData);
-        return Utils.responseIsPermit(xacmlResponse);
+        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 }

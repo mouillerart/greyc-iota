@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
+
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>sigma-test</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
-  
+
     <name>SigMa-Test</name>
-  
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <epcis-version>0.5.0</epcis-version>
     </properties>
-  
+
     <dependencies>
 
         <!-- IoTa Dependencies -->
@@ -28,17 +29,42 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>eta-capture-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>mu</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Fosstrak dependencies -->
         <dependency>
             <groupId>org.fosstrak.epcis</groupId>
             <artifactId>epcis-captureclient</artifactId>
-            <version>0.5.0</version>
+            <version>${epcis-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.fosstrak.epcis</groupId>
             <artifactId>epcis-commons</artifactId>
-            <version>0.5.0</version>
+            <version>${epcis-version}</version>
+        </dependency>
+
+        <!-- Log dependencies -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
         </dependency>
 
     </dependencies>

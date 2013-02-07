@@ -7,7 +7,6 @@ Dépendances:
   bibliothèques:
     - cxf
     - commons-logging
-    - log4j
 
 Utilisation:
   voir DSeTa, EpcILoN et ETa pour des exemples.

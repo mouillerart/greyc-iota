@@ -1,8 +1,8 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
- *                     		
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -31,6 +31,10 @@ public final class Constants {
     private Constants() {
     }
     public static final String PROPERTIES_CONFIG_FILE = "/application.properties";
+    public static final String PKS_FILENAME;
+    public static final String PKS_PASSWORD;
+    public static final String TRUST_PKS_FILENAME;
+    public static final String TRUST_PKS_PASSWORD;
     public static final String DEFAULT_SESSION = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     public static final String RMI_SERVER_NAME;
     public static final String RMI_SERVER_HOST;
@@ -46,6 +50,10 @@ public final class Constants {
         } catch (IOException ex) {
             LogFactory.getLog(Constants.class).fatal(null, ex);
         }
+        PKS_FILENAME = props.getProperty("pks-filename", "privatekeys.jks");
+        PKS_PASSWORD = props.getProperty("pks-password", "changeit");
+        TRUST_PKS_FILENAME = props.getProperty("trustpks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = props.getProperty("trustpks-password", "changeit");
         RMI_SERVER_NAME = props.getProperty("rmi-server-name", "alfa");
         RMI_SERVER_HOST = props.getProperty("rmi-server-host", "localhost");
         RMI_SERVER_PORT = Integer.parseInt(props.getProperty("rmi-server-port", "1099"));

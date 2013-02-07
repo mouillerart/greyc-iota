@@ -6,7 +6,6 @@ Dépendances:
   bibliothèques:
     - Apache cxf
     - commons-logging
-    - log4j
 
 Dépendances d’utilisation:
   - SigMa

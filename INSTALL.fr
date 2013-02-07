@@ -84,6 +84,91 @@ ou
 Utilisez le script fourni pour lancer l’application.
 
 
+### Conteneur de servlets et SSL/TLS
+
+Un conteneur de servlets doit être installé.
+
+Pour le moment, le IoTa-Installer ne sait gérer qu’Apache Tomcat (versions 6
+ou 7). Le IoTa-Installer peut vous aider à en installer un et à le configurer.
+
+Pour utiliser SSL/TLS comme moyen d’authentification mutuelle entre les
+applications web de IoTa et leurs clients, un `connector` SSL/TLS doit être
+configuré.
+
+Pour Apache Tomcat 7, si vous n’utilisez pas le IoTa-Installer, vous devez
+ajouter un élément `connector` similaire à l’exemple suivant dans le fichier
+`${CATALINA_HOME}/conf/server.xml` :
+
+    <Connector protocol="HTTP/1.1"
+               port="8443"
+               maxThreads="200"
+               scheme="https"
+               secure="true"
+               SSLEnabled="true"
+               keystoreFile="${catalina.home}/conf/ssl/keystore.jks"
+               keystorePass="changeit"
+               keyAlias="si_plus_d’une_clef_dans_le_keystore"
+               keyPass="changeit"
+               truststoreFile="${catalina.home}/conf/ssl/truststore.jks"
+               truststorePass="changeit"
+               crlFile="${catalina.home}/conf/ssl/revocations_list.pem"
+               clientAuth="true"
+               sslProtocol="TLS"/>
+
+Ou, si la bibliothèque Apache Portable Runtime (APR) est installée sur et
+utilisée par le système cible :
+
+    <Connector protocol="HTTP/1.1"
+               port="8443"
+               maxThreads="200"
+               scheme="https"
+               secure="true"
+               SSLEnabled="true"
+               SSLCertificateFile="${catalina.home}/conf/ssl/server.crt"
+               SSLCertificateKeyFile="${catalina.home}/conf/ssl/server.pem"
+               SSLCACertificatePath="${catalina.home}/conf/ssl/clients/"
+               SSLCARevocationPath="${catalina.home}/conf/ssl/revocations/"
+               SSLVerifyClient="require"
+               SSLProtocol="TLSv1"/>
+
+Ajouter les certificats des clients à la liste des certificats de confiance
+(truststore) de Tomcat, avec une commande du type:
+
+    keytool -importcert -storetype "jks" -keystore "truststore.jks" -alias "key"  -file "client.cert"
+
+Les applications OMeGa, ETa et EpcisPHi, pour gérer les identités en TLS, requièrent d'ajouter
+au fichier `$CATALINA_HOME/conf/tomcat-users.xml` des rôles:
+
+  * pour ETa: <role rolename="eta_user"/>
+  * pour OMeGa: <role rolename="omega_user"/>
+  * pour EpcisPHi: <role rolename="ephi_user"/>
+
+Les noms peuvent être différents selon la configuration des applications dans
+`<webapp-dir>/WEB-INF/web.xml`.
+
+Chaque utilisateur souhaitant interroger les services d'ETa, d'OMeGa ou
+l'interface web d'EpcisPHi doit être identifié dans
+`$CATALINA_HOME/conf/tomcat-users.xml` et un ou plusieurs rôles doivent
+lui être attribués.
+De même, chaque application utilisant ces services doit être connue.
+L'utilisateur (ou application) est reconnu par le Distinguished Name (DN)
+du certificat utilisé pour se connecter au service. Les rôles de l'utilisateur
+(ETa et/ou OMeGa et/ou EpcisPHi) sont déterminés par l'attribut "roles" et
+correspondent aux "rolename" ci-dessus.
+
+Pour que l'utilisateur dont le DN du certificat est "CN=toto" puissent
+utiliser les services d'ETA, d'OMeGa et d'EpcisPHi ajoutez au fichier
+`$CATALINA_HOME/conf/tomcat-users.xml`:
+<user username="CN=toto" password="" roles="eta_user,omega_user,ephi_user"/>
+
+Pour se connecter à l'interface web d'Epcis-PHi en tant que "superadmin",
+qui gère les comptes utilisateurs, il est nécessaire d'utiliser un certificat
+(généré via IoTa-Installer ou keytool) dont le DN (par défaut "UID=superadmin")
+correspond à celui qui identifie "superadmin" dans l'annuaire LDAP.
+Cet utilisateur doit être ajouté au fichier précédent:
+<user username="UID=superadmin" password="" roles="ephi_user"/>
+
+
 ### Applications webs
 
 Récupérez le fichier war de l’application web `<application>-<version>.war`.
@@ -211,24 +296,11 @@ ces options (dans la clause `options` de `named.conf.options`) :
     recursion no;
 
 
-### DNSSEC
-
-Activez DNSSEC dans bind9 avec ces options (dans la clause `options` de
-`named.conf.options`) :
-
-    dnssec-enable yes;
-    dnssec-validation auto;
-    dnssec-lookaside auto;
-
-Vous pouvez générer des clefs et signer vos fichiers de zone avec, par
-exemple, le programme `zonesigner` des `dnssec-tools`.
-
-
 ### LDAP
 
-Certaines applications (ETa) ont besoin d’un serveur LDAP.
+Certaines applications (User) ont besoin d’un serveur LDAP.
 
-À partir d’un serveur LDAP fonctionnel, le script `ETa/ldap.sh` ou le module
+À partir d’un serveur LDAP fonctionnel, le script `User/ldap.sh` ou le module
 LDAP de l’installateur permet d’ajouter un schéma, un groupe et les deux
 utilisateurs superadmin et anonymous.
 

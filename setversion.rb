@@ -3,7 +3,7 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+# Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -65,7 +65,8 @@ end
   ETa/ETa-Callback/ETa-Callback-Filter
   ETa/ETa-Callback/ETa-Callback-Receiver
   ETa/ETa-Callback/ETa-Callback-Sender
-  ETa/ETa-Client
+  ETa/ETa-Capture-Client
+  ETa/ETa-Query-Client
   ETa/ETa
   ETa/EpcisPHI
   ETa/LibXACML-EPCIS

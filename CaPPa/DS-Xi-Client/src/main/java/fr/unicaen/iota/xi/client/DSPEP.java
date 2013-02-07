@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -35,8 +35,8 @@ public class DSPEP extends PEP implements MethodNamesQuery, MethodNamesCapture {
 
     private static final Log log = LogFactory.getLog(DSPEP.class);
 
-    public DSPEP(String url) {
-        super(url);
+    public DSPEP(String url, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
+        super(url, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
     /**

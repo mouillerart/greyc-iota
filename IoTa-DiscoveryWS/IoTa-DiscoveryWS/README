@@ -10,13 +10,11 @@ Dependencies:
   IoTa modules:
     - Nu
     - LibXACML-DS
-    - EPCIS-Xi-Client
+    - DS-Xi-Client
     - IoTa-DiscoveryWS-Client
   libraries:
     - hibernate
-    - mysql-connector
     - axis2
-    - dnsjava
     - servlet-api
     - commons-logging
     - log4j

@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -49,6 +49,10 @@ class ETaCallbackFilterAppInstaller(installer.Installer):
                    "database-login": ("eta", "callback_db_login"),
                    "database-password": ("eta", "callback_db_password"),
                    "xacml-url": ("epcis_policies", "xacml_url"),
+                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-password": ("cert", "password"),
+                   "trust-pks-filename": ("cert", "truststore"),
+                   "trust-pks-password": ("cert", "trustpassword"),
                    "startup-delay": ("eta_callback_filter", "startup-delay"),
                    "polling-delay": ("eta_callback_filter", "polling-delay"),
                    })

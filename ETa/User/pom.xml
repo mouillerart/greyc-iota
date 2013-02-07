@@ -4,12 +4,11 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>user</artifactId>
-    <version>1.9-mock</version>
+    <version>1.9</version>
     <packaging>war</packaging>
     <name>User</name>
 
     <properties>
-        <epcis-version>0.5.0</epcis-version>
         <lib-cxf-version>2.2.12</lib-cxf-version>
         <lib-spring-version>2.5.6.SEC03</lib-spring-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -111,30 +110,6 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-codegen-plugin</artifactId>
-                <version>2.6.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-sources</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
-                            <wsdlOptions>
-                                <wsdlOption>
-                                    <wsdl>src/main/resources/wsdl/UserService.wsdl</wsdl>
-                                    <wsdlLocation>classpath:wsdl/UserService.wsdl</wsdlLocation>
-                                </wsdlOption>
-                            </wsdlOptions>
-                        </configuration>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.2</version>
@@ -177,13 +152,5 @@
         </plugins>
 
     </build>
-
-    <repositories>
-        <repository>
-            <id>fosstrak</id>
-            <name>Fosstrak repository</name>
-            <url>https://oss.sonatype.org/content/repositories/public</url>
-        </repository>
-    </repositories>
 
 </project>

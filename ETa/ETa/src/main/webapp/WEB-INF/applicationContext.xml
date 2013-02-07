@@ -75,18 +75,17 @@
 
     <bean id="epcisPEP" class="fr.unicaen.iota.xi.client.EPCISPEP">
         <constructor-arg type="java.lang.String" value="${xacml-url}" />
+        <constructor-arg type="java.lang.String" value="${pks-filename}" />
+        <constructor-arg type="java.lang.String" value="${pks-password}" />
+        <constructor-arg type="java.lang.String" value="${trust-pks-filename}" />
+        <constructor-arg type="java.lang.String" value="${trust-pks-password}" />
     </bean>
-
-   <bean id="sigMaClient" class="fr.unicaen.iota.sigma.client.SigMaClient">
-       <constructor-arg type="java.lang.String" value="${sigma-url}" />
-   </bean>
 
     <bean id="captureOperationsModule" class="fr.unicaen.iota.eta.capture.CaptureOperationsModule">
         <property name="epcisCaptureClient" ref="epcisCaptureClient" />
         <property name="epcisSchemaFile" value="${epcisSchemaFile}" />
         <property name="epcisMasterDataSchemaFile" value="${epcisMasterDataSchemaFile}" />
         <property name="captureCheck" ref="captureCheck" />
-        <property name="sigMaClient" ref="sigMaClient" />
     </bean>
 
     <bean id="epcisCaptureClient" class="org.fosstrak.epcis.captureclient.CaptureClient" >

@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,17 @@
  */
 package fr.unicaen.iota.eta.capture;
 
+import fr.unicaen.iota.eta.utils.Utils;
+import fr.unicaen.iota.mu.Constants;
 import fr.unicaen.iota.xacml.XACMLConstantsEventType;
 import fr.unicaen.iota.xacml.pep.ExtensionEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISMasterData;
 import fr.unicaen.iota.xi.client.EPCISPEP;
-import fr.unicaen.iota.xi.utils.Utils;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.bind.JAXBElement;
 import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.utils.TimeParser;
 import org.w3c.dom.Element;
@@ -51,10 +53,15 @@ public class CaptureCheck {
      * Checks the capture events by XACML requests to the XACML module.
      *
      * @param epcisEventList The capture events.
+     * @param user The user name to check.
      * @return <code>true</code> if the capture is permitted.
      */
-    public boolean xacmlCheck(List<EPCISEventType> epcisEventList, String user, String owner) {
+    public boolean xacmlCheck(List<EPCISEventType> epcisEventList, String user) {
         for (EPCISEventType epcisEvent : epcisEventList) {
+            String owner = Utils.getEventOwner(epcisEvent);
+            if (owner == null) {
+                owner = user;
+            }
             if (epcisEvent instanceof ObjectEventType) {
                 if (!checkObjectEvent((ObjectEventType) epcisEvent, user, owner)) {
                     return false;
@@ -80,6 +87,8 @@ public class CaptureCheck {
      * Checks access rights to an aggregation event.
      *
      * @param baseEvent The aggregation capture event to check.
+     * @param user The user name to check.
+     * @param owner The owner name to check.
      * @return <code>true</code> if the aggregation capture event is permitted.
      */
     private boolean checkAggregationEvent(AggregationEventType aggregationEvent, String user, String owner) {
@@ -158,6 +167,13 @@ public class CaptureCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -200,6 +216,8 @@ public class CaptureCheck {
      * Checks access rights to an object event.
      *
      * @param objectEvent The object capture event to check.
+     * @param user The user name to check.
+     * @param owner The owner name to check.
      * @return <code>true</code> if the object capture event is permitted.
      */
     private boolean checkObjectEvent(ObjectEventType objectEvent, String user, String owner) {
@@ -278,6 +296,13 @@ public class CaptureCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -319,6 +344,8 @@ public class CaptureCheck {
      * Checks access rights to a quantity event.
      *
      * @param quantityEvent The quantity capture event to check.
+     * @param user The user name to check.
+     * @param owner The owner name to check.
      * @return <code>true</code> if the quantity capture event is permitted.
      */
     private boolean checkQuantityEvent(QuantityEventType quantityEvent, String user, String owner) {
@@ -362,6 +389,13 @@ public class CaptureCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -404,6 +438,8 @@ public class CaptureCheck {
      * Checks access rights to a transaction event.
      *
      * @param transactionEvent The transaction capture event to check.
+     * @param user The user name to check.
+     * @param owner The owner name to chec.
      * @return <code>true</code> if the transaction capture event is permitted.
      */
     private boolean checkTransactionEvent(TransactionEventType transactionEvent, String user, String owner) {
@@ -482,6 +518,13 @@ public class CaptureCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (Constants.URN_IOTA.equals(namespace) &&
+                    (Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -528,49 +571,55 @@ public class CaptureCheck {
      */
     public boolean xacmlCheck(XACMLEPCISEvent xacmlEvent, String user) {
         int xacmlResponse = epcisPEP.captureEvent(user, xacmlEvent);
-        return Utils.responseIsPermit(xacmlResponse);
+        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 
     /**
-     * Filters the list of master data.
-     *
+     * Checks the list of master data.
      * @param vocList The list of master data to filter.
      * @param user The user name to check.
-     * @param owner The owner to check.
      * @return <code>true</code> if permitted.
      */
-    public boolean xacmlCheckMasterD(List<VocabularyType> vocList, String user, String owner) {
-        boolean onePermit = false;
+    public boolean xacmlCheckMasterD(List<VocabularyType> vocList, String user) {
         for (VocabularyType voc : vocList) {
-            if (xacmlCheckMasterDType(voc.getVocabularyElementList().getVocabularyElement(), user, owner)) {
-                onePermit = true;
+            if (!xacmlCheckMasterDType(voc.getVocabularyElementList().getVocabularyElement(), user)) {
+                return false;
             }
         }
-        return onePermit;
+        return true;
     }
 
     /**
-     * Filters the list of master data, by element type.
+     * Checks the list of master data, by element type.
      *
      * @param vocElList The list of master data to filter.
      * @param user The user name to check
-     * @param owner The owner to check.
      * @return <code>true</code> if permitted.
      */
-    private boolean xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user, String owner) {
+    private boolean xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user) {
         Iterator<VocabularyElementType> iterVoc = vocElList.iterator();
-        boolean onePermit = false;
         while (iterVoc.hasNext()) {
             VocabularyElementType vocEl = iterVoc.next();
             String id = vocEl.getId();
-            XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
-            if (!xacmlCheckMasterData(xacmlMasterData, user)) {
-                iterVoc.remove();
-            } else {
-                onePermit = true;
+            boolean ownerFound = false;
+            for (Object object : vocEl.getAny()) {
+                JAXBElement elem = (JAXBElement) object;
+                if (Constants.URN_IOTA.equals(elem.getName().getNamespaceURI()) &&
+                        Constants.EXTENSION_OWNER_ID.equals(elem.getName().getLocalPart())) {
+                    String owner = elem.getValue().toString();
+                    XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
+                    if (!xacmlCheckMasterData(xacmlMasterData, user)) {
+                        return false;
+                    }
+                    ownerFound = true;
+                    break;
+                }
+            }
+            if (!ownerFound) {
+                return false;
             }
         }
-        return onePermit;
+        return true;
     }
 
     /**
@@ -582,6 +631,6 @@ public class CaptureCheck {
      */
     private boolean xacmlCheckMasterData(XACMLEPCISMasterData xacmlMasterData, String user) {
         int xacmlResponse = epcisPEP.captureMasterData(user, xacmlMasterData);
-        return Utils.responseIsPermit(xacmlResponse);
+        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 }

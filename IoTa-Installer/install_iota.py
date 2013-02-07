@@ -3,8 +3,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +25,7 @@ from lib.common  import GlobalConfigurer
 from lib.tomcat  import TomcatInstaller
 from lib.db      import DBConfigurer
 from lib.cert    import CertConfigurer
+from lib.sigma_cert import SigMaCertConfigurer
 from lib.sigma   import SigMAInstaller
 from lib.epcis   import EpcisInstaller
 from lib.dphi    import DPHIInstaller
@@ -53,9 +54,10 @@ if __name__ == "__main__":
         CONFIG.set("global", "accept_defaults", "false")
     lib.utils.putTitle("                       IoTa Installer")
     GlobalConfigurer().run()
+    CertConfigurer().run()
     TomcatInstaller().run()
     DBConfigurer().run()
-    CertConfigurer().run()
+    SigMaCertConfigurer().run()
     SigMAInstaller().run()
     EpcisInstaller().run()
     LDAPConfigurer().run()

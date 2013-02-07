@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,10 @@
 package fr.unicaen.iota.epcilon.query;
 
 import fr.unicaen.iota.epcilon.conf.Configuration;
+import fr.unicaen.iota.eta.query.QueryControlClientTLS;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.Subscribe;
-import org.fosstrak.epcis.queryclient.QueryControlClient;
 
 /**
  *
@@ -38,7 +38,7 @@ public final class StandingQueryCaptureSubscribe {
 
     public static void subscribe() {
         try {
-            QueryControlClient client = new QueryControlClient(Configuration.DEFAULT_QUERY_CLIENT_ADDRESS);
+            QueryControlClientTLS client = new QueryControlClientTLS(Configuration.DEFAULT_QUERY_CLIENT_ADDRESS, Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
             Subscribe subscribe = StandingQueryCaptureModule.createScheduleSubscribe("SimpleEventQuery", Configuration.SUBSCRIPTION_KEY,
                     Configuration.DEFAULT_QUERY_CALLBACK_ADDRESS, Configuration.SUBSCRIPTION_TYPE, Configuration.SUBSCRIPTION_VALUE);
             client.subscribe(subscribe);

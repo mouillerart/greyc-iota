@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *  Copyright © 2007       ETH Zurich
  *
@@ -23,7 +23,7 @@
  */
 package fr.unicaen.iota.eta.query;
 
-import fr.unicaen.iota.eta.constants.Constants;
+import fr.unicaen.iota.eta.utils.Constants;
 import fr.unicaen.iota.eta.soap.IDedEPCISServicePortType;
 import fr.unicaen.iota.xi.client.EPCISPEP;
 import javax.naming.Context;
@@ -94,7 +94,7 @@ public class QueryInitServlet extends CXFNonSpringServlet {
         module.setDataSource(dataSource);
         module.setServletContext(servletConfig.getServletContext());
         module.setBackend(new QueryOperationsBackendSQL());
-        EPCISPEP epcisPEP = new EPCISPEP(Constants.XACML_URL);
+        EPCISPEP epcisPEP = new EPCISPEP(Constants.XACML_URL, Constants.PKS_FILENAME, Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
         module.setQueryCheck(new QueryCheck(epcisPEP));
 
         LOG.debug("Initializing query operations web service");

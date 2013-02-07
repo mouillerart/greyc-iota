@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -194,7 +194,7 @@ public class UserOperationsWebService implements UserServicePortType {
     }
 
     @Override
-    public UserLoginOut userLogin(UserLoginIn parms)
+    public UserLoginOut userBasicLogin(UserBasicLoginIn parms)
             throws ImplementationExceptionResponse, SecurityExceptionResponse {
         if (parms.getUserID() == null || parms.getPassword() == null) {
             String msg = "A parameter is missing.";
@@ -207,7 +207,28 @@ public class UserOperationsWebService implements UserServicePortType {
             throw ier;
         }
         UserLoginOut out = new UserLoginOut();
-        User user = userModule.userLogin(parms.getUserID(), parms.getPassword());
+        User user = userModule.userBasicLogin(parms.getUserID(), parms.getPassword());
+        out.setSessionLease(Constants.SESSION_TIME_LEASE);
+        String sessionId = Session.openSession(user);
+        out.setSid(sessionId);
+        return out;
+    }
+
+    @Override
+    public UserLoginOut userCertLogin(UserCertLoginIn parms)
+            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+        if (parms.getUserID() == null) {
+            String msg = "A parameter is missing.";
+            ImplementationException ie = new ImplementationException();
+            ie.setReason(msg);
+            ie.setQueryName("userLogin");
+            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
+            LOG.error(msg, ier);
+            throw ier;
+        }
+        UserLoginOut out = new UserLoginOut();
+        User user = userModule.userCertLogin(parms.getUserID());
         out.setSessionLease(Constants.SESSION_TIME_LEASE);
         String sessionId = Session.openSession(user);
         out.setSid(sessionId);

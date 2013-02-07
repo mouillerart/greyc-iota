@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ public class DSControler {
 
     private static final Log log = LogFactory.getLog(DSControler.class);
     private QueryOperationsModule queryOperationsModule = new QueryOperationsModule();
-    private DSPEP dspep = new DSPEP(Constants.XACML_URL);
+    private DSPEP dspep = new DSPEP(Constants.XACML_URL, Constants.PKS_FILENAME, Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
 
     public String hello() {
         return Constants.SERVICE_ID;

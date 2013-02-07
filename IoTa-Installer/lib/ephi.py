@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -36,12 +36,16 @@ class EPHIInstaller(installer.WebAppInstaller):
                    "capture-policy-directory": ("epcis_policies", "capture_dir"),
                    "admin-policy-directory": ("epcis_policies", "admin_dir") }),
                 ("application",
-                 { "eta.userservice.url": ("user", "url") })
+                 { "eta.userservice.url": ("user", "url"),
+                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-password": ("cert", "password"),
+                   "trust-pks-filename": ("cert", "truststore"),
+                   "trust-pks-password": ("cert", "trustpassword") })
                 ] )
 
 
     def postConfigure(self):
-        url = self.setURL()
+        url = self.setSecuredURL()
         CONFIG.set("epcis_policies", "xacml_url", url + "xi")
 
         # set policies directories (for ETa)

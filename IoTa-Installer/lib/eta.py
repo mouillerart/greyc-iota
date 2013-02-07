@@ -2,8 +2,8 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
-#                    		
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -41,8 +41,14 @@ class ETaInstaller(installer.DBWebAppInstaller):
                 ], [
                 ("application",
                  { "xacml-url": ("epcis_policies", "xacml_url"),
+                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-password": ("cert", "password"),
+                   "trust-pks-filename": ("cert", "truststore"),
+                   "trust-pks-password": ("cert", "trustpassword"),
                    "xacml-ihm-url": ("ephi", "url"),
-                   "xacml-default-user": ("global", "anonymous_user"),
+                   "xacml-use-tls-id": ("global", "use_tls_id"),
+                   "xacml-default-user": ("global", "default_user"),
+                   "xacml-anonymous-user": ("global", "anonymous_user"),
                    "epcis-query-url": ("epcis", "query_url"),
                    "epcis-capture-url": ("epcis", "capture_url"),
                    "eta-userservice-url": ("user", "url"),
@@ -52,12 +58,12 @@ class ETaInstaller(installer.DBWebAppInstaller):
                    "ldap-user": ("ldap", "login"),
                    "ldap-password": ("ldap", "password"),
                    "sigma-url": ("sigma", "url"),
-                   "sigma-verification": ("eta", "use_sigma"),})
+                   "sigma-verification": ("eta", "use_sigma")})
                 ] )
 
 
     def postConfigure(self):
-        self.setURL()
+        self.setSecuredURL()
         self.cset("db_jndi", "ETADB")
         url = self.cget("url")
         CONFIG.set("ds", "epcis_type", "ided_epcis")

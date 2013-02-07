@@ -3,19 +3,27 @@ PSi - Petri net SImulator
 Générateur d’événements EPCIS construit sur PNK.
 
 Dépendances:
+  modules IoTa:
+    - ETa-Capture-Client
+    - SigMa-Commons
+    - Mu
   bibliothèques:
     - epcis-captureclient
     - epcis-commons
     - jfreechart
     - jdom
     - crimson
+    - commons-logging
+    - log4j
   src:
     - PNK
 
 Configuration:
   Voir config/*.properties.
-  En particulier, changez les valeurs pour keystore et keystore-password dans
-  PTNet.properties.
+  En particulier, changez les valeurs dans PTNet.properties:
+   - sign, sigma-keystore, sigma-keystore-password (SigMa)
+   - pks-filename, pks-password, trust-pks-filename, trust-pks-password (TLS)
+   - event-owner (le propriétaire des évènements)
 
 Dépendances d’utilisation:
   - IoTa

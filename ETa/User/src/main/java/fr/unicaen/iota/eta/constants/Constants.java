@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,10 @@ public final class Constants {
     public static final String LDAP_BASE_DN;
     public static final String LDAP_USER;
     public static final String LDAP_PASSWORD;
+    public static final String PKS_FILENAME;
+    public static final String PKS_PASSWORD;
+    public static final String TRUST_PKS_FILENAME;
+    public static final String TRUST_PKS_PASSWORD;
 
     private Constants() {
     }
@@ -63,5 +67,9 @@ public final class Constants {
         LDAP_BASE_DN = properties.getProperty(PROP_LDAP_BASE_DN);
         LDAP_USER = properties.getProperty(PROP_LDAP_USER);
         LDAP_PASSWORD = properties.getProperty(PROP_LDAP_PASSWORD);
+        PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
+        PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
+        TRUST_PKS_FILENAME = properties.getProperty("trustpks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = properties.getProperty("trustpks-password", "changeit");
     }
 }

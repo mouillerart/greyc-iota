@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
  */
 package fr.unicaen.iota.epcisphi.utils;
 
-import fr.unicaen.iota.eta.user.client.GatewayClient;
+import fr.unicaen.iota.eta.user.client.UserClient;
 import fr.unicaen.iota.eta.user.userservice.UserInfoOut;
 import fr.unicaen.iota.eta.user.userservice_wsdl.ImplementationExceptionResponse;
 import fr.unicaen.iota.eta.user.userservice_wsdl.SecurityExceptionResponse;
@@ -35,11 +35,12 @@ public class SessionLoader {
 
     public static synchronized String loadSession(String sessionId, String userId, HttpSession session) throws SecurityExceptionResponse {
         try {
-            GatewayClient client = new GatewayClient(Constants.USERSERVICE_ADDRESS);
+            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME, Constants.PKS_PASSWORD,
+                    Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             UserInfoOut uInfo = client.userInfo(sessionId, userId);
             session.setAttribute("uInfo", uInfo);
             /*
-             * TODO PartnerInfo pInfo = GatewayClient.partnerInfo(sessionId,
+             * TODO PartnerInfo pInfo = UserClient.partnerInfo(sessionId,
              * uInfo.getPartnerId()); session.setAttribute("pInfo", pInfo);
              */
             session.setAttribute("session-id", sessionId);

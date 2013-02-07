@@ -1,7 +1,7 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,10 @@ public final class Constants {
     public static final String DATABASE_LOGIN;
     public static final String DATABASE_PASSWORD;
     public static final String XACML_URL;
+    public static final String PKS_FILENAME;
+    public static final String PKS_PASSWORD;
+    public static final String TRUST_PKS_FILENAME;
+    public static final String TRUST_PKS_PASSWORD;
     public static final long STARTUP_DELAY;
     public static final long POLLING_DELAY;
     private static final Log LOG = LogFactory.getLog(Constants.class);
@@ -67,5 +71,9 @@ public final class Constants {
         XACML_URL = properties.getProperty("xacml-url");
         STARTUP_DELAY = Long.parseLong(properties.getProperty("startup-delay", "10000"));
         POLLING_DELAY = Long.parseLong(properties.getProperty("polling-delay", "60000"));
+        PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
+        PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
+        TRUST_PKS_FILENAME = properties.getProperty("trustpks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = properties.getProperty("trustpks-password", "changeit");
     }
 }

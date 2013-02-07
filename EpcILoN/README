@@ -5,10 +5,12 @@ Interface between EPC events (information layer) and DS events (naming layer).
 Dependencies:
   IoTa modules:
     - DSeTa-Client
+    - ETa-Query-Client
+    - TAu
   librairies:
+    - epcis-commons
     - epcis-query-client
     - hibernate
-    - mysql-connector
     - servlet-api
     - commons-logging
     - log4j

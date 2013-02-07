@@ -1,9 +1,9 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
- *                     		
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -37,27 +37,39 @@ public class DiscoveryOperation {
     private static final Log log = LogFactory.getLog(DiscoveryOperation.class);
     private final Identity identity;
     private String DS_SERVICE_ADDRESS;
+    private final String pksFilename;
+    private final String pksPassword;
+    private final String trustPksFilename;
+    private final String trustPksPassword;
     private final CallbackClient client;
     private final String sessionID;
     private final Set<String> visitedSet = new HashSet<String>();
     private final DSeTaClient dSClient;
 
-    public DiscoveryOperation(Identity identity, String ds_service_address) {
+    public DiscoveryOperation(Identity identity, String ds_service_address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         super();
         this.identity = identity;
         this.DS_SERVICE_ADDRESS = ds_service_address;
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
         this.client = null;
         this.sessionID = null;
-        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS);
+        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
-    public DiscoveryOperation(Identity identity, String dsAddress, String sessionID, CallbackClient client) {
+    public DiscoveryOperation(Identity identity, String dsAddress, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword, String sessionID, CallbackClient client) {
         super();
         this.identity = identity;
         this.DS_SERVICE_ADDRESS = dsAddress;
+        this.pksFilename = pksFilename;
+        this.pksPassword = pksPassword;
+        this.trustPksFilename = trustPksFilename;
+        this.trustPksPassword = trustPksPassword;
         this.client = client;
         this.sessionID = sessionID;
-        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS);
+        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
     private List<TEventItem> getEvents(String EPC) throws RemoteException {
@@ -103,7 +115,7 @@ public class DiscoveryOperation {
                 } else if (s.getType() == TServiceType.IDED_EPCIS) {
                     result.add(s.getUri().toString());
                     if (client != null && !visitedSet.contains(s.getUri().toString())) {
-                        new EpcisRequest(s.getUri().toString(), EPC, identity, sessionID, client).start();
+                        new EpcisRequest(s.getUri().toString(), pksFilename, pksPassword, trustPksFilename, trustPksPassword, EPC, identity, sessionID, client).start();
                         visitedSet.add(s.getUri().toString());
                     }
                 } // else: do nothing

@@ -1,0 +1,221 @@
+/*
+ *  This program is a part of the IoTa project.
+ *
+ *  Copyright © 2013  Université de Caen Basse-Normandie, GREYC
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  <http://www.gnu.org/licenses/>
+ *
+ *  See AUTHORS for a list of contributors.
+ */
+
+ /*
+  * This CSS file is an example. See the JSP files to known all the classes.
+  */
+
+/* Default font settings.*/
+html {
+    font-size:100.01%;
+}
+
+body {
+  font-size: 75%;
+  color: #222;
+  background: #fff;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+
+/* Headings
+-------------------------------------------------------------- */
+
+h1,h2,h3 {
+    font-weight: normal;
+    color: #111;
+}
+
+h1 {
+    font-size: 3em;
+    line-height: 1;
+    margin-bottom: 0.5em;
+}
+
+h2 { font-size: 2em;
+     margin-bottom: 0.75em;
+}
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1;
+    margin-bottom: 1em;
+}
+
+
+/* Text elements
+-------------------------------------------------------------- */
+
+p {
+    margin: 0 0 1.5em;
+}
+
+a:focus, a:hover {
+    color: #09f;
+}
+
+a {
+    color: #06c;
+    text-decoration: underline;
+}
+
+div {
+    margin: 2px;
+}
+
+
+/* LaMBDa elements
+-------------------------------------------------------------- */
+
+.noevent, .noentry {
+    color: #7E197E;
+    font-weight: bold;
+}
+
+#serviceURL {
+    display: block;
+}
+
+#signature {
+    display: block;
+}
+
+div.eventItems {
+    padding: 10px;
+    width: 90%;
+    border: 1px solid black;
+    margin: 2px;
+}
+
+/* The elements of div.event are always displayed if the "display" property
+ * is not set to "block" and "none".
+ * See the display.js script.
+ */
+
+ div.event:before {
+     font-style: italic;
+ }
+
+div.event.eventType {
+    display: inline;
+}
+
+div.event.epcList {
+    display: inline;
+}
+
+div.event.bizStep {
+    display: inline;
+}
+
+div.event.eventTime {
+    display: inline;
+}
+
+div.event.recordTime {
+    display: block;
+}
+div.event.recordTime:before {
+    content: "Record Time : ";
+}
+
+div.event.action {
+    display: block;
+}
+div.event.action:before {
+    content: "Action : ";
+}
+
+div.event.parentId {
+    display: block;
+}
+div.event.parentId:before {
+    content: "Parent EPC : ";
+}
+
+div.event.children {
+    display: block;
+}
+div.event.children:before {
+    content: "Children EPC : ";
+}
+
+div.event.bizLoc {
+    display: block;
+}
+div.event.bizLoc:before {
+    content: "Business Location : ";
+}
+
+div.event.bizTrans {
+    display: block;
+}
+div.event.bizTrans:before {
+    content: "Business Transaction : ";
+}
+
+div.event.quantity {
+    display: block;
+}
+div.event.quantity:before {
+    content: "Quantity : ";
+}
+
+div.event.readPoint {
+    display: block;
+}
+div.event.readPoint:before {
+    content: "Read point : ";
+}
+
+div.event.disposition {
+    display: block;
+}
+div.event.disposition:before {
+    content: "Disposition : ";
+}
+
+div.event.extensions {
+    display: block;
+}
+
+div.event.signature {
+    display: block;
+}
+
+div.event.toggleDisplay {
+    cursor: pointer;
+    display: inline;
+    color: #7E197E;
+    font-weight: bold;
+}
+
+/* Specific to queryEPCIS
+-------------------------------------------------------------- */
+
+.epc, .url {
+    font-weight: bold;
+}
+
+/* Specific to queryONS
+-------------------------------------------------------------- */
+
+div.queryOns.onsEntryItem {
+    display: inline;
+}

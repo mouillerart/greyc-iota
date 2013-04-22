@@ -50,6 +50,13 @@
         <wsdl:part name="results" element="iota:TraceEPCResponse"/>
     </wsdl:message>
 
+    <wsdl:message name="traceEPCByEPCISRequest">
+        <wsdl:part name="parms" element="iota:TraceEPCByEPCISRequest"/>
+    </wsdl:message>
+    <wsdl:message name="traceEPCByEPCISResponse">
+        <wsdl:part name="results" element="iota:TraceEPCByEPCISResponse"/>
+    </wsdl:message>
+
     <wsdl:message name="queryEPCISRequest">
         <wsdl:part name="parms" element="iota:QueryEPCISRequest"/>
     </wsdl:message>
@@ -87,6 +94,11 @@
         <wsdl:operation name="traceEPC">
             <wsdl:input name="traceEPCRequest" message="iotaw:traceEPCRequest"/>
             <wsdl:output name="traceEPCResponse" message="iotaw:traceEPCResponse"/>
+            <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
+        </wsdl:operation>
+        <wsdl:operation name="traceEPCByEPCIS">
+            <wsdl:input name="traceEPCByEPCISRequest" message="iotaw:traceEPCByEPCISRequest"/>
+            <wsdl:output name="traceEPCByEPCISResponse" message="iotaw:traceEPCByEPCISResponse"/>
             <wsdl:fault name="IoTaException" message="iotaw:IoTaException"/>
         </wsdl:operation>
         <wsdl:operation name="queryEPCIS">
@@ -133,6 +145,14 @@
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="traceEPC">
+            <wsoap:operation/>
+            <wsdl:input><wsoap:body use="literal"/></wsdl:input>
+            <wsdl:output><wsoap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="IoTaException">
+                <wsoap:fault name="IoTaException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="traceEPCByEPCIS">
             <wsoap:operation/>
             <wsdl:input><wsoap:body use="literal"/></wsdl:input>
             <wsdl:output><wsoap:body use="literal"/></wsdl:output>

@@ -233,7 +233,12 @@ public abstract class BaseEvent {
         if (Config.sign) {
             SigMaFunctions sigMaFunctions = new SigMaFunctions(Config.sigma_keystore, Config.sigma_keystore_password);
             try {
-                sigMaFunctions.sign(event);
+                if (Config.sigma_signer_id != null && !Config.sigma_signer_id.isEmpty()) {
+                    sigMaFunctions.sign(event, Config.sigma_signer_id);
+                }
+                else {
+                    sigMaFunctions.sign(event);
+                }
             } catch (Exception ex) {
                 log.error("an error has been thrown during the signature of the event", ex);
             }

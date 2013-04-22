@@ -1,0 +1,18 @@
+ETa-Capture-Test
+
+Application de test du service web de capture d'ETa.
+
+Dépendances:
+  modules IoTa:
+    - eta-capture-client
+  bibliothèques:
+    - epcis-captureclient
+    - commons-logging
+    - log4j
+
+Dépendances d’utilisation:
+  - ETa
+  - un EPCIS
+
+Utilisation:
+  ./eta-capture-test.sh

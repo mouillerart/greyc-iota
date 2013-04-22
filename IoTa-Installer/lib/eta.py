@@ -41,7 +41,7 @@ class ETaInstaller(installer.DBWebAppInstaller):
                 ], [
                 ("application",
                  { "xacml-url": ("epcis_policies", "xacml_url"),
-                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword"),

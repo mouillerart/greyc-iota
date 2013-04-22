@@ -52,8 +52,8 @@ public final class Constants {
         }
         PKS_FILENAME = props.getProperty("pks-filename", "privatekeys.jks");
         PKS_PASSWORD = props.getProperty("pks-password", "changeit");
-        TRUST_PKS_FILENAME = props.getProperty("trustpks-filename", "publickeys.jks");
-        TRUST_PKS_PASSWORD = props.getProperty("trustpks-password", "changeit");
+        TRUST_PKS_FILENAME = props.getProperty("trust-pks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = props.getProperty("trust-pks-password", "changeit");
         RMI_SERVER_NAME = props.getProperty("rmi-server-name", "alfa");
         RMI_SERVER_HOST = props.getProperty("rmi-server-host", "localhost");
         RMI_SERVER_PORT = Integer.parseInt(props.getProperty("rmi-server-port", "1099"));

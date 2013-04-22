@@ -14,6 +14,7 @@ Dépendances:
     - IoTa-DiscoveryWS-Client
   bibliothèques:
     - hibernate
+    - javasisst
     - axis2
     - servlet-api
     - commons-logging

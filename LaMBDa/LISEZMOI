@@ -1,0 +1,43 @@
+LaMBDa - Luxe and Mark Beautiful Demo application
+
+Serveur web permettant l'accès aux événements et leur présentation de façon simple et intuitive.
+
+Dépendances:
+  modules IoTa:
+    - SigMa-Client
+    - OmICroN
+    - Mu
+    - TAu
+  bibliothèques:
+    - epcis-commons
+    - servlet-api
+    - commons-logging
+    - log4j
+
+Installation et Configuration:
+  Un utilisateur doit utiliser une paire de clés publique/privée pour se
+   connecter à l'interface web. IoTa-Installer peut générer ces clés.
+   La clé publique devra ensuite être ajoutée aux clés de confiance du serveur.
+   Le DN (Distinguished Name) devra être similaire à celui utilisé par
+   l'annuaire LDAP géré par le service User.
+   Modifier le fichier tomcat-users.xml de Tomcat pour la gestion des
+   identités en TLS.
+   Voir le fichier INSTALL.fr
+
+Personnalisation:
+  Chaque élément HTML généré par JSP est identifiable. La mise en forme des
+   pages Web peut ainsi être personnalisée en modifiant le fichier
+   CSS webapp/styles/style.css (et le fichier webapp/styles/style_handled.css
+   pour les appareils à écran de taille réduite).
+   Le fichier Javascript scripts/display.js peut aussi être modifié pour
+   adapter le comportement des changements d'affichage dynamiques. Par défaut,
+   tous les éléments sont affichés. Si Javascript est activé dans le
+   navigateur de l'utilisateur, certains éléments peuvent être masqués.
+
+Dépendances d’utilisation:
+  - OMeGa
+  - Un EPCIS
+  - SigMa
+
+Utilisation:
+  http://localhost:8080/lambda/

@@ -60,7 +60,8 @@ public class XiServlet extends HttpServlet {
             log.debug("Receiving XACML request...");
             InputStream is = req.getInputStream();
             String request = readXACMLRequest(is);
-            log.debug("create XACML request ...");
+            log.debug("create XACML request");
+            log.trace(request);
             RequestCtx reqCtx = RequestCtx.getInstance(new ByteArrayInputStream(request.getBytes()));
             log.debug("process policy");
             String resp = String.valueOf(processRequest(reqCtx));

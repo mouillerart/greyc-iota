@@ -28,8 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
- * This
- * <code>SigMAService</code> implements the SigMA web service. It receives and
+ * This <code>SigMAService</code> implements the SigMA web service. It receives and
  * verifies its signature.
  */
 public class SigMaService implements SigMaServicePortType {
@@ -48,39 +47,18 @@ public class SigMaService implements SigMaServicePortType {
         Verification verification = new Verification();
         VerifyResponse response = new VerifyResponse();
 
-        boolean value;
+        boolean value = false;
         try {
             SigMaFunctions sigMAFunctions = new SigMaFunctions(Constants.KEY_STORE_FILE_PATH, Constants.KEY_STORE_PASSWORD);
             value = sigMAFunctions.verify(event);
-//            value = true;
-            response.setValue(value);
         } catch (Exception e) {
             log.error("Error during verification", e);
             response.setMessage(e.getMessage());
         }
+        response.setValue(value);
         verification.setVerifyResponse(response);
-        log.info("Event signature verified");
+        log.info("Event signature verified: " + value);
         return verification;
-//        } catch (FileNotFoundException ex) {
-//            log.fatal("", ex);
-//        } catch (CertificateException ex) {
-//            log.fatal("", ex);
-//        } catch (IOException ex) {
-//            log.fatal("", ex);
-//        } catch (NoSuchAlgorithmException ex) {
-//            log.fatal("", ex);
-//        } catch (InvalidKeyException ex) {
-//            log.fatal("", ex);
-//        } catch (SignatureException ex) {
-//            log.fatal("", ex);
-//        } catch (java.security.cert.CertificateException ex) {
-//            log.fatal("", ex);
-//        } catch (NoSuchPaddingException ex) {
-//            log.fatal("", ex);
-//        } catch (IllegalBlockSizeException ex) {
-//            log.fatal("", ex);
-//        } catch (BadPaddingException ex) {
-//            log.fatal("", ex);
-//        }
     }
+
 }

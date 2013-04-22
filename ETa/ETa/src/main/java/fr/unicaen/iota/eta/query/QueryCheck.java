@@ -60,6 +60,7 @@ public class QueryCheck {
      * @return <code>true</code> if permitted.
      */
     public boolean xacmlCheck(XACMLEPCISEvent xacmlEvent, String user) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
         int xacmlResponse = epcisPEP.queryEvent(user, xacmlEvent);
         return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
@@ -68,7 +69,6 @@ public class QueryCheck {
      * Filters the list of events.
      *
      * @param objects The list of events to filter.
-     * @param owner The owner to check.
      * @param user The user name to check.
      * @return The filtered list.
      */
@@ -114,6 +114,7 @@ public class QueryCheck {
         if (owner == null) {
             return false;
         }
+        owner = fr.unicaen.iota.mu.Utils.formatId(owner);
         Date eventTime = (objectEvent.getEventTime() != null) ? objectEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (objectEvent.getRecordTime() != null) ? objectEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.OBJECT;
@@ -238,7 +239,6 @@ public class QueryCheck {
      *
      * @param aggregationEvent The AggregationEventType to filter by XACML requests.
      * @param user The user to check.
-     * @param owner The owner to check.
      * @return <code>true</code> if the aggregation event is permitted.
      */
     private boolean checkAggregationEvent(AggregationEventType aggregationEvent, String user) {
@@ -246,6 +246,7 @@ public class QueryCheck {
         if (owner == null) {
             return false;
         }
+        owner = fr.unicaen.iota.mu.Utils.formatId(owner);
         Date eventTime = (aggregationEvent.getEventTime() != null) ? aggregationEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (aggregationEvent.getRecordTime() != null) ? aggregationEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.AGGREGATION;
@@ -371,7 +372,6 @@ public class QueryCheck {
      *
      * @param quantityEvent The QuantityEventType to filter by XACML requests.
      * @param user The user to check.
-     * @param owner The owner to check.
      * @return <code>true</code> if the quantity event is permitted.
      */
     private boolean checkQuantityEvent(QuantityEventType quantityEvent, String user) {
@@ -379,6 +379,7 @@ public class QueryCheck {
         if (owner == null) {
             return false;
         }
+        owner = fr.unicaen.iota.mu.Utils.formatId(owner);
         Date eventTime = (quantityEvent.getEventTime() != null) ? quantityEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (quantityEvent.getRecordTime() != null) ? quantityEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.QUANTITY;
@@ -469,7 +470,6 @@ public class QueryCheck {
      *
      * @param transactionEvent The TransactionEventType to filter by XACML requests.
      * @param user The user to check.
-     * @param owner The owner to check.
      * @return <code>true</code> if the transaction event is permitted.
      */
     private boolean checkTransactionEvent(TransactionEventType transactionEvent, String user) {
@@ -477,6 +477,7 @@ public class QueryCheck {
         if (owner == null) {
             return false;
         }
+        owner = fr.unicaen.iota.mu.Utils.formatId(owner);
         Date eventTime = (transactionEvent.getEventTime() != null) ? transactionEvent.getEventTime().toGregorianCalendar().getTime() : null;
         Date recordTime = (transactionEvent.getRecordTime() != null) ? transactionEvent.getRecordTime().toGregorianCalendar().getTime() : null;
         String eventType = XACMLConstantsEventType.TRANSACTION;
@@ -603,6 +604,8 @@ public class QueryCheck {
      * @return The decision result.
      */
     public boolean checkSubscribe(String user, String partner) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
+        partner = fr.unicaen.iota.mu.Utils.formatId(partner);
         int xacmlResponse = epcisPEP.subscribe(user, partner);
         return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
@@ -615,6 +618,8 @@ public class QueryCheck {
      * @return The decision result.
      */
     public boolean canBe(String user, String partner) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
+        partner = fr.unicaen.iota.mu.Utils.formatId(partner);
         int xacmlResponse = epcisPEP.canBe(user, partner);
         return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
@@ -638,6 +643,7 @@ public class QueryCheck {
      * @param user The user name to check
      */
     private void xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
         Iterator<VocabularyElementType> iterVoc = vocElList.iterator();
         while (iterVoc.hasNext()) {
             boolean allowed = false;
@@ -648,6 +654,7 @@ public class QueryCheck {
                 if (Constants.URN_IOTA.equals(elem.getName().getNamespaceURI()) &&
                         Constants.EXTENSION_OWNER_ID.equals(elem.getName().getLocalPart())) {
                     String owner = elem.getValue().toString();
+                    fr.unicaen.iota.mu.Utils.formatId(owner);
                     XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
                     if (xacmlCheckMasterData(xacmlMasterData, user)) {
                         allowed = true;
@@ -669,6 +676,7 @@ public class QueryCheck {
      * @return <code>true</code> if permitted.
      */
     private boolean xacmlCheckMasterData(XACMLEPCISMasterData xacmlMasterData, String user) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
         int xacmlResponse = epcisPEP.queryMasterData(user, xacmlMasterData);
         return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }

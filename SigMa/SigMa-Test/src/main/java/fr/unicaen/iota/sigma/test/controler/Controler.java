@@ -1,5 +1,5 @@
 /*
- *  This program is a part of the IoTa Project.
+ *  This program is a part of the IoTa project.
  *
  *  Copyright © 2013  Université de Caen Basse-Normandie, GREYC
  *
@@ -20,6 +20,7 @@ package fr.unicaen.iota.sigma.test.controler;
 
 import fr.unicaen.iota.eta.capture.ETaCaptureClient;
 import fr.unicaen.iota.mu.Constants;
+import fr.unicaen.iota.mu.Utils;
 import fr.unicaen.iota.sigma.SigMaFunctions;
 import fr.unicaen.iota.sigma.client.SigMaClient;
 import fr.unicaen.iota.sigma.xsd.VerifyResponse;
@@ -34,7 +35,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 import org.fosstrak.epcis.captureclient.CaptureClientException;
 import org.fosstrak.epcis.model.ActionType;
@@ -54,23 +54,27 @@ import org.fosstrak.epcis.model.TransactionEventType;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author doud
- */
 public class Controler {
 
-    private String sigmaKeyStore = "/srv/sigma-cert.p12";
-    private String sigmaKsPassword = "store_pw";
-    private String captureUrl = "https://localhost:8443/eta/capture";
-    private String sigmaAddress = "https://localhost:8443/sigma";
+    private String captureUrl;
+    private String sigmaUrl;
+    private String tlsKeystore;
+    private String tlsKsPassword;
+    private String tlsTruststore;
+    private String tlsTsPassword;
+    private String signKeystore;
+    private String signKsPassword;
 
-    private String TLSKeyStore = "/srv/keystore.jks";
-    private String TLSKsPassword = "store_pw";
-    private String TLSTrustStore = "/srv/truststore.jks";
-    private String TLSTsPassword = "trust_pw";
-
-    public Controler() {
+    public Controler(String captureUrl, String sigmaUrl, String tlsKeystore, String tlsKsPassword,
+            String tlsTruststore, String tlsTsPassword, String signKeystore, String signKsPassword) {
+        this.captureUrl = captureUrl;
+        this.sigmaUrl = sigmaUrl;
+        this.tlsKeystore = tlsKeystore;
+        this.tlsKsPassword = tlsKsPassword;
+        this.tlsTruststore = tlsTruststore;
+        this.tlsTsPassword = tlsTsPassword;
+        this.signKeystore = signKeystore;
+        this.signKsPassword = signKsPassword;
     }
 
     public ObjectEventType sign(String epcCode, String bizStepCode, String dispositionCode, String readPointCode, String bizLocationCode) {
@@ -110,7 +114,7 @@ public class Controler {
         EPCISBodyType epcisBody = new EPCISBodyType();
         EventListType eventList = new EventListType();
         try {
-            SigMaFunctions sigMAFunctions = new SigMaFunctions(sigmaKeyStore, sigmaKsPassword);
+            SigMaFunctions sigMAFunctions = new SigMaFunctions(signKeystore, signKsPassword);
             sigMAFunctions.sign(objEvent);
         } catch (Exception e) {
             System.err.println("Exception during signing");
@@ -141,7 +145,7 @@ public class Controler {
         epcisDoc.setSchemaVersion(new BigDecimal("1.0"));
         epcisDoc.setCreationDate(now);
 
-        ETaCaptureClient client = new ETaCaptureClient(captureUrl, TLSKeyStore, TLSKsPassword, TLSTrustStore, TLSTsPassword);
+        ETaCaptureClient client = new ETaCaptureClient(captureUrl, tlsKeystore, tlsKsPassword, tlsTruststore, tlsTsPassword);
         int httpResponseCode;
         try {
             httpResponseCode = client.capture(epcisDoc);
@@ -157,7 +161,7 @@ public class Controler {
     }
 
     public VerifyResponse verify(ObjectEventType event){
-        SigMaClient sigMaClient = new SigMaClient(sigmaAddress,TLSKeyStore, TLSKsPassword, TLSTrustStore, TLSTsPassword);
+        SigMaClient sigMaClient = new SigMaClient(sigmaUrl,tlsKeystore, tlsKsPassword, tlsTruststore, tlsTsPassword);
         return sigMaClient.verify(event).getVerifyResponse();
     }
 
@@ -177,15 +181,12 @@ public class Controler {
             return null;
         }
         for (Object object : extensions) {
-            // we really don’t know what’s in an extension
-            JAXBElement elem = (JAXBElement) object;
-            if ((Constants.EXTENSION_SIGNATURE.equals(elem.getName().getLocalPart()))) {
-                signature = elem.getValue().toString();
+            Element elem = (Element) object;
+            if (Constants.URN_IOTA.equals(elem.getNamespaceURI())
+                    && Constants.EXTENSION_SIGNATURE.equals(elem.getLocalName())) {
+                signature = elem.getTextContent();
+                break;
             }
-//            Element elem = (Element) object;
-//            if (("signature".equals(elem.getLocalName()))) {
-//                signature = elem.getTextContent().toString();
-//            }
         }
         return signature;
     }
@@ -203,20 +204,16 @@ public class Controler {
     }
 
     private void insertWrongSignature(EPCISEventType event, String signature) throws IOException, ParserConfigurationException, SAXException {
-        JAXBElement<String> elem = new JAXBElement<String>(new QName(Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE), String.class, signature);
         if (event instanceof ObjectEventType) {
             ((ObjectEventType) event).getAny().clear();
-            ((ObjectEventType) event).getAny().add(elem);
         } else if (event instanceof AggregationEventType) {
             ((AggregationEventType) event).getAny().clear();
-            ((AggregationEventType) event).getAny().add(elem);
         } else if (event instanceof QuantityEventType) {
             ((QuantityEventType) event).getAny().clear();
-            ((QuantityEventType) event).getAny().add(elem);
         } else if (event instanceof TransactionEventType) {
             ((TransactionEventType) event).getAny().clear();
-            ((TransactionEventType) event).getAny().add(elem);
         }
+        Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE, signature);
     }
 
 }

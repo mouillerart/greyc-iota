@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -108,6 +108,28 @@ public interface AccessInterface {
      * @throws RemoteException
      */
     public List<EPCISEventType> traceEPC(Identity identity, String EPC, Map<String, String> filters) throws RemoteException;
+
+    /**
+     * Gets all the EPCIS events sorted by EPCIS concerning a given EPC code.
+     *
+     * @param identity the client identification
+     * @param EPC the EPC code
+     * @return a list of EPCIS events by EPCIS
+     * @throws RemoteException
+     */
+    public Map<String, List<EPCISEventType>> traceEPCByEPCIS(Identity identity, String EPC) throws RemoteException;
+
+    /**
+     * Gets all the EPCIS events sorted by EPCIS concerning a given EPC code and matching the
+     * given filters.
+     *
+     * @param identity the client identification
+     * @param EPC the EPC code
+     * @param filters the filters
+     * @return a list of EPCIS events by EPCIS
+     * @throws RemoteException
+     */
+    public Map<String, List<EPCISEventType>> traceEPCByEPCIS(Identity identity, String EPC, Map<String, String> filters) throws RemoteException;
 
     /**
      * Asynchronously gets all the EPCIS events concerning a given EPC code.

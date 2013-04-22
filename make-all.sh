@@ -130,17 +130,18 @@ do_compile SigMa-Client SigMa/SigMa-Client
 do_compile SigMa SigMa/SigMa
 p_info "\n"
 
-p_bold "User checking (user, eφ and κ-ξ)\n"
-do_compile User-Client ETa/User-Client
+p_bold "User checking (υ, eφ and κ-ξ)\n"
+do_compile YPSilon-Client YPSilon/YPSilon-Client
 do_compile LibXACML-EPCIS ETa/LibXACML-EPCIS
 do_compile EPCIS-Xi-Client CaPPa/EPCIS-Xi-Client
-do_compile User ETa/User
+do_compile YPSilon YPSilon/YPSilon
 do_compile EpcisPHI ETa/EpcisPHI
 p_info "\n"
 
 p_bold "Epcis Trust Agency (η)\n"
 do_compile ETa-Query-Client ETa/ETa-Query-Client
 do_compile ETa-Capture-Client ETa/ETa-Capture-Client
+do_compile ETa-Capture-Test ETa/ETa-Capture-Test
 do_compile ETa-Callback-Filter ETa/ETa-Callback/ETa-Callback-Filter
 do_compile ETa-Callback-Receiver ETa/ETa-Callback/ETa-Callback-Receiver
 do_compile ETa-Callback-Sender ETa/ETa-Callback/ETa-Callback-Sender
@@ -174,13 +175,14 @@ do_compile_pack OmICron OMeGa/OmICron
 do_compile OMeGa OMeGa/OMeGa
 p_info "\n"
 
-p_bold "Applications (β, ψ, μφ)\n"
+p_bold "Applications (β, ψ, μφ, λ)\n"
 do_compile_pack BETa BETa
 # DELTa needs DS
 #do_compile_pack DELTa DELTa
 do_compile_pack PSi PSi
 do_compile MuPHI MuPHI
 do_compile_pack SigMa-Test SigMa/SigMa-Test
+do_compile LaMBDa LaMBDa
 
 p_info "\n"
 

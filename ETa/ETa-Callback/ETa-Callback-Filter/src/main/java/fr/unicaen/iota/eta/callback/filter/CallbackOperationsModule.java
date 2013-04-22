@@ -19,6 +19,7 @@
  */
 package fr.unicaen.iota.eta.callback.filter;
 
+import fr.unicaen.iota.eta.callback.filter.utils.Constants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;

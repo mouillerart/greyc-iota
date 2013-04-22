@@ -19,6 +19,8 @@
  */
 package fr.unicaen.iota.eta.callback.filter;
 
+import fr.unicaen.iota.eta.callback.filter.utils.Constants;
+
 public class Main {
 
     public static void main(String[] args) {

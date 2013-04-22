@@ -67,10 +67,12 @@ public class ETaQueryControlClient implements QueryControlInterface {
     }
 
     public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws Exception {
-        System.setProperty("javax.net.ssl.keyStore", pksFilename);
-        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
-        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
-        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        if (pksFilename != null && pksPassword != null && trustPksFilename != null && trustPksPassword != null) {
+            System.setProperty("javax.net.ssl.keyStore", pksFilename);
+            System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+            System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        }
         URL wsdlUrl = new URL(address + "?wsdl");
         IDedEPCglobalEPCISService service = new IDedEPCglobalEPCISService(wsdlUrl);
         port = service.getPort(IDedEPCISServicePortType.class);

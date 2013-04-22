@@ -1,4 +1,4 @@
-<%@page import="fr.unicaen.iota.eta.user.userservice.UserInfoOut"%>
+<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
 <%@page import="fr.unicaen.iota.epcisphi.xacml.ihm.Module"%>
 <%@page import="fr.unicaen.iota.epcisphi.utils.HTMLUtilities"%>
 
@@ -8,14 +8,13 @@
             String pServiceAddress = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getUri().toString();
             String pServiceType = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getType();
  *          */
-            String partnerId = ((UserInfoOut) session.getAttribute("uInfo")).getPartnerID();
+            String partnerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
 %>
 
 <div id="createUser" title="Create User" class="modalDialog">
     <div class="dialog_message">Enter user informations :</div>
-    <div class="dialog_options">Login : <input id="userLogin" type="text" value="" /></div>
-    <div class="dialog_options">Password : <input id="userPassword" type="password" /></div>
-    <div class="dialog_options">Confirm password : <input id="userConfirmation" type="password" /></div>
+    <div class="dialog_options">User's certificate DN used to connect: <input id="userLogin" type="text" value="" /></div>
+    <div class="dialog_options">User name (empty if the DN is compatible with the LDAP directory) : <input id="userID" type="text" value="" /></div>
 </div>
 
 <div id="deleteUser" title="Delete User" class="modalDialog">
@@ -26,12 +25,6 @@
 <div id="updatePartner" title="Update Partner Informations" class="modalDialog">
     <div class="dialog_message">Enter the new partner informations :</div>
     <div class="dialog_options">Partner Id : <input disabled id="partnerID" type="text" value="<%=partnerId%>" /></div>
-    <!--<div id="dialogServiceId" class="dialog_options">Service Id : <input id="serviceID" type="text" value="<=pServiceId%>" /></div>
-    <div class="dialog_options">Service type :
-        <=HTMLUtilities.createSelectServiceType(pServiceType, "")%>
-    </div>
-    <div class="dialog_options">Service address : <input id="serviceAddress" type="text" value="<=pServiceAddress%>" /></div>
-    -->
 </div>
 
 <div id="GroupDialog" title="Group Name" class="modalDialog">

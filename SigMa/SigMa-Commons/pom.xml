@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>sigma-commons</artifactId>
-    <version>1.9</version>
+    <version>1.99</version>
     <packaging>jar</packaging>
 
     <name>SigMa-Commons</name>
@@ -34,9 +34,9 @@
 
         <!-- Crypto dependency -->
         <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>140</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.48</version>
         </dependency>
 
         <dependency>

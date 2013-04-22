@@ -30,8 +30,7 @@ public final class Constants {
     private Constants() {
     }
     private static Log log = LogFactory.getLog(Constants.class);
-    public static final String USERSERVICE_ADDRESS;
-    public static final String PROP_USERSERVICE_ADDRESS = "eta.userservice.url";
+    public static final String YPSILON_ADDRESS;
     public static final String PKS_FILENAME;
     public static final String PKS_PASSWORD;
     public static final String TRUST_PKS_FILENAME;
@@ -48,7 +47,7 @@ public final class Constants {
         } catch (IOException ex) {
             log.fatal(null, ex);
         }
-        USERSERVICE_ADDRESS = properties.getProperty("eta.userservice.url");
+        YPSILON_ADDRESS = properties.getProperty("ypsilon-url");
         PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
         PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
         TRUST_PKS_FILENAME = properties.getProperty("trust-pks-filename", "publickeys.jks");

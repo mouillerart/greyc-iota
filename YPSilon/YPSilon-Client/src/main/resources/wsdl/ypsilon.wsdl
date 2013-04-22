@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="YPSilon"
+                  targetNamespace="urn:unicaen:iota:ypsilon:wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:ypsilonw="urn:unicaen:iota:ypsilon:wsdl"
+                  xmlns:ypsilon="urn:unicaen:iota:ypsilon:xsd">
+
+    <!-- TYPES SECTION -->
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import
+                namespace="urn:unicaen:iota:ypsilon:xsd"
+                schemaLocation="./ypsilon.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+    <!-- GLOBAL -->
+
+    <wsdl:message name="helloReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:Hello"/>
+    </wsdl:message>
+    <wsdl:message name="helloRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:HelloResult"/>
+    </wsdl:message>
+
+    <!-- USER -->
+
+    <wsdl:message name="userLookupReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserLookup"/>
+    </wsdl:message>
+    <wsdl:message name="userLookupRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserLookupResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userCreateReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserCreate"/>
+    </wsdl:message>
+    <wsdl:message name="userCreateRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserCreateResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userInfoReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserInfo"/>
+    </wsdl:message>
+
+    <wsdl:message name="userInfoRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserInfoResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userUpdateReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserUpdate"/>
+    </wsdl:message>
+    <wsdl:message name="userUpdateRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserUpdateResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userDeleteReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserDelete"/>
+    </wsdl:message>
+    <wsdl:message name="userDeleteRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserDeleteResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userCertLoginReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserCertLogin"/>
+    </wsdl:message>
+
+    <wsdl:message name="userLoginRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserLoginResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="userLogoutReq">
+        <wsdl:part
+            name="parms"
+            element="ypsilon:UserLogout"/>
+    </wsdl:message>
+    <wsdl:message name="userLogoutRsp">
+        <wsdl:part
+            name="result"
+            element="ypsilon:UserLogoutResult"/>
+    </wsdl:message>
+
+
+    <!-- EXCEPTION SECTION -->
+
+    <wsdl:message name="ImplementationExceptionResponse">
+        <wsdl:part name="fault" element="ypsilon:ImplementationException"/>
+    </wsdl:message>
+
+    <wsdl:message name="SecurityExceptionResponse">
+        <wsdl:part name="fault" element="ypsilon:SecurityException"/>
+    </wsdl:message>
+
+     <!-- PORT TYPE SECTION -->
+
+    <wsdl:portType name="YPSilonServicePortType">
+
+     <!-- GLOBAL -->
+
+        <wsdl:operation name="hello">
+            <wsdl:input
+                message="ypsilonw:helloReq"
+                name="helloReq"/>
+            <wsdl:output
+                message="ypsilonw:helloRsp"
+                name="helloRsp"/>
+        </wsdl:operation>
+
+       <!-- USER -->
+
+        <wsdl:operation name="userLookup">
+            <wsdl:input
+                message="ypsilonw:userLookupReq"
+                name="userLookupReq"/>
+            <wsdl:output
+                message="ypsilonw:userLookupRsp"
+                name="userLookupRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCreate">
+            <wsdl:input
+                message="ypsilonw:userCreateReq"
+                name="userCreateReq"/>
+            <wsdl:output
+                message="ypsilonw:userCreateRsp"
+                name="userCreateRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userInfo">
+            <wsdl:input
+                message="ypsilonw:userInfoReq"
+                name="userInfoReq"/>
+            <wsdl:output
+                message="ypsilonw:userInfoRsp"
+                name="userInfoRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userUpdate">
+            <wsdl:input
+                message="ypsilonw:userUpdateReq"
+                name="userUpdateReq"/>
+            <wsdl:output
+                message="ypsilonw:userUpdateRsp"
+                name="userUpdateRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userDelete">
+            <wsdl:input
+                message="ypsilonw:userDeleteReq"
+                name="userDeleteReq"/>
+            <wsdl:output
+                message="ypsilonw:userDeleteRsp"
+                name="userDeleteRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCertLogin">
+            <wsdl:input
+                message="ypsilonw:userCertLoginReq"
+                name="userCertLoginReq"/>
+            <wsdl:output
+                message="ypsilonw:userLoginRsp"
+                name="userLoginRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="userLogout">
+            <wsdl:input
+                message="ypsilonw:userLogoutReq"
+                name="userLogoutReq"/>
+            <wsdl:output
+                message="ypsilonw:userLogoutRsp"
+                name="userLogoutRsp"/>
+            <wsdl:fault
+                name="ImplementationExceptionFault"
+                message="ypsilonw:ImplementationExceptionResponse"/>
+            <wsdl:fault
+                name="SecurityExceptionFault"
+                message="ypsilonw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+
+    </wsdl:portType>
+
+       <!-- BINDING SECTION -->
+
+    <wsdl:binding
+        name="YPSilonBinding"
+        type="ypsilonw:YPSilonServicePortType">
+
+        <wsoap:binding
+            style="document"
+            transport="http://schemas.xmlsoap.org/soap/http"/>
+
+       <!-- GLOBAL -->
+
+        <wsdl:operation name="hello">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="helloReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="helloRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+       <!-- USER -->
+
+        <wsdl:operation name="userLookup">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userLookupReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLookupRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCreate">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userCreateReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userCreateRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userInfo">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userInfoReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userInfoRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userUpdate">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userUpdateReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userUpdateRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userDelete">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userDeleteReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userDeleteRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userCertLogin">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userCertLoginReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLoginRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="userLogout">
+            <wsoap:operation soapAction=""/>
+            <wsdl:input name="userLogoutReq">
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="userLogoutRsp">
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+    </wsdl:binding>
+
+       <!-- SERVICE SECTION -->
+
+    <wsdl:service name="YPSilonService">
+        <wsdl:port
+            binding="ypsilonw:YPSilonBinding"
+            name="YPSilonServicePort">
+        </wsdl:port>
+    </wsdl:service>
+
+
+</wsdl:definitions>

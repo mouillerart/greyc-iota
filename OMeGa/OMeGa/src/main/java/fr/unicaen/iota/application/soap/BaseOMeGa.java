@@ -33,6 +33,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import org.apache.commons.logging.Log;
@@ -51,8 +52,11 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
     @Resource
     private WebServiceContext wsContext;
     private final EPCISPEP xiclient;
+    private final Identity anonymous;
 
     public BaseOMeGa() {
+        anonymous = new Identity();
+        anonymous.setAsString(Configuration.DEFAULT_IDENTITY);
         xiclient = new EPCISPEP(Configuration.XI_URL, Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
     }
 
@@ -60,8 +64,18 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
 
     private void checkAuth(Identity id) throws IoTaException {
         Principal authId = wsContext.getUserPrincipal();
-        String tlsId = authId == null ? null : authId.getName();
-        int chk = xiclient.canBe(tlsId, id.getAsString());
+        if (authId == null && id == anonymous) {
+            return;
+        }
+        if (authId == null) {
+            throw new IoTaException("No authentication", IoTaFault.tau.getCode());
+        }
+        if (id == null || id.getAsString().isEmpty()) {
+            throw new IoTaException("No identity to use", IoTaFault.tau.getCode());
+        }
+        String tlsId = fr.unicaen.iota.mu.Utils.formatId(authId.getName());
+        String idToPass = fr.unicaen.iota.mu.Utils.formatId(id.getAsString());
+        int chk = xiclient.canBe(tlsId, idToPass);
         if (!Utils.responseIsPermit(chk)) {
             throw new IoTaException(tlsId + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
         }
@@ -139,6 +153,33 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
         EventListType evtList = new EventListType();
         evtList.getObjectEventOrAggregationEventOrQuantityEvent().addAll(list);
         response.setEventList(evtList);
+        return response;
+    }
+
+    @Override
+    public TraceEPCByEPCISResponse traceEPCByEPCIS(TraceEPCByEPCISRequest traceEPCByEPCISRequest) throws IoTaException {
+        checkAuth(traceEPCByEPCISRequest.getIdentity());
+        AccessInterface controler = getAI();
+        Map<String, List<EPCISEventType>> map;
+        try {
+            if (traceEPCByEPCISRequest.getFilters() == null) {
+                map = controler.traceEPCByEPCIS(traceEPCByEPCISRequest.getIdentity(), traceEPCByEPCISRequest.getEpc().getValue());
+            } else {
+                map = controler.traceEPCByEPCIS(traceEPCByEPCISRequest.getIdentity(), traceEPCByEPCISRequest.getEpc().getValue(), filters(traceEPCByEPCISRequest.getFilters().getParam()));
+            }
+        } catch (RemoteException ex) {
+            log.warn("A problem occurred while executing traceEPCByEPCIS!", ex);
+            throw new IoTaException("Error while traceEPCByEPCIS", IoTaFault.alfa.getCode(), ex);
+        }
+        TraceEPCByEPCISResponse response = new TraceEPCByEPCISResponse();
+        for (Entry<String, List<EPCISEventType>> entry : map.entrySet()) {
+            EventsByEPCIS eventsByEPCIS = new EventsByEPCIS();
+            eventsByEPCIS.setEpcisAddress(entry.getKey());
+            EventListType evtList = new EventListType();
+            evtList.getObjectEventOrAggregationEventOrQuantityEvent().addAll(entry.getValue());
+            eventsByEPCIS.setEventList(evtList);
+            response.getEventsByEPCIS().add(eventsByEPCIS);
+        }
         return response;
     }
 

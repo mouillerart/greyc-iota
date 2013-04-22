@@ -310,10 +310,7 @@ public class QueryOperationsModule {
                     throw new ImplementationExceptionResponse(msg, ie, e);
                 }
 
-                // XACML check
-                // TODO user
-                String owner = "anonymous";
-                if (queryCheck.checkSubscribe(user, owner)) {
+                if (queryCheck.checkSubscribe(user, user)) {
                     String callbackAddress;
                     try {
                         callbackAddress = Constants.CALLBACK_URL;
@@ -340,7 +337,7 @@ public class QueryOperationsModule {
                     backend.storeSubscription(session, subscriptionID, dest, user);
                     LOG.debug("New subscription from user: " + user);
                 } else {
-                    String msg = "Subscription not allowed for (" + user + ", " + owner + ")";
+                    String msg = "Subscription not allowed for " + user;
                     LOG.warn("SubscribeNotPermittedException: " + msg);
                     SubscribeNotPermittedException e = new SubscribeNotPermittedException();
                     e.setReason(msg);
@@ -411,9 +408,9 @@ public class QueryOperationsModule {
     }
 
     public boolean canBe(Principal principal, Identity identity) {
-        String user = identity.getAsString();
-        String partner = principal.getName();
-        return queryCheck.canBe(user, partner);
+        String user = principal.getName();
+        String canBeUser = identity.getAsString();
+        return queryCheck.canBe(user, canBeUser);
     }
 
     private void configureEPCISQueryClient() throws IOException, Exception {

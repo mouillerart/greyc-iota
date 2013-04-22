@@ -23,10 +23,18 @@ import com.sun.xacml.ctx.RequestCtx;
 import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.xacml.request.EventRequest;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,8 +79,9 @@ public class PEP {
      * @param xacmlReq The XACML request to send.
      * @return The XACML response.
      * @throws IOException If an I/O error occurred.
+     * @throws Exception
      */
-    private String sendXACMLRequest(RequestCtx xacmlReq) throws IOException {
+    private String sendXACMLRequest(RequestCtx xacmlReq) throws IOException, Exception {
         HttpURLConnection httpConnection = getConnection("text/plain", url);
         log.debug("Sending XACML request...");
         xacmlReq.encode(httpConnection.getOutputStream());
@@ -96,18 +105,35 @@ public class PEP {
     /**
      * Opens a connection to the xacml module.
      *
-     * @param contentType The HTTP content-type, e.g.,
-     * <code>text/xml</code>
+     * @param contentType The HTTP content-type, e.g. <code>text/xml</code>
      * @return The HTTP connection object.
      * @throws IOException If an error occurred connecting to the XACML module.
+     * @throws Exception
      */
-    private HttpURLConnection getConnection(final String contentType, String url) throws IOException {
-        System.setProperty("javax.net.ssl.keyStore", pksFilename);
-        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
-        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
-        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+    private HttpURLConnection getConnection(final String contentType, String url) throws IOException, Exception {
+        if (pksFilename != null && pksPassword != null && trustPksFilename != null && trustPksPassword != null) {
+            System.setProperty("javax.net.ssl.keyStore", pksFilename);
+            System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+            System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        }
         URL serviceUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
+
+        if (pksFilename != null) {
+            KeyStore keyStore = KeyStore.getInstance(pksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            keyStore.load(new FileInputStream(new File(pksFilename)), pksPassword.toCharArray());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+            keyManagerFactory.init(keyStore, pksPassword.toCharArray());
+            KeyStore trustStore = KeyStore.getInstance(trustPksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            trustStore.load(new FileInputStream(new File(trustPksFilename)), trustPksPassword.toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(trustStore);
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+            ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
+        }
+
         connection.setRequestProperty("content-type", contentType);
         connection.setRequestMethod("POST");
         connection.setDoInput(true);

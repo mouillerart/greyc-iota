@@ -74,7 +74,7 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                     }
                 }
             });
-            
+
             break;
         case "epcFilterGroupNode":
             $("#questionDialogMsg").html("Do you want to switch the EPC policy Filter ?");
@@ -109,7 +109,7 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                     }
                 }
             });
-            
+
             break;
         case "eventTimeFilterGroupNode":
             $("#questionDialogMsg").html("Do you want to switch the Event Time policy Filter ?");
@@ -126,7 +126,7 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                         return 0;
                     }
                 }
-            });                
+            });
             break;
         case "recordTimeFilterGroupNode":
             $("#questionDialogMsg").html("Do you want to switch the Record Time policy Filter ?");
@@ -307,7 +307,7 @@ function processRequestSave(module){
         buttons: {
             "Validate" : function process(){
                 $(this).dialog("close");
-                validatePartnerPolicy(module);
+                validateOwnerPolicy(module);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -347,8 +347,8 @@ function processUserCreate(){
             "Validate" : function processDate(){
                 $(this).dialog("close");
                 var login = $("#userLogin").attr("value");
-                var password = $("#userPassword").attr("value");
-                createUser(login,password);
+                var userName = $("#userID").attr("value");
+                createUser(login,userName);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -385,8 +385,7 @@ function processUpdateRootUser(){
             "Validate" : function processDate(){
                 $(this).dialog("close");
                 var login = $("#userLogin2").attr("value");
-                var password = $("#userPassword2").attr("value");
-                updateUser(login,password);
+                updateUser(login);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -405,12 +404,9 @@ function processAccountCreate(){
             "Validate" : function processAccountCreate(){
                 $(this).dialog("close");
                 var login = $("#userLogin1").attr("value");
-                var password = $("#userPassword1").attr("value");
                 var partnerID = $("#partnerID1").attr("value");
-                var serviceID = $("#serviceID1").attr("value");
-                var serviceAddress = $("#serviceAddress1").attr("value");
-                var serviceType = $("#serviceType1").attr("value");
-                createAccount(partnerID,serviceID,serviceType,serviceAddress,login,password);
+                var userID = $("#userID1").attr("value");
+                createAccount(partnerID,login,userID);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -1068,11 +1064,11 @@ function updatePartner(partnerID,serviceID,serviceAddress,serviceType){
     });
 }
 
-function createUser(login,password){
+function createUser(login,userName){
     $.get('AccessControlPolicy', {
         a:"createUser",
         f:login,
-        g:password
+        g:userName
     },
     function(data){
         if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
@@ -1085,11 +1081,10 @@ function createUser(login,password){
 }
 
 
-function updateUser(login,password){
+function updateUser(login){
     $.get('AccessControlPolicy', {
         a:"updateUser",
-        f:login,
-        g:password
+        f:login
     },
     function(data){
         if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
@@ -1116,15 +1111,12 @@ function deleteUser(login){
     });
 }
 
-function createAccount(partnerID,serviceID,serviceType,serviceAddress,login,password){
+function createAccount(partnerID,login,userName){
     $.get('AccessControlPolicy', {
         a:"createAccount",
-        f:partnerID,
-        g:serviceID,
-        h:serviceType,
-        i:serviceAddress,
-        j:login,
-        k:password
+        f:login,
+        g:partnerID,
+        h:userName
     },
     function(data){
         if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
@@ -1152,7 +1144,7 @@ function addPartnerToGroup(groupId,objectId,blockNode,module,newName){
         }
         else{ // sinon
             errorDialog(getRepsonseDescription(data));
-        }    
+        }
     });
 }
 function removePartnerFromGroup(groupId,objectId,blockNode,module){
@@ -1870,9 +1862,9 @@ function updateGroupName(groupId,objectId,element,module,newName){
     });
 }
 
-function validatePartnerPolicy(module){
+function validateOwnerPolicy(module){
     $.get('AccessControlPolicy', {
-        a:"savePartnerPolicy",
+        a:"saveOwnerPolicy",
         e:null,
         d:module,
         b:null
@@ -1885,7 +1877,7 @@ function validatePartnerPolicy(module){
         else{ // sinon
             errorDialog(getRepsonseDescription(data));
         }
-    });    
+    });
 }
 
 function processRequestCancelPolicyChanges(module){

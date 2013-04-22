@@ -18,6 +18,7 @@
  */
 package fr.unicaen.iota.eta.callback.filter;
 
+import fr.unicaen.iota.eta.callback.filter.utils.Constants;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 

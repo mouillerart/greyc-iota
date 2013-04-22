@@ -18,6 +18,10 @@ default_user = default-id
 login = admin
 password = admin
 base_dn = dc=iota,dc=greyc,dc=fr
+user_group = ou=users
+user_id = uid
+attribute_owner = ownerid
+attribute_alias = aliasdn
 url = ldap://localhost:389/
 ldif_create = false
 ldif_install = false
@@ -153,10 +157,15 @@ rmi_name = ALfA
 rmi_port = 1099
 install = false
 
-[user]
-name = user
-repo = resources/user-${IOTA_VERSION}.war
-url = http://localhost:8080/user
+[ypsilon]
+name = ypsilon
+repo = resources/ypsilon-${IOTA_VERSION}.war
+url = http://localhost:8080/ypsilon
+install = false
+
+[lambda]
+name = lambda
+repo = resources/lambda-${IOTA_VERSION}.war
 install = false
 
 [eta]
@@ -204,7 +213,8 @@ install = false
 name = ephi
 repo = resources/epcis-phi-${IOTA_VERSION}.war
 install = false
-url = http://localhost:8080/ephi/
+deploy_policies = true
+url = https://localhost:8443/ephi/
 
 [epcis_policies]
 dir = /srv/epcis-policies/
@@ -229,7 +239,7 @@ entry_regex = \\\\!\\\\^\\\\.\\\\*\\\\$\\\\!|\\\\!
 
 [sigma]
 name = sigma
-repo = resources/sigma-1.9-mock.war
+repo = resources/sigma-${IOTA_VERSION}.war
 install = True
 url = http://localhost:8080/sigma/
 
@@ -242,21 +252,26 @@ keyalias = key
 keypassword =
 
 [cert]
-keystore = /srv/keystore.p12
+keystore = /srv/keystore.jks
+p12_keystore = /srv/keystore.p12
 jks_keystore = /srv/keystore.jks
+pem_keystore = /srv/keystore.pem
 password = store_pw
 distinguished_name = CN=anonymous
 keyalias = key
 keypassword =
 certfile = /srv/key.cert
 truststore = /srv/truststore.jks
+pem_truststore = /srv/truststore.pem
 trustpassword = trust_pw
 trust_keyalias = key
 trust_keypassword =
 create_keystore = True
 create_certfile = True
 create_truststore = True
+create_truststore_pem = True
 exportkeystore_tojks = True
+exportkeystore_topem = True
 
 EOS
 
@@ -268,13 +283,14 @@ rm -f resources/alfa-rmi-*-bin-with-dependencies.tar.gz			\
     resources/dseta-server-*.war					\
     resources/epcilon-*.war						\
     resources/epcis-phi-*.war						\
-    resources/user-*.war						\
+    resources/ypsilon-*.war						\
     resources/eta-*.war							\
     resources/eta-callback-receiver-*.war				\
     resources/eta-callback-filter-*-bin-with-dependencies.tar.gz	\
     resources/eta-callback-sender-*-bin-with-dependencies.tar.gz	\
     resources/omega-*.war						\
-    resources/sigma-*.war
+    resources/sigma-*.war						\
+    resources/lambda-*.war
 echo "Setting resources links ..."
 ln -s ../../ALfA/ALfA-RMI/target/alfa-rmi-${IOTA_VERSION}-bin-with-dependencies.tar.gz	\
     ../../DSeTa/DiscoveryPHI/target/discovery-phi-${IOTA_VERSION}.war			\
@@ -282,7 +298,7 @@ ln -s ../../ALfA/ALfA-RMI/target/alfa-rmi-${IOTA_VERSION}-bin-with-dependencies.
     ../../IoTa-DiscoveryWS/IoTa-DiscoveryWS/target/discovery-server-${IOTA_VERSION}.war	\
     ../../EpcILoN/target/epcilon-${IOTA_VERSION}.war					\
     ../../ETa/EpcisPHI/target/epcis-phi-${IOTA_VERSION}.war				\
-    ../../ETa/User/target/user-${IOTA_VERSION}.war					\
+    ../../YPSilon/YPSilon/target/ypsilon-${IOTA_VERSION}.war					\
     ../../ETa/ETa/target/eta-${IOTA_VERSION}.war					\
     ../../ETa/ETa-Callback/ETa-Callback-Receiver/target/eta-callback-receiver-${IOTA_VERSION}.war			\
     ../../ETa/ETa-Callback/ETa-Callback-Filter/target/eta-callback-filter-${IOTA_VERSION}.war				\
@@ -291,4 +307,5 @@ ln -s ../../ALfA/ALfA-RMI/target/alfa-rmi-${IOTA_VERSION}-bin-with-dependencies.
     ../../ETa/ETa-Callback/ETa-Callback-Sender/target/eta-callback-sender-${IOTA_VERSION}-bin-with-dependencies.tar.gz	\
     ../../OMeGa/OMeGa/target/omega-${IOTA_VERSION}.war					\
     ../../SigMa/SigMa/target/sigma-${IOTA_VERSION}.war					\
+    ../../LaMBDa/target/lambda-${IOTA_VERSION}.war					\
     resources/

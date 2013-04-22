@@ -32,12 +32,9 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -54,7 +51,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 /**
  *
  */
-public class DSeTaClient implements X509TrustManager {
+public class DSeTaClient {
 
     private Identity identity;
     private IDedDSServicePortType port;
@@ -75,10 +72,12 @@ public class DSeTaClient implements X509TrustManager {
     }
 
     public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws Exception {
-        System.setProperty("javax.net.ssl.keyStore", pksFilename);
-        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
-        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
-        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        if (pksFilename != null && pksPassword != null && trustPksFilename != null && trustPksPassword != null) {
+            System.setProperty("javax.net.ssl.keyStore", pksFilename);
+            System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+            System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        }
         URL wsdlUrl = new URL(address + "?wsdl");
         IDedDSService service = new IDedDSService(wsdlUrl);
         port = service.getPort(IDedDSServicePortType.class);
@@ -262,18 +261,4 @@ public class DSeTaClient implements X509TrustManager {
         return serviceIds;
     }
 
-    @Override
-    public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public X509Certificate[] getAcceptedIssuers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

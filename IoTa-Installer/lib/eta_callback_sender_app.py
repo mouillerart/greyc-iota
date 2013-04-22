@@ -46,7 +46,7 @@ class ETaCallbackSenderAppInstaller(installer.Installer):
                    "database-password": ("eta", "callback_db_password"),
                    "startup-delay": ("eta_callback_sender", "startup-delay"),
                    "polling-delay": ("eta_callback_sender", "polling-delay"),
-                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword")

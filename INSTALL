@@ -280,9 +280,9 @@ these options (in the `options` statement of `named.conf.options`):
 
 ### LDAP
 
-Some applications (User) need an LDAP server.
+Some applications (YPSilon) need an LDAP server.
 
-From a fonctionnal LDAP server, the script `User/ldap.sh` or the LDAP module of
+From a fonctionnal LDAP server, the script `YPSilon/ldap.sh` or the LDAP module of
 the IoTa-Installer adds a schema, a group and the two users superadmin and
 anonymous.
 

@@ -63,7 +63,15 @@ public abstract class BaseRHO extends HttpServlet {
         if (authId == null && id == anonymous) {
             return;
         }
-        int chk = xiclient.canBe(authId.getName(), id.getAsString());
+        if (authId == null) {
+            throw new IoTaException("No authentication", IoTaFault.tau.getCode());
+        }
+        if (id == null || id.getAsString().isEmpty()) {
+            throw new IoTaException("No identity to use", IoTaFault.tau.getCode());
+        }
+        String tlsId = fr.unicaen.iota.mu.Utils.formatId(authId.getName());
+        String idToPass = fr.unicaen.iota.mu.Utils.formatId(id.getAsString());
+        int chk = xiclient.canBe(tlsId, idToPass);
         if (!Utils.responseIsPermit(chk)) {
             throw new IoTaException(authId.getName() + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
         }

@@ -108,7 +108,6 @@ public class SigMaFunctions {
         log.debug(cForm);
         String signature = createECDSASignature(cForm);
         Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE, signature);
-        Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNER_ID, signerId);
         String cForm2 = createCanonicalForm(event);
         log.debug(cForm2);
     }
@@ -143,19 +142,19 @@ public class SigMaFunctions {
             CertificateException, UnrecoverableKeyException, JAXBException, TransformerConfigurationException, TransformerException {
         this.signerId = signerId;
         String cForm = createCanonicalForm(event);
-        log.info(cForm);
+        log.debug(cForm);
         String signature = createECDSASignature(cForm);
         Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE, signature);
         Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNER_ID, signerId);
         String cForm2 = createCanonicalForm(event);
-        log.info(cForm2);
+        log.debug(cForm2);
     }
 
     /**
      * Verify a signature of an EPCISEventType.
      *
      * @param event the signed event.
-     * @return <code>true</code> if the siganture is correct.
+     * @return <code>true</code> if the signature is correct.
      * @throws FileNotFoundException
      * @throws CertificateException
      * @throws NoSuchAlgorithmException
@@ -186,7 +185,7 @@ public class SigMaFunctions {
         String signature = getSignature(event);
         deleteSignature(event);
         String cForm = createCanonicalForm(event);
-        log.info(cForm);
+        log.debug(cForm);
         PublicKey publicKey = getPublicKey();
         Signature ecdsa = Signature.getInstance("SHA1withECDSA");
         ecdsa.initVerify(publicKey);
@@ -263,7 +262,8 @@ public class SigMaFunctions {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JAXBContext jc = JAXBContext.newInstance(AggregationEventType.class);
         Marshaller m = jc.createMarshaller();
-        m.marshal(event, baos);
+        m.marshal(new JAXBElement<AggregationEventType>(new QName("", "AggregationEvent"),
+                AggregationEventType.class, event), baos);
         byte[] nonCanonicalXML = baos.toByteArray();
         Node node = byteArrayToNode(nonCanonicalXML);
         byte[] canonicalXML = canonicalizeXML(node);
@@ -276,7 +276,8 @@ public class SigMaFunctions {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JAXBContext jc = JAXBContext.newInstance(ObjectEventType.class);
         Marshaller m = jc.createMarshaller();
-        m.marshal(event, baos);
+        m.marshal(new JAXBElement<ObjectEventType>(new QName("", "ObjectEvent"),
+                ObjectEventType.class, event), baos);
         byte[] nonCanonicalXML = baos.toByteArray();
         Node node = byteArrayToNode(nonCanonicalXML);
         byte[] canonicalXML = canonicalizeXML(node);
@@ -289,7 +290,8 @@ public class SigMaFunctions {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JAXBContext jc = JAXBContext.newInstance(QuantityEventType.class);
         Marshaller m = jc.createMarshaller();
-        m.marshal(event, baos);
+        m.marshal(new JAXBElement<QuantityEventType>(new QName("", "QuantityEvent"),
+                QuantityEventType.class, event), baos);
         byte[] nonCanonicalXML = baos.toByteArray();
         Node node = byteArrayToNode(nonCanonicalXML);
         byte[] canonicalXML = canonicalizeXML(node);
@@ -302,7 +304,8 @@ public class SigMaFunctions {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JAXBContext jc = JAXBContext.newInstance(TransactionEventType.class);
         Marshaller m = jc.createMarshaller();
-        m.marshal(event, baos);
+        m.marshal(new JAXBElement<TransactionEventType>(new QName("", "TransactionEvent"),
+                TransactionEventType.class, event), baos);
         byte[] nonCanonicalXML = baos.toByteArray();
         Node node = byteArrayToNode(nonCanonicalXML);
         byte[] canonicalXML = canonicalizeXML(node);
@@ -354,9 +357,8 @@ public class SigMaFunctions {
         PrivateKey privateKey = null;
         char[] password = keyStorePassword.toCharArray();
         KeyStore ks = getKeyStore(keyStoreFilePath);
-        if (this.signerId == null) {
+        if (this.signerId == null || this.signerId.isEmpty()) {
             Enumeration<String> en = ks.aliases();
-
             while (en.hasMoreElements()) {
                 String alias = en.nextElement();
                 if (ks.isKeyEntry(alias)) {
@@ -372,10 +374,17 @@ public class SigMaFunctions {
     private PublicKey getPublicKey() throws KeyStoreException, FileNotFoundException, IOException,
             NoSuchAlgorithmException, CertificateException {
         KeyStore ks = getKeyStore(keyStoreFilePath);
-        PublicKey publicKey = null;
-        Enumeration<String> en = ks.aliases();
-        // TODO: hard value
-        publicKey = ks.getCertificate(this.signerId).getPublicKey();
+        if (this.signerId == null || this.signerId.isEmpty()) {
+            Enumeration<String> en = ks.aliases();
+            while (en.hasMoreElements()) {
+                String alias = en.nextElement();
+                if (ks.isKeyEntry(alias)) {
+                    this.signerId = alias;
+                    break;
+                }
+            }
+        }
+        PublicKey publicKey = ks.getCertificate(this.signerId).getPublicKey();
         return publicKey;
     }
 
@@ -420,11 +429,6 @@ public class SigMaFunctions {
             return null;
         }
         for (Object object : extensions) {
-            // we really don’t know what’s in an extension
-//            JAXBElement elem = (JAXBElement) object;
-//            if (("signature".equals(elem.getName().getLocalPart()))) {
-//                signature = elem.getValue().toString();
-//            }
             Element elem = (Element) object;
             if ((Constants.URN_IOTA.equals(elem.getNamespaceURI()) && Constants.EXTENSION_SIGNATURE.equals(elem.getLocalName()))) {
                 signature = elem.getTextContent().toString();
@@ -450,12 +454,6 @@ public class SigMaFunctions {
 
         Element elem = null;
         for (Object object : extensions) {
-            // we really don’t know what’s in an extension
-//            JAXBElement elemTmp = (JAXBElement) object;
-//            if (("signature".equals(elemTmp.getName().getLocalPart()))) {
-//                elem = elemTmp;
-//                break;
-//            }
             Element elemTmp = (Element) object;
             if ((Constants.URN_IOTA.equals(elemTmp.getNamespaceURI()) && Constants.EXTENSION_SIGNATURE.equals(elemTmp.getLocalName()))) {
                 elem = elemTmp;
@@ -468,7 +466,7 @@ public class SigMaFunctions {
     }
 
     private String getSignerId(EPCISEventType event) {
-        String signerId = "";
+        String signId = "";
         List<Object> extensions;
 
         if (event instanceof ObjectEventType) {
@@ -483,17 +481,12 @@ public class SigMaFunctions {
             return null;
         }
         for (Object object : extensions) {
-            // we really don’t know what’s in an extension
-//            JAXBElement elem = (JAXBElement) object;
-//            if (("signature".equals(elem.getName().getLocalPart()))) {
-//                signature = elem.getValue().toString();
-//            }
             Element elem = (Element) object;
             if ((Constants.URN_IOTA.equals(elem.getNamespaceURI()) && Constants.EXTENSION_SIGNER_ID.equals(elem.getLocalName()))) {
-                signerId = elem.getTextContent().toString();
+                signId = elem.getTextContent().toString();
             }
         }
-        return signerId;
+        return signId;
     }
 
     private void deleteSignerId(EPCISEventType event) {
@@ -513,12 +506,6 @@ public class SigMaFunctions {
 
         Element elem = null;
         for (Object object : extensions) {
-            // we really don’t know what’s in an extension
-//            JAXBElement elemTmp = (JAXBElement) object;
-//            if (("signature".equals(elemTmp.getName().getLocalPart()))) {
-//                elem = elemTmp;
-//                break;
-//            }
             Element elemTmp = (Element) object;
             if ((Constants.URN_IOTA.equals(elemTmp.getNamespaceURI()) && Constants.EXTENSION_SIGNER_ID.equals(elemTmp.getLocalName()))) {
                 elem = elemTmp;

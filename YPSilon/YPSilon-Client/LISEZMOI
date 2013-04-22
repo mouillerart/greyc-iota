@@ -1,0 +1,12 @@
+YPSilon-Client
+
+Bibliothèque cliente pour l’interfaçage avec le web service YPSilon (gestion des
+utilisateurs).
+
+Dépendances:
+  bibliothèques:
+    - Apache cxf
+    - commons-logging
+
+Dépendances d’utilisation:
+  - YPSilon

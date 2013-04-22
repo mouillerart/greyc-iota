@@ -1,0 +1,24 @@
+YPSilon - identitY Provider for Servers
+
+Web service for the user management.
+
+Dependencies:
+  IoTa modules:
+    - EPCIS-Xi-Client
+    - YPSilon-Client
+  libraries:
+    - spring
+    - cxf
+    - commons-logging
+    - log4j
+
+Installation and Configuration:
+  IoTa-Installer installs and configures YPSilon.
+  (application.properties for this application,
+   commons-logging.properties and log4j.properties for the logs)
+  Use IoTa-Installer or the script ldap.sh (root privileges required) to
+   configure the LDAP directory.
+
+Usage Dependencies:
+  - a LDAP server
+  - EpcisPHI

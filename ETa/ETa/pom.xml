@@ -6,7 +6,7 @@
     <artifactId>eta</artifactId>
     <packaging>war</packaging>
     <name>ETa Server</name>
-    <version>1.9</version>
+    <version>1.99</version>
 
     <properties>
         <epcis-version>0.5.0</epcis-version>

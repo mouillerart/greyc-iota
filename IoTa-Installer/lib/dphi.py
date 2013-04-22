@@ -42,9 +42,10 @@ class DPHIInstaller(installer.WebAppInstaller):
 
     def postConfigure(self):
         # set default urls (for DSeTa)
-        url = self.setURL()
-        self.cset("url", url + "index.jsp")
+        url = self.setSecuredURL()
         CONFIG.set("ds_policies", "xacml_url", url + "xi")
+
+        self.cset("url", url + "index.jsp")
 
         # set policies directories (for DSeTa)
         policies_dir = CONFIG.get("ds_policies", "dir")

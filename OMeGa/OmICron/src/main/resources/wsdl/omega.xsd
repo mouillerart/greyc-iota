@@ -99,6 +99,30 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:element name="TraceEPCByEPCISRequest" type="iota:TraceEPCByEPCISRequest"/>
+    <xs:element name="TraceEPCByEPCISResponse" type="iota:TraceEPCByEPCISResponse"/>
+
+    <xs:complexType name="TraceEPCByEPCISRequest">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="identity" type="tau:Identity"/>
+            <xs:element name="epc" type="epc:EPC" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="filters" type="epcisq:QueryParams" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TraceEPCByEPCISResponse">
+        <xs:sequence>
+            <xs:element name="eventsByEPCIS" minOccurs="0" maxOccurs="unbounded" type="iota:EventsByEPCIS"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EventsByEPCIS">
+        <xs:sequence>
+            <xs:element name="epcisAddress" type="xs:string" nillable="true" />
+            <xs:element name="eventList" type="epcis:EventListType" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="QueryEPCISRequest" type="iota:QueryEPCISRequest"/>
     <xs:element name="QueryEPCISResponse" type="iota:QueryEPCISResponse"/>
 

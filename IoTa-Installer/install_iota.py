@@ -44,7 +44,8 @@ from lib.epcilon import EpcILoNInstaller
 from lib.ons     import ONSConfigurer
 from lib.alfa    import ALfAInstaller
 from lib.omega   import OMeGaInstaller
-from lib.user    import UserInstaller
+from lib.ypsilon    import YPSilonInstaller
+from lib.lambda_iota   import LaMBDaInstaller
 
 if __name__ == "__main__":
     if "--accept-defaults" in sys.argv:
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     SigMAInstaller().run()
     EpcisInstaller().run()
     LDAPConfigurer().run()
-    UserInstaller().run()
+    YPSilonInstaller().run()
     ETaInstaller().run()
     EPHIInstaller().run()
     ActiveMQInstaller().run()
@@ -80,6 +81,7 @@ if __name__ == "__main__":
     ONSConfigurer().run()
     ALfAInstaller().run()
     OMeGaInstaller().run()
+    LaMBDaInstaller().run()
     lib.utils.putWarning(
 """
 Important!

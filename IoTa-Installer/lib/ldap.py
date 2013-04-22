@@ -29,6 +29,10 @@ class LDAPConfigurer(installer.Configurer):
                 ("Enter the LDAP's domain name", "ldap", "base_dn", {}),
                 ("Enter the LDAP's login", "ldap", "login", {}),
                 ("Enter the LDAP's password", "ldap", "password", {}),
+                ("Enter the LDAP's user group (if multiples entries, complete the ldif file before to add it)", "ldap", "user_group", {}),
+                ("Enter the LDAP's user ID", "ldap", "user_id", {}),
+                ("Enter the LDAP's owner attribute", "ldap", "attribute_owner", {}),
+                ("Enter the LDAP's alias attribute", "ldap", "attribute_alias", {}),
                 ("Do you want to create ldif files?", "ldap", "ldif_create", {"type": "YN"}),
                 ("Do you want to automatically add ldif files to LDAP?", "ldap", "ldif_install",
                  { "when": ("ldap", "ldif_create"), "type": "YN"})
@@ -47,32 +51,32 @@ class LDAPConfigurer(installer.Configurer):
 dn: cn=user,cn=schema,cn=config
 objectClass: olcSchemaConfig
 cn: user
-olcAttributeTypes: ( 1.1.2.1.1 NAME 'partner' DESC 'Partner ID' SUP name )
-olcObjectClasses: ( 1.1.2.2.1 NAME 'user' DESC 'Define user' SUP top STRUCTURAL MUST ( uid $ userPassword $ partner ) )
-""")
+olcAttributeTypes: ( 1.1.2.1.1 NAME '%(owner)s' DESC 'Owner ID' SUP name )
+olcAttributeTypes: ( 1.1.2.1.2 NAME '%(alias)s' DESC 'Alias DN' SUP name )
+olcObjectClasses: ( 1.1.2.2.1 NAME 'user' DESC 'Define user' SUP top STRUCTURAL MUST ( %(uid)s $ %(owner)s ) MAY ( %(alias)s ) )
+""" % {"uid": self.cget("user_id"), "owner": self.cget("attribute_owner"), "alias": self.cget("attribute_alias")})
+        group_value = self.cget("user_group").split("=")[-1]
         utils.writeFile("Creating the user group as a ldif file (usergroup.ldif)", "usergroup.ldif", """
-dn: ou=users,%s
+dn: %(group)s,%(dn)s
 objectclass: top
 objectclass: organizationalUnit
-ou: users
+ou: %(group_val)s
 description: users
-""" % self.cget("base_dn"))
+""" % {"group": self.cget("user_group"), "group_val": group_value, "dn": self.cget("base_dn")} )
         utils.writeFile("Creating the user 'superadmin' as a ldif file (superadmin.ldif)", "superadmin.ldif", """
-dn: uid=superadmin,ou=users,%s
+dn: %(uid)s=superadmin,%(group)s,%(dn)s
 objectclass: top
 objectclass: user
-uid: superadmin
-partner: superadmin
-userPassword: {SHA}iJo6eRs4dc+uQTV0tT2ku4qQ1T4=
-""" % self.cget("base_dn"))
-        utils.writeFile("Creating the user 'anonymous' as ldif file (anonymous.ldif)", "anonymous.ldif", """
-dn: uid=anonymous,ou=users,%s
+%(uid)s: superadmin
+%(owner)s: superadmin
+""" % {"uid": self.cget("user_id"), "group": self.cget("user_group"), "dn": self.cget("base_dn"), "owner": self.cget("attribute_owner")} )
+        utils.writeFile("Creating the user '%(anonymous)s' as ldif file (anonymous.ldif)", "anonymous.ldif", """
+dn: %(uid)s=%(anonymous)s,%(group)s,%(dn)s
 objectclass: top
 objectclass: user
-uid: anonymous
-partner: anonymous
-userPassword: {SHA}CpL6syMBNMym6t2YmDJbmyrmeZg=
-""" % self.cget("base_dn"))
+%(uid)s: %(anonymous)s
+%(owner)s: anonymous
+""" % {"anonymous": CONFIG.get("global", "anonymous_user"), "uid": self.cget("user_id"), "group": self.cget("user_group"), "dn": self.cget("base_dn"), "owner": self.cget("attribute_owner")} )
 
 
     def addLdifs(self):

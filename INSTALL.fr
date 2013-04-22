@@ -298,9 +298,9 @@ ces options (dans la clause `options` de `named.conf.options`) :
 
 ### LDAP
 
-Certaines applications (User) ont besoin d’un serveur LDAP.
+Certaines applications (YPSilon) ont besoin d’un serveur LDAP.
 
-À partir d’un serveur LDAP fonctionnel, le script `User/ldap.sh` ou le module
+À partir d’un serveur LDAP fonctionnel, le script `YPSilon/ldap.sh` ou le module
 LDAP de l’installateur permet d’ajouter un schéma, un groupe et les deux
 utilisateurs superadmin et anonymous.
 

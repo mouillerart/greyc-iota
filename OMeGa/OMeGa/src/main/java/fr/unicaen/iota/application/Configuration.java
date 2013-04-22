@@ -53,8 +53,8 @@ public final class Configuration {
         }
         PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
         PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
-        TRUST_PKS_FILENAME = properties.getProperty("trustpks-filename", "publickeys.jks");
-        TRUST_PKS_PASSWORD = properties.getProperty("trustpks-password", "changeit");
+        TRUST_PKS_FILENAME = properties.getProperty("trust-pks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = properties.getProperty("trust-pks-password", "changeit");
         RMI_URL = properties.getProperty("alfa-rmi-url", "//localhost:1099/alfa");
         XI_URL = properties.getProperty("xi-url", "//localhost:1099/ephi/xi");
         DEFAULT_IDENTITY = properties.getProperty("default-identity", "anonymous");

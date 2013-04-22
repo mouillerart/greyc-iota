@@ -22,12 +22,12 @@ package fr.unicaen.iota.epcisphi.xacml.servlet;
 import fr.unicaen.iota.epcisphi.utils.Constants;
 import fr.unicaen.iota.epcisphi.utils.MapSessions;
 import fr.unicaen.iota.epcisphi.utils.SessionLoader;
-import fr.unicaen.iota.eta.user.client.UserClient;
-import fr.unicaen.iota.eta.user.userservice.UserLoginOut;
-import fr.unicaen.iota.eta.user.userservice_wsdl.ImplementationExceptionResponse;
-import fr.unicaen.iota.eta.user.userservice_wsdl.SecurityExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.YPSilonClient;
+import fr.unicaen.iota.mu.Utils;
+import fr.unicaen.iota.ypsilon.client.model.UserLoginOut;
+import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import java.io.IOException;
-import java.security.cert.X509Certificate;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -53,9 +53,10 @@ public class RootAccountAuth extends HttpServlet {
             if (login == null || login.isEmpty()) {
                 message = "?message=You are not authenticated.";
             } else {
+                login = Utils.formatId(login);
                 UserLoginOut userLoginOut;
                 try {
-                    UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                    YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
                             Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
                     userLoginOut = client.userCertLogin(login);
                     request.setAttribute("session-id", userLoginOut.getSid());
@@ -71,7 +72,7 @@ public class RootAccountAuth extends HttpServlet {
         } else if ("logout".equals(request.getParameter("action"))) {
             String sessionId = (String) (request.getSession().getAttribute("session-id"));
             try {
-                UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+                YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
                             Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
                 client.userLogout(sessionId);
                 SessionLoader.clearSession(request.getSession());

@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>libxacml-ds</artifactId>
-    <version>1.9</version>
+    <version>1.99</version>
     <packaging>jar</packaging>
 
     <name>LibXACML-DS</name>
@@ -65,7 +65,7 @@
         </plugins>
     </build>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>sunxacml-repository</id>
             <name>sunxacml Repository</name>
@@ -74,6 +74,6 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-    </repositories>
+    </repositories>-->
 
 </project>

@@ -22,16 +22,17 @@ package fr.unicaen.iota.eta.callback.sender;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 import javax.jms.*;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -185,7 +186,7 @@ public class CallbackOperationsModule {
     }
 
     /**
-     * Connects to the Message Broker, gets and sends events to users.
+     * Connects to the Message Broker, gets and sends events to user.
      *
      * @throws JMSException If an error receiving or sending message occurred.
      * @throws MalformedURLException If a destination url is malformed.
@@ -227,15 +228,20 @@ public class CallbackOperationsModule {
                     try {
                         int response = send(docText, dest);
                         LOG.info("Event sent.");
-                    } catch (SocketTimeoutException e) {
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         Session prodS = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
                         Destination sendDest = prodS.createQueue(Constants.ACTIVEMQ_QUEUE_NAME);
                         MessageProducer producer = prodS.createProducer(sendDest);
                         TextMessage messageToSend = prodS.createTextMessage();
                         messageToSend.setText(docText);
                         producer.send(messageToSend);
-                        LOG.info("Fails to send event: event resent.");
+                        String msg = "Fails to send event to " + dest + " : event resent.";
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug(msg, e);
+                        }
+                        else {
+                            LOG.info(msg);
+                        }
                     }
                     message.acknowledge();
                 }
@@ -253,12 +259,11 @@ public class CallbackOperationsModule {
      * @param dest The destination to send the data to.
      * @return The response code.
      * @throws MalformedURLException If the destination url is not conformed.
-     * @throws SocketTimeoutException
      * @throws IOException If a communication error occurred.
      * @throws Exception
      */
     public int send(String data, String dest)
-            throws MalformedURLException, SocketTimeoutException, IOException, Exception {
+            throws MalformedURLException, IOException, Exception {
         // set up connection and send data to given destination
         URL serviceUrl;
         try {
@@ -284,26 +289,43 @@ public class CallbackOperationsModule {
             response = connection.getResponseCode();
             connection.disconnect();
             return response;
-        } catch (SocketTimeoutException e) {
-            throw e;
         } catch (IOException e) {
-            throw new IOException("Unable to send results of subscribed query to '"
-                    + dest + "'", e);
+            throw new IOException("Unable to send results of subscribed query to '" + dest + "'", e);
         }
     }
 
     /**
-     * Opens a connection to the EPCIS capture interface.
+     * Opens a connection to the user interface.
      * @param url The address on which a connection will be opened.
      * @return The HTTP connection object.
+     * @throws IOException If an error occurred connecting to the interface.
+     * @throws Exception
      */
-    private HttpURLConnection getConnection(String url) throws IOException {
-        System.setProperty("javax.net.ssl.keyStore", Constants.PKS_FILENAME);
-        System.setProperty("javax.net.ssl.keyStorePassword", Constants.PKS_PASSWORD);
-        System.setProperty("javax.net.ssl.trustStore", Constants.TRUST_PKS_FILENAME);
-        System.setProperty("javax.net.ssl.trustStorePassword", Constants.TRUST_PKS_PASSWORD);
+    private HttpURLConnection getConnection(String url) throws IOException, Exception {
+        if (Constants.PKS_FILENAME != null && Constants.PKS_PASSWORD != null
+                && Constants.TRUST_PKS_FILENAME != null && Constants.TRUST_PKS_PASSWORD != null) {
+            System.setProperty("javax.net.ssl.keyStore", Constants.PKS_FILENAME);
+            System.setProperty("javax.net.ssl.keyStorePassword", Constants.PKS_PASSWORD);
+            System.setProperty("javax.net.ssl.trustStore", Constants.TRUST_PKS_FILENAME);
+            System.setProperty("javax.net.ssl.trustStorePassword", Constants.TRUST_PKS_PASSWORD);
+        }
         URL serviceUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
+
+        if (Constants.PKS_FILENAME != null) {
+            KeyStore keyStore = KeyStore.getInstance(Constants.PKS_FILENAME.endsWith(".p12") ? "PKCS12" : "JKS");
+            keyStore.load(new FileInputStream(new File(Constants.PKS_FILENAME)), Constants.PKS_PASSWORD.toCharArray());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+            keyManagerFactory.init(keyStore, Constants.PKS_PASSWORD.toCharArray());
+            KeyStore trustStore = KeyStore.getInstance(Constants.TRUST_PKS_FILENAME.endsWith(".p12") ? "PKCS12" : "JKS");
+            trustStore.load(new FileInputStream(new File(Constants.TRUST_PKS_FILENAME)), Constants.TRUST_PKS_PASSWORD.toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(trustStore);
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+            ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
+        }
+
         connection.setRequestProperty("content-type", "text/xml");
         connection.setRequestMethod("POST");
         connection.setReadTimeout(200);

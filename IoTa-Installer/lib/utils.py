@@ -361,6 +361,33 @@ def execSrcToDestKeyTool(msg, keycmd, srcstoretype, srckeystore, srcstorepass, s
         putDoneFail()
 
 
+def execSrcToDestOpenssl(msg, keycmd, srckeystore, srcstorepass, destkeystore, deststorepass, other_opts):
+    putWait(msg)
+    cmd = ("openssl " + keycmd + " -in \"" + srckeystore + "\" -passin pass:\"" + srcstorepass +
+           "\" -out \"" + destkeystore + "\" -passout pass:\"" + deststorepass + "\"")
+    for opt, value in other_opts:
+        if value:
+            value = " \"" + value + "\""
+        cmd += " " + opt + value
+    if sh_exec(cmd):
+        putDoneOK()
+    else:
+        putDoneFail()
+
+
+def execOpenssl(msg, keycmd, other_opts):
+    putWait(msg)
+    cmd = ("openssl " + keycmd)
+    for opt, value in other_opts:
+        if value:
+            value = " \"" + value + "\""
+        cmd += " " + opt + value
+    if sh_exec(cmd):
+        putDoneOK()
+    else:
+        putDoneFail()
+
+
 # File and Shell Utilities
 
 def sh_rm(filename):

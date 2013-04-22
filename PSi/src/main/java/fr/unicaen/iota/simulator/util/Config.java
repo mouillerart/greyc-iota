@@ -48,6 +48,7 @@ public final class Config {
     public static boolean sign;
     public static String sigma_keystore;
     public static String sigma_keystore_password;
+    public static String sigma_signer_id;
     public static String pks_filename;
     public static String pks_password;
     public static String trust_pks_filename;
@@ -73,6 +74,7 @@ public final class Config {
             sign = Boolean.valueOf(props.getProperty("sign"));
             sigma_keystore = props.getProperty("sigma-keystore");
             sigma_keystore_password = props.getProperty("sigma-keystore-password");
+            sigma_signer_id = props.getProperty("sigma-signer-id");
             pks_filename = props.getProperty("pks-filename", "privatekeys.jks");
             pks_password = props.getProperty("pks-password", "changeit");
             trust_pks_filename = props.getProperty("trust-pks-filename", "publickeys.jks");

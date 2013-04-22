@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ypsilon="urn:unicaen:iota:ypsilon:xsd"
+    targetNamespace="urn:unicaen:iota:ypsilon:xsd"
+    elementFormDefault="unqualified"
+    attributeFormDefault="unqualified"
+    version="1.0">
+
+     <!-- SIMPLE TYPES -->
+
+    <xs:simpleType name="tLeaseSeconds">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxExclusive value="3600"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+     <!-- ENUM TYPES -->
+
+    <xs:simpleType name="tMethod">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="hello"/>
+            <xs:enumeration value="login"/>
+            <xs:enumeration value="logout"/>
+            <xs:enumeration value="create"/>
+            <xs:enumeration value="update"/>
+            <xs:enumeration value="delete"/>
+            <xs:enumeration value="info"/>
+            <xs:enumeration value="lookup"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+     <!-- SIMPLE ID TYPES -->
+
+    <xs:simpleType name="tSessionID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="32"/>
+            <xs:maxLength value="32"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tUserID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tAlias">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tOwnerID">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tSmallUID">
+        <xs:restriction base="xs:int"/>
+    </xs:simpleType>
+
+     <!-- LIST ITEM TYPES -->
+
+    <xs:complexType name="tUserItem">
+        <xs:attribute
+            name="id"
+            type="ypsilon:tUserID"
+            use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tUserItemList">
+        <xs:sequence>
+            <xs:element
+                name="user"
+                type="ypsilon:tUserItem"
+                minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+     <!-- COMPLEX TYPES -->
+
+    <xs:complexType name="tResult">
+        <xs:attribute
+            name="desc"
+            type="xs:string"
+            use="required"/>
+    </xs:complexType>
+
+
+     <!-- ABSTRACT REQ(IN)/RSP(OUT) BASE TYPES -->
+
+    <xs:complexType name="tAbstractIn" abstract="true">
+        <xs:sequence>
+            <xs:element
+                name="sid"
+                type="ypsilon:tSessionID"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tAbstractOut" abstract="true">
+        <xs:sequence>
+            <xs:element
+                name="result"
+                type="ypsilon:tResult"/>
+        </xs:sequence>
+    </xs:complexType>
+
+     <!-- GLOBAL METHODS -->
+
+    <xs:complexType name="HelloIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="HelloOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="serverIdentity"
+                        type="xs:token"/>
+                    <xs:element
+                        name="serverTS"
+                        type="xs:dateTime"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+     <!-- USER METHODS -->
+
+    <xs:complexType name="UserLookupIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="ypsilon:tUserID"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLookupOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="userList"
+                        type="ypsilon:tUserItemList"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserCreateIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="ypsilon:tUserID"/>
+                    <xs:element
+                        name="ownerID"
+                        type="ypsilon:tOwnerID"/>
+                    <xs:element
+                        name="alias"
+                        type="ypsilon:tAlias"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="ypsilon:tLeaseSeconds"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserCreateOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserInfoIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="ypsilon:tUserID"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserInfoOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="ypsilon:tUserID"/>
+                    <xs:element
+                        name="ownerID"
+                        type="ypsilon:tOwnerID"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="ypsilon:tLeaseSeconds"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserUpdateIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userUID"
+                        type="ypsilon:tSmallUID"/>
+                    <xs:element
+                        name="userID"
+                        type="ypsilon:tUserID"
+                        minOccurs="0"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="ypsilon:tLeaseSeconds"
+                        minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserUpdateOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserDeleteIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                    <xs:element
+                        name="userID"
+                        type="ypsilon:tUserID"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserDeleteOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserCertLoginIn">
+        <xs:element
+            name="userID"
+            type="ypsilon:tUserID"/>
+    </xs:complexType>
+
+    <xs:complexType name="UserLoginOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                    <xs:element
+                        name="sid"
+                        type="ypsilon:tSessionID"/>
+                    <xs:element
+                        name="sessionLease"
+                        type="ypsilon:tLeaseSeconds"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLogoutIn">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractIn">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UserLogoutOut">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:tAbstractOut">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+     <!-- ELEMENT REFERENCES -->
+
+    <xs:element
+        name="Hello"
+        type="ypsilon:HelloIn"/>
+    <xs:element
+        name="HelloResult"
+        type="ypsilon:HelloOut"/>
+    <xs:element
+        name="UserLookup"
+        type="ypsilon:UserLookupIn"/>
+    <xs:element
+        name="UserLookupResult"
+        type="ypsilon:UserLookupOut"/>
+    <xs:element
+        name="UserCreate"
+        type="ypsilon:UserCreateIn"/>
+    <xs:element
+        name="UserCreateResult"
+        type="ypsilon:UserCreateOut"/>
+    <xs:element
+        name="UserInfo"
+        type="ypsilon:UserInfoIn"/>
+    <xs:element
+        name="UserInfoResult"
+        type="ypsilon:UserInfoOut"/>
+    <xs:element
+        name="UserUpdate"
+        type="ypsilon:UserUpdateIn"/>
+    <xs:element
+        name="UserUpdateResult"
+        type="ypsilon:UserUpdateOut"/>
+    <xs:element
+        name="UserDelete"
+        type="ypsilon:UserDeleteIn"/>
+    <xs:element
+        name="UserDeleteResult"
+        type="ypsilon:UserDeleteOut"/>
+    <xs:element
+        name="UserCertLogin"
+        type="ypsilon:UserCertLoginIn"/>
+    <xs:element
+        name="UserLoginResult"
+        type="ypsilon:UserLoginOut"/>
+    <xs:element
+        name="UserLogout"
+        type="ypsilon:UserLogoutIn"/>
+    <xs:element
+        name="UserLogoutResult"
+        type="ypsilon:UserLogoutOut"/>
+
+
+     <!-- EXCEPTIONS -->
+
+    <xs:element name="UserException" type="ypsilon:UserException"/>
+    <xs:complexType name="UserException">
+        <xs:sequence>
+            <xs:element name="reason" type="xs:string"/>
+            <xs:element name="queryName" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ImplementationException" type="ypsilon:ImplementationException"/>
+    <xs:complexType name="ImplementationException">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:UserException">
+                <xs:sequence>
+                    <xs:element name="severity" type="ypsilon:ImplementationExceptionSeverity"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="ImplementationExceptionSeverity">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="ERROR"/>
+            <xs:enumeration value="SEVERE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="SecurityException" type="ypsilon:SecurityException"/>
+    <xs:complexType name="SecurityException">
+        <xs:complexContent>
+            <xs:extension base="ypsilon:UserException">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

@@ -19,6 +19,7 @@
  */
 package fr.unicaen.iota.eta.callback.filter;
 
+import fr.unicaen.iota.eta.callback.filter.utils.Constants;
 import fr.unicaen.iota.xacml.XACMLConstantsEventType;
 import fr.unicaen.iota.xacml.pep.ExtensionEvent;
 import fr.unicaen.iota.xacml.pep.XACMLEPCISEvent;
@@ -61,7 +62,10 @@ public class CallbackCheck {
      */
     public boolean xacmlCheck(List<EPCISEventType> epcisEventList, String user) {
         for (EPCISEventType epcisEvent : epcisEventList) {
-            String owner = "anonymous";
+            String owner = fr.unicaen.iota.eta.callback.filter.utils.Utils.getEventOwner(epcisEvent);
+            if (owner == null) {
+                owner = user;
+            }
             if (epcisEvent instanceof ObjectEventType) {
                 if (!checkObjectEvent((ObjectEventType) epcisEvent, user, owner)) {
                     return false;
@@ -165,6 +169,13 @@ public class CallbackCheck {
             String namespace = element.getNamespaceURI();
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
+
+            if (fr.unicaen.iota.mu.Constants.URN_IOTA.equals(namespace) &&
+                    (fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
 
             // Gets the extension value
             Object extensionValue = null;
@@ -287,6 +298,13 @@ public class CallbackCheck {
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
 
+            if (fr.unicaen.iota.mu.Constants.URN_IOTA.equals(namespace) &&
+                    (fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
+
             // Gets the extension value
             Object extensionValue = null;
             try {
@@ -371,6 +389,13 @@ public class CallbackCheck {
             String namespace = element.getNamespaceURI();
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
+
+            if (fr.unicaen.iota.mu.Constants.URN_IOTA.equals(namespace) &&
+                    (fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
 
             // Gets the extension value
             Object extensionValue = null;
@@ -492,6 +517,13 @@ public class CallbackCheck {
             String namespace = element.getNamespaceURI();
             String extensionName = element.getLocalName();
             String value = element.getTextContent();
+
+            if (fr.unicaen.iota.mu.Constants.URN_IOTA.equals(namespace) &&
+                    (fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNATURE.equals(extensionName)
+                    || fr.unicaen.iota.mu.Constants.EXTENSION_SIGNER_ID.equals(extensionName))) {
+                continue;
+            }
 
             // Gets the extension value
             Object extensionValue = null;

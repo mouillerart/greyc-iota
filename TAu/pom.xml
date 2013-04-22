@@ -5,7 +5,7 @@
     <artifactId>tau</artifactId>
     <packaging>jar</packaging>
     <name>TAu</name>
-    <version>1.9</version>
+    <version>1.99</version>
 
     <properties>
         <lib-cxf-version>2.2.12</lib-cxf-version>

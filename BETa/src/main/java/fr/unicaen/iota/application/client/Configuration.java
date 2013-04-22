@@ -47,8 +47,8 @@ public final class Configuration {
             SOAP_SERVICE_URL = props.getProperty("soap-service-url", "http://localhost:8080/omega/services/IOTA_Service/");
             PKS_FILENAME = props.getProperty("pks-filename", "privatekeys.jks");
             PKS_PASSWORD = props.getProperty("pks-password", "changeit");
-            TRUST_PKS_FILENAME = props.getProperty("trustpks-filename", "publickeys.jks");
-            TRUST_PKS_PASSWORD = props.getProperty("trustpks-password", "changeit");
+            TRUST_PKS_FILENAME = props.getProperty("trust-pks-filename", "publickeys.jks");
+            TRUST_PKS_PASSWORD = props.getProperty("trust-pks-password", "changeit");
             RMI_SERVICE_URL = props.getProperty("rmi-service-url", "//localhost:1099/ALfA");
             RMI_CALLBACK_HOST = props.getProperty("rmi-callback-host", "localhost");
             RMI_CALLBACK_PORT = Integer.parseInt(props.getProperty("rmi-callback-port", "1099"));

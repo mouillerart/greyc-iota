@@ -39,7 +39,7 @@ class ALfAInstaller(installer.Installer):
                    "rmi-server-port": ("alfa", "rmi_port"),
                    "ons": ("ons", "server"),
                    "ons-domain-prefix": ("ons", "domain_prefix"),
-                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword"),

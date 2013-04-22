@@ -18,6 +18,8 @@
  */
 package fr.unicaen.iota.eta.capture;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,6 +27,12 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -63,20 +71,20 @@ public class ETaCaptureClient extends CaptureClient {
         this.trustPksFilename = trustPksFilename;
         this.trustPksPassword = trustPksPassword;
     }
-    
+
     /**
-     * {@inheritDoc 
+     * {@inheritDoc
      */
     @Override
     public int dbReset() throws CaptureClientException {
         String formParam = "dbReset=true";
         try {
             return doPost(formParam, "application/x-www-form-urlencoded");
-        } catch (IOException e) {
-            throw new CaptureClientException("error communicating with EPCIS cpature interface: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new CaptureClientException("error communicating with ETa cpature interface: " + e.getMessage(), e);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -84,8 +92,8 @@ public class ETaCaptureClient extends CaptureClient {
     public int capture(final InputStream xmlStream) throws CaptureClientException {
         try {
             return doPost(xmlStream, "text/xml");
-        } catch (IOException e) {
-            throw new CaptureClientException("error communicating with EPCIS cpature interface: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new CaptureClientException("error communicating with ETa cpature interface: " + e.getMessage(), e);
         }
     }
 
@@ -96,8 +104,8 @@ public class ETaCaptureClient extends CaptureClient {
     public int capture(final String eventXml) throws CaptureClientException {
         try {
             return doPost(eventXml, "text/xml");
-        } catch (IOException e) {
-            throw new CaptureClientException("error communicating with EPCIS cpature interface: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new CaptureClientException("error communicating with ETa cpature interface: " + e.getMessage(), e);
         }
     }
 
@@ -125,7 +133,7 @@ public class ETaCaptureClient extends CaptureClient {
         }
         return capture(writer.toString());
     }
-    
+
     /**
      * Send data to the repository's capture operation using HTTP POST. The data
      * will be sent using the given content-type.
@@ -133,8 +141,9 @@ public class ETaCaptureClient extends CaptureClient {
      * @return The HTTP response message from the repository.
      * @throws IOException If an error on the HTTP layer occurred.
      * @throws CaptureClientException
+     * @throws Exception
      */
-    private int doPost(final InputStream data, final String contentType) throws IOException, CaptureClientException {
+    private int doPost(final InputStream data, final String contentType) throws IOException, CaptureClientException, Exception {
         HttpURLConnection connection = getConnection(contentType);
         // read from input and write to output
         OutputStream os = connection.getOutputStream();
@@ -146,15 +155,16 @@ public class ETaCaptureClient extends CaptureClient {
         os.close();
         return connection.getResponseCode();
     }
-    
+
     /**
      * Send data to the repository's capture operation using HTTP POST. The data
      * will be sent using the given content-type.
      * @param data The data to send.
      * @return The HTTP response message
      * @throws IOException If an error on the HTTP layer occurred.
+     * @throws Exception
      */
-    private int doPost(final String data, final String contentType) throws CaptureClientException, IOException {
+    private int doPost(final String data, final String contentType) throws CaptureClientException, IOException, Exception {
         HttpURLConnection connection = getConnection(contentType);
         // write the data
         OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
@@ -163,19 +173,38 @@ public class ETaCaptureClient extends CaptureClient {
         wr.close();
         return connection.getResponseCode();
     }
-    
+
     /**
-     * Opens a connection to the EPCIS capture interface.
+     * Opens a connection to the ETa capture interface.
      * @param contentType The HTTP content-type, e.g., <code>text/xml</code>
      * @return The HTTP connection object.
+     * @throws IOException If an error occurred connecting to the interface.
+     * @throws Exception
      */
-    private HttpURLConnection getConnection(final String contentType) throws CaptureClientException, IOException {
-        System.setProperty("javax.net.ssl.keyStore", pksFilename);
-        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
-        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
-        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+    private HttpURLConnection getConnection(final String contentType) throws IOException, Exception {
+        if (pksFilename != null && pksPassword != null && trustPksFilename != null && trustPksPassword != null) {
+            System.setProperty("javax.net.ssl.keyStore", pksFilename);
+            System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+            System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        }
         URL serviceUrl = new URL(getCaptureUrl());
         HttpURLConnection connection = (HttpURLConnection) serviceUrl.openConnection();
+
+        if (pksFilename != null) {
+            KeyStore keyStore = KeyStore.getInstance(pksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            keyStore.load(new FileInputStream(new File(pksFilename)), pksPassword.toCharArray());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+            keyManagerFactory.init(keyStore, pksPassword.toCharArray());
+            KeyStore trustStore = KeyStore.getInstance(trustPksFilename.endsWith(".p12") ? "PKCS12" : "JKS");
+            trustStore.load(new FileInputStream(new File(trustPksFilename)), trustPksPassword.toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(trustStore);
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+            ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
+        }
+
         connection.setRequestProperty("content-type", contentType);
         connection.setRequestMethod("POST");
         connection.setDoInput(true);

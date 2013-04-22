@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>libxacml-epcis</artifactId>
-    <version>1.9</version>
+    <version>1.99</version>
     <packaging>jar</packaging>
 
     <name>LibXACML-EPCIS</name>
@@ -65,14 +65,12 @@
 
     </build>
 
-    <repositories>
-
+    <!--<repositories>
         <repository>
             <id>sunxacml-repository</id>
             <name>sunxacml Repository</name>
             <url>http://sunxacml.sourceforge.net/maven2/repository/</url>
         </repository>
-
-    </repositories>
+    </repositories>-->
 
 </project>

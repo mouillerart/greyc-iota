@@ -29,15 +29,16 @@ class EPHIInstaller(installer.WebAppInstaller):
                 ("Enter the EpcisPHI web application name", "ephi", "name", {}),
                 ("Enter the archive file pathname", "ephi", "repo", {"type": "file"}),
                 ("Enter the path where the policies will be saved", "epcis_policies", "dir", {}), # not "type": "path" as the directories are created
-                ("Enter the URL of the User web service", "user", "url", {})
+                ("Do you want to deploy the default policies?", "ephi", "deploy_policies", {"type": "YN"}),
+                ("Enter the URL of YPSilon", "ypsilon", "url", {})
                 ], [
                 ("xacml_configuration",
                  { "query-policy-directory": ("epcis_policies", "query_dir"),
                    "capture-policy-directory": ("epcis_policies", "capture_dir"),
                    "admin-policy-directory": ("epcis_policies", "admin_dir") }),
                 ("application",
-                 { "eta.userservice.url": ("user", "url"),
-                   "pks-filename": ("cert", "jks_keystore"),
+                 { "ypsilon-url": ("ypsilon", "url"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword") })
@@ -58,9 +59,10 @@ class EPHIInstaller(installer.WebAppInstaller):
         CONFIG.set("epcis_policies", "query_dir",query_dir)
 
         #
-        utils.putMessage("Initializing policies in " + policies_dir)
-        utils.sh_mkdir_p(policies_dir)
-        if utils.sh_exec("tar -C " + policies_dir + " --strip-components=1 -xaf resources/epcis_policies.tar"):
-            utils.putDoneOK()
-        else:
-            utils.putDoneFail()
+        if (self.cisTrue("deploy_policies")):
+            utils.putMessage("Initializing policies in " + policies_dir)
+            utils.sh_mkdir_p(policies_dir)
+            if utils.sh_exec("tar -C " + policies_dir + " --strip-components=1 -xaf resources/epcis_policies.tar"):
+                utils.putDoneOK()
+            else:
+                utils.putDoneFail()

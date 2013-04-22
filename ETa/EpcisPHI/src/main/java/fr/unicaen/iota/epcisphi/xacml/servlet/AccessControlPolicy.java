@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,8 @@ import fr.unicaen.iota.epcisphi.utils.User;
 import fr.unicaen.iota.epcisphi.xacml.ihm.*;
 import fr.unicaen.iota.epcisphi.xacml.ihm.factory.AccessPolicies;
 import fr.unicaen.iota.epcisphi.xacml.ihm.factory.Node;
-import fr.unicaen.iota.eta.user.userservice.UserInfoOut;
 import fr.unicaen.iota.xacml.policy.GroupPolicy;
+import fr.unicaen.iota.ypsilon.client.model.UserInfoOut;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -77,7 +77,7 @@ public class AccessControlPolicy extends HttpServlet {
                  * new User(userInfo.getUid(), partner, "",
                  * userInfo.getUserId(), userInfo.getUserId(), new Date());
                  */
-                User user = new User(userInfo.getUserID(), userInfo.getPartnerID());
+                User user = new User(userInfo.getUserID(), userInfo.getOwnerID());
                 Module module = (request.getParameter("d") != null)? Module.valueOf(request.getParameter("d")) : null;
                 String objectId = request.getParameter("b");
                 String groupId = request.getParameter("e");
@@ -230,23 +230,19 @@ public class AccessControlPolicy extends HttpServlet {
                     //TODO services.updatePartner(sessionId, user,user.getPartnerID(), partnerID, serviceID, serviceAddress, serviceType);
                 } else if ("createUser".equals(methodName)) {
                     String login = request.getParameter("f");
-                    String pass = request.getParameter("g");
-                    services.createUser(sessionId, user, login, pass);
+                    String userName = request.getParameter("g");
+                    services.createUser(sessionId, user, login, userName);
                 } else if ("updateUser".equals(methodName)) {
                     String login = request.getParameter("f");
-                    String pass = request.getParameter("g");
                     //TODO services.updateUser(sessionId, user, login, pass);
                 } else if ("deleteUser".equals(methodName)) {
                     String login = request.getParameter("f");
                     services.deleteUser(sessionId, user, login);
                 } else if ("createAccount".equals(methodName)) {
-                    String partnerId = request.getParameter("f");
-                    String serviceId = request.getParameter("g");
-                    String serviceType = request.getParameter("h");
-                    String serviceAddress = request.getParameter("i");
-                    String login = request.getParameter("j");
-                    String pass = request.getParameter("k");
-                    boolean rtr = services.createAccount(sessionId, user, partnerId, login, pass);
+                    String userDN = request.getParameter("f");
+                    String partnerId = request.getParameter("g");
+                    String userName = request.getParameter("h");
+                    boolean rtr = services.createAccount(sessionId, user, partnerId, userDN, userName);
                     if (rtr) {
                         html.append("Account successfull created.");
                     }
@@ -256,7 +252,7 @@ public class AccessControlPolicy extends HttpServlet {
                     services.updateGroupName(sessionId, user, module, objectId, groupId, newValue);
 
                 } // **************************  SAVE  **********************************
-                else if ("savePartnerPolicy".equals(methodName)) {
+                else if ("saveOwnerPolicy".equals(methodName)) {
                     services.savePolicyPartner(sessionId, user, module);
 
                 } // **************************  CANCEL  **********************************

@@ -1,7 +1,7 @@
 <%@page import="fr.unicaen.iota.epcisphi.utils.SessionLoader"%>
 <%@page import="com.sun.xacml.ctx.Result"%>
 <%@page import="fr.unicaen.iota.epcisphi.utils.PEPRequester"%>
-<%@page import="fr.unicaen.iota.eta.user.userservice.UserInfoOut"%>
+<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
 <%
 
             String sessionId = (String) session.getAttribute("session-id");
@@ -39,9 +39,8 @@
         <script type="text/javascript" src="script/tree.js"></script>
         <script type="text/javascript" src="script/requestDispatcher.js"></script>
         <script type="text/javascript" src="script/jquery.js"></script>
-        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="script/jquery-ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" href="style/style.css" />
     </head>
     <body>
@@ -50,10 +49,8 @@
         <jsp:include page="dialogs.jsp" />
 
         <%
-                    //PartnerInfo pInfo = (PartnerInfo) session.getAttribute("pInfo");
                     UserInfoOut uInfo = (UserInfoOut) session.getAttribute("uInfo");
-                    //Partner partner = new Partner(0, true, pInfo.getPartnerId(), new Date(), null, null, null);
-                    User u = new User(uInfo.getUserID(), uInfo.getPartnerID());
+                    User u = new User(uInfo.getUserID(), uInfo.getOwnerID());
                     if (PEPRequester.checkAccess(u, "superadmin") != Result.DECISION_PERMIT) {
 
         %>
@@ -71,8 +68,7 @@
                     }
 
                     String userId = ((UserInfoOut) session.getAttribute("uInfo")).getUserID();
-            //String partnerId = ((PartnerInfo) session.getAttribute("pInfo")).getPartnerId();
-                    String partnerId = ((UserInfoOut) session.getAttribute("uInfo")).getPartnerID();
+                    String partnerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
 
         %>
         <div class="account">

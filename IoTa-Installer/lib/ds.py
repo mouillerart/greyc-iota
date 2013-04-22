@@ -45,7 +45,7 @@ class DSInstaller(installer.DBWebAppInstaller):
                  { "service-id": ("ds", "server_identity"),
                    "ons": ("ons", "server"),
                    "ons-domain-prefix": ("ons", "domain_prefix"),
-                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword"),

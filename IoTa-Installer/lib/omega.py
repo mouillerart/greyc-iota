@@ -32,7 +32,7 @@ class OMeGaInstaller(installer.WebAppInstaller):
                 ("application",
                  { "alfa-rmi-url": ("alfa", "rmi_url"),
                    "xi-url": ("epcis_policies", "xacml_url"),
-                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword"),
@@ -40,3 +40,6 @@ class OMeGaInstaller(installer.WebAppInstaller):
                    "ons-domain-prefix": ("ons", "domain_prefix"),
                    "default-identity": ("global", "anonymous_user") })
                 ] )
+
+    def postConfigure(self):
+        url = self.setSecuredURL()

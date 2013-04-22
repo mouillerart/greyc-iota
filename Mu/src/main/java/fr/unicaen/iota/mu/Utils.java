@@ -66,4 +66,13 @@ public class Utils {
         return true;
     }
 
+    /**
+     * Formats a user ID.
+     * @param id The user ID to format.
+     * @return The formated user ID.
+     */
+    public static String formatId(String id) {
+        return id.replaceAll(" ", "");
+    }
+
 }

@@ -33,15 +33,19 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
                 ("Enter the EpcILoN database login", "epcilon", "db_login", {}),
                 ("Enter the EpcILoN database password", "epcilon", "db_password", {}),
                 ("Enter the URL to the Epcis (or ETa) Query service", "epcilon", "subscription_url", {}),
-                ("Enter the URL to the DS (or DSeTa)", "epcilon", "ds_url", {})
+                ("Enter the URL to the DS (or DSeTa)", "epcilon", "ds_url", {}),
+                ("Enter the keystore file name (PEM format)", "cert", "pem_keystore", {}),
+                ("Enter the keystore password", "cert", "password", {}),
+                ("Enter the truststore file name (PEM format)", "cert", "pem_truststore", {})
                 # EpcILoN is only a DSeTa client for now
                 # ("Enter the DS client login (not used by DSeTa)", "ds", "login", {}),
                 # ("Enter the DS client password (not used by DSeTa)", "ds", "password", {})
                 ], [
                 ("application",
                  { "query-callback-address": ("epcilon", "callback_url"),
+                   "identity": ("epcilon", "identity"),
                    "publish": "true",
-                   "pks-filename": ("cert", "jks_keystore"),
+                   "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword"),
@@ -53,7 +57,10 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
 
 
     def postConfigure(self):
-        self.setURL()
+        if self.cget("subscription_url").startswith("https"):
+            self.setSecuredURL()
+        else:
+            self.setURL()
         self.cset("callback_url", self.cget("url") + "StandingQueryCallbackServlet")
         self.cset("db_jndi", "EPCILONDB")
 
@@ -62,7 +69,14 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
         installer.DBWebAppInstaller.postInstall(self)
         utils.putWait("Subscribing to the Epcis")
         url = self.cget("url") + "SubscribedServlet"
-        if utils.sh_exec("wget -qO /dev/null " + url):
+        cmd = "curl"
+        if url.startswith("https"):
+            keystore = CONFIG.get("cert", "pem_keystore")
+            keystore_pwd = CONFIG.get("cert", "password")
+            truststore = CONFIG.get("cert", "pem_truststore")
+            cmd += " --cert \"" + keystore + "\":\"" + keystore_pwd + "\" --cacert \"" + truststore + "\""
+        cmd += " " + url
+        if utils.sh_exec(cmd):
             utils.putDoneOK()
         else:
             utils.putDoneFail()

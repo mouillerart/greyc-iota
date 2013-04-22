@@ -32,8 +32,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.fosstrak.epcis.model.*;
 
 /**
- * This
- * <code>App</code> class is a simple application of the
+ * This <code>App</code> class is a simple application of the
  * <code>SigMAFunctions</code> class. Its shows how to sign and verify an
  * electronic signature of an EPCIS event.
  */
@@ -118,4 +117,5 @@ public class SigMaTest {
             e.printStackTrace();
         }
     }
+
 }

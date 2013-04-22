@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>eta-capture-client</artifactId>
-    <version>1.9</version>
+    <version>1.99</version>
     <packaging>jar</packaging>
 
     <name>ETa-Capture-Client</name>

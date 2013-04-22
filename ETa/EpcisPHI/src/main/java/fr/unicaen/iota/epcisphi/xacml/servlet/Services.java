@@ -22,14 +22,13 @@ package fr.unicaen.iota.epcisphi.xacml.servlet;
 import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.epcisphi.utils.*;
 import fr.unicaen.iota.epcisphi.xacml.ihm.Module;
-import fr.unicaen.iota.eta.user.client.UserClient;
-import fr.unicaen.iota.eta.user.userservice_wsdl.ImplementationExceptionResponse;
-import fr.unicaen.iota.eta.user.userservice_wsdl.SecurityExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.YPSilonClient;
 import fr.unicaen.iota.xacml.pep.MethodNamesAdmin;
 import fr.unicaen.iota.xacml.policy.GroupPolicy;
 import fr.unicaen.iota.xacml.policy.OwnerPolicies;
+import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import java.lang.reflect.Method;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1025,36 +1024,18 @@ public class Services {
         }
     }
 
-    /*
-     * TODO: methods implementing public void updatePartner(String sessionId,
-     * User user, int partnerUID, String partnerID, String serviceID, String
-     * serviceAddress, String serviceType, Session session) throws
-     * ServiceException { if (PEPRequester.checkAccess(user, "partnerUpdate") ==
-     * Result.DECISION_DENY) { throw new ServiceException("partnerUpdate: not
-     * allowed for user " + user.getUserID() + " in module: " +
-     * Module.adminModule, ServiceErrorType.xacml); } DsClient gatewayClient =
-     * new DsClient(CONFIGURATION.DS_ADDRESS); Service service; try { service =
-     * new Service(serviceID, serviceType, new URI(serviceAddress)); } catch
-     * (MalformedURIException ex) { throw new ServiceException("service URL
-     * malformed !", ServiceErrorType.Unknown); } List<Service> lService = new
-     * ArrayList<Service>(); lService.add(service); try {
-     * gatewayClient.partnerUpdate(sessionId, partnerUID, partnerID, lService);
-     * } catch (RemoteException ex) { throw new ServiceException("DS
-     * Communication Failure: internal protocol error !",
-     * ServiceErrorType.Unknown); } catch (EnancedProtocolException ex) { throw
-     * new ServiceException(ex.getMessage(), ServiceErrorType.Unknown); } }
-     */
-    public void createUser(String sessionId, User user, String login, String pass) throws ServiceException {
+    public void createUser(String sessionId, User user, String login, String userName) throws ServiceException {
         checkAccess(user, Module.adminModule, "userCreate");
         try {
             String partner = user.getPartnerID();
-            String hashPass = SHA1.makeSHA1Hash(pass);
-            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
                             Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
-            client.userCreate(sessionId, login, hashPass, partner, 30);
-        } catch (NoSuchAlgorithmException ex) {
-            log.error("Algorithm error", ex);
-            throw new ServiceException(ex.getMessage(), ServiceErrorType.epcis);
+            if (userName != null && !userName.isEmpty()) {
+                client.userCreate(sessionId, login, partner, userName, 30);
+            }
+            else {
+                client.userCreate(sessionId, login, partner, 30);
+            }
         } catch (ImplementationExceptionResponse ex) {
             log.error("Internal error", ex);
             throw new ServiceException(ex.getMessage(), ServiceErrorType.Unknown);
@@ -1067,7 +1048,7 @@ public class Services {
     public void deleteUser(String sessionId, User user, String login) throws ServiceException {
         checkAccess(user, Module.adminModule, "userDelete");
         try {
-            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
                             Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             client.userDelete(sessionId, login);
         } catch (ImplementationExceptionResponse ex) {
@@ -1109,29 +1090,32 @@ public class Services {
         log.debug(MapSessions.AdminAPMtoString());
     }
 
-    public boolean createAccount(String sessionId, User user, String partnerId, String login, String pass) throws ServiceException {
+    public boolean createAccount(String sessionId, User user, String partnerId, String userDN, String userName) throws ServiceException {
         checkAccess(user, Module.adminModule, "superadmin");
         try {
-            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME,
+            String userId = (userName != null && !userName.isEmpty())? userName : userDN;
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
                             Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             boolean found = false;
             try {
-                client.userInfo(sessionId, login);
+                client.userInfo(sessionId, userId);
                 found = true;
             } catch (ImplementationExceptionResponse ex) {
-                log.warn(null, ex);
+                log.trace(null, ex);
             } catch (SecurityExceptionResponse ex) {
-                log.warn(null, ex);
+                log.trace(null, ex);
             }
             if (found) {
                 throw new ServiceException("User exists", ServiceErrorType.Unknown);
             }
-            String hashPass = SHA1.makeSHA1Hash(pass);
-            client.userCreate(sessionId, login, hashPass, partnerId, 30);
-            createRootPartnerPolicy(sessionId, login, partnerId);
-        } catch (NoSuchAlgorithmException ex) {
-            log.error("Algorithm error", ex);
-            throw new ServiceException(ex.getMessage(), ServiceErrorType.Unknown);
+            if (userName != null && !userName.isEmpty()) {
+                client.userCreate(sessionId, userDN, partnerId, userName, 30);
+                createRootPartnerPolicy(sessionId, userDN, partnerId);
+            }
+            else {
+                client.userCreate(sessionId, userDN, partnerId, 30);
+                createRootPartnerPolicy(sessionId, userDN, partnerId);
+            }
         } catch (ImplementationExceptionResponse ex) {
             log.error("Internal error", ex);
             throw new ServiceException(ex.getMessage(), ServiceErrorType.Unknown);

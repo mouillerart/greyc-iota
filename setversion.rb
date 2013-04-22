@@ -66,12 +66,13 @@ end
   ETa/ETa-Callback/ETa-Callback-Receiver
   ETa/ETa-Callback/ETa-Callback-Sender
   ETa/ETa-Capture-Client
+  ETa/ETa-Capture-Test
   ETa/ETa-Query-Client
   ETa/ETa
   ETa/EpcisPHI
   ETa/LibXACML-EPCIS
-  ETa/User
-  ETa/User-Client
+  YPSilon/YPSilon
+  YPSilon/YPSilon-Client
   EpcILoN
   IoTa-DiscoveryWS/IoTa-DiscoveryWS-Client
   IoTa-DiscoveryWS/IoTa-DiscoveryWS
@@ -81,6 +82,7 @@ end
   Nu/Nu-PI
   OMeGa/OMeGa
   OMeGa/OmICron
+  LaMBDa
   PSi
   SigMa/SigMa
   SigMa/SigMa-Client

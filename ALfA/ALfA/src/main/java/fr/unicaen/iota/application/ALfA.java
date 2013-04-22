@@ -74,10 +74,24 @@ public class ALfA implements AccessInterface {
     }
 
     @Override
+    public Map<String, List<EPCISEventType>> traceEPCByEPCIS(Identity identity, String EPC) throws RemoteException {
+        LOG.trace("[COMMAND]--[TRACE EPC BY EPCIS]");
+        LOG.trace(EPC);
+        return new TraceEPC(identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).traceEPCbyEPCIS(EPC);
+    }
+
+    @Override
     public List<EPCISEventType> traceEPC(Identity identity, String EPC, Map<String, String> filters) throws RemoteException {
         LOG.trace("[COMMAND]--[FILTERED TRACE]");
         LOG.trace(EPC);
         return new TraceEPC(identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).filteredTrace(EPC, filters);
+    }
+
+    @Override
+    public Map<String, List<EPCISEventType>> traceEPCByEPCIS(Identity identity, String EPC, Map<String, String> filters) throws RemoteException {
+        LOG.trace("[COMMAND]--[FILTERED TRACE BY EPCIS]");
+        LOG.trace(EPC);
+        return new TraceEPC(identity, pksFilename, pksPassword, trustPksFilename, trustPksPassword).filteredTracebyEPCIS(EPC, filters);
     }
 
     @Override
@@ -97,13 +111,13 @@ public class ALfA implements AccessInterface {
     public List<EPCISEventType> queryEPCIS(Identity identity, String EPC, String EPCISAddress) throws RemoteException {
         LOG.trace("[COMMAND]--[QUERY EPCIS]");
         EpcisOperation epcisOperation = null;
-        while (epcisOperation == null) {
-            try {
-                epcisOperation = new EpcisOperation(identity, EPCISAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
-            } catch (Exception e) {
-                epcisOperation = null;
-                LOG.warn("Unable to create service proxy port! [RETRY]", e);
-            }
+        try {
+            epcisOperation = new EpcisOperation(identity, EPCISAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
+        } catch (Exception e) {
+            epcisOperation = null;
+            String msg = "Unable to create service proxy port";
+            LOG.warn(msg, e);
+            throw new RemoteException(msg, e);
         }
         return epcisOperation.getEventFromEPC(EPC);
     }
@@ -112,13 +126,13 @@ public class ALfA implements AccessInterface {
     public List<EPCISEventType> queryEPCIS(Identity identity, Map<String, String> filters, String EPCISAddress) throws RemoteException {
         LOG.trace("[COMMAND]--[QUERY EPCIS FILTERS]");
         EpcisOperation epcisOperation = null;
-        while (epcisOperation == null) {
-            try {
-                epcisOperation = new EpcisOperation(identity, EPCISAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
-            } catch (Exception e) {
-                epcisOperation = null;
-                LOG.warn("Unable to create service proxy port! [RETRY]", e);
-            }
+        try {
+            epcisOperation = new EpcisOperation(identity, EPCISAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
+        } catch (Exception e) {
+            epcisOperation = null;
+            String msg = "Unable to create service proxy port";
+            LOG.warn(msg, e);
+            throw new RemoteException(msg, e);
         }
         List<EPCISEventType> res = epcisOperation.getFilteredEvent(filters);
         return res;

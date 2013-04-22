@@ -130,7 +130,7 @@ public final class Constants {
         USE_XACML = Boolean.parseBoolean(properties.getProperty("use-xacml"));
         PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
         PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
-        TRUST_PKS_FILENAME = properties.getProperty("trustpks-filename", "publickeys.jks");
-        TRUST_PKS_PASSWORD = properties.getProperty("trustpks-password", "changeit");
+        TRUST_PKS_FILENAME = properties.getProperty("trust-pks-filename", "publickeys.jks");
+        TRUST_PKS_PASSWORD = properties.getProperty("trust-pks-password", "changeit");
     }
 }

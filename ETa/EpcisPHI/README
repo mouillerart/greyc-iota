@@ -5,7 +5,7 @@ XACML web service for ETa and policy administration interface.
 Dependencies:
   IoTa modules:
     - LibXACML-EPCIS
-    - User-Client
+    - YPSilon-Client
   libraries:
     - commons-codec
     - servlet-api
@@ -19,7 +19,7 @@ Installation and Configuration:
   A user must use a public/private key pair to connect to the web interface.
    IoTa-Installer can generate this keys. The public key have to be added to the
    truststore of the server. DN (Distinguished name) needs to be similar
-   to the LDAP directory provided by the User service. To log to the web
+   to the LDAP directory provided by YPSilon. To log to the web
    interface as "superadmin" who manages user accounts, add this user
    in this way.
    Modify the tomcat-users.xml file of Tomcat to manage identity with TLS.
@@ -27,7 +27,7 @@ Installation and Configuration:
 
 Usage Dependencies:
   - ETa
-  - User
+  - YPSilon
   - an EPCIS
 
 Usage:

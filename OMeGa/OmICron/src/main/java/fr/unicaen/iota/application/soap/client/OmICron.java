@@ -23,6 +23,7 @@ import fr.unicaen.iota.application.soap.IoTaException;
 import fr.unicaen.iota.application.soap.IoTaService;
 import fr.unicaen.iota.application.soap.IoTaServicePortType;
 import fr.unicaen.iota.ds.model.TEventItem;
+import fr.unicaen.iota.ds.model.TServiceItem;
 import fr.unicaen.iota.ds.model.TServiceType;
 import fr.unicaen.iota.mu.EPCISEventTypeHelper;
 import fr.unicaen.iota.nu.ONSEntryType;
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.KeyManagerFactory;
@@ -72,10 +74,12 @@ public class OmICron {
     }
 
     public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws Exception {
-        System.setProperty("javax.net.ssl.keyStore", pksFilename);
-        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
-        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
-        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        if (pksFilename != null && pksPassword != null && trustPksFilename != null && trustPksPassword != null) {
+            System.setProperty("javax.net.ssl.keyStore", pksFilename);
+            System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+            System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        }
         URL wsdlUrl = new URL(address + "?wsdl");
         IoTaService service = new IoTaService(wsdlUrl);
         port = service.getPort(IoTaServicePortType.class);
@@ -121,6 +125,13 @@ public class OmICron {
         this.identity = id;
     }
 
+    /**
+     * Queries the ONS for all NAPTR entries related to the given EPC code.
+     *
+     * @param EPC the EPC code
+     * @return a mapping of all entries by service type
+     * @throws RemoteException
+     */
     public Map<ONSEntryType, String> queryONS(String epc) throws IoTaException {
         QueryONSRequest in = new QueryONSRequest();
         EPC tepc = new EPC();
@@ -135,6 +146,14 @@ public class OmICron {
         return res;
     }
 
+    /**
+     * Queries the ONS for the URL of the referent Discovery Service for the
+     * given EPC code.
+     *
+     * @param EPC the EPC code
+     * @return the URL of the referent Discovery Service
+     * @throws RemoteException
+     */
     public String getReferentDS(String epc) throws IoTaException {
         GetReferentDSRequest in = new GetReferentDSRequest();
         EPC tepc = new EPC();
@@ -144,6 +163,13 @@ public class OmICron {
         return out.getUrl();
     }
 
+    /**
+     * Gets all the EPCIS events concerning a given EPC code.
+     *
+     * @param EPC the EPC code
+     * @return a list of EPCIS events
+     * @throws RemoteException
+     */
     public List<EPCISEventType> traceEPC(String epc) throws IoTaException {
         TraceEPCRequest in = new TraceEPCRequest();
         EPC tepc = new EPC();
@@ -154,17 +180,37 @@ public class OmICron {
         return EPCISEventTypeHelper.listFromEventList(out.getEventList());
     }
 
-    private QueryParams createQueryParams(Map<String, String> filters) {
-        QueryParams queryParams = new QueryParams();
-        for (Map.Entry<String, String> entry : filters.entrySet()) {
-            QueryParam qp = new QueryParam();
-            qp.setName(entry.getKey());
-            qp.setValue(entry.getValue());
-            queryParams.getParam().add(qp);
+    /**
+     * Gets all the EPCIS events sorted by EPCIS concerning a given EPC code.
+     *
+     * @param EPC the EPC code
+     * @return a list of EPCIS events by EPCIS
+     * @throws RemoteException
+     */
+    public Map<String, List<EPCISEventType>> traceEPCByEPCIS(String epc) throws IoTaException {
+        TraceEPCByEPCISRequest in = new TraceEPCByEPCISRequest();
+        EPC tepc = new EPC();
+        tepc.setValue(epc);
+        in.setEpc(tepc);
+        in.setIdentity(identity);
+        TraceEPCByEPCISResponse out = port.traceEPCByEPCIS(in);
+        Map<String, List<EPCISEventType>> results = new HashMap<String, List<EPCISEventType>>();
+        for (EventsByEPCIS eventsByEPCIS: out.getEventsByEPCIS()) {
+            List<EPCISEventType> eventList = EPCISEventTypeHelper.listFromEventList(eventsByEPCIS.getEventList());
+            results.put(eventsByEPCIS.getEpcisAddress(), eventList);
         }
-        return queryParams;
+        return results;
     }
 
+    /**
+     * Gets all the EPCIS events concerning a given EPC code and matching the
+     * given filters.
+     *
+     * @param EPC the EPC code
+     * @param filters the filters
+     * @return a list of EPCIS events
+     * @throws RemoteException
+     */
     public List<EPCISEventType> traceEPC(String epc, Map<String, String> filters) throws IoTaException {
         TraceEPCRequest in = new TraceEPCRequest();
         EPC tepc = new EPC();
@@ -176,6 +222,31 @@ public class OmICron {
         return EPCISEventTypeHelper.listFromEventList(out.getEventList());
     }
 
+    /**
+     * Gets all the EPCIS events sorted by EPCIS concerning a given EPC code and matching the
+     * given filters.
+     *
+     * @param EPC the EPC code
+     * @param filters the filters
+     * @return a list of EPCIS events by EPCIS
+     * @throws RemoteException
+     */
+    public Map<String, List<EPCISEventType>> traceEPCByEPCIS(String epc, Map<String, String> filters) throws IoTaException {
+        TraceEPCByEPCISRequest in = new TraceEPCByEPCISRequest();
+        EPC tepc = new EPC();
+        tepc.setValue(epc);
+        in.setEpc(tepc);
+        in.setIdentity(identity);
+        in.setFilters(createQueryParams(filters));
+        TraceEPCByEPCISResponse out = port.traceEPCByEPCIS(in);
+        Map<String, List<EPCISEventType>> results = new HashMap<String, List<EPCISEventType>>();
+        for (EventsByEPCIS eventsByEPCIS: out.getEventsByEPCIS()) {
+            List<EPCISEventType> eventList = EPCISEventTypeHelper.listFromEventList(eventsByEPCIS.getEventList());
+            results.put(eventsByEPCIS.getEpcisAddress(), eventList);
+        }
+        return results;
+    }
+
     public String getEPCDocURL(String epc) throws IoTaException {
         GetEPCDocURLRequest in = new GetEPCDocURLRequest();
         EPC tepc = new EPC();
@@ -185,6 +256,15 @@ public class OmICron {
         return out.getUrl();
     }
 
+    /**
+     * Gets all the EPCIS events concerning a given EPC code from a given ECPIS
+     * repository.
+     *
+     * @param EPC the EPC code
+     * @param EPCISAddress the URL of the EPCIS repository
+     * @return a list of EPCIS events
+     * @throws RemoteException
+     */
     public List<EPCISEventType> queryEPCIS(String epc, String EPCISAddress) throws IoTaException {
         QueryEPCISRequest in = new QueryEPCISRequest();
         EPC tepc = new EPC();
@@ -196,6 +276,15 @@ public class OmICron {
         return EPCISEventTypeHelper.listFromEventList(out.getEventList());
     }
 
+    /**
+     * Gets all the EPCIS events matching the given filters from a given ECPIS
+     * repository.
+     *
+     * @param filters the EPC code
+     * @param EPCISAddress the URL of the EPCIS repository
+     * @return a list of EPCIS events
+     * @throws RemoteException
+     */
     public List<EPCISEventType> queryEPCIS(Map<String, String> filters, String EPCISAddress) throws IoTaException {
         QueryEPCISRequest in = new QueryEPCISRequest();
         in.setFilters(createQueryParams(filters));
@@ -205,6 +294,15 @@ public class OmICron {
         return EPCISEventTypeHelper.listFromEventList(out.getEventList());
     }
 
+    /**
+     * Queries a given Discovery Service for all events concerning a given EPC
+     * code.
+     *
+     * @param EPC the EPC code
+     * @param DSAddress the DS URL
+     * @return a list of DS events
+     * @throws RemoteException
+     */
     public List<TEventItem> queryDS(String epc, String DSAddress) throws IoTaException {
         QueryDSRequest in = new QueryDSRequest();
         EPC tepc = new EPC();
@@ -216,6 +314,16 @@ public class OmICron {
         return out.getEventList().getEvent();
     }
 
+    /**
+     * Queries a given Discovery Service for all events concerning a given EPC
+     * code.
+     *
+     * @param EPC the EPC code
+     * @param DSAddress the DS URL
+     * @param serviceType the service type
+     * @return a list of DS events
+     * @throws RemoteException
+     */
     public List<TEventItem> queryDS(String epc, String DSAddress, TServiceType serviceType) throws IoTaException {
         QueryDSRequest in = new QueryDSRequest();
         EPC tepc = new EPC();
@@ -229,7 +337,9 @@ public class OmICron {
     }
 
     public static void main(String args[]) throws Exception {
-        String serviceURL = "http://localhost:8080/omega";
+        String service = "traceEPC";
+        String serviceURL = "https://localhost:8443/omega";
+        String epcisOrDsURL = null;
         String sid = "anonymous";
         String epc = "urn:epc:id:sgtin:40000.00002.1298283877319";
         String ksFile = null;
@@ -237,38 +347,88 @@ public class OmICron {
         String tsFile = null;
         String tsPass = null;
         switch (args.length) {
-            case 7:
-                ksFile = args[3];
-                ksPass = args[4];
-                tsFile = args[5];
-                tsPass = args[6];
+            case 8:
+            case 9:
+                ksFile = args[4];
+                ksPass = args[5];
+                tsFile = args[6];
+                tsPass = args[7];
             // fall-through
-            case 3:
-                serviceURL = args[0];
-                sid = args[1];
-                epc = args[2];
+            case 4:
+            case 5:
+                service = args[0];
+                serviceURL = args[1];
+                sid = args[2];
+                epc = args[3];
                 break;
             default:
-                System.err.println("Usage: OmICron <OMeGa Web Service URL> <IDENTITY> <EPC URN ID>");
+                System.err.println("Usage: OmICron <Service> <Service URL> <IDENTITY> <EPC URN ID> [<Keystore File> <Keystore Password> <Truststore file> <Truststore Password>] [<EPCIS or DS URL>]");
                 System.err.println();
-                System.err.println("example: OmICron " + serviceURL + " " + sid + " " + epc);
+                System.err.println("example: OmICron " + service + " " + serviceURL + " " + sid + " " + epc + " /srv/keystore.jks store_pw /srv/truststore.jks trust_pw");
+                System.err.println("example: OmICron queryEPCIS " + serviceURL + " " + sid + " " + epc + " /srv/keystore.jks store_pw /srv/truststore.jks trust_pw https://localhost:8443/eta/ided_query");
                 System.exit(-1);
                 break;
         }
         Identity id = new Identity();
         id.setAsString(sid);
-        OmICron client = new OmICron(id, serviceURL, ksFile, ksPass, tsFile, tsPass);
 
-        System.out.println("Processing traceEPC ...");
-        List<EPCISEventType> eventList = client.traceEPC(epc);
-        if (eventList.isEmpty()) {
-            System.out.println("  No events found.");
-        } else {
+        List<EPCISEventType> eventList = null;
+        List<TEventItem> dsEventList = null;
+        if ("traceEPC".equals(service)) {
+            System.out.println("Processing traceEPC ...");
+            OmICron client = new OmICron(id, serviceURL, ksFile, ksPass, tsFile, tsPass);
+            eventList = client.traceEPC(epc);
+        }
+        else if ("queryEPCIS".equals(service)) {
+            epcisOrDsURL = (args.length == 5)? args[4] : args[8];
+            System.out.println("Processing queryEPCIS ...");
+            OmICron client = new OmICron(id, serviceURL, ksFile, ksPass, tsFile, tsPass);
+            eventList = client.queryEPCIS(epc, epcisOrDsURL);
+        }
+        else if ("queryDS".equals(service)) {
+            epcisOrDsURL = (args.length == 5)? args[4] : args[8];
+            System.out.println("Processing queryDS ...");
+            OmICron client = new OmICron(id, serviceURL, ksFile, ksPass, tsFile, tsPass);
+            dsEventList = client.queryDS(epc, epcisOrDsURL);
+        }
+        else {
+            System.out.println("Service:");
+            System.out.println("traceEPC:   gets all events concerning an EPC code");
+            System.out.println("queryEPCIS: gets events concerning an EPC code contained by an EPCIS");
+            System.exit(-1);
+        }
+        if (eventList != null && !eventList.isEmpty()) {
             for (EPCISEventType evt : eventList) {
                 EPCISEventTypeHelper e = new EPCISEventTypeHelper(evt);
-                System.out.println("  Event found: " + e.getBizStep() + " " + e.getDisposition());
+                System.out.println("  Event found:");
+                System.out.println(e.toString());
             }
+        }
+        else if (dsEventList != null && !dsEventList.isEmpty()) {
+            for (TEventItem event : dsEventList) {
+                System.out.println("Event found: ");
+                for (TServiceItem serviceItem : event.getServiceList().getService()) {
+                    System.out.println("   | OwnerID: " + event.getP());
+                    System.out.println("   | service type: " + serviceItem.getType());
+                    System.out.println("   | service address: " + serviceItem.getUri());
+                }
+            }
+        }
+        else {
+            System.out.println("  No event found.");
         }
         System.out.println("Bye.");
     }
+
+    private QueryParams createQueryParams(Map<String, String> filters) {
+        QueryParams queryParams = new QueryParams();
+        for (Map.Entry<String, String> entry : filters.entrySet()) {
+            QueryParam qp = new QueryParam();
+            qp.setName(entry.getKey());
+            qp.setValue(entry.getValue());
+            queryParams.getParam().add(qp);
+        }
+        return queryParams;
+    }
+
 }

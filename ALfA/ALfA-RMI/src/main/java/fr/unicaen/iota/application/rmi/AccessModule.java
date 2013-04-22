@@ -53,8 +53,18 @@ public class AccessModule implements RMIAccessInterface {
     }
 
     @Override
+    public synchronized Map<String, List<EPCISEventType>> traceEPCByEPCIS(Identity identity, String EPC) throws RemoteException {
+        return controler.traceEPCByEPCIS(identity, EPC);
+    }
+
+    @Override
     public synchronized List<EPCISEventType> traceEPC(Identity identity, String EPC, Map<String, String> filters) throws RemoteException {
         return controler.traceEPC(identity, EPC, filters);
+    }
+
+    @Override
+    public synchronized Map<String, List<EPCISEventType>> traceEPCByEPCIS(Identity identity, String EPC, Map<String, String> filters) throws RemoteException {
+        return controler.traceEPCByEPCIS(identity, EPC, filters);
     }
 
     @Override
@@ -86,4 +96,5 @@ public class AccessModule implements RMIAccessInterface {
     public synchronized List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress, TServiceType serviceType) throws RemoteException {
         return controler.queryDS(identity, EPC, DSAddress, serviceType);
     }
+
 }

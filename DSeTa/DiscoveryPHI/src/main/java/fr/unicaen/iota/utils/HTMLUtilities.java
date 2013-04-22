@@ -31,6 +31,10 @@ import java.util.List;
  */
 public final class HTMLUtilities {
 
+    private static final String[] SERVICES = {"ds", "ided_ds", "epcis", "ided_epcis", "html", "ws", "xmlrpc"};
+
+    private static final String[] TYPES = {"object", "aggregation", "quantity", "transaction"};
+
     private HTMLUtilities() {
     }
 
@@ -94,7 +98,6 @@ public final class HTMLUtilities {
         res.append("</select>");
         return res.toString();
     }
-    private static final String[] SERVICES = {"ds", "epcis", "html", "ws", "xmlrpc"};
 
     public static String createSelectServiceType(String serviceType, String idSuffix) {
         StringBuilder res = new StringBuilder();
@@ -113,7 +116,6 @@ public final class HTMLUtilities {
         res.append("</select>");
         return res.toString();
     }
-    private static final String[] TYPES = {"object", "aggregation", "quantity", "transaction"};
 
     public static String createSelectEventClassFilter() {
         StringBuilder res = new StringBuilder();

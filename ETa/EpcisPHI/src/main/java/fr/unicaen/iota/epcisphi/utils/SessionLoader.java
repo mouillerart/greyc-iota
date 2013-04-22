@@ -19,10 +19,10 @@
  */
 package fr.unicaen.iota.epcisphi.utils;
 
-import fr.unicaen.iota.eta.user.client.UserClient;
-import fr.unicaen.iota.eta.user.userservice.UserInfoOut;
-import fr.unicaen.iota.eta.user.userservice_wsdl.ImplementationExceptionResponse;
-import fr.unicaen.iota.eta.user.userservice_wsdl.SecurityExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.YPSilonClient;
+import fr.unicaen.iota.ypsilon.client.model.UserInfoOut;
+import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,12 +35,12 @@ public class SessionLoader {
 
     public static synchronized String loadSession(String sessionId, String userId, HttpSession session) throws SecurityExceptionResponse {
         try {
-            UserClient client = new UserClient(Constants.USERSERVICE_ADDRESS, Constants.PKS_FILENAME, Constants.PKS_PASSWORD,
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME, Constants.PKS_PASSWORD,
                     Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             UserInfoOut uInfo = client.userInfo(sessionId, userId);
             session.setAttribute("uInfo", uInfo);
             /*
-             * TODO PartnerInfo pInfo = UserClient.partnerInfo(sessionId,
+             * TODO PartnerInfo pInfo = YPSilonClient.partnerInfo(sessionId,
              * uInfo.getPartnerId()); session.setAttribute("pInfo", pInfo);
              */
             session.setAttribute("session-id", sessionId);

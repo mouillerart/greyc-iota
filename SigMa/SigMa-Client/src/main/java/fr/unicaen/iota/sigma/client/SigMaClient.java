@@ -40,8 +40,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
- * This
- * <code>SigMAClient</code> performs the requests to the SigMA web service. This
+ * This <code>SigMAClient</code> performs the requests to the SigMA web service. This
  * class receives the address of the SigMA web service and sends the signature
  * verification resquests.
  */
@@ -65,10 +64,12 @@ public class SigMaClient {
     }
 
     public void configureService(String address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) throws MalformedURLException, Exception {
-        System.setProperty("javax.net.ssl.keyStore", pksFilename);
-        System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
-        System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
-        System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        if (pksFilename != null && pksPassword != null && trustPksFilename != null && trustPksPassword != null) {
+            System.setProperty("javax.net.ssl.keyStore", pksFilename);
+            System.setProperty("javax.net.ssl.keyStorePassword", pksPassword);
+            System.setProperty("javax.net.ssl.trustStore", trustPksFilename);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
+        }
         URL wsdlUrl = new URL(address + "?wsdl");
         SigMaService service = new SigMaService(wsdlUrl);
         port = service.getPort(SigMaServicePortType.class);

@@ -57,11 +57,13 @@ public class CaptureCheck {
      * @return <code>true</code> if the capture is permitted.
      */
     public boolean xacmlCheck(List<EPCISEventType> epcisEventList, String user) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
         for (EPCISEventType epcisEvent : epcisEventList) {
             String owner = Utils.getEventOwner(epcisEvent);
             if (owner == null) {
                 owner = user;
             }
+            owner = fr.unicaen.iota.mu.Utils.formatId(owner);
             if (epcisEvent instanceof ObjectEventType) {
                 if (!checkObjectEvent((ObjectEventType) epcisEvent, user, owner)) {
                     return false;
@@ -597,6 +599,7 @@ public class CaptureCheck {
      * @return <code>true</code> if permitted.
      */
     private boolean xacmlCheckMasterDType(List<VocabularyElementType> vocElList, String user) {
+        user = fr.unicaen.iota.mu.Utils.formatId(user);
         Iterator<VocabularyElementType> iterVoc = vocElList.iterator();
         while (iterVoc.hasNext()) {
             VocabularyElementType vocEl = iterVoc.next();
@@ -607,6 +610,7 @@ public class CaptureCheck {
                 if (Constants.URN_IOTA.equals(elem.getName().getNamespaceURI()) &&
                         Constants.EXTENSION_OWNER_ID.equals(elem.getName().getLocalPart())) {
                     String owner = elem.getValue().toString();
+                    owner = fr.unicaen.iota.mu.Utils.formatId(owner);
                     XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
                     if (!xacmlCheckMasterData(xacmlMasterData, user)) {
                         return false;

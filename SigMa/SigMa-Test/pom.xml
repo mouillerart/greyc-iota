@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>sigma-test</artifactId>
-    <version>1.9</version>
+    <version>1.99</version>
     <packaging>jar</packaging>
 
     <name>SigMa-Test</name>
@@ -90,7 +90,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.unicaen.iota.sigma.test.SigMaTest</mainClass>
+                            <mainClass>fr.unicaen.iota.sigma.test.SigMaTestGUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

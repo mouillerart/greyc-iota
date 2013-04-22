@@ -42,9 +42,8 @@
         <script type="text/javascript" src="script/tree.js"></script>
         <script type="text/javascript" src="script/requestDispatcher.js"></script>
         <script type="text/javascript" src="script/jquery.js"></script>
-        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="script/jquery-ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" href="style/style.css" />
     </head>
     <body>

@@ -23,7 +23,7 @@ import fr.unicaen.iota.mu.Constants;
 import fr.unicaen.iota.mu.Utils;
 import fr.unicaen.iota.sigma.SigMaFunctions;
 import fr.unicaen.iota.sigma.client.SigMaClient;
-import fr.unicaen.iota.sigma.xsd.VerifyResponse;
+import fr.unicaen.iota.sigma.model.VerifyResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -166,29 +166,11 @@ public class Controler {
     }
 
     public String getSignature(EPCISEventType event) {
-        String signature = "";
-        List<Object> extensions;
-
-        if (event instanceof ObjectEventType) {
-            extensions = ((ObjectEventType) event).getAny();
-        } else if (event instanceof AggregationEventType) {
-            extensions = ((AggregationEventType) event).getAny();
-        } else if (event instanceof QuantityEventType) {
-            extensions = ((QuantityEventType) event).getAny();
-        } else if (event instanceof TransactionEventType) {
-            extensions = ((TransactionEventType) event).getAny();
-        } else {
-            return null;
+        List<String> signatures = Utils.getExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE);
+        if (signatures != null && !signatures.isEmpty()) {
+            return signatures.get(0);
         }
-        for (Object object : extensions) {
-            Element elem = (Element) object;
-            if (Constants.URN_IOTA.equals(elem.getNamespaceURI())
-                    && Constants.EXTENSION_SIGNATURE.equals(elem.getLocalName())) {
-                signature = elem.getTextContent();
-                break;
-            }
-        }
-        return signature;
+        return "";
     }
 
     public boolean insertErrors(ObjectEventType objectEvent){

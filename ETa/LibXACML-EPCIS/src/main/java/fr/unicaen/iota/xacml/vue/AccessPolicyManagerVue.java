@@ -30,7 +30,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class AccessPolicyManagerVue extends javax.swing.JFrame {
 
-    private String partner;
+    private String owner;
     private String user;
     private AccessPolicyManager apm;
     private DefaultMutableTreeNode captureRoot;
@@ -41,8 +41,8 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
     /**
      * Creates new form AccessPolicyManagerInterface
      */
-    public AccessPolicyManagerVue(String partner, String user) {
-        this.partner = partner;
+    public AccessPolicyManagerVue(String owner, String user) {
+        this.owner = owner;
         this.user = user;
         initComponents();
         initGroups();
@@ -55,10 +55,10 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
 
     private void createQueryTreeNodes() {
         root.removeAllChildren();
-        List list = apm.getPolicies(partner);
+        List list = apm.getPolicies(owner);
         OwnerPolicies queryPolicy = (OwnerPolicies) list.get(0);
         if (queryPolicy == null) {
-            queryPolicy = new OwnerPolicies(partner, Module.queryModule);
+            queryPolicy = new OwnerPolicies(owner, Module.queryModule);
             apm.addQueryPolicy(queryPolicy);
         }
         OwnerPoliciesTreeNode queryPolicyInterface = new OwnerPoliciesTreeNode(queryPolicy);
@@ -135,7 +135,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
 
             MasterDataIdRuleTreeNode masterDataIdRuleTreeNode = new MasterDataIdRuleTreeNode(gp.getMasterDataIds(), gp.getMasterDataIdsFilterFunction());
             DefaultMutableTreeNode masterDataIdGroupRoot = new DefaultMutableTreeNode(masterDataIdRuleTreeNode);
-            filtersRoot.add(dispositionGroupRoot);
+            filtersRoot.add(masterDataIdGroupRoot);
 
             for (Object obAction : gp.getActions()) {
                 String action = (String) obAction;
@@ -277,7 +277,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabelTitle = new javax.swing.JLabel();
-        jLabelPartner = new javax.swing.JLabel();
+        jLabelOwner = new javax.swing.JLabel();
         jLabelUser = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jButtonDelete = new javax.swing.JButton();
@@ -286,7 +286,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         jButtonAddGroup = new javax.swing.JButton();
         jButtonAddFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        root = new DefaultMutableTreeNode(partner);
+        root = new DefaultMutableTreeNode(owner);
         jTreeGroupsView = new javax.swing.JTree(root);
 
         setDefaultCloseOperation(
@@ -294,7 +294,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
 
         jLabelTitle.setText("AccessPolicyManager");
 
-        jLabelPartner.setText("partner: " + partner);
+        jLabelOwner.setText("Owner: " + owner);
 
         jLabelUser.setText("user: " + user);
 
@@ -347,9 +347,9 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jLabelPartner).addContainerGap(759, Short.MAX_VALUE)).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jLabelUser).addContainerGap(778, Short.MAX_VALUE)).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup().addComponent(jLabelTitle).addGap(330, 330, 330)).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addContainerGap()))));
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jLabelOwner).addContainerGap(759, Short.MAX_VALUE)).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jLabelUser).addContainerGap(778, Short.MAX_VALUE)).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup().addComponent(jLabelTitle).addGap(330, 330, 330)).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addContainerGap()))));
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jLabelTitle).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jLabelPartner).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jLabelUser).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addContainerGap()));
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jLabelTitle).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jLabelOwner).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jLabelUser).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addContainerGap()));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -381,10 +381,10 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         if (object instanceof OwnerPoliciesTreeNode) {
             OwnerPoliciesTreeNode ownerPoliciesTreeNode = (OwnerPoliciesTreeNode) object;
             if (Module.queryModule.equals(ownerPoliciesTreeNode.getOwnerPolicies().getType())) {
-                GroupPolicy groupPolicy = new GroupPolicy(content, partner);
+                GroupPolicy groupPolicy = new GroupPolicy(content, owner);
                 groupPolicy.addAction("test");
                 groupPolicy.createPolicy();
-                apm.addQueryGroupPolicy(partner, groupPolicy);
+                apm.addQueryGroupPolicy(owner, groupPolicy);
                 GroupPolicyTreeNode groupPolicyTreeNode = new GroupPolicyTreeNode(groupPolicy);
                 createQueryTreeNodes();
             }
@@ -430,7 +430,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryUserFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryUserFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -442,7 +442,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryActionFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryActionFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -455,7 +455,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryBizStepFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryBizStepFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -468,7 +468,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryEpcFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryEpcFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -481,7 +481,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryEventTimeFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), dates);
+            apm.addQueryEventTimeFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), dates);
         }
         addFilterInTree(nodeSelected, dates);
     }
@@ -494,7 +494,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryRecordTimeFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), dates);
+            apm.addQueryRecordTimeFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), dates);
         }
         addFilterInTree(nodeSelected, dates);
     }
@@ -507,7 +507,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryOperationFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryOperationFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -520,7 +520,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryEventTypeFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryEventTypeFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -533,7 +533,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryParentIdFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryParentIdFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -546,7 +546,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryChildEpcFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryChildEpcFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -559,7 +559,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryQuantityFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), quantities);
+            apm.addQueryQuantityFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), quantities);
         }
         addFilterInTree(nodeSelected, quantities);
     }
@@ -572,7 +572,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryReadPointFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryReadPointFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -585,7 +585,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryBizLocFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryBizLocFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -598,7 +598,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryBizTransFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryBizTransFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -611,7 +611,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryDispositionFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryDispositionFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
@@ -624,13 +624,13 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
         Object groupObject = groupPolicyNode.getUserObject();
         if (groupObject instanceof GroupPolicyTreeNode) {
             GroupPolicyTreeNode groupPolicyTreeNode = (GroupPolicyTreeNode) groupObject;
-            apm.addQueryMasterDataIdFilter(partner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
+            apm.addQueryMasterDataIdFilter(owner, groupPolicyTreeNode.getGroupPolicy().getName(), text);
         }
         addFilterInTree(nodeSelected, text);
     }
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {
-        apm.save(partner);
+        apm.save(owner);
     }
 
     /**
@@ -651,7 +651,7 @@ public class AccessPolicyManagerVue extends javax.swing.JFrame {
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonModify;
     private javax.swing.JButton jButtonSave;
-    private javax.swing.JLabel jLabelPartner;
+    private javax.swing.JLabel jLabelOwner;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JLabel jLabelUser;
     private javax.swing.JPanel jPanel1;

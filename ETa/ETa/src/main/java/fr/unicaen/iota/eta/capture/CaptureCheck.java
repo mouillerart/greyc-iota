@@ -29,7 +29,6 @@ import fr.unicaen.iota.xi.client.EPCISPEP;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import javax.xml.bind.JAXBElement;
 import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.utils.TimeParser;
 import org.w3c.dom.Element;
@@ -604,22 +603,13 @@ public class CaptureCheck {
         while (iterVoc.hasNext()) {
             VocabularyElementType vocEl = iterVoc.next();
             String id = vocEl.getId();
-            boolean ownerFound = false;
-            for (Object object : vocEl.getAny()) {
-                JAXBElement elem = (JAXBElement) object;
-                if (Constants.URN_IOTA.equals(elem.getName().getNamespaceURI()) &&
-                        Constants.EXTENSION_OWNER_ID.equals(elem.getName().getLocalPart())) {
-                    String owner = elem.getValue().toString();
-                    owner = fr.unicaen.iota.mu.Utils.formatId(owner);
-                    XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
-                    if (!xacmlCheckMasterData(xacmlMasterData, user)) {
-                        return false;
-                    }
-                    ownerFound = true;
-                    break;
-                }
+            String owner = Utils.getVocabularyOwner(vocEl);
+            if (owner == null || owner.isEmpty()) {
+                return false;
             }
-            if (!ownerFound) {
+            owner = fr.unicaen.iota.mu.Utils.formatId(owner);
+            XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
+            if (!xacmlCheckMasterData(xacmlMasterData, user)) {
                 return false;
             }
         }

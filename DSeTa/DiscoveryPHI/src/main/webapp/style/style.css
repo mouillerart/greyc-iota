@@ -269,7 +269,7 @@ body{
     display : none;
 }
 
-.partnerSelector{
+.ownerSelector{
     width : 100%;
 }
 
@@ -340,7 +340,7 @@ body{
     margin-top : 10px;
 }
 
-#epcClassFilterName{
+#eventTypeFilterName{
     width : 200px;
 }
 

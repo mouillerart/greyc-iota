@@ -44,15 +44,4 @@
                     address="/"
                     xmlns:ser="urn:unicaen:iota:omega:wsdl" />
 
-  <!-- register local transport -->
-    <bean class="org.apache.cxf.transport.local.LocalTransportFactory" lazy-init="false">
-        <property name="transportIds">
-            <list>
-                <value>http://cxf.apache.org/transports/local</value>
-                <value>http://schemas.xmlsoap.org/soap/http</value>
-                <value>http://schemas.xmlsoap.org/wsdl/soap/http</value>
-            </list>
-        </property>
-    </bean>
-
 </beans>

@@ -39,10 +39,6 @@ public class SessionLoader {
                     Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             UserInfoOut uInfo = client.userInfo(sessionId, userId);
             session.setAttribute("uInfo", uInfo);
-            /*
-             * TODO PartnerInfo pInfo = YPSilonClient.partnerInfo(sessionId,
-             * uInfo.getPartnerId()); session.setAttribute("pInfo", pInfo);
-             */
             session.setAttribute("session-id", sessionId);
             return "";
         } catch (ImplementationExceptionResponse ex) {

@@ -19,14 +19,14 @@
  */
 package fr.unicaen.iota.ypsilon;
 
-import fr.unicaen.iota.ypsilon.constants.Constants;
 import fr.unicaen.iota.xi.client.UserPEP;
 import fr.unicaen.iota.xi.utils.Utils;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationException;
-import fr.unicaen.iota.ypsilon.client.model.SecurityException;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationExceptionSeverity;
+import fr.unicaen.iota.ypsilon.client.model.SecurityException;
 import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
 import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
+import fr.unicaen.iota.ypsilon.constants.Constants;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.logging.Log;

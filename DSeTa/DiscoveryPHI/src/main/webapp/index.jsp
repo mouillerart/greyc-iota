@@ -1,17 +1,17 @@
-<%@page import="fr.unicaen.iota.discovery.client.model.UserInfo"%>
-<%@page import="fr.unicaen.iota.discovery.client.model.PartnerInfo"%>
-<%@page import="fr.unicaen.iota.discovery.client.DsClient"%>
+<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
+<%@page import="fr.unicaen.iota.utils.Constants"%>
+<%@page import="fr.unicaen.iota.ypsilon.client.YPSilonClient"%>
 <%@page import="fr.unicaen.iota.utils.SessionLoader"%>
 <%@page import="com.sun.xacml.ctx.Result"%>
 <%@page import="fr.unicaen.iota.utils.PEPRequester"%>
-<%@page import="fr.unicaen.iota.xacml.conf.Configuration"%>
 <%
     String sessionId = (String) session.getAttribute("session-id");
     String sid = (String) request.getParameter("sid");
     String uid = (String) request.getParameter("uid");
     if (sid != null) {
-        DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
-        String message = SessionLoader.loadSession(sid, dsClient, uid, session);
+        YPSilonClient ypsilonClient = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+        String message = SessionLoader.loadSession(sid, ypsilonClient, uid, session);
         if (!message.isEmpty()) {
             request.setAttribute("message", message);
 %>
@@ -30,7 +30,6 @@
 <%@page import="fr.unicaen.iota.xacml.ihm.Module"%>
 <%@page import="fr.unicaen.iota.utils.HTMLUtilities"%>
 <%@page import="java.util.Date"%>
-<%@page import="fr.unicaen.iota.auth.Partner"%>
 <%@page import="fr.unicaen.iota.auth.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -41,7 +40,7 @@
         <title>Policy Manager</title>
         <script type="text/javascript" src="script/tree.js"></script>
         <script type="text/javascript" src="script/requestDispatcher.js"></script>
-        <script type="text/javascript" src="script/jquery.js"></script>
+        <script type="text/javascript" src="script/jquery-min.js"></script>
         <script type="text/javascript" src="script/jquery-ui.min.js"></script>
         <link rel="stylesheet" type="text/css" href="style/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" href="style/style.css" />
@@ -50,10 +49,8 @@
         <div class="treeTitle">&nbsp;</div>
         <jsp:include page="dialogs.jsp" />
         <%
-            PartnerInfo pInfo = (PartnerInfo) session.getAttribute("pInfo");
-            UserInfo uInfo = (UserInfo) session.getAttribute("uInfo");
-            Partner partner = new Partner(0, true, pInfo.getPartnerId(), new Date(), null, null, null);
-            User u = new User(0, partner, "", uInfo.getUserId(), null, new Date());
+            UserInfoOut uInfo = (UserInfoOut) session.getAttribute("uInfo");
+            User u = new User(uInfo.getUserID(), uInfo.getOwnerID());
             if (PEPRequester.checkAccess(u, "superadmin") != Result.DECISION_PERMIT) {
         %>
         <jsp:include page="policyList.jsp" />
@@ -64,14 +61,15 @@
         <%
                 return;
             }
-            String userId = ((UserInfo) session.getAttribute("uInfo")).getUserId();
-            String partnerId = ((PartnerInfo) session.getAttribute("pInfo")).getPartnerId();
+            String userId = ((UserInfoOut) session.getAttribute("uInfo")).getUserID();
+            String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
         %>
         <div class="account">
             <div class="logout"><a href="RootAccountAuth?action=logout">[ logout ]</a></div>
-            <div class="logout"><a href="#" onclick="processPartnerUpdate()" >[ Update My Account ]</a></div>
+            <div class="logout"><a href="#" onclick="processOwnerUpdate()" >[ Update My Account ]</a></div>
             <div class="logout"><a href="#" onclick="processUserCreate()" >[ Create User ]</a></div>
-            <div style="width : 300px;"><span>*</span> User: <span class="accountDetails"><%=userId%></span> / Partner profile: <span class="accountDetails"><%=partnerId%></span></div>
+            <div class="logout"><a href="#" onclick="processUserDelete()" >[ Delete User ]</a></div>
+            <div style="width : 300px;"><span>*</span> User: <span class="accountDetails"><%=userId%></span> / Owner profile: <span class="accountDetails"><%=ownerId%></span></div>
         </div>
     </body>
 </html>

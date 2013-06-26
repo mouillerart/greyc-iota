@@ -19,10 +19,10 @@
  */
 package fr.unicaen.iota.ypsilon;
 
-import fr.unicaen.iota.ypsilon.constants.Constants;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationException;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationExceptionSeverity;
 import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ypsilon.constants.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -45,9 +45,8 @@ public class UserOperations {
      *
      * @return The connection.
      * @throws NamingException If an error occurred during the LDAP connection.
-     * @throws Exception If an unexpected error occured.
      */
-    private DirContext getContext() throws NamingException, Exception {
+    private DirContext getContext() throws NamingException {
         /*
          * Context newCtx = new InitialContext(); Context envCtx = (Context)
          * newCtx.lookup("java:comp/env"); DirContext dirCtxt = (DirContext)
@@ -60,10 +59,6 @@ public class UserOperations {
         Properties p = new Properties();
         p.setProperty(Context.INITIAL_CONTEXT_FACTORY, LDAP_CONTEXT_FACTORY);
         String providerUrl = Constants.LDAP_URL;
-        if (!providerUrl.endsWith("/")) {
-            providerUrl += "/";
-        }
-        providerUrl += Constants.LDAP_BASE_DN;
         p.setProperty(Context.PROVIDER_URL, providerUrl);
         p.setProperty(Context.SECURITY_AUTHENTICATION, LDAP_AUTHENTICATION_MODE);
         p.setProperty(Context.SECURITY_PRINCIPAL, LDAP_USER);
@@ -84,22 +79,13 @@ public class UserOperations {
         try {
             return getUserByDN(userDN);
         } catch (NamingException ex) {
-            String msg = "An error occurred during the LDAP connection.";
+            String msg = "An error occurred during the user login: " + ex.toString();
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
             ie.setQueryName("userLogin");
             ie.setSeverity(ImplementationExceptionSeverity.ERROR);
             ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
-            throw ier;
-        } catch (Exception ex) {
-            String msg = "An unexpected error occurred.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLogin");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
+            LOG.info(msg, ier);
             throw ier;
         }
     }
@@ -124,22 +110,13 @@ public class UserOperations {
             }
             return getUserByDN(userDN);
         } catch (NamingException ex) {
-            String msg = "An error occurred during the LDAP connection.";
+            String msg = "An error occurred during the user lookup: " + ex.toString();
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
             ie.setQueryName("userLookup");
             ie.setSeverity(ImplementationExceptionSeverity.ERROR);
             ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
-            throw ier;
-        } catch (Exception ex) {
-            String msg = "An unexpected error occurred.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLookup");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
+            LOG.info(msg, ier);
             throw ier;
         }
     }
@@ -163,31 +140,32 @@ public class UserOperations {
                 oc.add("user");
                 attributes.put(oc);
                 attributes.put(new BasicAttribute(Constants.LDAP_ATTRIBUTE_OWNER, owner));
-                String name = login;
                 if (alias != null && !alias.isEmpty()) {
-                    attributes.put(new BasicAttribute(Constants.LDAP_ATTRIBUTE_ALIAS, login));
-                    name = alias;
+                    attributes.put(new BasicAttribute(Constants.LDAP_ATTRIBUTE_ALIAS, formatDN(alias)));
                 }
-                if (!name.contains("=")) {
-                    name = Constants.LDAP_USER_ID + "=" + name;
-                    name += (Constants.LDAP_USER_GROUP != null && !Constants.LDAP_USER_GROUP.isEmpty()) ? "," + Constants.LDAP_USER_GROUP : "";
+                if (!login.contains("=")) {
+                    login = Constants.LDAP_USER_ID + "=" + login;
+                    login += (Constants.LDAP_USER_GROUP != null && !Constants.LDAP_USER_GROUP.isEmpty()) ? "," + Constants.LDAP_USER_GROUP : "";
                 }
-                String formatedDN = formatDN(name);
+                if (!login.toLowerCase().endsWith(Constants.LDAP_BASE_DN.toLowerCase())) {
+                    login += "," + Constants.LDAP_BASE_DN;
+                }
+                String formatedDN = formatDN(login);
                 dirCtxt.createSubcontext(formatedDN, attributes);
+            } catch (NamingException ex) {
+                String msg = "An error occurred during the creation of the user: ";
+                ImplementationException ie = new ImplementationException();
+                ie.setReason(msg + ex.toString());
+                ie.setQueryName("userCreate");
+                ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+                ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg + ex.toString(), ie, ex);
+                LOG.info(msg, ier);
+                throw ier;
             } finally {
                 dirCtxt.close();
             }
         } catch (NamingException ex) {
             String msg = "An error occurred during the LDAP connection.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userCreate");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
-            throw ier;
-        } catch (Exception ex) {
-            String msg = "An unexpected error occurred.";
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
             ie.setQueryName("userCreate");
@@ -219,20 +197,20 @@ public class UserOperations {
                 }
                 String formatedDN = formatDN(name);
                 dirCtxt.destroySubcontext(formatedDN);
+            } catch (NamingException ex) {
+                String msg = "An error occurred during the delete of the user: ";
+                ImplementationException ie = new ImplementationException();
+                ie.setReason(msg + ex.toString());
+                ie.setQueryName("userDelete");
+                ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+                ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg + ex.toString(), ie, ex);
+                LOG.info(msg, ier);
+                throw ier;
             } finally {
                 dirCtxt.close();
             }
         } catch (NamingException ex) {
             String msg = "An error occurred during the LDAP connection.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userDelete");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
-            throw ier;
-        } catch (Exception ex) {
-            String msg = "An unexpected error occurred.";
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
             ie.setQueryName("userDelete");
@@ -250,13 +228,14 @@ public class UserOperations {
      * @throws NamingException
      * @throws Exception
      */
-    private List<User> getUserByDN(String userDN) throws NamingException, Exception {
+    private List<User> getUserByDN(String userDN) throws NamingException {
         DirContext dirCtxt = getContext();
         try {
             List<User> userList = new ArrayList<User>();
             String formatedDN = formatDN(userDN);
             boolean found = false;
             try {
+                LOG.debug("Tries to find " + formatedDN);
                 Attributes attrs = dirCtxt.getAttributes(formatedDN);
                 if (attrs != null && attrs.size() > 0) {
                     found = true;
@@ -270,9 +249,11 @@ public class UserOperations {
                 // DN not found.
             }
             if (!found) {
-                Attributes matchAttribs = new BasicAttributes(true);
-                matchAttribs.put(new BasicAttribute(Constants.LDAP_ATTRIBUTE_ALIAS, userDN));
-                NamingEnumeration answer = dirCtxt.search("", matchAttribs);
+                LOG.debug("Tries to find [" + formatedDN + "] in the attribute: " + Constants.LDAP_ATTRIBUTE_ALIAS);
+                String filter = Constants.LDAP_ATTRIBUTE_ALIAS + "=" + formatedDN;
+                SearchControls constraints = new SearchControls();
+                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                NamingEnumeration answer = dirCtxt.search(Constants.LDAP_BASE_DN, filter, constraints);
                 while (answer.hasMore()) {
                     SearchResult result = (SearchResult) answer.next();
                     Attributes attrsRes = result.getAttributes();
@@ -283,6 +264,11 @@ public class UserOperations {
                     userList.add(user);
                 }
             }
+            for (User u : userList) {
+                LOG.debug("User found:");
+                LOG.debug("user ID: " + u.getUserID());
+                LOG.debug("owner ID: " + u.getOwnerID());
+            }
             return userList;
         } finally {
             dirCtxt.close();
@@ -290,19 +276,12 @@ public class UserOperations {
     }
 
     /**
-     * Formats the specified DN depending on the LDAP configuration: removes white spaces and base DN.
+     * Formats the specified DN depending on the LDAP configuration: removes white spaces.
      * @param dn The DN to format.
      * @return The formated DN.
      */
     private String formatDN(String dn) {
         String formatedDN = dn.replaceAll(" ", "");
-        if (formatedDN.toLowerCase().endsWith(Constants.LDAP_BASE_DN.toLowerCase())) {
-            int index = formatedDN.toLowerCase().lastIndexOf(Constants.LDAP_BASE_DN.toLowerCase());
-            formatedDN = formatedDN.substring(0, index);
-            if (formatedDN.endsWith(",")) {
-                formatedDN = formatedDN.substring(0, formatedDN.length() - 1);
-            }
-        }
         return formatedDN;
     }
 

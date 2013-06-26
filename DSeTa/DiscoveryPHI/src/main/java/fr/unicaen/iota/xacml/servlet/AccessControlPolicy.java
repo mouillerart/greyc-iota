@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,24 +18,22 @@
  */
 package fr.unicaen.iota.xacml.servlet;
 
-import fr.unicaen.iota.auth.Partner;
 import fr.unicaen.iota.auth.User;
-import fr.unicaen.iota.discovery.client.model.PartnerInfo;
-import fr.unicaen.iota.discovery.client.model.Service;
-import fr.unicaen.iota.discovery.client.model.UserInfo;
 import fr.unicaen.iota.utils.InterfaceHelper;
 import fr.unicaen.iota.utils.MapSessions;
 import fr.unicaen.iota.xacml.ihm.*;
 import fr.unicaen.iota.xacml.ihm.factory.AccessPolicies;
 import fr.unicaen.iota.xacml.ihm.factory.Node;
 import fr.unicaen.iota.xacml.policy.GroupPolicy;
+import fr.unicaen.iota.ypsilon.client.model.UserInfoOut;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -43,6 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AccessControlPolicy extends HttpServlet {
 
     private Services services = new Services();
+
+    private static final Log log = LogFactory.getLog(AccessControlPolicy.class);
 
     /**
      * Processes requests for both HTTP
@@ -65,15 +65,11 @@ public class AccessControlPolicy extends HttpServlet {
                 if (request.getSession().getAttribute("session-id") == null) {
                     throw new ServiceException("Session expired you have to reconnect!", ServiceErrorType.ds);
                 }
-                UserInfo userInfo = (UserInfo) request.getSession().getAttribute("uInfo");
-                PartnerInfo partnerInfo = (PartnerInfo) request.getSession().getAttribute("pInfo");
-                if (userInfo == null || partnerInfo == null) {
-                    throw new ServiceException("User not well connected!", ServiceErrorType.ds);
+                UserInfoOut userInfo = (UserInfoOut) request.getSession().getAttribute("uInfo");
+                if (userInfo == null) {
+                    throw new ServiceException("User not well connected !", ServiceErrorType.ds);
                 }
-                Service service = partnerInfo.getServiceList().get(0);
-                Partner partner = new Partner(partnerInfo.getUid(), true, partnerInfo.getPartnerId(),
-                        new Date(), service.getId(), service.getType(), service.getUri().toString());
-                User user = new User(userInfo.getUid(), partner, "", userInfo.getUserId(), userInfo.getUserId(), new Date());
+                User user = new User(userInfo.getUserID(), userInfo.getOwnerID());
                 Module module = (request.getParameter("d") != null)? Module.valueOf(request.getParameter("d")) : null;
                 String objectId = request.getParameter("b");
                 String groupId = request.getParameter("e");
@@ -81,14 +77,14 @@ public class AccessControlPolicy extends HttpServlet {
                 synchronized (services) {
                     String a = request.getParameter("a");
                     // **************************  CREATE *********************************
-                    if ("createPartnerGroup".equals(a)) {
+                    if ("createOwnerGroup".equals(a)) {
                         String newValue = request.getParameter("c");
-                        String resp = services.createPartnerGroup(sessionId, user, module, newValue);
+                        String resp = services.createOwnerGroup(sessionId, user, module, newValue);
                         TreeNode node = createEmptyPolicies(user, newValue, module, resp);
                         html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
-                    } else if ("addPartnerToGroup".equals(a)) {
+                    } else if ("addOwnerToGroup".equals(a)) {
                         String newValue = request.getParameter("c");
-                        services.addPartnerToGroup(sessionId, user, module, objectId, groupId, newValue);
+                        services.addOwnerToGroup(sessionId, user, module, objectId, groupId, newValue);
                         TreeNode node = new Node(newValue, NodeType.userNode, newValue, module, groupId);
                         html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                     } else if ("addBizStepRestriction".equals(a)) {
@@ -101,10 +97,10 @@ public class AccessControlPolicy extends HttpServlet {
                         services.addEPCRestriction(sessionId, user, module, objectId, groupId, newValue);
                         TreeNode node = new Node(newValue, NodeType.epcFilterNode, newValue, module, groupId);
                         html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
-                    } else if ("addEPCClassRestriction".equals(a)) {
+                    } else if ("addEventTypeRestriction".equals(a)) {
                         String newValue = request.getParameter("c");
-                        services.addEPCClassRestriction(sessionId, user, module, objectId, groupId, newValue);
-                        TreeNode node = new Node(newValue, NodeType.epcClassFilterNode, newValue, module, groupId);
+                        services.addEventTypeRestriction(sessionId, user, module, objectId, groupId, newValue);
+                        TreeNode node = new Node(newValue, NodeType.eventTypeFilterNode, newValue, module, groupId);
                         html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                     } else if ("addTimeRestriction".equals(a)) {
                         String d1 = request.getParameter("d1");
@@ -122,8 +118,8 @@ public class AccessControlPolicy extends HttpServlet {
                         html.append(services.switchBizStepPolicy(sessionId, user, module, objectId, groupId));
                     } else if ("switchEPCPolicy".equals(a)) {
                         html.append(services.switchEPCPolicy(sessionId, user, module, objectId, groupId));
-                    } else if ("switchEPCClassPolicy".equals(a)) {
-                        html.append(services.switchEPCClassPolicy(sessionId, user, module, objectId, groupId));
+                    } else if ("switchEventTypePolicy".equals(a)) {
+                        html.append(services.switchEventTypePolicy(sessionId, user, module, objectId, groupId));
                     } else if ("switchTimePolicy".equals(a)) {
                         html.append(services.switchTimePolicy(sessionId, user, module, objectId, groupId));
                     } else if ("switchPermissionPolicy".equals(a)) {
@@ -133,39 +129,33 @@ public class AccessControlPolicy extends HttpServlet {
                         services.removeBizStepRestriction(sessionId, user, module, objectId, groupId);
                     } else if ("removeEPCRestriction".equals(a)) {
                         services.removeEPCRestriction(sessionId, user, module, objectId, groupId);
-                    } else if ("removeEPCClassRestriction".equals(a)) {
-                        services.removeEPCClassRestriction(sessionId, user, module, objectId, groupId);
+                    } else if ("removeEventTypeRestriction".equals(a)) {
+                        services.removeEventTypeRestriction(sessionId, user, module, objectId, groupId);
                     } else if ("removeTimeRestriction".equals(a)) {
                         services.removeTimeRestriction(sessionId, user, module, objectId, groupId);
                     } else if ("removeUserPermission".equals(a)) {
                         services.removeUserPermission(sessionId, user, module, objectId, groupId);
-                    } else if ("deletePartnerGroup".equals(a)) {
-                        services.deletePartnerGroup(sessionId, user, module, objectId, groupId);
-                    } else if ("removePartnerFromGroup".equals(a)) {
-                        services.removePartnerFromGroup(sessionId, user, module, objectId, groupId);
+                    } else if ("deleteOwnerGroup".equals(a)) {
+                        services.deleteOwnerGroup(sessionId, user, module, objectId, groupId);
+                    } else if ("removeOwnerFromGroup".equals(a)) {
+                        services.removeOwnerFromGroup(sessionId, user, module, objectId, groupId);
                     } // *************************  DS ADMIN ********************************
-                    else if ("updatePartner".equals(a)) {
-                        String partnerID = request.getParameter("f");
-                        String serviceID = request.getParameter("g");
-                        String serviceAddress = request.getParameter("h");
-                        String serviceType = request.getParameter("i");
-                        services.updatePartner(sessionId, user, partnerInfo.getUid(), partnerID, serviceID, serviceAddress, serviceType);
-                    } else if ("createUser".equals(a)) {
-                        String login = request.getParameter("f");
-                        String pass = request.getParameter("g");
-                        services.createUser(sessionId, user, login, pass);
+                    else if ("createUser".equals(a)) {
+                        String userDN = request.getParameter("f");
+                        String userName = request.getParameter("g");
+                        services.createUser(sessionId, user, userDN, userName);
                     } else if ("updateUser".equals(a)) {
                         String login = request.getParameter("f");
                         String pass = request.getParameter("g");
-                        services.updateUser(sessionId, user, login, pass);
+                        //services.updateUser(sessionId, user, login, pass);
+                    } else if ("deleteUser".equals(a)) {
+                        String login = request.getParameter("f");
+                        services.deleteUser(sessionId, user, login);
                     } else if ("createAccount".equals(a)) {
-                        String partnerId = request.getParameter("f");
-                        String serviceId = request.getParameter("g");
-                        String serviceType = request.getParameter("h");
-                        String serviceAddress = request.getParameter("i");
-                        String login = request.getParameter("j");
-                        String pass = request.getParameter("k");
-                        boolean rtr = services.createAccount(sessionId, user, partnerId, serviceId, serviceType, serviceAddress, login, pass);
+                        String userDN = request.getParameter("f");
+                        String owner = request.getParameter("g");
+                        String userName = request.getParameter("h");
+                        boolean rtr = services.createAccount(sessionId, user, owner, userDN, userName);
                         if (rtr) {
                             html.append("Account successfull created.");
                         }
@@ -175,19 +165,19 @@ public class AccessControlPolicy extends HttpServlet {
                         services.updateGroupName(sessionId, user, module, objectId, groupId, newValue);
 
                     } // **************************  SAVE  **********************************
-                    else if ("savePartnerPolicy".equals(a)) {
-                        services.savePolicyPartner(sessionId, user, module);
+                    else if ("savePolicyOwner".equals(a)) {
+                        services.savePolicyOwner(sessionId, user, module);
 
                     } // **************************  CANCEL  **********************************
-                    else if ("cancelPartnerPolicy".equals(a)) {
-                        services.cancelPartnerPolicy(user, module);
+                    else if ("cancelOwnerPolicy".equals(a)) {
+                        services.cancelOwnerPolicy(user, module);
 
                     } // **************************  LOAD POLICIES  *************************
                     else if ("loadPolicyTree".equals(a)) {
                         services.loadPolicyTree(user, module);
-                        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, user.getPartner().getPartnerID());
+                        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, user.getOwnerID());
                         interfaceHelper.reload();
-                        AccessPolicies policies = new AccessPolicies(sessionId, user.getPartner().getPartnerID(), module);
+                        AccessPolicies policies = new AccessPolicies(sessionId, user.getOwnerID(), module);
                         switch (module) {
                             case adminModule:
                                 html.append(new TreeFactory(Mode.Create_Mode).createTree(policies.getPoliciesAdmin().get(0)));
@@ -205,9 +195,11 @@ public class AccessControlPolicy extends HttpServlet {
                     out.print(createXMLEnvelop(createXMLRespondeHeader(Response.Value.OK, "") + createXMLHTMLTag(html.toString())));
                 }
             } catch (ServiceException se) {
+                log.info("", se);
                 out.print(createXMLEnvelop(createXMLRespondeHeader(Response.Value.ERROR, se.getMessage()) + createXMLHTMLTag(html.toString())));
                 return;
             } catch (Exception e) {
+                log.info("", e);
                 out.print(createXMLEnvelop(createXMLRespondeHeader(Response.Value.ERROR, "INTERNAL ERROR: "
                         + e.getMessage()) + createXMLHTMLTag(html.toString())));
                 return;
@@ -231,7 +223,7 @@ public class AccessControlPolicy extends HttpServlet {
     }
 
     public TreeNode createEmptyPolicies(User user, String name, Module module, String groupId) {
-        GroupPolicy gpq = new GroupPolicy(name, user.getPartner().getPartnerID());
+        GroupPolicy gpq = new GroupPolicy(name, user.getOwnerID());
         AccessPolicies accessPolicies = new AccessPolicies();
         return accessPolicies.createGroupPolicy(gpq, module);
     }

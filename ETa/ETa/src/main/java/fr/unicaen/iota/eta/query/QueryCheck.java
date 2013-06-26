@@ -598,29 +598,16 @@ public class QueryCheck {
     }
 
     /**
-     * Checks whether the user has access rights to subscribe.
-     *
-     * @param user The user who wants to subscribe.
-     * @return The decision result.
-     */
-    public boolean checkSubscribe(String user, String partner) {
-        user = fr.unicaen.iota.mu.Utils.formatId(user);
-        partner = fr.unicaen.iota.mu.Utils.formatId(partner);
-        int xacmlResponse = epcisPEP.subscribe(user, partner);
-        return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
-    }
-
-    /**
      * Checks whether the user can use an identity.
      *
      * @param user The identity used by the user.
-     * @param partner The partner of the user.
+     * @param owner The owner corresponding to the user.
      * @return The decision result.
      */
-    public boolean canBe(String user, String partner) {
+    public boolean canBe(String user, String owner) {
         user = fr.unicaen.iota.mu.Utils.formatId(user);
-        partner = fr.unicaen.iota.mu.Utils.formatId(partner);
-        int xacmlResponse = epcisPEP.canBe(user, partner);
+        owner = fr.unicaen.iota.mu.Utils.formatId(owner);
+        int xacmlResponse = epcisPEP.canBe(user, owner);
         return fr.unicaen.iota.xi.utils.Utils.responseIsPermit(xacmlResponse);
     }
 
@@ -649,17 +636,12 @@ public class QueryCheck {
             boolean allowed = false;
             VocabularyElementType vocEl = iterVoc.next();
             String id = vocEl.getId();
-            for (Object object : vocEl.getAny()) {
-                JAXBElement elem = (JAXBElement) object;
-                if (Constants.URN_IOTA.equals(elem.getName().getNamespaceURI()) &&
-                        Constants.EXTENSION_OWNER_ID.equals(elem.getName().getLocalPart())) {
-                    String owner = elem.getValue().toString();
-                    fr.unicaen.iota.mu.Utils.formatId(owner);
-                    XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
-                    if (xacmlCheckMasterData(xacmlMasterData, user)) {
-                        allowed = true;
-                    }
-                    break;
+            String owner = Utils.getVocabularyOwner(vocEl);
+            if (owner != null && !owner.isEmpty()) {
+                owner = fr.unicaen.iota.mu.Utils.formatId(owner);
+                XACMLEPCISMasterData xacmlMasterData = new XACMLEPCISMasterData(owner, id);
+                if (xacmlCheckMasterData(xacmlMasterData, user)) {
+                    allowed = true;
                 }
             }
             if (!allowed) {

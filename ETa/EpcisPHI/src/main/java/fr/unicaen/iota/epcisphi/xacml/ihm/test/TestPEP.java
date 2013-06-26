@@ -23,7 +23,7 @@ public class TestPEP {
 
     public static void main(String[] args) {
 //        DSPEP dspep = InterfaceHelper.APM.getDspep();
-//        XACMLResponse res = dspep.hello(InterfaceHelper.APM, "partner2", "PartnerDeTest");
+//        XACMLResponse res = dspep.hello(InterfaceHelper.APM, "owner2", "OwnerDeTest");
 //        System.out.println(res.toString());
     }
 }

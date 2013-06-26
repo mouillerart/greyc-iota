@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -137,6 +137,8 @@ public class TreeFactory {
                 return "Business Location Filters / default policy: ";
             case dispositionFilterGroupNode:
                 return "Disposition Filters / default policy: ";
+            case masterDataIdFilterGroupNode:
+                return "MasterData ID Filters / default policy: ";
             case rulesNode:
                 return "Restricted filters";
             case policiesNode:
@@ -171,6 +173,8 @@ public class TreeFactory {
                 return "Business Location filter: ";
             case dispositionFilterNode:
                 return "Disposition Location filter: ";
+            case masterDataIdFilterNode:
+                return "Master Data ID filter: ";
             default:
                 return "";
         }

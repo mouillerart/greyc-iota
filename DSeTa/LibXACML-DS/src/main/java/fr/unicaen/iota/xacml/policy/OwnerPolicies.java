@@ -612,14 +612,14 @@ public class OwnerPolicies extends AbstractPolicy {
         }
         gp.setEpcs(epcs);
 
-        //////////////// EPCClasses ////////////////
+        //////////////// EventTypes ////////////////
 
-        List<String> epcClasses = new ArrayList<String>();
+        List<String> eventTypes = new ArrayList<String>();
         for (int i = 1; i < 5; i++) {
-            String epcClass = "epcClass:" + i;
-            epcClasses.add(epcClass);
+            String eventType = "eventType:" + i;
+            eventTypes.add(eventType);
         }
-        gp.setEpcClasses(epcClasses);
+        gp.setEventTypes(eventTypes);
 
         //////////////// EventTimes ////////////////
 

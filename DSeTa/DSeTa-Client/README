@@ -1,11 +1,11 @@
-IoTa-DiscoveryWS-Client
+DSeTa-Client
 
 Client library for the DSeTa web service.
 
 Dependencies:
   IoTa modules:
+    - DS-Client
     - TAu
-    - IoTa-DiscoveryWS-Client
   libraries:
     - cxf
     - commons-logging

@@ -2,7 +2,7 @@
 #
 # This program is a part of the IoTa project.
 #
-# Copyright © 2012  Université de Caen Basse-Normandie, GREYC
+# Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,14 +29,19 @@ class DPHIInstaller(installer.WebAppInstaller):
                 ("Enter the DiscoveryPHI web application name", "dphi", "name", {}),
                 ("Enter the archive file pathname", "dphi", "repo", {"type": "file"}),
                 ("Enter the path where the policies will be saved", "ds_policies", "dir", {}), # not "type": "path" as the directories are created
-                ("Enter the URL of the Discovery Web Services", "ds", "url", {})
+                ("Do you want to deploy the default policies?", "dphi", "deploy_policies", {"type": "YN"}),
+                ("Enter the URL of YPSilon", "ypsilon", "url", {})
                 ], [
                 ("xacml_configuration",
                  { "query-policy-directory": ("ds_policies", "query_dir"),
                    "capture-policy-directory": ("ds_policies", "capture_dir"),
                    "admin-policy-directory": ("ds_policies", "admin_dir") }),
                 ("application", 
-                 { "ds-address": ("ds", "url") })
+                 { "ypsilon-url": ("ypsilon", "url"),
+                   "pks-filename": ("cert", "keystore"),
+                   "pks-password": ("cert", "password"),
+                   "trust-pks-filename": ("cert", "truststore"),
+                   "trust-pks-password": ("cert", "trustpassword") })
                 ] )
 
 
@@ -44,8 +49,6 @@ class DPHIInstaller(installer.WebAppInstaller):
         # set default urls (for DSeTa)
         url = self.setSecuredURL()
         CONFIG.set("ds_policies", "xacml_url", url + "xi")
-
-        self.cset("url", url + "index.jsp")
 
         # set policies directories (for DSeTa)
         policies_dir = CONFIG.get("ds_policies", "dir")
@@ -56,10 +59,10 @@ class DPHIInstaller(installer.WebAppInstaller):
         CONFIG.set("ds_policies", "capture_dir", capture_dir)
         CONFIG.set("ds_policies", "query_dir",query_dir)
 
-        #
-        utils.putWait("Initializing policies in " + policies_dir)
-        utils.sh_mkdir_p(policies_dir)
-        if utils.sh_exec("tar -C " + policies_dir + " --strip-components=1 -xaf resources/ds_policies.tar"):
-            utils.putDoneOK()
-        else:
-            utils.putDoneFail()
+        if (self.cisTrue("deploy_policies")):
+            utils.putWait("Initializing policies in " + policies_dir)
+            utils.sh_mkdir_p(policies_dir)
+            if utils.sh_exec("tar -C " + policies_dir + " --strip-components=1 -xaf resources/ds_policies.tar"):
+                utils.putDoneOK()
+            else:
+                utils.putDoneFail()

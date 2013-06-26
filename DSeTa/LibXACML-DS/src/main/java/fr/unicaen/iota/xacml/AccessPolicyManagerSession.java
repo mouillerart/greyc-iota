@@ -23,14 +23,14 @@ package fr.unicaen.iota.xacml;
  */
 public class AccessPolicyManagerSession extends AccessPolicyManager {
 
-    protected String partner;
+    protected String owner;
 
-    public String getPartner() {
-        return partner;
+    public String getOwner() {
+        return owner;
     }
 
-    public AccessPolicyManagerSession(String partnerName) {
-        super(partnerName);
-        this.partner = partnerName;
+    public AccessPolicyManagerSession(String ownerName) {
+        super(ownerName);
+        this.owner = ownerName;
     }
 }

@@ -22,17 +22,16 @@ package fr.unicaen.iota.eta.callback.receiver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public final class Constants {
 
     public static final String EPCIS_SCHEMA_PATH;
-    public static final String ACTIVEMQ_URL;
-    public static final String ACTIVEMQ_LOGIN;
-    public static final String ACTIVEMQ_PASSWORD;
-    public static final String ACTIVEMQ_QUEUE_NAME;
+    public static final String JMS_URL;
+    public static final String JMS_LOGIN;
+    public static final String JMS_PASSWORD;
+    public static final String JMS_QUEUE_NAME;
     private static final Log LOG = LogFactory.getLog(Constants.class);
 
     private Constants() {
@@ -48,9 +47,9 @@ public final class Constants {
             LOG.fatal(null, ex);
         }
         EPCIS_SCHEMA_PATH = properties.getProperty("epcisSchemaFile", "/xsd/EPCglobal-epcis-query-1_0.xsd");
-        ACTIVEMQ_URL = properties.getProperty("activemq-url");
-        ACTIVEMQ_LOGIN = properties.getProperty("activemq-login", ActiveMQConnection.DEFAULT_USER);
-        ACTIVEMQ_PASSWORD = properties.getProperty("activemq-password", ActiveMQConnection.DEFAULT_PASSWORD);
-        ACTIVEMQ_QUEUE_NAME = properties.getProperty("activemq-queueName", "queueToFilter");
+        JMS_URL = properties.getProperty("jms-url");
+        JMS_LOGIN = properties.getProperty("jms-login");
+        JMS_PASSWORD = properties.getProperty("jms-password");
+        JMS_QUEUE_NAME = properties.getProperty("jms-queueName", "queueToFilter");
     }
 }

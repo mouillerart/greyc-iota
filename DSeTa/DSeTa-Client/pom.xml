@@ -4,28 +4,28 @@
 
   <groupId>fr.unicaen.iota</groupId>
     <artifactId>dseta-client</artifactId>
-    <version>1.99</version>
+    <version>2.0</version>
     <packaging>jar</packaging>
 
     <name>DSeTa-Client</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <lib-cxf-version>2.2.12</lib-cxf-version>
+        <lib-cxf-version>2.7.5</lib-cxf-version>
     </properties>
 
     <dependencies>
 
-        <!-- IoTa dependencies -->
+        <!-- IoTa depdencies -->
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
-            <artifactId>tau</artifactId>
+            <artifactId>ds-client</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
-            <artifactId>discovery-client</artifactId>
+            <artifactId>tau</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -80,7 +80,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>${lib-cxf-version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -89,21 +89,21 @@
                             <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
                             <defaultOptions>
                                 <packagenames>
-                                    <packagename>urn:unicaen:iota:tau:xsd=fr.unicaen.iota.tau.model</packagename>
-                                    <packagename>urn:unicaen:iota:ds:xsd=fr.unicaen.iota.ds.model</packagename>
-                                    <packagename>urn:unicaen:iota:ds:wsdl=fr.unicaen.iota.ds.soap</packagename>
                                     <packagename>urn:unicaen:iota:dseta:xsd=fr.unicaen.iota.dseta.model</packagename>
                                     <packagename>urn:unicaen:iota:dseta:wsdl=fr.unicaen.iota.dseta.soap</packagename>
                                 </packagenames>
                             </defaultOptions>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/tau-ds.wsdl</wsdl>
-                                    <wsdlLocation>classpath:wsdl/tau-ds.wsdl</wsdlLocation>
-                                </wsdlOption>
-                                <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/ds.wsdl</wsdl>
-                                    <wsdlLocation>classpath:wsdl/ds.wsdl</wsdlLocation>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/dseta.wsdl</wsdl>
+                                    <extraargs>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:unicaen:iota:tau:xsd=fr.unicaen.iota.tau.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:unicaen:iota:ds:wsdl=fr.unicaen.iota.ds.soap</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:unicaen:iota:ds:xsd=fr.unicaen.iota.ds.model</extraarg>
+                                </extraargs>
                                 </wsdlOption>
                             </wsdlOptions>
                         </configuration>

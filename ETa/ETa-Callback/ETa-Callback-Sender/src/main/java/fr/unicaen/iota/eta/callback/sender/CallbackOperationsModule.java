@@ -56,8 +56,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * This
- * <code>CallbackOperationsModule</code> parses messages from the message broker
+ * This <code>CallbackOperationsModule</code> parses messages from the message broker
  * to a XML document conforming to a xsd schema. The query callback events
  * contained by this document are sent to the user.
  */
@@ -66,12 +65,21 @@ public class CallbackOperationsModule {
     private Schema schema;
     private java.sql.Connection dbConnection;
     private CallbackOperationsBackendSQL backend;
+    private Connection connection;
+    private String jmsUrl;
+    private String jmsLogin;
+    private String jmsPassword;
+    private String timeProperty;
     private static final Log LOG = LogFactory.getLog(CallbackOperationsModule.class);
 
-    public CallbackOperationsModule() {
+    public CallbackOperationsModule(String jmsUrl, String jmsLogin, String jmsPassword, String timeProperty) {
         this.schema = initEpcisSchema(Constants.EPCIS_SCHEMA_PATH);
         backend = new CallbackOperationsBackendSQL();
         dbConnection = loadDatabaseConnection();
+        this.jmsUrl = jmsUrl;
+        this.jmsLogin = jmsLogin;
+        this.jmsPassword = jmsPassword;
+        this.timeProperty = timeProperty;
         LOG.info("CallbackModule sender is successfully loaded");
     }
 
@@ -133,8 +141,7 @@ public class CallbackOperationsModule {
      * @throws SAXException If an error processing the XML document occurred.
      * @throws IOException If an I/O error occurred.
      */
-    private Document getDocumentFromString(String string)
-            throws SAXException, IOException {
+    private Document getDocumentFromString(String string) throws SAXException, IOException {
 
         // parse the payload as XML document
         Document document;
@@ -187,69 +194,52 @@ public class CallbackOperationsModule {
 
     /**
      * Connects to the Message Broker, gets and sends events to user.
-     *
-     * @throws JMSException If an error receiving or sending message occurred.
-     * @throws MalformedURLException If a destination url is malformed.
-     * @throws IOException If an I/O error occurred.
+     * @param consumer The JMS consumer which retrieves the event to send.
+     * @param timeout Waits until this time expires (in milliseconds).
+     * @param producerSession The JMS session associated to the producer.
+     * @param producer The JMS producer which sends the event to the next queue if the event could not be sended.
+     * @param runtime The runtime.
+     * @return True if the sending can continue.
+     * @throws MalformedURLException If the destination URL is malformed.
+     * @throws JMSException If an error occurred with the JMS provider.
+     * @throws IOExceptionIf an I/O error occurred.
      * @throws SAXException If an error processing the XML document occurred.
      * @throws SQLException If an error involving the database occurred.
      * @throws Exception If an unexpected error occurred.
      */
-    public void consumeAndSend() throws JMSException, MalformedURLException, IOException, SAXException,
+    public boolean consumeAndSend(MessageConsumer consumer, long timeout, Session producerSession, MessageProducer producer,
+            long runtime) throws  MalformedURLException, JMSException, IOException, SAXException,
             SQLException, Exception {
-        ActiveMQConnectionFactory factory;
-        if (Constants.ACTIVEMQ_LOGIN != null && Constants.ACTIVEMQ_PASSWORD != null
-                && !Constants.ACTIVEMQ_LOGIN.isEmpty() && !Constants.ACTIVEMQ_PASSWORD.isEmpty()) {
-            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_LOGIN, Constants.ACTIVEMQ_PASSWORD, Constants.ACTIVEMQ_URL);
-        } else {
-            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_URL);
+        boolean continueSending = true;
+        Message message = consumer.receive(timeout);
+        if (message == null) {
+            return false;
         }
-        Connection connection = factory.createConnection();
-        Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-        Destination destination = session.createQueue(Constants.ACTIVEMQ_QUEUE_NAME);
-        MessageConsumer consumer = session.createConsumer(destination);
-        connection.start();
-
-        try {
-            while (true) {
-                Message message = consumer.receive(200);
-                if (message == null) {
-                    break;
+        String docText;
+        TextMessage text = (TextMessage) message;
+        docText = text.getText();
+        if (text.getLongProperty(timeProperty) <= runtime) {
+            Document doc = getDocumentFromString(docText);
+            String dest = fetchAddress(getSubIDInDoc(doc));
+            try {
+                int response = send(docText, dest);
+                LOG.info("Event sent.");
+            } catch (Exception e) {
+                sendsJMSEvent(producerSession, producer, docText);
+                String msg = "Fails to send event to " + dest + " : event resent.";
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(msg, e);
                 }
-
-                String docText;
-                if (message != null && message instanceof TextMessage) {
-                    TextMessage text = (TextMessage) message;
-                    docText = text.getText();
-
-                    Document doc = getDocumentFromString(docText);
-                    String dest = fetchAddress(getSubIDInDoc(doc));
-
-                    try {
-                        int response = send(docText, dest);
-                        LOG.info("Event sent.");
-                    } catch (Exception e) {
-                        Session prodS = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-                        Destination sendDest = prodS.createQueue(Constants.ACTIVEMQ_QUEUE_NAME);
-                        MessageProducer producer = prodS.createProducer(sendDest);
-                        TextMessage messageToSend = prodS.createTextMessage();
-                        messageToSend.setText(docText);
-                        producer.send(messageToSend);
-                        String msg = "Fails to send event to " + dest + " : event resent.";
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug(msg, e);
-                        }
-                        else {
-                            LOG.info(msg);
-                        }
-                    }
-                    message.acknowledge();
+                else {
+                    LOG.info(msg);
                 }
             }
-        } finally {
-            session.close();
-            connection.close();
         }
+        else {
+            continueSending = false;
+        }
+        message.acknowledge();
+        return continueSending;
     }
 
     /**
@@ -262,8 +252,7 @@ public class CallbackOperationsModule {
      * @throws IOException If a communication error occurred.
      * @throws Exception
      */
-    public int send(String data, String dest)
-            throws MalformedURLException, IOException, Exception {
+    public int send(String data, String dest) throws MalformedURLException, IOException, Exception {
         // set up connection and send data to given destination
         URL serviceUrl;
         try {
@@ -361,4 +350,81 @@ public class CallbackOperationsModule {
         CallbackOperationsSession session = new CallbackOperationsSession(dbConnection);
         return backend.fetchAddress(session, subscriptionID);
     }
+
+    /**
+     * Creates a JMS connection.
+     * @throws JMSException If the connection could not be established.
+     */
+    public void createsJMSConnection() throws JMSException {
+        ActiveMQConnectionFactory factory;
+        if (jmsLogin != null && jmsPassword != null
+                && !jmsLogin.isEmpty() && !jmsPassword.isEmpty()) {
+            factory = new ActiveMQConnectionFactory(jmsLogin, jmsPassword, jmsUrl);
+        } else {
+            factory = new ActiveMQConnectionFactory(jmsUrl);
+        }
+        connection = factory.createConnection();
+    }
+
+    /**
+     * Starts the JMS connection.
+     * @throws JMSException If the JMS provider fails to start message delivery due to some internal error.
+     */
+    public void startsJMSConnection() throws JMSException {
+        connection.start();
+    }
+
+    /**
+     * Closes the JMS connection.
+     * @throws JMSException If the JMS provider fails to start message delivery due to some internal error.
+     */
+    public void closesJMSConnection() throws JMSException {
+        connection.close();
+    }
+
+    /**
+     * Creates a <code>Session</code> object.
+     * See {@link javax.jms.Connection#createSession(boolean, int)}
+     */
+    public Session createsJMSSession(boolean transacted, int acknowledge) throws JMSException {
+        return connection.createSession(transacted, acknowledge);
+    }
+
+    /**
+     * Creates a <code>Queue</code> object.
+     * See {@link javax.jms.Session#createQueue(java.lang.String)}
+     */
+    public Queue createsJMSQueue(Session session, String queueName) throws JMSException {
+        return session.createQueue(queueName);
+    }
+
+    /**
+     * Creates a <code>MessageConsumer</code> object.
+     * See {@link javax.jms.Session#createConsumer(javax.jms.Destination) }
+     */
+    public MessageConsumer createsJMSConsumer(Session session, Destination dest) throws JMSException {
+        return session.createConsumer(dest);
+    }
+
+    /**
+     * Creates a <code>MessageProducer</code> object.
+     * See {@link javax.jms.Session#createProducer(javax.jms.Destination) }
+     */
+    public MessageProducer createJMSProducer(Session session, Destination dest) throws JMSException {
+        return session.createProducer(dest);
+    }
+
+    /**
+     * Sends event with the specified message producer.
+     * @param session The JMS session used to send the message.
+     * @param producer The JMS message producer used to send the message.
+     * @param eventToReturn The event to send in String format.
+     * @throws JMSException If an error occurred with the JMS provider.
+     */
+    public void sendsJMSEvent(Session session, MessageProducer producer, String eventToReturn) throws JMSException {
+        TextMessage tMsg = session.createTextMessage(eventToReturn);
+        tMsg.setLongProperty(timeProperty, System.currentTimeMillis());
+        producer.send(tMsg);
+    }
+
 }

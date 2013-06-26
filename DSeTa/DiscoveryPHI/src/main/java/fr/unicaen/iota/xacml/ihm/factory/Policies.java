@@ -63,7 +63,7 @@ public class Policies {
         rule2.addChild(filter21);
         rule2.addChild(filter22);
 
-        Node rule3 = new Node("DROP", NodeType.epcClassFilterGroupNode, null, Module.queryModule, "id_group_query_1");
+        Node rule3 = new Node("DROP", NodeType.eventTypeFilterGroupNode, null, Module.queryModule, "id_group_query_1");
         Node rule4 = new Node("DROP", NodeType.eventTimeFilterGroupNode, null, Module.queryModule, "id_group_query_1");
 
         filters.addChild(rule1);

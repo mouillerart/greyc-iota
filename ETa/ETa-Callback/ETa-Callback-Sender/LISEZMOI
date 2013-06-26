@@ -4,7 +4,7 @@ Module d'envoi des évènements envoyés par un EPCIS (retours d'abonnements).
 
 Dépendances:
   bibliothèques:
-    - activemq-core
+    - activemq-client
     - commons-io
     - commons-logging
     - log4j

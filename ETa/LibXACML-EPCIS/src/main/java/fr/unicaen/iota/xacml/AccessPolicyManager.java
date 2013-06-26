@@ -77,18 +77,18 @@ public class AccessPolicyManager {
         initFinderModule();
     }
 
-    public AccessPolicyManager(String partnerName) {
+    public AccessPolicyManager(String ownerName) {
         initCombiningAlg();
         initFunction();
-        initEPCISPDP(partnerName);
+        initEPCISPDP(ownerName);
         initFinderModule();
     }
 
-    public synchronized static AccessPolicyManagerSession getInstance(String partnerName) {
-        return new AccessPolicyManagerSession(partnerName);
+    public synchronized static AccessPolicyManagerSession getInstance(String ownerName) {
+        return new AccessPolicyManagerSession(ownerName);
     }
 
-    public void updatePartner(String partnerName) {
+    public void updateOwner(String ownerName) {
     }
 
     public synchronized void initFinderModule() {
@@ -100,21 +100,21 @@ public class AccessPolicyManager {
         finderModule = (MyPolicyFinderModule) it.next();
     }
 
-    public synchronized void initEPCISPDP(String partnerName) {
-        String queryPoliciesDirFileName = Configuration.QUERY_POLICIES_DIRECTORY + partnerName + ".xml";
+    public synchronized void initEPCISPDP(String ownerName) {
+        String queryPoliciesDirFileName = Configuration.QUERY_POLICIES_DIRECTORY + ownerName + ".xml";
         File queryPoliciesDir = new File(queryPoliciesDirFileName);
         ArrayList queryFilesList = new ArrayList();
         if (queryPoliciesDir.exists()) {
             queryFilesList.add(queryPoliciesDir.getAbsolutePath());
         }
-        String capturePoliciesDirFileName = Configuration.CAPTURE_POLICIES_DIRECTORY + partnerName + ".xml";
+        String capturePoliciesDirFileName = Configuration.CAPTURE_POLICIES_DIRECTORY + ownerName + ".xml";
         File capturePoliciesDir = new File(capturePoliciesDirFileName);
         ArrayList captureFilesList = new ArrayList();
         if (capturePoliciesDir.exists()) {
             captureFilesList.add(capturePoliciesDir.getAbsolutePath());
         }
 
-        String adminPoliciesDirFileName = Configuration.ADMIN_POLICIES_DIRECTORY + partnerName + ".xml";
+        String adminPoliciesDirFileName = Configuration.ADMIN_POLICIES_DIRECTORY + ownerName + ".xml";
         File adminPoliciesDir = new File(adminPoliciesDirFileName);
         ArrayList adminFilesList = new ArrayList();
         if (adminPoliciesDir.exists()) {
@@ -132,7 +132,7 @@ public class AccessPolicyManager {
         attrModules.add(envModule);
         attributeFinder.setModules(attrModules);
         PDPConfig pdpConfig = new PDPConfig(attributeFinder, policyFinder, null);
-        log.trace("INITEPCISPDP -> " + partnerName);
+        log.trace("INITEPCISPDP -> " + ownerName);
         epcispdp = new EPCISPDP(pdpConfig);
     }
 
@@ -278,16 +278,16 @@ public class AccessPolicyManager {
         return finderModule.saveAdminPolicies(identifier);
     }
 
-    public synchronized boolean updateQueryGroupName(String partnerID, String groupId, String value) {
-        return finderModule.updateQueryGroupName(partnerID, groupId, value);
+    public synchronized boolean updateQueryGroupName(String ownerID, String groupId, String value) {
+        return finderModule.updateQueryGroupName(ownerID, groupId, value);
     }
 
-    public synchronized boolean updateCaptureGroupName(String partnerID, String groupId, String value) {
-        return finderModule.updateCaptureGroupName(partnerID, groupId, value);
+    public synchronized boolean updateCaptureGroupName(String ownerID, String groupId, String value) {
+        return finderModule.updateCaptureGroupName(ownerID, groupId, value);
     }
 
-    public synchronized boolean updateAdminGroupName(String partnerID, String groupId, String value) {
-        return finderModule.updateAdminGroupName(partnerID, groupId, value);
+    public synchronized boolean updateAdminGroupName(String ownerID, String groupId, String value) {
+        return finderModule.updateAdminGroupName(ownerID, groupId, value);
     }
 
     //#####################################################

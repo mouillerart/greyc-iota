@@ -19,15 +19,15 @@
     </session-config>
 
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/jsp/pages/index.jsp</welcome-file>
     </welcome-file-list>
 
     <jsp-config>
         <jsp-property-group>
-            <url-pattern>*.jsp</url-pattern>
+            <url-pattern>/jsp/pages/*</url-pattern>
             <page-encoding>UTF-8</page-encoding>
-            <include-prelude>prelude.jsp</include-prelude>
-            <include-coda>coda.jsp</include-coda>
+            <include-prelude>/jsp/common/prelude.jsp</include-prelude>
+            <include-coda>/jsp/common/coda.jsp</include-coda>
         </jsp-property-group>
     </jsp-config>
 

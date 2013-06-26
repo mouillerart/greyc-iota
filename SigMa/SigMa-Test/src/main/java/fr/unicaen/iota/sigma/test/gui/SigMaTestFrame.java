@@ -19,7 +19,7 @@
 package fr.unicaen.iota.sigma.test.gui;
 
 import fr.unicaen.iota.sigma.test.controler.Controler;
-import fr.unicaen.iota.sigma.xsd.VerifyResponse;
+import fr.unicaen.iota.sigma.model.VerifyResponse;
 import org.fosstrak.epcis.model.ObjectEventType;
 
 public class SigMaTestFrame extends javax.swing.JFrame {

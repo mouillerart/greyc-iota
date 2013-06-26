@@ -4,24 +4,24 @@
  *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *  <http://www.gnu.org/licenses/>
  *
  *  See AUTHORS for a list of contributors.
  */
 package fr.unicaen.iota.sigma.client;
 
-import fr.unicaen.iota.sigma.wsdl.SigMaService;
-import fr.unicaen.iota.sigma.wsdl.SigMaServicePortType;
-import fr.unicaen.iota.sigma.xsd.Principal;
-import fr.unicaen.iota.sigma.xsd.Verification;
+import fr.unicaen.iota.sigma.model.Principal;
+import fr.unicaen.iota.sigma.model.Verification;
+import fr.unicaen.iota.sigma.soap.SigMaService;
+import fr.unicaen.iota.sigma.soap.SigMaServicePortType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;

@@ -37,7 +37,7 @@ class ALfAInstaller(installer.Installer):
                  { "rmi-server-name": ("alfa", "rmi_name"),
                    "rmi-server-host": ("global", "host"),
                    "rmi-server-port": ("alfa", "rmi_port"),
-                   "ons": ("ons", "server"),
+                   "ons-hosts": ("ons", "server"),
                    "ons-domain-prefix": ("ons", "domain_prefix"),
                    "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),

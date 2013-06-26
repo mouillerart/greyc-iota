@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -81,36 +81,36 @@ public class StandingQueryCallbackModule {
         LOG.info(nb_events + " events received");
     }
 
-    private List<EventToPublish> createEventToPublishFromObject(EPCISEventType eventType) {
-        ObjectEventType objectEvent = (ObjectEventType) eventType;
+    private List<EventToPublish> createEventToPublishFromObject(EPCISEventType epcisEvent) {
+        ObjectEventType objectEvent = (ObjectEventType) epcisEvent;
         String bizStep = objectEvent.getBizStep();
-        // récupération des évenements pour ObjectEvent
-        String action = objectEvent.getAction().value();
-        // récupération de la liste des codes epcs de l'évenement
+        String eventType = EventToPublishClass.object;
         EPCListType epcList = objectEvent.getEpcList();
         List<EventToPublish> result = new ArrayList<EventToPublish>();
         nb_events += epcList.getEpc().size();
-        // création de l'objet à sauvegarder
         for (EPC epc : epcList.getEpc()) {
             EventToPublish eventToPublish = new EventToPublish();
             eventToPublish.setEpc(epc.getValue());
             eventToPublish.setBizStep(bizStep);
-            eventToPublish.setEventType(action);
-            eventToPublish.setEventClass(EventToPublishClass.object);
+            eventToPublish.setEventType(eventType);
             long mil = objectEvent.getEventTime().toGregorianCalendar().getTimeInMillis();
             eventToPublish.setEventTime(new Timestamp(mil));
             eventToPublish.setLastUpdate(new Timestamp(Configuration.DEFAULT_EVENT_TO_PUBLISH_TIMESTAMP));
+            if (Configuration.IOTA_IDED) {
+                List<String> ownerList = fr.unicaen.iota.mu.Utils.getExtension(epcisEvent, fr.unicaen.iota.mu.Constants.URN_IOTA, fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID);
+                if (ownerList != null && !ownerList.isEmpty()) {
+                    eventToPublish.setOwner(ownerList.get(0));
+                }
+            }
             result.add(eventToPublish);
         }
         return result;
     }
 
-    private List<EventToPublish> createEventToPublishFromAggregation(EPCISEventType eventType) {
-        AggregationEventType aggregationEvent = (AggregationEventType) eventType;
+    private List<EventToPublish> createEventToPublishFromAggregation(EPCISEventType epcisEvent) {
+        AggregationEventType aggregationEvent = (AggregationEventType) epcisEvent;
         String bizStep = aggregationEvent.getBizStep();
-        // récupération des évenements pour ObjectEvent
-        String action = aggregationEvent.getAction().value();
-        // récupération de la liste des codes epcs de l'évenement
+        String eventType = EventToPublishClass.aggregation;
         EPCListType epcList = aggregationEvent.getChildEPCs();
         if (aggregationEvent.getParentID() != null) {
             EPC parent = new EPC();
@@ -119,27 +119,29 @@ public class StandingQueryCallbackModule {
         }
         List<EventToPublish> result = new ArrayList<EventToPublish>();
         nb_events += epcList.getEpc().size();
-        // création de l'objet à sauvegarder
         for (EPC epc : epcList.getEpc()) {
             EventToPublish eventToPublish = new EventToPublish();
             eventToPublish.setEpc(epc.getValue());
             eventToPublish.setBizStep(bizStep);
-            eventToPublish.setEventType(action);
-            eventToPublish.setEventClass(EventToPublishClass.aggregation);
+            eventToPublish.setEventType(eventType);
             long mil = aggregationEvent.getEventTime().toGregorianCalendar().getTimeInMillis();
             eventToPublish.setEventTime(new Timestamp(mil));
             eventToPublish.setLastUpdate(new Timestamp(Configuration.DEFAULT_EVENT_TO_PUBLISH_TIMESTAMP));
+            if (Configuration.IOTA_IDED) {
+                List<String> ownerList = fr.unicaen.iota.mu.Utils.getExtension(epcisEvent, fr.unicaen.iota.mu.Constants.URN_IOTA, fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID);
+                if (ownerList != null && !ownerList.isEmpty()) {
+                    eventToPublish.setOwner(ownerList.get(0));
+                }
+            }
             result.add(eventToPublish);
         }
         return result;
     }
 
-    private List<EventToPublish> createEventToPublishFromTransaction(EPCISEventType eventType) {
-        TransactionEventType transactionEvent = (TransactionEventType) eventType;
+    private List<EventToPublish> createEventToPublishFromTransaction(EPCISEventType epcisEvent) {
+        TransactionEventType transactionEvent = (TransactionEventType) epcisEvent;
         String bizStep = transactionEvent.getBizStep();
-        // récupération des évenements pour ObjectEvent
-        String action = transactionEvent.getAction().value();
-        // récupération de la liste des codes epcs de l'évenement
+        String eventType = EventToPublishClass.transaction;
         EPCListType epcList = transactionEvent.getEpcList();
         if (transactionEvent.getParentID() != null) {
             EPC parent = new EPC();
@@ -148,37 +150,45 @@ public class StandingQueryCallbackModule {
         }
         List<EventToPublish> result = new ArrayList<EventToPublish>();
         nb_events += epcList.getEpc().size();
-        // création de l'objet à sauvegarder
         for (EPC epc : epcList.getEpc()) {
             EventToPublish eventToPublish = new EventToPublish();
             eventToPublish.setEpc(epc.getValue());
             eventToPublish.setBizStep(bizStep);
-            eventToPublish.setEventType(action);
-            eventToPublish.setEventClass(EventToPublishClass.transaction);
+            eventToPublish.setEventType(eventType);
             long mil = transactionEvent.getEventTime().toGregorianCalendar().getTimeInMillis();
             eventToPublish.setEventTime(new Timestamp(mil));
             eventToPublish.setLastUpdate(new Timestamp(Configuration.DEFAULT_EVENT_TO_PUBLISH_TIMESTAMP));
+            if (Configuration.IOTA_IDED) {
+                List<String> ownerList = fr.unicaen.iota.mu.Utils.getExtension(epcisEvent, fr.unicaen.iota.mu.Constants.URN_IOTA, fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID);
+                if (ownerList != null && !ownerList.isEmpty()) {
+                    eventToPublish.setOwner(ownerList.get(0));
+                }
+            }
             result.add(eventToPublish);
         }
         return result;
     }
 
-    private List<EventToPublish> createEventToPublishFromQuantity(EPCISEventType eventType) {
-        QuantityEventType quantityEvent = (QuantityEventType) eventType;
+    private List<EventToPublish> createEventToPublishFromQuantity(EPCISEventType epcisEvent) {
+        QuantityEventType quantityEvent = (QuantityEventType) epcisEvent;
+        String eventType = EventToPublishClass.quantity;
         String bizStep = quantityEvent.getBizStep();
-        // récupération des évenements pour ObjectEvent
-        // récupération de la liste des codes epcs de l'évenement
         List<EventToPublish> result = new ArrayList<EventToPublish>();
         nb_events += 1;
         // création de l'objet à sauvegarder
         EventToPublish eventToPublish = new EventToPublish();
         eventToPublish.setEpc(quantityEvent.getEpcClass() + ".0");
         eventToPublish.setBizStep(bizStep);
-        eventToPublish.setEventType("null");
-        eventToPublish.setEventClass(EventToPublishClass.quantity);
+        eventToPublish.setEventType(eventType);
         long mil = quantityEvent.getEventTime().toGregorianCalendar().getTimeInMillis();
         eventToPublish.setEventTime(new Timestamp(mil));
         eventToPublish.setLastUpdate(new Timestamp(Configuration.DEFAULT_EVENT_TO_PUBLISH_TIMESTAMP));
+            if (Configuration.IOTA_IDED) {
+                List<String> ownerList = fr.unicaen.iota.mu.Utils.getExtension(epcisEvent, fr.unicaen.iota.mu.Constants.URN_IOTA, fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID);
+                if (ownerList != null && !ownerList.isEmpty()) {
+                    eventToPublish.setOwner(ownerList.get(0));
+                }
+            }
         result.add(eventToPublish);
         return result;
     }

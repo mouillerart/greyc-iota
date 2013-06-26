@@ -1,0 +1,22 @@
+DS - Discovery Service
+
+Indexing service for events
+
+Dependencies:
+  IoTa modules:
+    - DS-Client
+    - DS-Commons
+  libraries:
+    - spring
+    - servlet-api
+    - commons-logging
+    - log4j
+
+Installation and Configuration:
+  IoTa-Installer installs and configures DS.
+  (application.properties for this application,
+   commons-logging.properties and log4j.properties for the logs)
+
+Usage Dependencies:
+  - a MySQL server
+  - an Epcis

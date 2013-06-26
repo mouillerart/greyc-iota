@@ -28,7 +28,7 @@ public class XACMLDSEvent {
     private final String owner;
     private final String bizStep;
     private final String epc;
-    private final String epcClass;
+    private final String eventType;
     private final Date eventTime;
 
     public String getBizStep() {
@@ -39,8 +39,8 @@ public class XACMLDSEvent {
         return epc;
     }
 
-    public String getEpcClass() {
-        return epcClass;
+    public String getEventType() {
+        return eventType;
     }
 
     public Date getEventTime() {
@@ -51,11 +51,11 @@ public class XACMLDSEvent {
         return owner;
     }
 
-    public XACMLDSEvent(String owner, String bizStep, String epc, String epcClass, Date eventTime) {
+    public XACMLDSEvent(String owner, String bizStep, String epc, String eventType, Date eventTime) {
         this.owner = owner;
         this.bizStep = bizStep;
         this.epc = epc;
-        this.epcClass = epcClass;
+        this.eventType = eventType;
         this.eventTime = eventTime;
     }
 }

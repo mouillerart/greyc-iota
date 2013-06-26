@@ -71,9 +71,11 @@ public abstract class BaseRHO extends HttpServlet {
         }
         String tlsId = fr.unicaen.iota.mu.Utils.formatId(authId.getName());
         String idToPass = fr.unicaen.iota.mu.Utils.formatId(id.getAsString());
-        int chk = xiclient.canBe(tlsId, idToPass);
-        if (!Utils.responseIsPermit(chk)) {
-            throw new IoTaException(authId.getName() + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
+        if (!tlsId.equals(idToPass)) {
+            int chk = xiclient.canBe(tlsId, idToPass);
+            if (!Utils.responseIsPermit(chk)) {
+                throw new IoTaException(authId.getName() + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
+            }
         }
     }
 

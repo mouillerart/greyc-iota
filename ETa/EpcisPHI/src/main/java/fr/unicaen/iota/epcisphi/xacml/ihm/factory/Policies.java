@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -72,6 +72,7 @@ public class Policies {
         Node rule10 = new Node("DROP", NodeType.readPointFilterGroupNode, null, Module.queryModule, "id_group_query_1");
         Node rule11 = new Node("DROP", NodeType.bizLocFilterGroupNode, null, Module.queryModule, "id_group_query_1");
         Node rule12 = new Node("DROP", NodeType.dispositionFilterGroupNode, null, Module.queryModule, "id_group_query_1");
+        Node rule13 = new Node("DROP", NodeType.masterDataIdFilterGroupNode, null, Module.queryModule, "id_group_query_1");
 
         filters.addChild(rule1);
         filters.addChild(rule2);
@@ -85,6 +86,7 @@ public class Policies {
         filters.addChild(rule10);
         filters.addChild(rule11);
         filters.addChild(rule12);
+        filters.addChild(rule13);
 
         policy1.addChild(users);
         policy1.addChild(filters);

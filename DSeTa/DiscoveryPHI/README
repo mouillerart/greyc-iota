@@ -4,11 +4,11 @@ Editor web service for the Discovery services policies.
 
 Dependencies:
   IoTa modules:
-    - IoTa-DiscoveryWS-Client
     - LibXACML-DS
+    - YPSilon-Client
+    - Mu
   librairies:
     - sunxacml
-    - axis2-adb
     - servlet-api
     - commons-logging
     - log4j
@@ -17,11 +17,19 @@ Installation and Configuration:
   IoTa-Installer installs and configures DiscoveryPHI.
   (application.properties for this application,
    xacml_configuration.properties for the client library LibXACML-DS,
-   ds-client.properties for the client library IoTa-DiscoveryWS-Client,
    commons-logging.properties and log4j.properties for the logs)
+  A user must use a public/private key pair to connect to the web interface.
+   IoTa-Installer can generate this keys. The public key have to be added to the
+   truststore of the server. DN (Distinguished name) needs to be similar
+   to the LDAP directory provided by YPSilon. To log to the web
+   interface as "superadmin" who manages user accounts, add this user
+   in this way.
+   Modify the tomcat-users.xml file of Tomcat to manage identity with TLS.
+   See the INSTALL file.
+
 
 Usage Dependencies:
-  - a DWS
+  - a DSeTa
 
 Usage:
-  http://localhost:8080/discovery-phi/
+  https://localhost:8443/discovery-phi/

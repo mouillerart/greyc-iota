@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <wsdl:definitions name="TAuXiService"
-                  targetNamespace="urn:fr:unicaen:iota:tau:wsdl"
+                  targetNamespace="urn:unicaen:iota:tau:wsdl"
                   xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                  xmlns:xi="urn:fr:unicaen:iota:tau:wsdl"
-                  xmlns:tau="urn:fr:unicaen:iota:tau:xsd">
+                  xmlns:xi="urn:unicaen:iota:tau:wsdl"
+                  xmlns:tau="urn:unicaen:iota:tau:xsd">
 
     <wsdl:types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-            <xs:import namespace="urn:fr:unicaen:iota:tau:xsd" schemaLocation="tau.xsd"/>
+            <xs:import namespace="urn:unicaen:iota:tau:xsd" schemaLocation="tau.xsd"/>
         </xs:schema>
     </wsdl:types>
 

@@ -27,11 +27,10 @@ class YPSilonInstaller(installer.WebAppInstaller):
         installer.WebAppInstaller.__init__(self, "YPSilon web application", "ypsilon", [
                 ("Enter the YPSilon web application name", "ypsilon", "name", {}),
                 ("Enter the archive file pathname", "ypsilon", "repo", {"type": "file"}),
-                ("Enter the URL to the XACML module", "epcis_policies", "xacml_url", {})
+                ("Enter the URL to the XACML module (EXi or DXi)", "ypsilon", "xacml_url", {})
                 ], [
                 ("application",
-                 { "xacml-url": ("epcis_policies", "xacml_url"),
-                   "xacml-ihm-url": ("ephi", "url"),
+                 { "xacml-url": ("ypsilon", "xacml_url"),
                    "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),

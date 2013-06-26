@@ -79,18 +79,18 @@ public class AccessPolicyManager {
         initFinderModule();
     }
 
-    public AccessPolicyManager(String partnerName) {
+    public AccessPolicyManager(String ownerName) {
         initCombiningAlg();
         initFunction();
-        initDSPDP(partnerName);
+        initDSPDP(ownerName);
         initFinderModule();
     }
 
-    public synchronized static AccessPolicyManagerSession getInstance(String partnerName) {
-        return new AccessPolicyManagerSession(partnerName);
+    public synchronized static AccessPolicyManagerSession getInstance(String ownerName) {
+        return new AccessPolicyManagerSession(ownerName);
     }
 
-    public void updatePartner(String partnerName) {
+    public void updateOwner(String ownerName) {
     }
 
     public synchronized void initFinderModule() {
@@ -102,21 +102,21 @@ public class AccessPolicyManager {
         finderModule = (MyPolicyFinderModule) it.next();
     }
 
-    public synchronized void initDSPDP(String partnerName) {
-        String queryPoliciesDirFileName = Configuration.QUERY_POLICIES_DIRECTORY + partnerName + ".xml";
+    public synchronized void initDSPDP(String ownerName) {
+        String queryPoliciesDirFileName = Configuration.QUERY_POLICIES_DIRECTORY + ownerName + ".xml";
         File queryPoliciesDir = new File(queryPoliciesDirFileName);
         ArrayList queryFilesList = new ArrayList();
         if (queryPoliciesDir.exists()) {
             queryFilesList.add(queryPoliciesDir.getAbsolutePath());
         }
-        String capturePoliciesDirFileName = Configuration.CAPTURE_POLICIES_DIRECTORY + partnerName + ".xml";
+        String capturePoliciesDirFileName = Configuration.CAPTURE_POLICIES_DIRECTORY + ownerName + ".xml";
         File capturePoliciesDir = new File(capturePoliciesDirFileName);
         ArrayList captureFilesList = new ArrayList();
         if (capturePoliciesDir.exists()) {
             captureFilesList.add(capturePoliciesDir.getAbsolutePath());
         }
 
-        String adminPoliciesDirFileName = Configuration.ADMIN_POLICIES_DIRECTORY + partnerName + ".xml";
+        String adminPoliciesDirFileName = Configuration.ADMIN_POLICIES_DIRECTORY + ownerName + ".xml";
         File adminPoliciesDir = new File(adminPoliciesDirFileName);
         ArrayList adminFilesList = new ArrayList();
         if (adminPoliciesDir.exists()) {
@@ -134,7 +134,7 @@ public class AccessPolicyManager {
         attrModules.add(envModule);
         attributeFinder.setModules(attrModules);
         PDPConfig pdpConfig = new PDPConfig(attributeFinder, policyFinder, null);
-        log.trace("INITDSPDP -> " + partnerName);
+        log.trace("INITDSPDP -> " + ownerName);
         dspdp = new DSPDP(pdpConfig);
     }
 
@@ -280,16 +280,16 @@ public class AccessPolicyManager {
         return finderModule.saveAdminPolicies(identifier);
     }
 
-    public synchronized boolean updateQueryGroupName(String partnerID, String groupId, String value) {
-        return finderModule.updateQueryGroupName(partnerID, groupId, value);
+    public synchronized boolean updateQueryGroupName(String ownerID, String groupId, String value) {
+        return finderModule.updateQueryGroupName(ownerID, groupId, value);
     }
 
-    public synchronized boolean updateCaptureGroupName(String partnerID, String groupId, String value) {
-        return finderModule.updateCaptureGroupName(partnerID, groupId, value);
+    public synchronized boolean updateCaptureGroupName(String ownerID, String groupId, String value) {
+        return finderModule.updateCaptureGroupName(ownerID, groupId, value);
     }
 
-    public synchronized boolean updateAdminGroupName(String partnerID, String groupId, String value) {
-        return finderModule.updateAdminGroupName(partnerID, groupId, value);
+    public synchronized boolean updateAdminGroupName(String ownerID, String groupId, String value) {
+        return finderModule.updateAdminGroupName(ownerID, groupId, value);
     }
 
     //#####################################################
@@ -326,8 +326,8 @@ public class AccessPolicyManager {
         return finderModule.addQueryEpcFilter(identifier, groupName, epc);
     }
 
-    public synchronized boolean addQueryEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return finderModule.addQueryEpcClassFilter(identifier, groupName, epcClass);
+    public synchronized boolean addQueryEventTypeFilter(String identifier, String groupName, String eventType) {
+        return finderModule.addQueryEventTypeFilter(identifier, groupName, eventType);
     }
 
     public synchronized boolean addQueryEventTimeFilter(String identifier, String groupName, List dates) {
@@ -350,8 +350,8 @@ public class AccessPolicyManager {
         return finderModule.removeQueryEpcFilter(identifier, groupName, epc);
     }
 
-    public synchronized boolean removeQueryEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return finderModule.removeQueryEpcClassFilter(identifier, groupName, epcClass);
+    public synchronized boolean removeQueryEventTypeFilter(String identifier, String groupName, String eventType) {
+        return finderModule.removeQueryEventTypeFilter(identifier, groupName, eventType);
     }
 
     public synchronized boolean removeQueryEventTimeFilter(String identifier, String groupName, List dates) {
@@ -390,8 +390,8 @@ public class AccessPolicyManager {
         return finderModule.switchQueryPermissionEpcs(identifier, policyId);
     }
 
-    public synchronized boolean switchQueryPermissionEpcClasses(String identifier, String policyId) {
-        return finderModule.switchQueryPermissionEpcClasses(identifier, policyId);
+    public synchronized boolean switchQueryPermissionEventTypes(String identifier, String policyId) {
+        return finderModule.switchQueryPermissionEventTypes(identifier, policyId);
     }
 
     public synchronized boolean switchQueryPermissionEventTimes(String identifier, String policyId) {
@@ -413,8 +413,8 @@ public class AccessPolicyManager {
         return finderModule.switchCapturePermissionEpcs(identifier, policyId);
     }
 
-    public synchronized boolean switchCapturePermissionEpcClasses(String identifier, String policyId) {
-        return finderModule.switchCapturePermissionEpcClasses(identifier, policyId);
+    public synchronized boolean switchCapturePermissionEventTypes(String identifier, String policyId) {
+        return finderModule.switchCapturePermissionEventTypes(identifier, policyId);
     }
 
     public synchronized boolean switchCapturePermissionEventTimes(String identifier, String policyId) {
@@ -452,8 +452,8 @@ public class AccessPolicyManager {
         return finderModule.addCaptureEpcFilter(identifier, groupName, epc);
     }
 
-    public synchronized boolean addCaptureEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return finderModule.addCaptureEpcClassFilter(identifier, groupName, epcClass);
+    public synchronized boolean addCaptureEventTypeFilter(String identifier, String groupName, String eventType) {
+        return finderModule.addCaptureEventTypeFilter(identifier, groupName, eventType);
     }
 
     public synchronized boolean addCaptureEventTimeFilter(String identifier, String groupName, List dates) {
@@ -476,8 +476,8 @@ public class AccessPolicyManager {
         return finderModule.removeCaptureEpcFilter(identifier, groupName, epc);
     }
 
-    public synchronized boolean removeCaptureEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return finderModule.removeCaptureEpcClassFilter(identifier, groupName, epcClass);
+    public synchronized boolean removeCaptureEventTypeFilter(String identifier, String groupName, String eventType) {
+        return finderModule.removeCaptureEventTypeFilter(identifier, groupName, eventType);
     }
 
     public synchronized boolean removeCaptureEventTimeFilter(String identifier, String groupName, List dates) {

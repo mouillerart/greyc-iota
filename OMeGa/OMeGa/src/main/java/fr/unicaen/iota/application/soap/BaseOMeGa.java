@@ -22,8 +22,7 @@ import fr.unicaen.iota.application.AccessInterface;
 import fr.unicaen.iota.application.Configuration;
 import fr.unicaen.iota.application.model.*;
 import fr.unicaen.iota.application.soap.client.IoTaFault;
-import fr.unicaen.iota.ds.model.TEventItem;
-import fr.unicaen.iota.ds.model.TEventItemList;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.xi.client.EPCISPEP;
@@ -75,9 +74,11 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
         }
         String tlsId = fr.unicaen.iota.mu.Utils.formatId(authId.getName());
         String idToPass = fr.unicaen.iota.mu.Utils.formatId(id.getAsString());
-        int chk = xiclient.canBe(tlsId, idToPass);
-        if (!Utils.responseIsPermit(chk)) {
-            throw new IoTaException(tlsId + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
+        if (!tlsId.equals(idToPass)) {
+            int chk = xiclient.canBe(tlsId, idToPass);
+            if (!Utils.responseIsPermit(chk)) {
+                throw new IoTaException(tlsId + " isn't allowed to pass as " + id.getAsString(), IoTaFault.tau.getCode());
+            }
         }
     }
 
@@ -116,21 +117,21 @@ public abstract class BaseOMeGa implements IoTaServicePortType {
     public QueryDSResponse queryDS(QueryDSRequest queryDSRequest) throws IoTaException {
         checkAuth(queryDSRequest.getIdentity());
         AccessInterface controler = getAI();
-        List<TEventItem> list;
+        List<DSEvent> list;
         try {
             if (queryDSRequest.getServiceType() == null) {
                 list = controler.queryDS(queryDSRequest.getIdentity(), queryDSRequest.getEpc().getValue(), queryDSRequest.getDSAddress());
             } else {
-                list = controler.queryDS(queryDSRequest.getIdentity(), queryDSRequest.getEpc().getValue(), queryDSRequest.getDSAddress(), queryDSRequest.getServiceType());
+                ONSEntryType entryType = Enum.valueOf(ONSEntryType.class, queryDSRequest.getServiceType());
+                list = controler.queryDS(queryDSRequest.getIdentity(), queryDSRequest.getEpc().getValue(), queryDSRequest.getDSAddress(), entryType);
             }
         } catch (RemoteException ex) {
             log.warn("A problem occurred while executing queryDS", ex);
             throw new IoTaException("Error while queryDS", IoTaFault.ds.getCode(), ex);
         }
-        TEventItemList eventList = new TEventItemList();
-        eventList.getEvent().addAll(list);
         QueryDSResponse response = new QueryDSResponse();
-        response.setEventList(eventList);
+        List<DSEvent> responseEvents = response.getDsEventList();
+        responseEvents.addAll(list);
         return response;
     }
 

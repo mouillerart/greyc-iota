@@ -58,20 +58,6 @@ public class EPCISPEP extends PEP implements MethodNamesQuery, MethodNamesCaptur
     }
 
     @Override
-    public int subscribe(String userId, String partnerId) {
-        log.debug("process subscribe policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "subscribe", partnerId, Module.queryModule.getValue());
-        return processXACMLRequest(eventRequest);
-    }
-
-    @Override
-    public int unsubscribe(String userId, String partnerId) {
-        log.debug("process unsubscribe policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "unsubscribe", partnerId, Module.queryModule.getValue());
-        return processXACMLRequest(eventRequest);
-    }
-
-    @Override
     public int canBe(String userId, String partnerId) {
         log.debug("process canBe policy for user: " + userId);
         EventRequest eventRequest = new EventRequest(userId, "canBe", partnerId, Module.queryModule.getValue());
@@ -87,8 +73,8 @@ public class EPCISPEP extends PEP implements MethodNamesQuery, MethodNamesCaptur
 
     @Override
     public int captureMasterData(String userId, XACMLEPCISMasterData epcisMasterData) {
-        log.debug("process captureMasterDataEvent policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "captureMasterDataEvent", epcisMasterData, Module.captureModule.getValue());
+        log.debug("process captureMasterData policy for user: " + userId);
+        EventRequest eventRequest = new EventRequest(userId, "captureMasterData", epcisMasterData, Module.captureModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 

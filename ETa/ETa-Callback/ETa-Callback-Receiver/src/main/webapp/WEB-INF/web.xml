@@ -6,10 +6,6 @@
         <param-name>appConfigLocation</param-name>
         <param-value>WEB-INF/classes/application.properties</param-value>
     </context-param>
-  
-  <!--<listener>
-    <listener-class>fr.unicaen.eta.callback.receiver.CallbackContextListener</listener-class>
-  </listener>-->
 
     <servlet>
         <servlet-name>CallbackInterface</servlet-name>

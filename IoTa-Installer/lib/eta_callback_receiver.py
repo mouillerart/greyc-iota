@@ -30,10 +30,10 @@ class ETaCallbackReceiverInstaller(installer.WebAppInstaller):
                 ("Enter the ActiveMQ sender queue name for Callback Filter", "eta_callback_receiver", "send_queue_name", {}),
                 ], [
                 ("application",
-                 { "activemq-url": ("activemq", "url"),
-                   "activemq-login": ("activemq", "login"),
-                   "activemq-password": ("activemq", "password"),
-                   "activemq-queueName": ("eta_callback_receiver", "send_queue_name") })
+                 { "jms-url": ("activemq", "url"),
+                   "jms-login": ("activemq", "login"),
+                   "jms-password": ("activemq", "password"),
+                   "jms-queueName": ("eta_callback_receiver", "send_queue_name") })
                 ] )
 
 

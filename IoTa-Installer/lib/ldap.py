@@ -19,6 +19,7 @@
 #
 import installer
 import utils
+from config import CONFIG
 
 
 class LDAPConfigurer(installer.Configurer):
@@ -44,7 +45,10 @@ class LDAPConfigurer(installer.Configurer):
             self.createLdifs()
             if self.cisTrue("ldif_install"):
                 self.addLdifs()
-
+        msg = "Don't forget to add index on the alias attribute (DN of user certificate used when this DN is incompatible with the LDAP tree)\n"
+        msg += "In your actual configuration, this attribute is: " + self.cget("attribute_alias") + "\n"
+        msg += "See the INSTALL file"
+        utils.putWarning(msg)
 
     def createLdifs(self):
         utils.writeFile("Creating the schema as a ldif file (user.ldif)", "user.ldif", """

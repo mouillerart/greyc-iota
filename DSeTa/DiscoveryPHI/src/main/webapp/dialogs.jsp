@@ -1,28 +1,25 @@
-<%@page import="fr.unicaen.iota.discovery.client.model.UserInfo"%>
-<%@page import="fr.unicaen.iota.discovery.client.model.PartnerInfo"%>
+<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
 <%@page import="fr.unicaen.iota.xacml.ihm.Module"%>
 <%@page import="fr.unicaen.iota.utils.HTMLUtilities"%>
 
 <%
-    String partnerId = ((PartnerInfo) session.getAttribute("pInfo")).getPartnerId();
-    String pServiceId = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getId();
-    String pServiceAddress = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getUri().toString();
-    String pServiceType = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getType();
+    String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
 %>
 
 <div id="createUser" title="Create User" class="modalDialog">
-    <div class="dialog_message">Enter user informations:</div>
-    <div class="dialog_options">Login: <input id="userLogin" type="text" value="" /></div>
-    <div class="dialog_options">Password: <input id="userPassword" type="password" /></div>
-    <div class="dialog_options">Confirm password: <input id="userConfirmation" type="password" /></div>
+    <div class="dialog_message">Enter user informations :</div>
+    <div class="dialog_options">User's certificate DN used to connect: <input id="userLogin" type="text" value="" /></div>
+    <div class="dialog_options">User name (empty if the DN is compatible with the LDAP directory) : <input id="userID" type="text" value="" /></div>
 </div>
 
-<div id="updatePartner" title="Update Partner Informations" class="modalDialog">
-    <div class="dialog_message">Enter the new partner informations:</div>
-    <div class="dialog_options">Partner Id: <input disabled id="partnerID" type="text" value="<%=partnerId%>" /></div>
-    <div id="dialogServiceId" class="dialog_options">Service Id: <input id="serviceID" type="text" value="<%=pServiceId%>" /></div>
-    <div class="dialog_options">Service type: <%=HTMLUtilities.createSelectServiceType(pServiceType, "")%></div>
-    <div class="dialog_options">Service address: <input id="serviceAddress" type="text" value="<%=pServiceAddress%>" /></div>
+<div id="deleteUser" title="Delete User" class="modalDialog">
+    <div class="dialog_message">Enter user information :</div>
+    <div class="dialog_options">Login : <input id="userId" type="text" value="" /></div>
+</div>
+
+<div id="updateOwner" title="Update Owner Informations" class="modalDialog">
+    <div class="dialog_message">Enter the new owner informations :</div>
+    <div class="dialog_options">Owner Id : <input disabled id="ownerID" type="text" value="<%=ownerId%>" /></div>
 </div>
 
 <div id="TimeDialog" title="Event Time Filter" class="modalDialog">
@@ -37,8 +34,8 @@
 </div>
 
 <div id="usersDialog" title="Add User" class="modalDialog">
-    <div class="dialog_message">Chosoe a new Partner you want to associate in this group:</div>
-    <div class="dialog_options">Partner: <input type="text" value="" id="groupPartnerName" /></div>
+    <div class="dialog_message">Chose a new user you want to associate in this group:</div>
+    <div class="dialog_options">User: <input type="text" value="" id="groupOwnerName" /></div>
 </div>
 
 <div id="userAdminPermissionDialog" title="Add user permissions" class="modalDialog">
@@ -75,9 +72,9 @@
     <div class="dialog_options">Name: <input id="epcFilterName" type="text" value="" /></div>
 </div>
 
-<div id="epcClassFilterDialog" title="Event Class Filter" class="modalDialog">
-    <div class="dialog_message">Select an Event class filter:</div>
-    <div class="dialog_options">Event class: <%=HTMLUtilities.createSelectEventClassFilter()%></div>
+<div id="eventTypeFilterDialog" title="Event Type Filter" class="modalDialog">
+    <div class="dialog_message">Select an Event type filter:</div>
+    <div class="dialog_options">Event class: <%=HTMLUtilities.createSelectEventTypeFilter()%></div>
 </div>
 
 <div id="errorDialog" title="Error !!!" class="modalDialog">

@@ -18,7 +18,7 @@
 
   <properties>
     <lib-cxf-version>2.2.9</lib-cxf-version>
-    <lib-spring-version>2.5.1</lib-spring-version>
+    <lib-spring-version>2.5.6.SEC03</lib-spring-version>
   </properties>
 
   <!-- =========================================================== -->

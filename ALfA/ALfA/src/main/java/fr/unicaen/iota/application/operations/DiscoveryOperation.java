@@ -20,15 +20,19 @@
 package fr.unicaen.iota.application.operations;
 
 import fr.unicaen.iota.application.rmi.CallbackClient;
-import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
-import fr.unicaen.iota.ds.model.TEventItem;
-import fr.unicaen.iota.ds.model.TServiceItem;
-import fr.unicaen.iota.ds.model.TServiceType;
+import fr.unicaen.iota.ds.model.DSEvent;
+import fr.unicaen.iota.ds.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ds.soap.InternalExceptionResponse;
 import fr.unicaen.iota.dseta.client.DSeTaClient;
+import fr.unicaen.iota.dseta.soap.SecurityExceptionResponse;
+import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
-import java.util.*;
-import org.apache.axis2.databinding.types.URI.MalformedURIException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -44,7 +48,7 @@ public class DiscoveryOperation {
     private final CallbackClient client;
     private final String sessionID;
     private final Set<String> visitedSet = new HashSet<String>();
-    private final DSeTaClient dSClient;
+    private DSeTaClient dsetaClient;
 
     public DiscoveryOperation(Identity identity, String ds_service_address, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword) {
         super();
@@ -56,7 +60,7 @@ public class DiscoveryOperation {
         this.trustPksPassword = trustPksPassword;
         this.client = null;
         this.sessionID = null;
-        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
+        this.dsetaClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
     public DiscoveryOperation(Identity identity, String dsAddress, String pksFilename, String pksPassword, String trustPksFilename, String trustPksPassword, String sessionID, CallbackClient client) {
@@ -69,87 +73,87 @@ public class DiscoveryOperation {
         this.trustPksPassword = trustPksPassword;
         this.client = client;
         this.sessionID = sessionID;
-        this.dSClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
+        this.dsetaClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
     }
 
-    private List<TEventItem> getEvents(String EPC) throws RemoteException {
-        List<TEventItem> dsClientEventList;
+    private List<DSEvent> getEvents(String epc) throws RemoteException {
+        List<DSEvent> dsClientEventList;
         try {
-            dsClientEventList = dSClient.eventLookup(EPC, null, null, null);
-        } catch (MalformedURIException ex) {
+            dsClientEventList = dsetaClient.eventLookup(epc, null, null, null, null, null);
+        } catch (ImplementationExceptionResponse ex) {
             log.error("Unable to process eventLookup", ex);
             throw new RemoteException("Unable to process eventLookup");
-        } catch (EnhancedProtocolException ex) {
+        } catch (InternalExceptionResponse ex) {
+            log.error("Unable to process eventLookup", ex);
+            throw new RemoteException("Unable to process eventLookup");
+        } catch (SecurityExceptionResponse ex) {
             log.error("Unable to process eventLookup", ex);
             throw new RemoteException("Unable to process eventLookup");
         }
-        log.debug(EPC + " -> dsEvents in repository: " + dsClientEventList.size());
+        log.debug(epc + " -> dsEvents in repository: " + dsClientEventList.size());
         return dsClientEventList;
     }
 
-    public Set<String> discover(String EPC) {
+    public Set<String> discover(String epc) {
+        Set<String> result = discover(epc, DS_SERVICE_ADDRESS, DS_SERVICE_ADDRESS);
+        this.dsetaClient = new DSeTaClient(identity, DS_SERVICE_ADDRESS, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
+        return result;
+    }
+
+    private Set<String> discover(String epc, String oldDSAddress, String dsAddress) {
         Set<String> result = new HashSet<String>();
-        Collection<TEventItem> evtList;
+        Collection<DSEvent> evtList;
+        if (dsAddress == null || dsAddress.isEmpty()) {
+            return result;
+        }
+        else if (!dsAddress.equals(oldDSAddress) || dsetaClient == null) {
+            try {
+                dsetaClient = new DSeTaClient(identity, dsAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
+            } catch (Exception e) {
+                log.error(null, e);
+                return result;
+            }
+        }
         try {
-            evtList = getEvents(EPC);
+            evtList = getEvents(epc);
         } catch (RemoteException e) {
             log.error(null, e);
-            return new HashSet<String>();
+            return result;
         }
-        for (TEventItem evt : evtList) {
-            log.trace("Source found: " + evt.getP());
-            Collection<TServiceItem> serviceList = evt.getServiceList().getService();
-            log.trace(serviceList.size());
-
-            for (TServiceItem s : serviceList) {
-                log.trace("  PartnerID: " + evt.getP());
-                log.trace("    | service type: " + s.getType());
-                log.trace("    | service address: " + s.getUri());
-                // TODO: also handle TServiceType.DS (?)
-                if (s.getType() == TServiceType.IDED_DS) {
-                    // TODO: Quick'n'dirty correction
-                    String old_addr = DS_SERVICE_ADDRESS;
-                    DS_SERVICE_ADDRESS = s.getUri().toString();
-                    result.addAll(discover(EPC));
-                    DS_SERVICE_ADDRESS = old_addr;
-                } else if (s.getType() == TServiceType.IDED_EPCIS) {
-                    result.add(s.getUri().toString());
-                    if (client != null && !visitedSet.contains(s.getUri().toString())) {
-                        new EpcisRequest(s.getUri().toString(), pksFilename, pksPassword, trustPksFilename, trustPksPassword, EPC, identity, sessionID, client).start();
-                        visitedSet.add(s.getUri().toString());
-                    }
-                } // else: do nothing
+        for (DSEvent evt : evtList) {
+            // TODO: also handle TServiceType.DS (?)
+            if (ONSEntryType.ided_ds.name().equals(evt.getServiceType())) {
+                // TODO: Quick'n'dirty correction
+                result.addAll(discover(epc, dsAddress, evt.getServiceAddress()));
             }
-        }
-        return result;
-    }
-
-    public List<TEventItem> getDSEvents(String EPC) throws RemoteException {
-        List<TEventItem> result = new ArrayList<TEventItem>();
-        for (TEventItem dsClientEvent : getEvents(EPC)) {
-            TServiceItem first = dsClientEvent.getServiceList().getService().get(0);
-            log.debug(EPC + "      | partnerID: " + first.getId());
-            log.debug(EPC + "             | partner info size: " + dsClientEvent.getServiceList().getService().size());
-            log.debug(EPC + "             | partner type: " + first.getType());
-            result.add(dsClientEvent);
-        }
-        return result;
-    }
-
-    public List<TEventItem> getDSEvents(String EPC, TServiceType serviceType) throws RemoteException {
-        List<TEventItem> result = new ArrayList<TEventItem>();
-        for (TEventItem dsClientEvent : getEvents(EPC)) {
-            if (!dsClientEvent.getServiceList().getService().isEmpty()) {
-                TServiceItem firstService = dsClientEvent.getServiceList().getService().get(0);
-                log.debug(EPC + "      | partnerID:" + firstService.getId());
-                log.debug(EPC + "             | partner info size:" + dsClientEvent.getServiceList().getService().size());
-                log.debug(EPC + "             | partner type: " + firstService.getType());
-                if (firstService.getType() == serviceType) {
-                    result.add(dsClientEvent);
+            else if (ONSEntryType.ided_epcis.name().equals(evt.getServiceType())) {
+                result.add(evt.getServiceAddress());
+                if (client != null && !visitedSet.contains(evt.getServiceAddress())) {
+                    new EpcisRequest(evt.getServiceAddress(), pksFilename, pksPassword, trustPksFilename, trustPksPassword, epc, identity, sessionID, client).start();
+                    visitedSet.add(evt.getServiceAddress());
                 }
+            } // else: do nothing
+        }
+        return result;
+    }
+
+    public List<DSEvent> getDSEvents(String epc) throws RemoteException {
+        List<DSEvent> result = new ArrayList<DSEvent>();
+        for (DSEvent event : getEvents(epc)) {
+            result.add(event);
+        }
+        log.debug(epc + " -> dsEvents with corresponding type: " + result.size());
+        return result;
+    }
+
+    public List<DSEvent> getDSEvents(String epc, ONSEntryType serviceType) throws RemoteException {
+        List<DSEvent> result = new ArrayList<DSEvent>();
+        for (DSEvent event : getEvents(epc)) {
+            if (event.getServiceType() != null && serviceType.name().equals(event.getServiceType())) {
+                result.add(event);
             }
         }
-        log.debug(EPC + " -> dsEvents with corresponding type: " + result.size());
+        log.debug(epc + " -> dsEvents with corresponding type: " + result.size());
         return result;
     }
 }

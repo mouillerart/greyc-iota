@@ -9,7 +9,7 @@ Dependencies:
   libraries:
     - epcis-commons
     - servlet-api
-    - activemq-core
+    - activemq-client
     - commons-logging
     - log4j
 

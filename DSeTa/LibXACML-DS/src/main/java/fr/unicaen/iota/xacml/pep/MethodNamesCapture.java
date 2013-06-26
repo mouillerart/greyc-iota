@@ -23,11 +23,9 @@ package fr.unicaen.iota.xacml.pep;
  */
 public interface MethodNamesCapture {
 
-    public int hello(String user, String partner, String module);
+    public int hello(String user, String owner, String module);
 
     public int eventCreate(String user, XACMLDSEvent dsEvent);
-
-    public int voidEvent(String user, XACMLDSEvent dsEvent);
 
     public int multipleEventCreate(String user, XACMLDSEvent dsEvent);
 }

@@ -17,7 +17,10 @@ Installation et Configuration:
   (application.properties pour cette application,
    commons-logging.properties et log4j.properties pour les journaux)
   Utiliser IoTa-Installer ou le script ldap.sh (droits root requis) pour configurer
-   l'annuaire LDAP.
+   l'annuaire LDAP. Ajouter un index dans l'annuaire LDAP sur l'attribut
+   correspondant au DN du certificat utilisateur (attribut utilisé quand ce DN
+   n'est pas compatible avec l'arbre LDAP, "aliasdn" par défaut).
+   Voir le fichier INSTALL.fr
 
 Dépendances d’utilisation:
   - un serveur LDAP

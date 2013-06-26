@@ -100,12 +100,12 @@ public class GroupPolicy extends AbstractPolicy {
     private List users;
     private List bizSteps;
     private List epcs;
-    private List epcClasses;
+    private List eventTypes;
     private List eventTimes;
     private OneOrGlobalFunction usersFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_DENY);
     private OneOrGlobalFunction bizStepsFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
     private OneOrGlobalFunction epcsFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
-    private OneOrGlobalFunction epcClassesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
+    private OneOrGlobalFunction eventTypesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
     private OneOrGlobalFunction eventTimesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
     private List actions;
 
@@ -115,7 +115,7 @@ public class GroupPolicy extends AbstractPolicy {
         this.users = new ArrayList();
         this.bizSteps = new ArrayList();
         this.epcs = new ArrayList();
-        this.epcClasses = new ArrayList();
+        this.eventTypes = new ArrayList();
         this.eventTimes = new ArrayList();
         this.obligations = new HashSet();
         this.combiningAlg = new SCGroupRuleAlg();
@@ -462,9 +462,9 @@ public class GroupPolicy extends AbstractPolicy {
                 RuleCombinerElement ruleCombinerElement = new RuleCombinerElement(rule);
                 ruleList.add(ruleCombinerElement);
             }
-            if (this.epcClasses != null) {
-                SCEPCClassRule sCEpcClassesRule = new SCEPCClassRule(name, epcClasses, epcClassesFilterFunction);
-                Rule rule = sCEpcClassesRule.createRule();
+            if (this.eventTypes != null) {
+                SCEventTypeRule sCEventTypesRule = new SCEventTypeRule(name, eventTypes, eventTypesFilterFunction);
+                Rule rule = sCEventTypesRule.createRule();
                 RuleCombinerElement ruleCombinerElement = new RuleCombinerElement(rule);
                 ruleList.add(ruleCombinerElement);
             }
@@ -503,9 +503,9 @@ public class GroupPolicy extends AbstractPolicy {
             if (SCBizStepRule.RULEFILTER.equals(ruleid)) {
                 bizSteps = getFiltersValues(rule);
                 bizStepsFilterFunction = function;
-            } else if (SCEPCClassRule.RULEFILTER.equals(ruleid)) {
-                epcClasses = getFiltersValues(rule);
-                epcClassesFilterFunction = function;
+            } else if (SCEventTypeRule.RULEFILTER.equals(ruleid)) {
+                eventTypes = getFiltersValues(rule);
+                eventTypesFilterFunction = function;
             } else if (SCEPCsRule.RULEFILTER.equals(ruleid)) {
                 epcs = getFiltersValues(rule);
                 epcsFilterFunction = function;
@@ -769,11 +769,11 @@ public class GroupPolicy extends AbstractPolicy {
         return epcs.add(epc);
     }
 
-    public boolean addEpcClassFilter(String epcClass) {
-        if (epcClasses.contains(epcClass)) {
+    public boolean addEventTypeFilter(String eventType) {
+        if (eventTypes.contains(eventType)) {
             return false;
         }
-        return epcClasses.add(epcClass);
+        return eventTypes.add(eventType);
     }
 
     public boolean addEventTimeFilter(List dates) {
@@ -795,8 +795,8 @@ public class GroupPolicy extends AbstractPolicy {
         return epcs.remove(epc);
     }
 
-    public boolean removeEpcClassFilter(String epcClass) {
-        return epcClasses.remove(epcClass);
+    public boolean removeEventTypeFilter(String eventType) {
+        return eventTypes.remove(eventType);
     }
 
     public boolean removeEventTimeFilter(List dates) {
@@ -824,20 +824,20 @@ public class GroupPolicy extends AbstractPolicy {
         return true;
     }
 
-    public boolean updateEpcClassFilter(String newEpcClassName, String oldEpcClassName) {
-        int i = epcClasses.indexOf(oldEpcClassName);
-        epcClasses.remove(oldEpcClassName);
-        epcClasses.add(i, newEpcClassName);
+    public boolean updateEventTypeFilter(String newEventTypeName, String oldEventTypeName) {
+        int i = eventTypes.indexOf(oldEventTypeName);
+        eventTypes.remove(oldEventTypeName);
+        eventTypes.add(i, newEventTypeName);
         return true;
     }
 
     public boolean updateEventTimeFilter(Date newLowDate, Date newHighDate, Date oldLowDate, Date oldHighDate) {
         int i = eventTimes.indexOf(oldLowDate);
-        epcClasses.remove(oldLowDate);
-        epcClasses.add(i, newLowDate);
+        eventTypes.remove(oldLowDate);
+        eventTypes.add(i, newLowDate);
         i = eventTimes.indexOf(oldHighDate);
-        epcClasses.remove(oldHighDate);
-        epcClasses.add(i, newHighDate);
+        eventTypes.remove(oldHighDate);
+        eventTypes.add(i, newHighDate);
         return true;
     }
 
@@ -877,13 +877,13 @@ public class GroupPolicy extends AbstractPolicy {
         return false;
     }
 
-    public boolean switchEpcClassesFunction() {
-        if (OneOrGlobalFunction.NAME_GLOBAL_PERMIT.equals(epcClassesFilterFunction.getFunctionName())) {
-            epcClassesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_DENY);
+    public boolean switchEventTypesFunction() {
+        if (OneOrGlobalFunction.NAME_GLOBAL_PERMIT.equals(eventTypesFilterFunction.getFunctionName())) {
+            eventTypesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_DENY);
             return true;
         }
-        if (OneOrGlobalFunction.NAME_GLOBAL_DENY.equals(epcClassesFilterFunction.getFunctionName())) {
-            epcClassesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
+        if (OneOrGlobalFunction.NAME_GLOBAL_DENY.equals(eventTypesFilterFunction.getFunctionName())) {
+            eventTypesFilterFunction = new OneOrGlobalFunction(OneOrGlobalFunction.NAME_GLOBAL_PERMIT);
             return true;
         }
         return false;
@@ -974,12 +974,12 @@ public class GroupPolicy extends AbstractPolicy {
         this.bizStepsFilterFunction = bizStepsFilterFunction;
     }
 
-    public OneOrGlobalFunction getEpcClassesFilterFunction() {
-        return epcClassesFilterFunction;
+    public OneOrGlobalFunction getEventTypesFilterFunction() {
+        return eventTypesFilterFunction;
     }
 
-    public void setEpcClassesFilterFunction(OneOrGlobalFunction epcClassesFilterFunction) {
-        this.epcClassesFilterFunction = epcClassesFilterFunction;
+    public void setEventTypesFilterFunction(OneOrGlobalFunction eventTypesFilterFunction) {
+        this.eventTypesFilterFunction = eventTypesFilterFunction;
     }
 
     public OneOrGlobalFunction getEpcsFilterFunction() {
@@ -1056,12 +1056,12 @@ public class GroupPolicy extends AbstractPolicy {
         this.bizSteps = bizSteps;
     }
 
-    public List getEpcClasses() {
-        return epcClasses;
+    public List getEventTypes() {
+        return eventTypes;
     }
 
-    public void setEpcClasses(List epcClasses) {
-        this.epcClasses = epcClasses;
+    public void setEventTypes(List eventTypes) {
+        this.eventTypes = eventTypes;
     }
 
     public List getEpcs() {

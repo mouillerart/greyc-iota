@@ -28,9 +28,9 @@ public class InterfaceHelper {
     private static final Log log = LogFactory.getLog(InterfaceHelper.class);
     public AccessPolicyManagerSession APMSession;
 
-    public InterfaceHelper(String partner) {
+    public InterfaceHelper(String owner) {
         log.info("InterfaceHelper instanciated");
-        APMSession = MapSessions.APM.getInstance(partner);
+        APMSession = MapSessions.APM.getInstance(owner);
     }
 
     public void updateAPM() {
@@ -51,7 +51,7 @@ public class InterfaceHelper {
 
     public void reload() {
         log.info("RELAOD EPCISPDP");
-        APMSession.initEPCISPDP(APMSession.getPartner());
+        APMSession.initEPCISPDP(APMSession.getOwner());
         APMSession.initFinderModule();
     }
 }

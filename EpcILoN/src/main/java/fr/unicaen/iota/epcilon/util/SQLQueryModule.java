@@ -68,7 +68,7 @@ public class SQLQueryModule {
     public void deleteFromDB(List<EventToPublish> whiteList) {
         Session session = null;
         try {
-            LOG.info("white list size: " + whiteList.size());
+            LOG.debug("white list size: " + whiteList.size());
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             session = sessionFactory.openSession();
             session.beginTransaction();

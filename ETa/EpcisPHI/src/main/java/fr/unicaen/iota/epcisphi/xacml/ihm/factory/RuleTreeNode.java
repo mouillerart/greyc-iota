@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -90,6 +90,8 @@ public class RuleTreeNode implements TreeNode {
             return NodeType.bizLocFilterGroupNode;
         } else if (SCDispositionRule.RULEFILTER.equals(id)) {
             return NodeType.dispositionFilterGroupNode;
+        } else if (SCMasterDataIdRule.RULEFILTER.equals(id)) {
+            return NodeType.masterDataIdFilterGroupNode;
         } else if (SCgroupRule.RULEFILTER.equals(id)) {
             return NodeType.usersNode;
         }

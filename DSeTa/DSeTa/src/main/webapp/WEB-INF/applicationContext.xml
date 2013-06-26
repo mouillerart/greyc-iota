@@ -11,12 +11,10 @@
       http://cxf.apache.org/jaxws
       http://cxf.apache.org/schemas/jaxws.xsd">
 
-  <!-- beans and configurations defined in the cxf jars -->
     <import resource="classpath:META-INF/cxf/cxf.xml" />
-    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-  <!-- post-processor which replaces placeholders like ${test} with values from property files -->
     <bean id="dataPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -25,42 +23,30 @@
         </property>
     </bean>
 
-  <!-- =========================================================== -->
-  <!--  Service layer definitions                                  -->
-  <!-- =========================================================== -->
-
-    <bean id="ds" class="fr.unicaen.iota.dseta.server.DiscoveryWebService">
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+        <property name="jndiName" value="java:comp/env/jdbc/DSETADB" />
     </bean>
 
-    <bean id="dseta" class="fr.unicaen.iota.dseta.server.DSeTaWebService">
+    <bean id="dsPEP" class="fr.unicaen.iota.xi.client.DSPEP">
+        <constructor-arg type="java.lang.String" value="${xacml-url}" />
+        <constructor-arg type="java.lang.String" value="${pks-filename}" />
+        <constructor-arg type="java.lang.String" value="${pks-password}" />
+        <constructor-arg type="java.lang.String" value="${trust-pks-filename}" />
+        <constructor-arg type="java.lang.String" value="${trust-pks-password}" />
     </bean>
 
-
-  <!-- =========================================================== -->
-  <!--  CXF (Web service) configuration                            -->
-  <!-- =========================================================== -->
-
-  <!-- publish the Web service endpoint and it's implementing bean -->
-    <jaxws:endpoint id="DSEndpoint"
-                    serviceName="ser:DS_Service"
-                    implementor="#ds"
-                    address="/ds"
-                    xmlns:ser="urn:unicaen:iota:ds:wsdl" />
-    <jaxws:endpoint id="DSeTaEndpoint"
-                    serviceName="ser:IDed_DS_Service"
-                    implementor="#dseta"
-                    address="/ided_ds"
-                    xmlns:ser="urn:unicaen:iota:dseta:wsdl" />
-
-  <!-- register local transport -->
-    <bean class="org.apache.cxf.transport.local.LocalTransportFactory" lazy-init="false">
-        <property name="transportIds">
-            <list>
-                <value>http://cxf.apache.org/transports/local</value>
-                <value>http://schemas.xmlsoap.org/soap/http</value>
-                <value>http://schemas.xmlsoap.org/wsdl/soap/http</value>
-            </list>
+    <bean id="dsetaService" class="fr.unicaen.iota.dseta.service.DSeTaService">
+        <property name="dataSource" ref="dataSource" />
+        <property name="pep" ref="dsPEP" />
+        <property name="backend">
+            <bean class="fr.unicaen.iota.ds.commons.OperationsBackendSQL" />
         </property>
     </bean>
+
+    <jaxws:endpoint id="DSeTaEndpoint"
+                    serviceName="dseta:DSeTaService"
+                    implementor="#dsetaService"
+                    address="/"
+                    xmlns:dseta="urn:unicaen:iota:dseta:wsdl" />
 
 </beans>

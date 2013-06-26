@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE 
+<!DOCTYPE
 hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="fr.unicaen.iota.epcilon.model"
                    default-lazy="false">
   <class name="EventToPublish"
          table="EventToPublish">
-    <id column="ID"
-        name="Id"
+    <id column="id"
+        name="id"
         type="integer">
       <generator class="increment" />
     </id>
-    <property column="eventTime"
-              length="10"
-              name="EventTime"
-              not-null="true"
-              type="java.sql.Timestamp" />
     <property column="epc"
-              name="Epc"
-              not-null="true"
-              type="string" />
-    <property column="bizStep"
-              name="BizStep"
+              name="epc"
               not-null="true"
               type="string" />
     <property column="eventType"
               length="40"
-              name="EventType"
+              name="eventType"
               not-null="true"
               type="string" />
-    <property column="eventClass"
-              length="40"
-              name="EventClass"
+    <property column="bizStep"
+              name="bizStep"
               not-null="true"
               type="string" />
-    <property column="lastUpdate"
-              length="40"
-              name="LastUpdate"
+    <property column="eventTime"
+              length="20"
+             name="eventTime"
               not-null="true"
               type="java.sql.Timestamp" />
+    <property column="lastUpdate"
+              length="20"
+              name="lastUpdate"
+              not-null="true"
+              type="java.sql.Timestamp" />
+    <property column="owner"
+              name="owner"
+              not-null="false"
+              type="string" />
   </class>
 </hibernate-mapping>

@@ -119,32 +119,10 @@
                     implementor="#queryOperationsWebService"
                     address="/query"
                     xmlns:sser="urn:epcglobal:epcis:wsdl:1" />
-    <jaxws:endpoint id="EpcisQueryLocalEndpoint"
-                    serviceName="sser:EPCglobalEPCISService"
-                    implementor="#queryOperationsWebService"
-                    address="local://query"
-                    xmlns:sser="urn:epcglobal:epcis:wsdl:1" />
     <jaxws:endpoint id="IDedEpcisQueryEndpoint"
                     serviceName="idser:IDed_EPCglobalEPCISService"
                     implementor="#iDedQueryOperationsWebService"
                     address="/ided_query"
                     xmlns:idser="urn:unicaen:iota:eta:wsdl" />
-    <jaxws:endpoint id="IDedEpcisQueryLocalEndpoint"
-                    serviceName="idser:IDed_EPCglobalEPCISService"
-                    implementor="#iDedQueryOperationsWebService"
-                    address="local://ided_query"
-                    xmlns:idser="urn:unicaen:iota:eta:wsdl" />
-
-
-  <!-- register local transport -->
-    <bean class="org.apache.cxf.transport.local.LocalTransportFactory" lazy-init="false">
-        <property name="transportIds">
-            <list>
-                <value>http://cxf.apache.org/transports/local</value>
-                <value>http://schemas.xmlsoap.org/soap/http</value>
-                <value>http://schemas.xmlsoap.org/wsdl/soap/http</value>
-            </list>
-        </property>
-    </bean>
 
 </beans>

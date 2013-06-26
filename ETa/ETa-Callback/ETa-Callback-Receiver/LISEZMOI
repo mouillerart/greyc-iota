@@ -5,7 +5,7 @@ Serveur web de réception des retours d'abonnements à un EPCIS.
 Dépendances:
   bibliothèques:
     - servlet-api
-    - activemq-core
+    - activemq-client
     - commons-logging
     - log4j
 

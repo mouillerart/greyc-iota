@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <wsdl:definitions name="SigMaService"
-                  targetNamespace="urn:fr:unicaen:iota:sigma:wsdl"
+                  targetNamespace="urn:unicaen:iota:sigma:wsdl"
                   xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                  xmlns:service="urn:fr:unicaen:iota:sigma:wsdl"
-                  xmlns:model="urn:fr:unicaen:iota:sigma:xsd">
+                  xmlns:service="urn:unicaen:iota:sigma:wsdl"
+                  xmlns:model="urn:unicaen:iota:sigma:xsd">
     
     <wsdl:types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-            <xs:import namespace="urn:fr:unicaen:iota:sigma:xsd" schemaLocation="sigma.xsd"/>
+            <xs:import namespace="urn:unicaen:iota:sigma:xsd" schemaLocation="sigma.xsd"/>
         </xs:schema>
     </wsdl:types>
     

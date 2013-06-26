@@ -20,11 +20,11 @@ package fr.unicaen.iota.lambda.Utils;
 
 import fr.unicaen.iota.application.soap.IoTaException;
 import fr.unicaen.iota.application.soap.client.OmICron;
-import fr.unicaen.iota.ds.model.TEventItem;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.lambda.Configuration;
 import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.sigma.client.SigMaClient;
-import fr.unicaen.iota.sigma.xsd.Verification;
+import fr.unicaen.iota.sigma.model.Verification;
 import fr.unicaen.iota.tau.model.Identity;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +80,7 @@ public class EventsHandler {
      * @return List of events associated to an EPC code contained by a DS.
      * @throws IoTaException
      */
-    public List<TEventItem> queryDS(String epc, String dsUrl) throws IoTaException {
+    public List<DSEvent> queryDS(String epc, String dsUrl) throws IoTaException {
         return omicron.queryDS(epc, dsUrl);
     }
 

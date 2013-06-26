@@ -4,14 +4,18 @@ Python installation script for IoTa.
 
 Dependencies:
   IoTa modules:
-    - IoTa-DiscoveryWS
+    - DS
+    - DSeTa
     - DiscoveryPHI
     - Fosstrak-Epcis
     - EpcILoN
+    - SigMa
     - ETa
     - EpcisPHI
+    - YPSilon
     - ALfA
     - OMeGa
+    - LaMBDa
   libraries:
     - Python
     - Apache Tomcat

@@ -17,7 +17,9 @@ Installation and Configuration:
   (application.properties for this application,
    commons-logging.properties and log4j.properties for the logs)
   Use IoTa-Installer or the script ldap.sh (root privileges required) to
-   configure the LDAP directory.
+   configure the LDAP directory. Add index on the attribut corresponding
+   to the DN of user certificate (used when this DN is incompatible with the
+   LDAP tree, "aliasdn" by default).
 
 Usage Dependencies:
   - a LDAP server

@@ -139,7 +139,7 @@ public class TransactionEvent extends BaseEvent {
     protected void setExtensionsObjects(EPCISEventType event, List<Object> extensionsObjects) {
         ((TransactionEventType) event).getAny().addAll(extensionsObjects);
     }
-    
+
     public BusinessTransactionListType getBuiBusinessTransactionListType() {
         return buiBusinessTransactionListType;
     }
@@ -207,7 +207,7 @@ public class TransactionEvent extends BaseEvent {
         }
         for (Object o : elem.getChildren("bizTransList")) {
             Element e = (Element) o;
-            for (Object o2 : e.getChildren("epc")) {
+            for (Object o2 : e.getChildren("bizTrans")) {
                 Element e2 = (Element) o2;
                 BusinessTransactionType btt = new BusinessTransactionType();
                 btt.setType(e2.getAttributeValue("type"));

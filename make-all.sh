@@ -154,11 +154,12 @@ do_compile Nu Nu/Nu
 p_info "\n"
 
 p_bold "Discovery Services and Trust Agency (ds, ζ, dφ and κ-ξ)\n"
-do_compile IoTa-DiscoveryWS-Client IoTa-DiscoveryWS/IoTa-DiscoveryWS-Client
+do_compile DS-Client DS/DS-Client
+do_compile DS-Commons DS/DS-Commons
+do_compile DS DS/DS
 do_compile LibXACML-DS DSeTa/LibXACML-DS
 do_compile DS-Xi-Client CaPPa/DS-Xi-Client
 do_compile DiscoveryPHI DSeTa/DiscoveryPHI
-do_compile IoTa-DiscoveryWS IoTa-DiscoveryWS/IoTa-DiscoveryWS
 do_compile DSeTa-Client DSeTa/DSeTa-Client
 do_compile DSeTa DSeTa/DSeTa
 p_info "\n"
@@ -183,6 +184,7 @@ do_compile_pack PSi PSi
 do_compile MuPHI MuPHI
 do_compile_pack SigMa-Test SigMa/SigMa-Test
 do_compile LaMBDa LaMBDa
+do_pack GaMMa
 
 p_info "\n"
 

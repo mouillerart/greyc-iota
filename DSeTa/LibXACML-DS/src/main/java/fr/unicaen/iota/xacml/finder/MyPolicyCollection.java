@@ -101,18 +101,18 @@ public class MyPolicyCollection extends PolicyCollection {
         return null;
     }
 
-    public boolean updateQueryGroupName(String partnerID, String groupId, String value) {
-        OwnerPolicies ownerPolicies = getQueryPolicy(partnerID);
+    public boolean updateQueryGroupName(String ownerID, String groupId, String value) {
+        OwnerPolicies ownerPolicies = getQueryPolicy(ownerID);
         return ownerPolicies.updateGroupPolicyName(groupId, value);
     }
 
-    public boolean updateCaptureGroupName(String partnerID, String groupId, String value) {
-        OwnerPolicies ownerPolicies = getCapturePolicy(partnerID);
+    public boolean updateCaptureGroupName(String ownerID, String groupId, String value) {
+        OwnerPolicies ownerPolicies = getCapturePolicy(ownerID);
         return ownerPolicies.updateGroupPolicyName(groupId, value);
     }
 
-    public boolean updateAdminGroupName(String partnerID, String groupId, String value) {
-        OwnerPolicies ownerPolicies = getAdminPolicy(partnerID);
+    public boolean updateAdminGroupName(String ownerID, String groupId, String value) {
+        OwnerPolicies ownerPolicies = getAdminPolicy(ownerID);
         return ownerPolicies.updateGroupPolicyName(groupId, value);
     }
 
@@ -198,8 +198,8 @@ public class MyPolicyCollection extends PolicyCollection {
         if (SCEPCsRule.RULEFILTER.equals(filterType)) {
             return groupPolicy.addEPCFilter(filterName);
         }
-        if (SCEPCClassRule.RULEFILTER.equals(filterType)) {
-            return groupPolicy.addEpcClassFilter(filterName);
+        if (SCEventTypeRule.RULEFILTER.equals(filterType)) {
+            return groupPolicy.addEventTypeFilter(filterName);
         }
         return false;
     }
@@ -240,8 +240,8 @@ public class MyPolicyCollection extends PolicyCollection {
         if (SCEPCsRule.RULEFILTER.equals(filterType)) {
             return groupPolicy.removeEPCFilter(filterName);
         }
-        if (SCEPCClassRule.RULEFILTER.equals(filterType)) {
-            return groupPolicy.removeEpcClassFilter(filterName);
+        if (SCEventTypeRule.RULEFILTER.equals(filterType)) {
+            return groupPolicy.removeEventTypeFilter(filterName);
         }
         return false;
     }
@@ -270,8 +270,8 @@ public class MyPolicyCollection extends PolicyCollection {
         if (SCEPCsRule.RULEFILTER.equals(filterType)) {
             return groupPolicy.updateEPCFilter(newFilterName, oldFilterName);
         }
-        if (SCEPCClassRule.RULEFILTER.equals(filterType)) {
-            return groupPolicy.updateEpcClassFilter(newFilterName, oldFilterName);
+        if (SCEventTypeRule.RULEFILTER.equals(filterType)) {
+            return groupPolicy.updateEventTypeFilter(newFilterName, oldFilterName);
         }
         return false;
     }
@@ -325,7 +325,7 @@ public class MyPolicyCollection extends PolicyCollection {
         return groupPolicy.switchEpcsFunction();
     }
 
-    public boolean switchQueryPermissionEpcClasses(String identifier, String policyId) {
+    public boolean switchQueryPermissionEventTypes(String identifier, String policyId) {
         OwnerPolicies ownerPolicies = (OwnerPolicies) queryPolicies.get(identifier);
         if (ownerPolicies == null) {
             return false;
@@ -334,7 +334,7 @@ public class MyPolicyCollection extends PolicyCollection {
         if (groupPolicy == null) {
             return false;
         }
-        return groupPolicy.switchEpcClassesFunction();
+        return groupPolicy.switchEventTypesFunction();
     }
 
     public boolean switchQueryPermissionEventTimes(String identifier, String policyId) {
@@ -389,7 +389,7 @@ public class MyPolicyCollection extends PolicyCollection {
         return groupPolicy.switchEpcsFunction();
     }
 
-    public boolean switchCapturePermissionEpcClasses(String identifier, String policyId) {
+    public boolean switchCapturePermissionEventTypes(String identifier, String policyId) {
         OwnerPolicies ownerPolicies = (OwnerPolicies) capturePolicies.get(identifier);
         if (ownerPolicies == null) {
             return false;
@@ -398,7 +398,7 @@ public class MyPolicyCollection extends PolicyCollection {
         if (groupPolicy == null) {
             return false;
         }
-        return groupPolicy.switchEpcClassesFunction();
+        return groupPolicy.switchEventTypesFunction();
     }
 
     public boolean switchCapturePermissionEventTimes(String identifier, String policyId) {
@@ -493,8 +493,8 @@ public class MyPolicyCollection extends PolicyCollection {
         if (SCEPCsRule.RULEFILTER.equals(filterType)) {
             return groupPolicy.addEPCFilter(filterName);
         }
-        if (SCEPCClassRule.RULEFILTER.equals(filterType)) {
-            return groupPolicy.addEpcClassFilter(filterName);
+        if (SCEventTypeRule.RULEFILTER.equals(filterType)) {
+            return groupPolicy.addEventTypeFilter(filterName);
         }
         return false;
     }
@@ -535,8 +535,8 @@ public class MyPolicyCollection extends PolicyCollection {
         if (SCEPCsRule.RULEFILTER.equals(filterType)) {
             return groupPolicy.removeEPCFilter(filterName);
         }
-        if (SCEPCClassRule.RULEFILTER.equals(filterType)) {
-            return groupPolicy.removeEpcClassFilter(filterName);
+        if (SCEventTypeRule.RULEFILTER.equals(filterType)) {
+            return groupPolicy.removeEventTypeFilter(filterName);
         }
         return false;
     }
@@ -565,8 +565,8 @@ public class MyPolicyCollection extends PolicyCollection {
         if (SCEPCsRule.RULEFILTER.equals(filterType)) {
             return groupPolicy.updateEPCFilter(newFilterName, oldFilterName);
         }
-        if (SCEPCClassRule.RULEFILTER.equals(filterType)) {
-            return groupPolicy.updateEpcClassFilter(newFilterName, oldFilterName);
+        if (SCEventTypeRule.RULEFILTER.equals(filterType)) {
+            return groupPolicy.updateEventTypeFilter(newFilterName, oldFilterName);
         }
         return false;
     }
@@ -748,39 +748,39 @@ public class MyPolicyCollection extends PolicyCollection {
 
     boolean updateAPMSession(AccessPolicyManagerSession APMS, MyPolicyReader reader) {
 
-        String partner = APMS.getPartner();
-        OwnerPolicies adminOP = APMS.getAdminPolicy(partner);
-        String ownerPartner = adminOP.getOwner();
-        String adminFilename = Configuration.ADMIN_POLICIES_DIRECTORY + ownerPartner + ".xml";
-        if (adminPolicies.containsKey(partner)) {
-            deleteAdminOwnerPolicy(partner);
-            if (APMS.getAdminPolicy(partner) != null) {
+        String owner = APMS.getOwner();
+        OwnerPolicies adminOP = APMS.getAdminPolicy(owner);
+        String ownerOP = adminOP.getOwner();
+        String adminFilename = Configuration.ADMIN_POLICIES_DIRECTORY + ownerOP + ".xml";
+        if (adminPolicies.containsKey(owner)) {
+            deleteAdminOwnerPolicy(owner);
+            if (APMS.getAdminPolicy(owner) != null) {
                 addAdminPolicy(getOwnerPolicies(reader, adminFilename));
             }
         } else {
-            if (APMS.getAdminPolicy(partner) != null) {
+            if (APMS.getAdminPolicy(owner) != null) {
                 addAdminPolicy(getOwnerPolicies(reader, adminFilename));
             }
         }
-        String captureFilename = Configuration.CAPTURE_POLICIES_DIRECTORY + ownerPartner + ".xml";
-        if (capturePolicies.containsKey(partner)) {
-            deleteCaptureOwnerPolicy(partner);
-            if (APMS.getCapturePolicy(partner) != null) {
+        String captureFilename = Configuration.CAPTURE_POLICIES_DIRECTORY + ownerOP + ".xml";
+        if (capturePolicies.containsKey(owner)) {
+            deleteCaptureOwnerPolicy(owner);
+            if (APMS.getCapturePolicy(owner) != null) {
                 addCapturePolicy(getOwnerPolicies(reader, captureFilename));
             }
         } else {
-            if (APMS.getCapturePolicy(partner) != null) {
+            if (APMS.getCapturePolicy(owner) != null) {
                 addCapturePolicy(getOwnerPolicies(reader, captureFilename));
             }
         }
-        String queryFilename = Configuration.QUERY_POLICIES_DIRECTORY + ownerPartner + ".xml";
-        if (queryPolicies.containsKey(partner)) {
-            deleteQueryOwnerPolicy(partner);
-            if (APMS.getQueryPolicy(partner) != null) {
+        String queryFilename = Configuration.QUERY_POLICIES_DIRECTORY + ownerOP + ".xml";
+        if (queryPolicies.containsKey(owner)) {
+            deleteQueryOwnerPolicy(owner);
+            if (APMS.getQueryPolicy(owner) != null) {
                 addQueryPolicy(getOwnerPolicies(reader, queryFilename));
             }
         } else {
-            if (APMS.getQueryPolicy(partner) != null) {
+            if (APMS.getQueryPolicy(owner) != null) {
                 addQueryPolicy(getOwnerPolicies(reader, queryFilename));
             }
         }
@@ -788,14 +788,14 @@ public class MyPolicyCollection extends PolicyCollection {
     }
 
     public boolean updateAPMQuerySession(AccessPolicyManagerSession APMS, OwnerPolicies ownerPolicies) {
-        String partner = APMS.getPartner();
-        if (queryPolicies.containsKey(partner)) {
-            deleteQueryOwnerPolicy(partner);
-            if (APMS.getQueryPolicy(partner) != null) {
+        String owner = APMS.getOwner();
+        if (queryPolicies.containsKey(owner)) {
+            deleteQueryOwnerPolicy(owner);
+            if (APMS.getQueryPolicy(owner) != null) {
                 addQueryPolicy(ownerPolicies);
             }
         } else {
-            if (APMS.getQueryPolicy(partner) != null) {
+            if (APMS.getQueryPolicy(owner) != null) {
                 addQueryPolicy(ownerPolicies);
             }
         }
@@ -803,14 +803,14 @@ public class MyPolicyCollection extends PolicyCollection {
     }
 
     public boolean updateAPMCaptureSession(AccessPolicyManagerSession APMS, OwnerPolicies ownerPolicies) {
-        String partner = APMS.getPartner();
-        if (capturePolicies.containsKey(partner)) {
-            deleteCaptureOwnerPolicy(partner);
-            if (APMS.getCapturePolicy(partner) != null) {
+        String owner = APMS.getOwner();
+        if (capturePolicies.containsKey(owner)) {
+            deleteCaptureOwnerPolicy(owner);
+            if (APMS.getCapturePolicy(owner) != null) {
                 addCapturePolicy(ownerPolicies);
             }
         } else {
-            if (APMS.getCapturePolicy(partner) != null) {
+            if (APMS.getCapturePolicy(owner) != null) {
                 addCapturePolicy(ownerPolicies);
             }
         }
@@ -818,14 +818,14 @@ public class MyPolicyCollection extends PolicyCollection {
     }
 
     public boolean updateAPMAdminSession(AccessPolicyManagerSession APMS, OwnerPolicies ownerPolicies) {
-        String partner = APMS.getPartner();
-        if (adminPolicies.containsKey(partner)) {
-            deleteAdminOwnerPolicy(partner);
-            if (APMS.getAdminPolicy(partner) != null) {
+        String owner = APMS.getOwner();
+        if (adminPolicies.containsKey(owner)) {
+            deleteAdminOwnerPolicy(owner);
+            if (APMS.getAdminPolicy(owner) != null) {
                 addAdminPolicy(ownerPolicies);
             }
         } else {
-            if (APMS.getAdminPolicy(partner) != null) {
+            if (APMS.getAdminPolicy(owner) != null) {
                 addAdminPolicy(ownerPolicies);
             }
         }

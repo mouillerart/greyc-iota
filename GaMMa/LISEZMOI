@@ -1,0 +1,44 @@
+GaMMa - Geo Map Maker
+
+Utilise OpenLayers pour visualiser sur une carte les lieux des EPCevents
+présents sur une page HTML faite par LaMBDa. Est fait en javascript qui
+s'éxécute entièrement sur le poste de l'utilisateur.
+
+Les lieux sont extraits dynamiquement de l'extension localisation de l'EPCevent.
+Les événements doivent être dans une div de classe "eventsFound".
+Chaque événement est dans une div de classe "eventItems" et ayant un id. L'id
+est utilisé pour relier les marqueurs de la carte aux textes. Les extensions
+sont dans une div de classe "extensions" contenant des éléments de classes
+"extensionName" et "extensionValue". Le lieu est donné par l'extension de nom
+"http://www.opengis.net/kml/2.2##location".
+
+La carte va s'afficher dans une div d'id "map". Cette div est placée par la css
+à côté d'une div d'id "queryEpcis".
+
+Il suffit alors d'ajouter à la page dans l'entête (head) :
+    <link rel="stylesheet" href="./OpenLayers-2.12/theme/default/style.css" type="text/css">
+    <link rel="stylesheet" href="styles/gamma-style.css" type="text/css">
+    <script src="./OpenLayers-2.12/OpenLayers.js"></script>
+    <script type="text/javascript" src="scripts/gamma.js"></script>
+
+et en fin de document :
+<script type="text/javascript">
+	   gamma_init(); /* OpenLayers and div map init */
+	   initShowOnMap("eventItems");
+</script>
+Note : ces fonctions ne peuvent pas être appelées dans le "onload" de body car
+elles manipulent le DOM de la page.
+
+Dépendances:
+  bibliothèques:
+    - OpenLayers
+
+Installation et configuration:
+  Utiliser IoTa-Installer ou installer les scripts js, les css, OpenLayers et
+   inclure les éléments ci-dessus.
+
+Dépendances d’utilisation:
+  - LaMBDa
+
+Utilisation:
+  Utiliser un navigateur web et aller sur LaMBDa

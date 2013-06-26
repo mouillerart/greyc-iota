@@ -44,7 +44,7 @@ public class CaptureModule extends javax.swing.JFrame {
         sendButton = new javax.swing.JButton();
         actionComboBox = new javax.swing.JComboBox();
         userField = new javax.swing.JTextField();
-        partnerField = new javax.swing.JTextField();
+        ownerField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,7 +52,7 @@ public class CaptureModule extends javax.swing.JFrame {
 
         jLabel2.setText("User: ");
 
-        jLabel3.setText("Partner: ");
+        jLabel3.setText("Owner:");
 
         jLabel8.setText("Action: ");
 
@@ -79,9 +79,9 @@ public class CaptureModule extends javax.swing.JFrame {
                             .addComponent(jLabel8))
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                            .addComponent(partnerField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                            .addComponent(actionComboBox, 0, 231, Short.MAX_VALUE)
+                            .addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                            .addComponent(ownerField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                            .addComponent(actionComboBox, 0, 238, Short.MAX_VALUE)
                             .addComponent(jLabel1)))
                     .addComponent(sendButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
@@ -96,7 +96,7 @@ public class CaptureModule extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(partnerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ownerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -131,7 +131,7 @@ public class CaptureModule extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField partnerField;
+    private javax.swing.JTextField ownerField;
     private javax.swing.JButton sendButton;
     private javax.swing.JTextField userField;
     // End of variables declaration//GEN-END:variables

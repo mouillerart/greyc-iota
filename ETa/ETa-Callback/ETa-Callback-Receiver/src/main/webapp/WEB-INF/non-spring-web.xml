@@ -8,10 +8,6 @@
         <param-value>WEB-INF/classes/application.properties</param-value>
     </context-param>
 
-    <listener>
-        <listener-class>fr.unicaen.iota.eta.callback.receiver.CallbackContextListener</listener-class>
-    </listener>
-  
     <servlet>
         <servlet-name>CallbackInterface</servlet-name>
         <description>

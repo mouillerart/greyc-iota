@@ -4,21 +4,38 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>omicron</artifactId>
-    <version>1.99</version>
+    <version>2.0</version>
     <packaging>jar</packaging>
 
     <name>OmICron</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <lib-cxf-version>2.2.12</lib-cxf-version>
-        <lib-spring-version>2.5.6.SEC03</lib-spring-version>
+        <lib-cxf-version>2.7.5</lib-cxf-version>
         <epcis-version>0.5.0</epcis-version>
     </properties>
 
     <dependencies>
 
         <!-- IoTa dependencies -->
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>ds-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>dseta-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.unicaen.iota</groupId>
+            <artifactId>tau</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>fr.unicaen.iota</groupId>
             <artifactId>nu-pi</artifactId>
@@ -93,28 +110,39 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>${lib-cxf-version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
                         <phase>generate-sources</phase>
                         <configuration>
                             <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
+                            <defaultOptions>
+                                <packagenames>
+                                    <packagename>urn:unicaen:iota:omega:xsd=fr.unicaen.iota.application.model</packagename>
+                                    <packagename>urn:unicaen:iota:omega:wsdl=fr.unicaen.iota.application.soap</packagename>
+                                    <!--<packagename>http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader=org.fosstrak.epcis.model</packagename>-->
+                                </packagenames>
+                            </defaultOptions>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <packagenames>
-                                        <packagename>urn:unicaen:iota:tau:xsd=fr.unicaen.iota.tau.model</packagename>
-                                        <packagename>urn:unicaen:iota:ds:xsd=fr.unicaen.iota.ds.model</packagename>
-                                        <packagename>urn:unicaen:iota:omega:xsd=fr.unicaen.iota.application.model</packagename>
-                                        <packagename>urn:unicaen:iota:omega:wsdl=fr.unicaen.iota.application.soap</packagename>
-                                        <packagename>urn:epcglobal:xsd:1=org.fosstrak.epcis.model</packagename>
-                                        <packagename>urn:epcglobal:epcis:xsd:1=org.fosstrak.epcis.model</packagename>
-                                        <packagename>urn:epcglobal:epcis-masterdata:xsd:1=org.fosstrak.epcis.model</packagename>
-                                        <packagename>urn:epcglobal:epcis-query:xsd:1=org.fosstrak.epcis.model</packagename>
-                                        <packagename>http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader=org.fosstrak.epcis.model</packagename>
-                                    </packagenames>
                                     <wsdl>${basedir}/src/main/resources/wsdl/omega.wsdl</wsdl>
-                                    <wsdlLocation>classpath:wsdl/omega.wsdl</wsdlLocation>
+                                    <extraargs>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:unicaen:iota:tau:xsd=fr.unicaen.iota.tau.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:unicaen:iota:ds:xsd=fr.unicaen.iota.ds.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:epcglobal:xsd:1=org.fosstrak.epcis.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:epcglobal:epcis:xsd:1=org.fosstrak.epcis.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:epcglobal:epcis-masterdata:xsd:1=org.fosstrak.epcis.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>urn:epcglobal:epcis-query:xsd:1=org.fosstrak.epcis.model</extraarg>
+                                        <extraarg>-nexclude</extraarg>
+                                        <extraarg>http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader=org.fosstrak.epcis.model</extraarg>
+                                    </extraargs>
                                 </wsdlOption>
                             </wsdlOptions>
                         </configuration>

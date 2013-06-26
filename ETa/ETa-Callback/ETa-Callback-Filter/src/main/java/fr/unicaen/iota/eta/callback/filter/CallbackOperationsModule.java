@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
+import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.xml.XMLConstants;
@@ -69,8 +71,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * This
- * <code>CallbackOperationsModule</code> parses messages from the message broker
+ * This <code>CallbackOperationsModule</code> parses messages from the message broker
  * to a XML document conforming to a xsd schema. The query callback events
  * contained by this document are extracted and used by
  * <code>CallbackCheck</code> to validate access.
@@ -81,13 +82,22 @@ public class CallbackOperationsModule {
     private java.sql.Connection dbConnection;
     private CallbackOperationsBackendSQL backend;
     private CallbackCheck callbackCheck;
+    private Connection connection;
+    private String jmsUrl;
+    private String jmsLogin;
+    private String jmsPassword;
+    private String timeProperty;
     private static final Log LOG = LogFactory.getLog(CallbackOperationsModule.class);
 
-    public CallbackOperationsModule() {
+    public CallbackOperationsModule(String jmsUrl, String jmsLogin, String jmsPassword, String timeProperty) {
         this.schema = initEpcisSchema(Constants.EPCIS_SCHEMA_PATH);
         callbackCheck = new CallbackCheck();
         backend = new CallbackOperationsBackendSQL();
         dbConnection = loadDatabaseConnection();
+        this.jmsUrl = jmsUrl;
+        this.jmsLogin = jmsLogin;
+        this.jmsPassword = jmsPassword;
+        this.timeProperty = timeProperty;
     }
 
     /**
@@ -148,8 +158,7 @@ public class CallbackOperationsModule {
      * @throws SAXException If an error processing the XML document occurred.
      * @throws IOException If an I/O error occurred.
      */
-    private Document getDocumentFromString(String string)
-            throws SAXException, IOException {
+    private Document getDocumentFromString(String string) throws SAXException, IOException {
 
         // parse the payload as XML document
         Document document;
@@ -204,58 +213,40 @@ public class CallbackOperationsModule {
 
     /**
      * Connects to the Message Broker, gets events and sends authorized events.
-     *
-     * @throws JMSException If a receiving or sending message error occurred.
-     * @throws SQLException If an error involving the database occurred
+     * @param consumer The JMS consumer which retrieves the event to filter.
+     * @param timeout Waits until this time expires (in milliseconds).
+     * @param producerSession The JMS session associated to the producer.
+     * @param producer The JMS producer which sends the event to the next queue.
+     * @param runtime The runtime.
+     * @return True if the filtering can continue.
+     * @throws JMSException If an error occurred with the JMS provider.
+     * @throws SQLException If an error involving the database occurred.
      * @throws SAXException If an error processing the XML document occurred.
-     * @throws IOException If an I/O error occured.
+     * @throws IOException If an I/O error occurred.
+     * @throws JAXBException If an error parsing from the XML document to objects occurred.
      * @throws Exception If an unexpected error occurred.
      */
-    public void receiveFilterSend() throws JMSException, SQLException, SAXException, IOException, JAXBException, Exception {
-        ActiveMQConnectionFactory factory;
-        if (Constants.ACTIVEMQ_LOGIN != null && Constants.ACTIVEMQ_PASSWORD != null
-                && !Constants.ACTIVEMQ_LOGIN.isEmpty() && !Constants.ACTIVEMQ_PASSWORD.isEmpty()) {
-            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_LOGIN, Constants.ACTIVEMQ_PASSWORD, Constants.ACTIVEMQ_URL);
-        } else {
-            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_URL);
+    public boolean receiveFilterSend(MessageConsumer consumer, long timeout, Session producerSession, MessageProducer producer,
+            long runtime) throws JMSException, SQLException, SAXException, IOException, JAXBException, Exception {
+        Message message = consumer.receive(timeout);
+        if (message == null) {
+            return false;
         }
-        javax.jms.Connection msgConnection = factory.createConnection();
-        Session session = msgConnection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-        Destination destination = session.createQueue(Constants.CONSUMMER_QUEUE_NAME);
-        MessageConsumer consumer = session.createConsumer(destination);
-        msgConnection.start();
-
-        try {
-            while (true) {
-                Message message = consumer.receive(200);
-                if (message == null) {
-                    break;
-                }
-
-                String docText;
-                if (message instanceof TextMessage) {
-                    TextMessage text = (TextMessage) message;
-                    docText = text.getText();
-
-                    if (isPermitted(docText)) {
-                        // --- Sending authorized message to the queue
-                        Session prodS = msgConnection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-                        Destination sendDest = prodS.createQueue(Constants.SENDER_QUEUE_NAME);
-                        MessageProducer producer = prodS.createProducer(sendDest);
-                        TextMessage messageToSend = prodS.createTextMessage();
-                        messageToSend.setText(docText);
-                        producer.send(messageToSend);
-                        LOG.info("Event transferred to the next queue.");
-                    } else {
-                        LOG.info("Event deleted.");
-                    }
-                }
-                message.acknowledge();
+        String docText;
+        if (message instanceof TextMessage) {
+            TextMessage text = (TextMessage) message;
+            docText = text.getText();
+            if (isPermitted(docText)) {
+                // --- Sending authorized message to the queue
+                sendsJMSEvent(producerSession, producer, docText);
+                LOG.info("Event transferred to the next queue.");
             }
-        } finally {
-            session.close();
-            msgConnection.close();
+            else {
+                LOG.info("Event deleted.");
+            }
         }
+        message.acknowledge();
+        return true;
     }
 
     /**
@@ -383,4 +374,81 @@ public class CallbackOperationsModule {
         CallbackOperationsSession session = new CallbackOperationsSession(dbConnection);
         return backend.fetchUser(session, subscriptionID);
     }
+
+    /**
+     * Creates a JMS connection.
+     * @throws JMSException If the connection could not be established.
+     */
+    public void createsJMSConnection() throws JMSException {
+        ActiveMQConnectionFactory factory;
+        if (jmsLogin != null && jmsPassword != null
+                && !jmsLogin.isEmpty() && !jmsPassword.isEmpty()) {
+            factory = new ActiveMQConnectionFactory(jmsLogin, jmsPassword, jmsUrl);
+        } else {
+            factory = new ActiveMQConnectionFactory(jmsUrl);
+        }
+        connection = factory.createConnection();
+    }
+
+    /**
+     * Starts the JMS connection.
+     * @throws JMSException If the JMS provider fails to start message delivery due to some internal error.
+     */
+    public void startsJMSConnection() throws JMSException {
+        connection.start();
+    }
+
+    /**
+     * Closes the JMS connection.
+     * @throws JMSException If the JMS provider fails to start message delivery due to some internal error.
+     */
+    public void closesJMSConnection() throws JMSException {
+        connection.close();
+    }
+
+    /**
+     * Creates a <code>Session</code> object.
+     * See {@link javax.jms.Connection#createSession(boolean, int)}
+     */
+    public Session createsJMSSession(boolean transacted, int acknowledge) throws JMSException {
+        return connection.createSession(transacted, acknowledge);
+    }
+
+    /**
+     * Creates a <code>Queue</code> object.
+     * See {@link javax.jms.Session#createQueue(java.lang.String)}
+     */
+    public Queue createsJMSQueue(Session session, String queueName) throws JMSException {
+        return session.createQueue(queueName);
+    }
+
+    /**
+     * Creates a <code>MessageConsumer</code> object.
+     * See {@link javax.jms.Session#createConsumer(javax.jms.Destination) }
+     */
+    public MessageConsumer createsJMSConsumer(Session session, Destination dest) throws JMSException {
+        return session.createConsumer(dest);
+    }
+
+    /**
+     * Creates a <code>MessageProducer</code> object.
+     * See {@link javax.jms.Session#createProducer(javax.jms.Destination) }
+     */
+    public MessageProducer createJMSProducer(Session session, Destination dest) throws JMSException {
+        return session.createProducer(dest);
+    }
+
+    /**
+     * Sends event with the specified message producer.
+     * @param session The JMS session used to send the message.
+     * @param producer The JMS message producer used to send the message.
+     * @param eventToReturn The event to send in String format.
+     * @throws JMSException If an error occurred with the JMS provider.
+     */
+    public void sendsJMSEvent(Session session, MessageProducer producer, String eventToReturn) throws JMSException {
+        TextMessage tMsg = session.createTextMessage(eventToReturn);
+        tMsg.setLongProperty(timeProperty, System.currentTimeMillis());
+        producer.send(tMsg);
+    }
+
 }

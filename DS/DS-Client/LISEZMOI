@@ -1,0 +1,14 @@
+DS-Client
+
+Bibliothèque client pour l’interfaçage avec le web service DS de IoTa.
+
+Dépendances:
+  bibliothèques:
+    - cxf
+    - commons-logging
+
+Dépendances d’utilisation:
+  - un DS
+
+Utilisation:
+  voir ALfA ou EpcILoN pour des exemples

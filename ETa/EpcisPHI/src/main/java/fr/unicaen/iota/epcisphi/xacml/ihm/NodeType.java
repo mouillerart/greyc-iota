@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ public enum NodeType {
     readPointFilterNode,
     bizLocFilterNode,
     dispositionFilterNode,
+    masterDataIdFilterNode,
     methodFilterNode,
     bizStepFilterGroupNode,
     epcFilterGroupNode,
@@ -48,6 +49,7 @@ public enum NodeType {
     readPointFilterGroupNode,
     bizLocFilterGroupNode,
     dispositionFilterGroupNode,
+    masterDataIdFilterGroupNode,
     methodFilterGroupNode,
     rulesNode,
     userNode,
@@ -66,6 +68,7 @@ public enum NodeType {
                 || this == readPointFilterNode
                 || this == bizLocFilterNode
                 || this == dispositionFilterNode
+                || this == masterDataIdFilterNode
                 || this == methodFilterNode;
     }
 
@@ -82,6 +85,7 @@ public enum NodeType {
                 || this == readPointFilterGroupNode
                 || this == bizLocFilterGroupNode
                 || this == dispositionFilterGroupNode
+                || this == masterDataIdFilterGroupNode
                 || this == methodFilterGroupNode;
     }
 
@@ -98,6 +102,7 @@ public enum NodeType {
                 || this == readPointFilterGroupNode
                 || this == bizLocFilterGroupNode
                 || this == dispositionFilterGroupNode
+                || this == masterDataIdFilterGroupNode
                 || this == policyNode
                 || this == policiesNode
                 || this == rulesNode

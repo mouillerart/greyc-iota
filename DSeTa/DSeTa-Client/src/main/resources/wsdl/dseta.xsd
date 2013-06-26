@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:unicaen:iota:dseta:xsd"
+           xmlns:dseta="urn:unicaen:iota:dseta:xsd"
+           xmlns:ds="urn:unicaen:iota:ds:xsd"
+           xmlns:tau="urn:unicaen:iota:tau:xsd"
+           elementFormDefault="unqualified" attributeFormDefault="unqualified">
+
+    <xs:import namespace="urn:unicaen:iota:ds:xsd" schemaLocation="ds.xsd"/>
+
+    <xs:import namespace="urn:unicaen:iota:tau:xsd" schemaLocation="tau.xsd"/>
+
+    <xs:element name="SecurityException" type="dseta:SecurityException"/>
+    <xs:complexType name="SecurityException">
+        <xs:complexContent>
+            <xs:extension base="ds:DSException">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="eventCreateReq" type="dseta:EventCreateReq"/>
+    <xs:complexType name="EventCreateReq">
+        <xs:complexContent>
+            <xs:extension base="ds:EventCreateReq">
+                <xs:sequence>
+                    <xs:element name="owner" type="tau:Identity"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="multipleEventCreateReq" type="dseta:MultipleEventCreateReq"/>
+    <xs:complexType name="MultipleEventCreateReq">
+        <xs:sequence>
+            <xs:element name="eventCreate" type="dseta:EventCreateReq" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

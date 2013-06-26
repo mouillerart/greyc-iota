@@ -66,8 +66,8 @@ public class RuleTreeNode implements TreeNode {
     public NodeType getNodeType() {
         if (SCBizStepRule.RULEFILTER.equals(id)) {
             return NodeType.bizStepFilterGroupNode;
-        } else if (SCEPCClassRule.RULEFILTER.equals(id)) {
-            return NodeType.epcClassFilterGroupNode;
+        } else if (SCEventTypeRule.RULEFILTER.equals(id)) {
+            return NodeType.eventTypeFilterGroupNode;
         } else if (SCEPCsRule.RULEFILTER.equals(id)) {
             return NodeType.epcFilterGroupNode;
         } else if (SCEventTimeRule.RULEFILTER.equals(id)) {

@@ -58,6 +58,9 @@ end
   CaPPa/DS-Xi-Client
   CaPPa/EPCIS-Xi-Client
   DELTa
+  DS/DS-Commons
+  DS/DS-Client
+  DS/DS
   DSeTa/DSeTa-Client
   DSeTa/DSeTa
   DSeTa/DiscoveryPHI

@@ -21,156 +21,156 @@ package fr.unicaen.iota.xacml.pep;
 
 public interface MethodNamesAdmin {
 
-    public int hello(String user, String partner);
+    public int hello(String user, String owner);
 
-    public int userLookup(String user, String partner);
+    public int userLookup(String user, String owner);
 
-    public int userCreate(String user, String partner);
+    public int userCreate(String user, String owner);
 
-    public int userInfo(String user, String partner);
+    public int userInfo(String user, String owner);
 
-    public int userUpdate(String user, String partner);
+    public int userUpdate(String user, String owner);
 
-    public int userDelete(String user, String partner);
+    public int userDelete(String user, String owner);
 
-    public int partnerInfo(String user, String partner);
+    public int ownerInfo(String user, String owner);
 
-    public int partnerUpdate(String user, String partner);
+    public int ownerUpdate(String user, String owner);
 
-    public int partnerDelete(String user, String partner);
+    public int ownerDelete(String user, String owner);
 
-    public int createPartnerGroup(String user, String partner);
+    public int createOwnerGroup(String user, String owner);
 
-    public int deletePartnerGroup(String user, String partner);
+    public int deleteOwnerGroup(String user, String owner);
 
-    public int addPartnerToGroup(String user, String partner);
+    public int addOwnerToGroup(String user, String owner);
 
-    public int removePartnerFromGroup(String user, String partner);
+    public int removeOwnerFromGroup(String user, String owner);
 
-    public int addBizStepRestriction(String user, String partner);
+    public int addBizStepRestriction(String user, String owner);
 
-    public int removeBizStepRestriction(String user, String partner);
+    public int removeBizStepRestriction(String user, String owner);
 
-    public int switchBizStepPolicy(String user, String partner);
+    public int switchBizStepPolicy(String user, String owner);
 
-    public int addEpcRestriction(String user, String partner);
+    public int addEpcRestriction(String user, String owner);
 
-    public int removeEpcRestriction(String user, String partner);
+    public int removeEpcRestriction(String user, String owner);
 
-    public int switchEpcPolicy(String user, String partner);
+    public int switchEpcPolicy(String user, String owner);
 
-    public int addEventTimeRestriction(String user, String partner);
+    public int addEventTimeRestriction(String user, String owner);
 
-    public int removeEventTimeRestriction(String user, String partner);
+    public int removeEventTimeRestriction(String user, String owner);
 
-    public int switchEventTimePolicy(String user, String partner);
+    public int switchEventTimePolicy(String user, String owner);
 
-    public int addRecordTimeRestriction(String user, String partner);
+    public int addRecordTimeRestriction(String user, String owner);
 
-    public int removeRecordTimeRestriction(String user, String partner);
+    public int removeRecordTimeRestriction(String user, String owner);
 
-    public int switchRecordTimePolicy(String user, String partner);
+    public int switchRecordTimePolicy(String user, String owner);
 
-    public int addEventTypeRestriction(String user, String partner);
+    public int addEventTypeRestriction(String user, String owner);
 
-    public int removeEventTypeRestriction(String user, String partner);
+    public int removeEventTypeRestriction(String user, String owner);
 
-    public int switchEventTypePolicy(String user, String partner);
+    public int switchEventTypePolicy(String user, String owner);
 
-    public int addOperationRestriction(String user, String partner);
+    public int addOperationRestriction(String user, String owner);
 
-    public int removeOperationRestriction(String user, String partner);
+    public int removeOperationRestriction(String user, String owner);
 
-    public int switchOperationPolicy(String user, String partner);
+    public int switchOperationPolicy(String user, String owner);
 
-    public int addParentIdRestriction(String user, String partner);
+    public int addParentIdRestriction(String user, String owner);
 
-    public int removeParentIdRestriction(String user, String partner);
+    public int removeParentIdRestriction(String user, String owner);
 
-    public int switchParentIdPolicy(String user, String partner);
+    public int switchParentIdPolicy(String user, String owner);
 
-    public int addChildEpcRestriction(String user, String partner);
+    public int addChildEpcRestriction(String user, String owner);
 
-    public int removeChildEpcRestriction(String user, String partner);
+    public int removeChildEpcRestriction(String user, String owner);
 
-    public int switchChildEpcPolicy(String user, String partner);
+    public int switchChildEpcPolicy(String user, String owner);
 
-    public int addQuantityRestriction(String user, String partner);
+    public int addQuantityRestriction(String user, String owner);
 
-    public int removeQuantityRestriction(String user, String partner);
+    public int removeQuantityRestriction(String user, String owner);
 
-    public int switchQuantityPolicy(String user, String partner);
+    public int switchQuantityPolicy(String user, String owner);
 
-    public int addReadPointRestriction(String user, String partner);
+    public int addReadPointRestriction(String user, String owner);
 
-    public int removeReadPointRestriction(String user, String partner);
+    public int removeReadPointRestriction(String user, String owner);
 
-    public int switchReadPointPolicy(String user, String partner);
+    public int switchReadPointPolicy(String user, String owner);
 
-    public int addBizLocRestriction(String user, String partner);
+    public int addBizLocRestriction(String user, String owner);
 
-    public int removeBizLocRestriction(String user, String partner);
+    public int removeBizLocRestriction(String user, String owner);
 
-    public int switchBizLocPolicy(String user, String partner);
+    public int switchBizLocPolicy(String user, String owner);
 
-    public int addBizTransRestriction(String user, String partner);
+    public int addBizTransRestriction(String user, String owner);
 
-    public int removeBizTransRestriction(String user, String partner);
+    public int removeBizTransRestriction(String user, String owner);
 
-    public int switchBizTransPolicy(String user, String partner);
+    public int switchBizTransPolicy(String user, String owner);
 
-    public int addDispositionRestriction(String user, String partner);
+    public int addDispositionRestriction(String user, String owner);
 
-    public int removeDispositionRestriction(String user, String partner);
+    public int removeDispositionRestriction(String user, String owner);
 
-    public int switchDispositionPolicy(String user, String partner);
+    public int switchDispositionPolicy(String user, String owner);
 
-    public int addMasterDataIdRestriction(String user, String partner);
+    public int addMasterDataIdRestriction(String user, String owner);
 
-    public int removeMasterDataIdRestriction(String user, String partner);
+    public int removeMasterDataIdRestriction(String user, String owner);
 
-    public int switchMasterDataIdPolicy(String user, String partner);
+    public int switchMasterDataIdPolicy(String user, String owner);
 
-    public int addExtensionRestriction(String user, String partner);
+    public int addExtensionRestriction(String user, String owner);
 
-    public int removeExtensionRestriction(String user, String partner);
+    public int removeExtensionRestriction(String user, String owner);
 
-    public int switchExtensionPolicy(String user, String partner);
+    public int switchExtensionPolicy(String user, String owner);
 
-    public int switchUserPermissionPolicy(String user, String partner);
+    public int switchUserPermissionPolicy(String user, String owner);
 
-    public int removeUserPermission(String user, String partner);
+    public int removeUserPermission(String user, String owner);
 
-    public int addUserPermission(String user, String partner);
+    public int addUserPermission(String user, String owner);
 
-    public int updateGroupName(String user, String partner);
+    public int updateGroupName(String user, String owner);
 
-    public int savePolicyPartner(String user, String partner);
+    public int savePolicyOwner(String user, String owner);
 
     //####################################################
     //############## Admin Module Section ################
     //####################################################
-//    public int superadmin(String user, String partner);
-//    public int allAdminMethods(String user, String partner);
+//    public int superadmin(String user, String owner);
+//    public int allAdminMethods(String user, String owner);
 //
-//    public int allQueryMethods(String user, String partner);
+//    public int allQueryMethods(String user, String owner);
 //
-//    public int allCaptureMethods(String user, String partner);
-    public int createAdminPartnerGroup(String user, String partner);
+//    public int allCaptureMethods(String user, String owner);
+    public int createAdminOwnerGroup(String user, String owner);
 
-    public int deleteAdminPartnerGroup(String user, String partner);
+    public int deleteAdminOwnerGroup(String user, String owner);
 
-    public int addAdminPartnerToGroup(String user, String partner);
+    public int addAdminOwnerToGroup(String user, String owner);
 
-    public int removeAdminPartnerFromGroup(String user, String partner);
+    public int removeAdminOwnerFromGroup(String user, String owner);
 
-    public int switchAdminUserPermissionPolicy(String user, String partner);
+    public int switchAdminUserPermissionPolicy(String user, String owner);
 
-    public int removeAdminUserPermission(String user, String partner);
+    public int removeAdminUserPermission(String user, String owner);
 
-    public int addAdminUserPermission(String user, String partner);
+    public int addAdminUserPermission(String user, String owner);
 
-    public int updateAdminGroupName(String user, String partner);
+    public int updateAdminGroupName(String user, String owner);
 
-    public int saveAdminPolicyPartner(String user, String partner);
+    public int saveAdminPolicyOwner(String user, String owner);
 }

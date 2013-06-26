@@ -31,9 +31,9 @@ public class InterfaceHelper {
     // TODO @SLS public field!
     public AccessPolicyManagerSession APMSession;
 
-    public InterfaceHelper(String partner) {
+    public InterfaceHelper(String owner) {
         log.info("InterfaceHelper instanciated");
-        APMSession = MapSessions.APM.getInstance(partner);
+        APMSession = MapSessions.APM.getInstance(owner);
     }
 
     public void updateAPM() {
@@ -54,7 +54,7 @@ public class InterfaceHelper {
 
     public void reload() {
         log.info("RELAOD DSPDP");
-        APMSession.initDSPDP(APMSession.getPartner());
+        APMSession.initDSPDP(APMSession.getOwner());
         APMSession.initFinderModule();
     }
 }

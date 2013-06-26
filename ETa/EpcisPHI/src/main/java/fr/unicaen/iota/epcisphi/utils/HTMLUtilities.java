@@ -32,16 +32,16 @@ public class HTMLUtilities {
     private HTMLUtilities() {
     }
 
-    public static String createPartnerSelect() {
+    public static String createOwnerSelect() {
         StringBuilder res = new StringBuilder();
-        res.append("<select class=\"partnerSelector\" id=\"groupPartnerName\">");
-        for (String partnerId : listAllPartners()) {
-            res.append("<option label=\"partner: ");
-            res.append(partnerId);
+        res.append("<select class=\"ownerSelector\" id=\"groupOwnerName\">");
+        for (String ownerId : listAllOwners()) {
+            res.append("<option label=\"owner: ");
+            res.append(ownerId);
             res.append("\" value=\"");
-            res.append(partnerId);
+            res.append(ownerId);
             res.append("\">");
-            res.append(partnerId);
+            res.append(ownerId);
             res.append("</option>");
         }
         res.append("</select>");
@@ -132,18 +132,18 @@ public class HTMLUtilities {
         return res.toString();
     }
 
-    private static Iterable<String> listAllPartners() {
+    private static Iterable<String> listAllOwners() {
 
         // TODOTODOTODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        List<String> partnerIdList = new ArrayList<String>();
-        partnerIdList.add("partner1");
-        partnerIdList.add("partner2");
-        partnerIdList.add("partner3");
-        partnerIdList.add("partner4");
-        partnerIdList.add("partner5");
+        List<String> ownerIdList = new ArrayList<String>();
+        ownerIdList.add("owner1");
+        ownerIdList.add("owner2");
+        ownerIdList.add("owner3");
+        ownerIdList.add("owner4");
+        ownerIdList.add("owner5");
 
-        return partnerIdList;
+        return ownerIdList;
     }
 
     private static Iterable<String> listAllMethods() {

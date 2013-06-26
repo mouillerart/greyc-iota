@@ -1,0 +1,14 @@
+DS-Commons
+
+Bibliothèque pour la gestion des évènements DS.
+
+Dépendances::
+  modules IoTa:
+   - ds-client
+   - nu-pi
+   - nu
+  bibliothèques:
+   - activemq
+   - commons-logging
+
+Utilisation:

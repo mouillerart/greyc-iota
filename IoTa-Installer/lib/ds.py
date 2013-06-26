@@ -23,51 +23,70 @@ import utils
 
 
 class DSInstaller(installer.DBWebAppInstaller):
-    
+
     def __init__(self):
         installer.DBWebAppInstaller.__init__(self, "Discovery Web Server", "ds", [
                 ("Enter the DS web application name", "ds", "name", {}),
                 ("Enter the archive file pathname", "ds", "repo", {"type": "file"}),
-                ("Enter the server identity (sgln)", "ds", "server_identity", {}),
                 ("Enter the DS database name", "ds", "db_name", {}),
                 ("Enter the DS database login", "ds", "db_login", {}),
                 ("Enter the DS database password", "ds", "db_password", {}),
-                ("Enter the URL to the XACML module", "ds_policies", "xacml_url", {}),
-                ("Use as multi DS instance?", "publisher", "multi_ds_architecture",
+                ("Use as multi DS instance?", "ds", "multi_ds_architecture",
                  {"type": "YN"}),
-                ("Enter your DS login for publisher", "publisher", "login",
-                 {"when": ("publisher", "multi_ds_architecture")}),
-                ("Enter your DS password for publisher", "publisher", "password",
-                 {"when": ("publisher", "multi_ds_architecture")}),
-                ("Enter the URL of the Epcis Query service (or ETa)", "ds", "epcis_query_url", {})
+                ("Enter the server identity (URL)", "ds", "server_identity",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter one or several ONS IP address(es) (comma separated)", "ds", "ons_hosts",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the ONS Domain Prefix", "ds", "ons_domain_prefix",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the ActiveMQ URL", "activemq", "url",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the ActiveMQ user login (may be empty)", "activemq", "login",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the ActiveMQ user password (may be empty)", "activemq", "password",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the JMS queue name of events to publish", "ds", "topublish_jms_queue_name",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the JMS message name property to set the time of the last try to publish", "ds", "jms_message_time_property",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the startup delay", "ds", "publisher_delay",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the publishing timeout (wait for event to publish)", "ds", "publisher_timeout",
+                 {"when": ("ds", "multi_ds_architecture")}),
+                ("Enter the publishing period (time between each launch)", "ds", "publisher_period",
+                 {"when": ("ds", "multi_ds_architecture")}),
                 ], [
                 ("application",
                  { "service-id": ("ds", "server_identity"),
-                   "ons": ("ons", "server"),
-                   "ons-domain-prefix": ("ons", "domain_prefix"),
-                   "pks-filename": ("cert", "keystore"),
-                   "pks-password": ("cert", "password"),
-                   "trust-pks-filename": ("cert", "truststore"),
-                   "trust-pks-password": ("cert", "trustpassword"),
-                   "xacml-url": ("ds_policies", "xacml_url"),
-                   "xacml-ihm-url": ("dphi", "url") }),
-                ("publisher",
-                 { "multi-ds-architecture": ("publisher", "multi_ds_architecture"),
-                   "ds-login": ("publisher", "login"),
-                   "ds-password": ("publisher", "password") })
+                   "ons-hosts": ("ds", "ons_hosts"),
+                   "ons-domain-prefix": ("ds", "ons_domain_prefix"),
+                   "multi-ds-architecture": ("ds", "multi_ds_architecture"),
+                   "publisher-delay": ("ds", "publisher_delay"),
+                   "publisher-timeout": ("ds", "publisher_timeout"),
+                   "publisher-period": ("ds", "publisher_period"),
+                   "jms-url": ("activemq", "url"),
+                   "jms-login": ("activemq", "login"),
+                   "jms-password": ("activemq", "password"),
+                   "jms-queue-name": ("ds", "topublish_jms_queue_name"),
+                   "jms-message-time-property": ("ds", "jms_message_time_property"),
+                   })
                 ])
 
 
     def postConfigure(self):
         self.setURL()
-        self.cset("url", self.cget("url") + "services/ESDS_Service")
         self.cset("db_jndi", "DSDB")
+        CONFIG.set("epcilon", "ds_url", self.cget("url"))
+        CONFIG.set("epcilon", "iota_ided", "False")
 
 
     def postUnpack(self):
-        if self.cisTrue("db_install"):
-            utils.execDB("Setting Anonymous partner’s service address", self.cget("db_name"),
-                         "UPDATE partner SET serviceType='" + self.cget("epcis_type") +
-                         "', serviceAddress='" + self.cget("epcis_query_url") +
-                         "' WHERE partnerID='anonymous'")
-        # note: this 'anonymous' should be the Epcis/EpcILoN identity
+        if self.cisTrue("multi_ds_architecture"):
+            webxml_path = CONFIG.get("tomcat", "catalina_home") + "webapps/" + self.cget("name") + "/WEB-INF/web.xml"
+            cmd = """sed -i '
+/<\/web-app>/i\\
+    <listener>\\
+        <listener-class>fr.unicaen.iota.ds.service.PublisherContextListener</listener-class>\\
+    </listener>' %s""" % webxml_path
+            if not utils.sh_exec(cmd):
+                utils.putWarning("The Publisher listener could not be added to web.xml")

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2011-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2011-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2011       Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -39,28 +39,28 @@ public class AccessPolicies {
     public AccessPolicies() {
     }
 
-    public AccessPolicies(String sessionId, String partner) {
-        this.createQueryPolicies(sessionId, partner);
-        this.createCapturePolicies(sessionId, partner);
-        this.createAdminPolicies(sessionId, partner);
+    public AccessPolicies(String sessionId, String owner) {
+        this.createQueryPolicies(sessionId, owner);
+        this.createCapturePolicies(sessionId, owner);
+        this.createAdminPolicies(sessionId, owner);
     }
 
-    public AccessPolicies(String sessionId, String partner, Module module) {
+    public AccessPolicies(String sessionId, String owner, Module module) {
         switch (module) {
             case adminModule:
-                this.createAdminPolicies(sessionId, partner);
+                this.createAdminPolicies(sessionId, owner);
                 break;
             case queryModule:
-                this.createQueryPolicies(sessionId, partner);
+                this.createQueryPolicies(sessionId, owner);
                 break;
             case captureModule:
-                this.createCapturePolicies(sessionId, partner);
+                this.createCapturePolicies(sessionId, owner);
                 break;
         }
     }
 
-    private synchronized void createQueryPolicies(String sessionId, String partner) {
-        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, partner).APMSession.getQueryPolicy(partner);
+    private synchronized void createQueryPolicies(String sessionId, String owner) {
+        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, owner).APMSession.getQueryPolicy(owner);
         Node policies = new Node("", NodeType.policiesNode, null, Module.queryModule, null);
         if (ownerPolicies != null) {
             for (Object ogp : ownerPolicies.getPolicies()) {
@@ -181,23 +181,31 @@ public class AccessPolicies {
                     }
                     filters.addChild(dispositionRuleTreeNode);
 
+                    MasterDataIdRuleTreeNode masterDataIdRuleTreeNode = new MasterDataIdRuleTreeNode(gp.getMasterDataIdsFilterFunction(), gp.getId().toString(), Module.queryModule);
+                    for (Object ob : gp.getMasterDataIds()) {
+                        String value = (String) ob;
+                        MasterDataIdTreeNode treeNode = new MasterDataIdTreeNode(value, value, gp.getId().toString(), Module.queryModule);
+                        masterDataIdRuleTreeNode.addChild(treeNode);
+                    }
+                    filters.addChild(masterDataIdRuleTreeNode);
+
                     gptn.addChild(filters);
                     policies.addChild(gptn);
 
                 }
             }
         } else {
-            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, partner);
-            ownerPolicies = new OwnerPolicies(partner, fr.unicaen.iota.xacml.policy.Module.queryModule);
+            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, owner);
+            ownerPolicies = new OwnerPolicies(owner, fr.unicaen.iota.xacml.policy.Module.queryModule);
             ih.APMSession.addQueryPolicy(ownerPolicies);
-            ih.APMSession.saveQueryPolicies(partner);
+            ih.APMSession.saveQueryPolicies(owner);
             ih.updateAPM();
         }
         getPoliciesQuery().add(policies);
     }
 
-    private synchronized void createCapturePolicies(String sessionId, String partner) {
-        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, partner).APMSession.getCapturePolicy(partner);
+    private synchronized void createCapturePolicies(String sessionId, String owner) {
+        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, owner).APMSession.getCapturePolicy(owner);
         Node policies = new Node("", NodeType.policiesNode, null, Module.captureModule, null);
 
         if (ownerPolicies != null) {
@@ -319,24 +327,32 @@ public class AccessPolicies {
                     }
                     filters.addChild(dispositionRuleTreeNode);
 
+                    MasterDataIdRuleTreeNode masterDataIdRuleTreeNode = new MasterDataIdRuleTreeNode(gp.getMasterDataIdsFilterFunction(), gp.getId().toString(), Module.captureModule);
+                    for (Object ob : gp.getMasterDataIds()) {
+                        String value = (String) ob;
+                        MasterDataIdTreeNode treeNode = new MasterDataIdTreeNode(value, value, gp.getId().toString(), Module.captureModule);
+                        masterDataIdRuleTreeNode.addChild(treeNode);
+                    }
+                    filters.addChild(masterDataIdRuleTreeNode);
+
                     gptn.addChild(filters);
                     policies.addChild(gptn);
 
                 }
             }
         } else {
-            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, partner);
-            ownerPolicies = new OwnerPolicies(partner, fr.unicaen.iota.xacml.policy.Module.captureModule);
+            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, owner);
+            ownerPolicies = new OwnerPolicies(owner, fr.unicaen.iota.xacml.policy.Module.captureModule);
             ih.APMSession.addCapturePolicy(ownerPolicies);
-//            createCapturePolicies(sessionId, partner);
-            ih.APMSession.saveCapturePolicies(partner);
+//            createCapturePolicies(sessionId, owner);
+            ih.APMSession.saveCapturePolicies(owner);
             ih.updateAPM();
         }
         getPoliciesCapture().add(policies);
     }
 
-    private synchronized void createAdminPolicies(String sessionId, String partner) {
-        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, partner).APMSession.getAdminPolicy(partner);
+    private synchronized void createAdminPolicies(String sessionId, String owner) {
+        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, owner).APMSession.getAdminPolicy(owner);
         Node policies = new Node("", NodeType.policiesNode, null, Module.adminModule, null);
 
         if (ownerPolicies != null) {
@@ -365,10 +381,10 @@ public class AccessPolicies {
                 }
             }
         } else {
-            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, partner);
-            ownerPolicies = new OwnerPolicies(partner, fr.unicaen.iota.xacml.policy.Module.administrationModule);
+            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, owner);
+            ownerPolicies = new OwnerPolicies(owner, fr.unicaen.iota.xacml.policy.Module.administrationModule);
             ih.APMSession.addAdminPolicy(ownerPolicies);
-            ih.APMSession.saveAdminPolicies(partner);
+            ih.APMSession.saveAdminPolicies(owner);
             ih.updateAPM();
         }
         getPoliciesAdmin().add(policies);
@@ -492,6 +508,14 @@ public class AccessPolicies {
                 dispositionRuleTreeNode.addChild(treeNode);
             }
             filters.addChild(dispositionRuleTreeNode);
+
+            MasterDataIdRuleTreeNode masterDataIdRuleTreeNode = new MasterDataIdRuleTreeNode(gp.getMasterDataIdsFilterFunction(), gp.getId().toString(), module);
+            for (Object ob : gp.getMasterDataIds()) {
+                String value = (String) ob;
+                MasterDataIdTreeNode treeNode = new MasterDataIdTreeNode(value, value, gp.getId().toString(), module);
+                masterDataIdRuleTreeNode.addChild(treeNode);
+            }
+            filters.addChild(masterDataIdRuleTreeNode);
 
             gptn.addChild(filters);
         }

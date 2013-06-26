@@ -27,12 +27,12 @@ public enum NodeType {
     policyNode,
     bizStepFilterNode,
     epcFilterNode,
-    epcClassFilterNode,
+    eventTypeFilterNode,
     eventTimeFilterNode,
     methodFilterNode,
     bizStepFilterGroupNode,
     epcFilterGroupNode,
-    epcClassFilterGroupNode,
+    eventTypeFilterGroupNode,
     eventTimeFilterGroupNode,
     methodFilterGroupNode,
     rulesNode,
@@ -42,7 +42,7 @@ public enum NodeType {
     public boolean isFilter() {
         return this == bizStepFilterNode
                 || this == epcFilterNode
-                || this == epcClassFilterNode
+                || this == eventTypeFilterNode
                 || this == eventTimeFilterNode
                 || this == methodFilterNode;
     }
@@ -50,7 +50,7 @@ public enum NodeType {
     public boolean isFilterGroup() {
         return this == bizStepFilterGroupNode
                 || this == epcFilterGroupNode
-                || this == epcClassFilterGroupNode
+                || this == eventTypeFilterGroupNode
                 || this == eventTimeFilterGroupNode
                 || this == methodFilterGroupNode;
     }
@@ -58,7 +58,7 @@ public enum NodeType {
     public boolean isExpandable() {
         return this == bizStepFilterGroupNode
                 || this == epcFilterGroupNode
-                || this == epcClassFilterGroupNode
+                || this == eventTypeFilterGroupNode
                 || this == eventTimeFilterGroupNode
                 || this == policyNode
                 || this == policiesNode

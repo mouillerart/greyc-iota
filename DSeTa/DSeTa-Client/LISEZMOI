@@ -4,8 +4,8 @@ Bibliothèque client pour le web service DSeTa.
 
 Dépendances:
   modules IoTa:
+    - DS-Client
     - TAu
-    - IoTa-DiscoveryWS-Client
   bibliothèques:
     - cxf
     - commons-logging

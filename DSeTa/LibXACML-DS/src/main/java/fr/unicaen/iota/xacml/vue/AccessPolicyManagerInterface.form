@@ -6,6 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -53,7 +54,7 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelPartner" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelOwner" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabelUser" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -67,7 +68,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jLabelTitle" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabelPartner" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelOwner" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabelUser" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -83,9 +84,9 @@
             <Property name="text" type="java.lang.String" value="AccessPolicyManager"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelPartner">
+        <Component class="javax.swing.JLabel" name="jLabelOwner">
           <Properties>
-            <Property name="text" type="java.lang.String" value="partner:"/>
+            <Property name="text" type="java.lang.String" value="owner:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelUser">

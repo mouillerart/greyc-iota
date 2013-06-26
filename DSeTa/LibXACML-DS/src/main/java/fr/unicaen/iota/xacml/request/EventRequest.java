@@ -75,11 +75,11 @@ public class EventRequest {
         return dsEvent.getEpc();
     }
 
-    public String getEpcClass() {
+    public String getEventType() {
         if (dsEvent == null) {
             return null;
         }
-        return dsEvent.getEpcClass();
+        return dsEvent.getEventType();
     }
 
     public Date getEventTime() {
@@ -208,18 +208,18 @@ public class EventRequest {
             resources.add(epcAttribute);
         }
 
-        //////////////////////// EPCClass ID //////////////////////
+        //////////////////////// EventType ID //////////////////////
 
-        if (getEpcClass() != null) {
-            URI epcClassAttributeId = null;
+        if (getEventType() != null) {
+            URI eventTypeAttributeId = null;
             try {
-                epcClassAttributeId = new URI("urn:oasis:names:tc:xacml:1.0:resource:epcClass-id");
+                eventTypeAttributeId = new URI("urn:oasis:names:tc:xacml:1.0:resource:eventType-id");
             } catch (URISyntaxException ex) {
                 log.fatal(null, ex);
             }
-            StringAttribute epcClassValue = new StringAttribute(getEpcClass());
-            Attribute epcClassAttribute = new Attribute(epcClassAttributeId, null, null, epcClassValue);
-            resources.add(epcClassAttribute);
+            StringAttribute eventTypeValue = new StringAttribute(getEventType());
+            Attribute eventTypeAttribute = new Attribute(eventTypeAttributeId, null, null, eventTypeValue);
+            resources.add(eventTypeAttribute);
         }
 
         //////////////////////// EventTime ID //////////////////////
@@ -259,10 +259,10 @@ public class EventRequest {
 
     public static void main(String[] args) {
         String bizStep = "bizStep1";
-        String epcClass = "epcClass:1";
+        String eventType = "eventType:1";
         String epc = "epc:1";
         Date date = new Date(8000);
-        XACMLDSEvent event = new XACMLDSEvent("toto", bizStep, epc, epcClass, date);
+        XACMLDSEvent event = new XACMLDSEvent("toto", bizStep, epc, eventType, date);
         EventRequest er = new EventRequest("user8", "read", event, Module.queryModule.getValue());
         er.save();
     }

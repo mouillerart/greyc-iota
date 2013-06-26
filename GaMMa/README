@@ -1,0 +1,44 @@
+GaMMa - Geo Map Maker
+
+Uses OpenLayers to visualize on a map the location of the EPCevents listed on a
+HTML page by LaMBDa. Entirely realized in javascript that is to be executed in
+a web browser.
+
+The locations are extracted dynamically from the location extension of the
+EPCevent. The events must be displayed in a div of class "eventsFound". Each event
+is inside a div of class "eventItems" having its own id. This id is used to
+link the markers on the map with the text. The extensions are inside a div of
+class "extensions" contaninig elements of classes "extensionName" and
+"extensionValue". The location is given by the extension names
+"http://www.opengis.net/kml/2.2##location".
+
+The map is displayed in a div of id "map". It will be placed by the default css
+next to a div of id "queryEpcis".
+
+You must just than add in the head of the document :
+    <link rel="stylesheet" href="./OpenLayers-2.12/theme/default/style.css" type="text/css">
+    <link rel="stylesheet" href="styles/gamma-style.css" type="text/css">
+    <script src="./OpenLayers-2.12/OpenLayers.js"></script>
+    <script type="text/javascript" src="scripts/gamma.js"></script>
+
+and at the end of the body:
+    <script type="text/javascript">
+	   gamma_init(); /* OpenLayers and div map init */
+	   initShowOnMap("eventItems");
+    </script>
+Note: these calls cannot be triggered directly on "onload" as they modify the
+DOM of the current page.
+
+Dependencies:
+  libraries:
+    - OpenLayers
+
+Installation and configuration:
+  Use IoTa-Installer or install the js scripts, the css files, OpenLayers and
+   include the elements above.
+
+Usage Dependencies:
+  - LaMBDa
+
+Usage:
+  Use a web browser and go to LaMBDa

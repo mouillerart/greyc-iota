@@ -24,8 +24,7 @@ import fr.unicaen.iota.application.operations.EpcisOperation;
 import fr.unicaen.iota.application.operations.TraceEPC;
 import fr.unicaen.iota.application.operations.TraceEPCAsync;
 import fr.unicaen.iota.application.rmi.CallbackClient;
-import fr.unicaen.iota.ds.model.TEventItem;
-import fr.unicaen.iota.ds.model.TServiceType;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.nu.ONSOperation;
 import fr.unicaen.iota.tau.model.Identity;
@@ -139,19 +138,19 @@ public class ALfA implements AccessInterface {
     }
 
     @Override
-    public List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException {
+    public List<DSEvent> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException {
         LOG.trace("[COMMAND]--[QUERY DS]");
         DiscoveryOperation dsOperation = new DiscoveryOperation(identity, DSAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
-        List<TEventItem> list = dsOperation.getDSEvents(EPC);
+        List<DSEvent> list = dsOperation.getDSEvents(EPC);
         return list;
     }
 
     @Override
-    public List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress, TServiceType serviceType) throws RemoteException {
+    public List<DSEvent> queryDS(Identity identity, String EPC, String DSAddress, ONSEntryType serviceType) throws RemoteException {
         LOG.trace("[COMMAND]--[QUERY DS]");
         try {
             DiscoveryOperation dsOperation = new DiscoveryOperation(identity, DSAddress, pksFilename, pksPassword, trustPksFilename, trustPksPassword);
-            List<TEventItem> list = dsOperation.getDSEvents(EPC, serviceType);
+            List<DSEvent> list = dsOperation.getDSEvents(EPC, serviceType);
             return list;
         } catch (Exception e) {
             LOG.error(null, e);

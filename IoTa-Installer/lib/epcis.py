@@ -38,6 +38,4 @@ class EpcisInstaller(installer.DBWebAppInstaller):
         qurl = self.cset("query_url", url + "query")
         self.cset("capture_url", url + "capture")
         self.cset("db_jndi", "EPCISDB")
-        CONFIG.set("ds", "epcis_type", "epcis")
-        CONFIG.set("ds", "epcis_query_url", qurl)
         CONFIG.set("epcilon", "subscription_url", qurl)

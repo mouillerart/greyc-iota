@@ -32,11 +32,11 @@ port = 3306
 login = root
 password = root
 user_host = localhost
-repo = resources/mysql-connector-java-5.1.21.jar
+repo = resources/mysql-connector-java-5.1.25.jar
 jar_install = true
 
 [tomcat]
-repo = resources/apache-tomcat-7.0.33.tar.gz
+repo = resources/apache-tomcat-7.0.41.tar.gz
 name = apache-tomcat
 directory = /srv/
 catalina_home = /srv/apache-tomcat/
@@ -64,7 +64,7 @@ url = tcp://localhost:61616
 admin_url = http://localhost:8161/admin
 login = 
 password =
-repo = resources/apache-activemq-5.6.0-bin.tar.gz
+repo = resources/apache-activemq-5.8.0-bin.tar.gz
 directory = /srv/
 install = false
 
@@ -83,63 +83,76 @@ install = false
 
 [epcilon]
 name = epcilon
-identity = anonymous
 repo = resources/epcilon-${IOTA_VERSION}.war
 url = http://localhost:8080/epcilon
 callback_url = http://localhost:8080/epcilon/StandingQueryCallbackServlet
-subscription_url = http://localhost:8080/eta/query
-ds_url = http://localhost:8080/dseta
+subscription_url = http://localhost:8080/epcis/query
+ds_url = http://localhost:8080/ds
 db_jndi = EPCILONDB
 db_name = EPCILON_DB
 db_login = epcilon_usr
 db_password = epcilon_pw
 db_install = false
+publisher_frequency = 30000
+publisher_pending_republish = 180000
+iota_ided = false
+identity = anonymous
 install = false
 
 [dphi]
 name = dphi
 repo = resources/discovery-phi-${IOTA_VERSION}.war
 install = false
-url = http://localhost:8080/dphi/index.jsp
+deploy_policies = true
+url = https://localhost:8443/dphi/index.jsp
 
 [ds_policies]
 dir = /srv/ds-policies/
 query_dir = /srv/ds-policies/query/
 capture_dir = /srv/ds-policies/capture/
 admin_dir = /srv/ds-policies/admin/
-xacml_url = http://localhost:8080/dphi/xi
+xacml_url = https://localhost:8443/dphi/xi
 
 [ds]
 name = ds
-repo = resources/discovery-server-${IOTA_VERSION}.war
-login = anonymous
-password = anonymous
+repo = resources/ds-${IOTA_VERSION}.war
+url = http://localhost:8080/ds
 db_jndi = DSDB
 db_name = DS_DB
 db_login = ds_usr
 db_password = ds_pw
 db_install = false
-server_identity = urn:epc:id:gsrn:1.1
+server_identity = http://localhost:8080/ds
+multi_ds_architecture = False
+topublish_jms_queue_name = toPublishDS
+jms_message_time_property = lastPublish
+publisher_delay = 10000
+publisher_timeout = 5000
+publisher_period = 30000
+ons_hosts = localhost
+ons_domain_prefix = ons-peer.com.
 install = false
-url = http://localhost:8080/ds/services/ESDS_Service
-epcis_type = epcis
-epcis_query_url = http://localhost:8080/epcis/query
 
 [dseta]
 name = dseta
-repo = resources/dseta-server-${IOTA_VERSION}.war
-ds_login = anonymous
-ds_password = anonymous
-install = false
-url = http://localhost:8080/dseta
-
-[publisher]
-my_address = ds.domain.com
-login = localusr
-password = localpsw
+repo = resources/dseta-${IOTA_VERSION}.war
+url = https://localhost:8443/dseta
+multi_dseta_architecture = False
+db_jndi = DSETADB
+db_name = DSETA_DB
+db_login = dseta_usr
+db_password = dseta_pw
+db_install = false
+server_identity = https://localhost:8443/dseta
+multi_dseta_architecture = False
+topublish_jms_queue_name = toPublishDSeTa
+jms_message_time_property = lastPublish
+publisher_delay = 10000
+publisher_timeout = 5000
+publisher_period = 30000
 ons_hosts = localhost
-multi_ds_architecture = False
-my_port = 8080
+ons_domain_prefix = ons-peer.com.
+install = false
 
 [omega]
 name = omega
@@ -161,11 +174,15 @@ install = false
 name = ypsilon
 repo = resources/ypsilon-${IOTA_VERSION}.war
 url = http://localhost:8080/ypsilon
+xacml_url = https://localhost:8443/ephi/xi
 install = false
 
 [lambda]
 name = lambda
 repo = resources/lambda-${IOTA_VERSION}.war
+use_gamma= false
+gamma_repo = resources/gamma-${IOTA_VERSION}.tar
+gamma_path = /srv/
 install = false
 
 [eta]
@@ -187,7 +204,7 @@ name = eta-callback-receiver
 repo = resources/eta-callback-receiver-${IOTA_VERSION}.war
 install = false
 callbackservlet_name = callback
-callback_url = http://localhost:8080/eta-callback-receiver/callback
+callback_url = https://localhost:8443/eta-callback-receiver/callback
 send_queue_name = queueToFilter
 
 [eta_callback_filter]
@@ -198,6 +215,8 @@ directory = /srv/
 send_queue_name = queueToSender
 startup-delay = 10000
 polling-delay = 60000
+jms_timeout = 200
+jms_message_time_property = lastSend
 install = false
 
 [eta_callback_sender]
@@ -207,6 +226,8 @@ repo_war = resources/eta-callback-sender-${IOTA_VERSION}.war
 directory = /srv/
 startup-delay = 10000
 polling-delay = 60000
+jms_timeout = 200
+jms_message_time_property = lastSend
 install = false
 
 [ephi]
@@ -221,7 +242,7 @@ dir = /srv/epcis-policies/
 query_dir = /srv/epcis-policies/query/
 capture_dir = /srv/epcis-policies/capture/
 admin_dir = /srv/epcis-policies/admin/
-xacml_url = http://localhost:8080/ephi/xi
+xacml_url = https://localhost:8443/ephi/xi
 
 [ons]
 server = localhost
@@ -241,7 +262,7 @@ entry_regex = \\\\!\\\\^\\\\.\\\\*\\\\$\\\\!|\\\\!
 name = sigma
 repo = resources/sigma-${IOTA_VERSION}.war
 install = True
-url = http://localhost:8080/sigma/
+url = https://localhost:8443/sigma/
 
 [sigma_cert]
 create_keystore = True
@@ -279,8 +300,8 @@ EOS
 echo "Cleaning resources links ..."
 rm -f resources/alfa-rmi-*-bin-with-dependencies.tar.gz			\
     resources/discovery-phi-*.war					\
-    resources/discovery-server-*.war					\
-    resources/dseta-server-*.war					\
+    resources/ds-*.war					\
+    resources/dseta-*.war					\
     resources/epcilon-*.war						\
     resources/epcis-phi-*.war						\
     resources/ypsilon-*.war						\
@@ -294,8 +315,8 @@ rm -f resources/alfa-rmi-*-bin-with-dependencies.tar.gz			\
 echo "Setting resources links ..."
 ln -s ../../ALfA/ALfA-RMI/target/alfa-rmi-${IOTA_VERSION}-bin-with-dependencies.tar.gz	\
     ../../DSeTa/DiscoveryPHI/target/discovery-phi-${IOTA_VERSION}.war			\
-    ../../DSeTa/DSeTa/target/dseta-server-${IOTA_VERSION}.war				\
-    ../../IoTa-DiscoveryWS/IoTa-DiscoveryWS/target/discovery-server-${IOTA_VERSION}.war	\
+    ../../DSeTa/DSeTa/target/dseta-${IOTA_VERSION}.war				\
+    ../../DS/DS/target/ds-${IOTA_VERSION}.war	\
     ../../EpcILoN/target/epcilon-${IOTA_VERSION}.war					\
     ../../ETa/EpcisPHI/target/epcis-phi-${IOTA_VERSION}.war				\
     ../../YPSilon/YPSilon/target/ypsilon-${IOTA_VERSION}.war					\

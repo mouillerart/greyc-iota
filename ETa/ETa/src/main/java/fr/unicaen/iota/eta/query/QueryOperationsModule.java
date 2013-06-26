@@ -31,6 +31,7 @@ import java.net.URL;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
@@ -39,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.*;
 import org.fosstrak.epcis.queryclient.QueryControlClient;
 import org.fosstrak.epcis.soap.*;
+import org.w3c.dom.Element;
 
 /**
  * EPCIS Query Operations Module implementing the SOAP/HTTP binding of the Query
@@ -171,7 +173,7 @@ public class QueryOperationsModule {
     public QueryResults poll(String queryName, QueryParams queryParams, String user) throws NoSuchNameExceptionResponse,
             QueryParameterExceptionResponse, QueryTooComplexExceptionResponse, QueryTooLargeExceptionResponse,
             SecurityExceptionResponse, ValidationExceptionResponse, ImplementationExceptionResponse {
-        QueryResults results;
+        QueryResults results = null;
         try {
             configureEPCISQueryClient();
         } catch (Exception e) {
@@ -186,17 +188,82 @@ public class QueryOperationsModule {
             throw new ImplementationExceptionResponse(msg, ie, e);
         }
 
-        LOG.debug("Invoking 'poll'");
         Poll poll = new Poll();
         poll.setQueryName(queryName);
-        poll.setParams(queryParams);
 
-        results = epcisQueryClient.poll(poll);
-
-        if ("SimpleEventQuery".equals(results.getQueryName())) {
-            queryCheck.xacmlCheck(results.getResultsBody().getEventList().getObjectEventOrAggregationEventOrQuantityEvent(), user);
-        } else if ("SimpleMasterDataQuery".equals(results.getQueryName())) {
-            queryCheck.xacmlCheckMasterD(results.getResultsBody().getVocabularyList().getVocabulary(), user);
+        if ("SimpleEventQuery".equals(queryName)) {
+            int maxEventCount = -1;
+            int eventCountLimit = -1;
+            boolean paramOrderByIsPresent = false;
+            Iterator<QueryParam> iterParam = queryParams.getParam().iterator();
+            try {
+                while (iterParam.hasNext()) {
+                    QueryParam param = iterParam.next();
+                    if ("maxEventCount".equals(param.getName())) {
+                        maxEventCount = parseAsInteger(param.getValue()).intValue();
+                        iterParam.remove();
+                    }
+                    else if ("eventCountLimit".equals(param.getName())) {
+                        eventCountLimit = parseAsInteger(param.getValue()).intValue();
+                        iterParam.remove();
+                    }
+                    else if ("orderBy".equals(param.getName())) {
+                        paramOrderByIsPresent = true;
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                throw queryParameterException("The QueryParam can not be parsed", ex);
+            }
+            if (maxEventCount > -1 && eventCountLimit > -1) {
+                String msg = "Paramters 'maxEventCount' and 'eventCountLimit' are mutually exclusive";
+                throw queryParameterException(msg, null);
+            }
+            if (paramOrderByIsPresent && eventCountLimit > -1) {
+                String msg = "'eventCountLimit' may only be used when 'orderBy' is specified";
+                throw queryParameterException(msg, null);
+            }
+            poll.setParams(queryParams);
+            LOG.debug("Invoking 'poll'");
+            results = epcisQueryClient.poll(poll);
+            List<Object> eventList = results.getResultsBody().getEventList().getObjectEventOrAggregationEventOrQuantityEvent();
+            queryCheck.xacmlCheck(eventList, user);
+            if (eventCountLimit > -1 && eventList.size() > eventCountLimit) {
+                eventList.subList(eventCountLimit, eventList.size()).clear();
+            }
+            else if (maxEventCount > -1 && eventList.size() > maxEventCount) {
+                // according to spec, this must result in a QueryTooLargeException
+                String msg = "The query returned more results than specified by 'maxEventCount'";
+                LOG.info(msg);
+                QueryTooLargeException e = new QueryTooLargeException();
+                e.setReason(msg);
+                throw new QueryTooLargeExceptionResponse(msg, e);
+            }
+        } else if ("SimpleMasterDataQuery".equals(queryName)) {
+            int maxElementCount = -1;
+            Iterator<QueryParam> iterParam = queryParams.getParam().iterator();
+            try {
+                while (iterParam.hasNext()) {
+                    QueryParam param = iterParam.next();
+                    if ("maxElementCount".equals(param.getName())) {
+                        maxElementCount = parseAsInteger(param.getValue()).intValue();
+                        iterParam.remove();
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                throw queryParameterException("The QueryParam can not be parsed", ex);
+            }
+            poll.setParams(queryParams);
+            LOG.debug("Invoking 'poll'");
+            results = epcisQueryClient.poll(poll);
+            List<VocabularyType> vocList = results.getResultsBody().getVocabularyList().getVocabulary();
+            queryCheck.xacmlCheckMasterD(vocList, user);
+            if (maxElementCount > -1 && vocList.size() > maxElementCount) {
+                String msg = "The query returned more results than specified by 'maxElementCount'";
+                LOG.info(msg);
+                QueryTooLargeException e = new QueryTooLargeException();
+                e.setReason(msg);
+                throw new QueryTooLargeExceptionResponse(msg, e);
+            }
         }
         return results;
 
@@ -310,39 +377,31 @@ public class QueryOperationsModule {
                     throw new ImplementationExceptionResponse(msg, ie, e);
                 }
 
-                if (queryCheck.checkSubscribe(user, user)) {
-                    String callbackAddress;
-                    try {
-                        callbackAddress = Constants.CALLBACK_URL;
-                    } catch (Exception e) {
-                        String msg = "Internal error occurred while processing request";
-                        LOG.error(msg, e);
-                        ImplementationException ie = new ImplementationException();
-                        ie.setReason(msg);
-                        ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-                        if (queryName != null) {
-                            ie.setQueryName(queryName);
-                        }
-                        throw new ImplementationExceptionResponse(msg, ie, e);
+                String callbackAddress;
+                try {
+                    callbackAddress = Constants.CALLBACK_URL;
+                } catch (Exception e) {
+                    String msg = "Internal error occurred while processing request";
+                    LOG.error(msg, e);
+                    ImplementationException ie = new ImplementationException();
+                    ie.setReason(msg);
+                    ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+                    if (queryName != null) {
+                        ie.setQueryName(queryName);
                     }
-                    Subscribe subscribe = new Subscribe();
-                    subscribe.setQueryName(queryName);
-                    subscribe.setParams(params);
-                    subscribe.setDest(callbackAddress);
-                    subscribe.setControls(controls);
-                    subscribe.setSubscriptionID(subscriptionID);
-                    // Subscribe query to the EPCIS
-                    epcisQueryClient.subscribe(subscribe);
-                    // Stores the query subscription to the database
-                    backend.storeSubscription(session, subscriptionID, dest, user);
-                    LOG.debug("New subscription from user: " + user);
-                } else {
-                    String msg = "Subscription not allowed for " + user;
-                    LOG.warn("SubscribeNotPermittedException: " + msg);
-                    SubscribeNotPermittedException e = new SubscribeNotPermittedException();
-                    e.setReason(msg);
-                    throw new SubscribeNotPermittedExceptionResponse(msg, e);
+                    throw new ImplementationExceptionResponse(msg, ie, e);
                 }
+                Subscribe subscribe = new Subscribe();
+                subscribe.setQueryName(queryName);
+                subscribe.setParams(params);
+                subscribe.setDest(callbackAddress);
+                subscribe.setControls(controls);
+                subscribe.setSubscriptionID(subscriptionID);
+                // Subscribe query to the EPCIS
+                epcisQueryClient.subscribe(subscribe);
+                // Stores the query subscription to the database
+                backend.storeSubscription(session, subscriptionID, dest, user);
+                LOG.debug("New subscription from user: " + user);
             } finally {
                 session.close();
                 LOG.debug("DB connection closed");
@@ -374,8 +433,6 @@ public class QueryOperationsModule {
                     e.setReason(msg);
                     throw new NoSuchSubscriptionExceptionResponse(msg, e);
                 }
-
-                //TODO xacml check?
 
                 try {
                     configureEPCISQueryClient();
@@ -410,6 +467,9 @@ public class QueryOperationsModule {
     public boolean canBe(Principal principal, Identity identity) {
         String user = principal.getName();
         String canBeUser = identity.getAsString();
+        if (user.equals(canBeUser)) {
+            return true;
+        }
         return queryCheck.canBe(user, canBeUser);
     }
 
@@ -426,4 +486,54 @@ public class QueryOperationsModule {
             }
         }
     }
+
+    /**
+     * Parses the given query parameter value as Integer.
+     *
+     * @param queryParamValue The query parameter value to be parsed as Integer.
+     * @return The Integer holding the value of the query parameter.
+     * @throws NumberFormatException If the query parameter value cannot be parsed as Integer.
+     */
+    private Integer parseAsInteger(Object queryParamValue) throws NumberFormatException {
+        if (queryParamValue instanceof Integer) {
+            return (Integer) queryParamValue;
+        } else if (queryParamValue instanceof Element) {
+            Element elem = (Element) queryParamValue;
+            return Integer.valueOf(elem.getTextContent().trim());
+        } else {
+            return Integer.valueOf(queryParamValue.toString());
+        }
+    }
+
+    /**
+     * Writes the given message and exception to the application's log file,
+     * creates a QueryParameterException from the given message, and returns a
+     * new QueryParameterExceptionResponse. Use this method to conveniently
+     * return a user error message back to the requesting service caller, e.g.:
+     *
+     * <pre>
+     * String msg = &quot;unable to parse query parameter&quot;
+     * throw new queryParameterException(msg, null);
+     * </pre>
+     *
+     * @param msg
+     *            A user error message.
+     * @param e
+     *            An internal exception - this exception will not be delivered
+     *            back to the service caller as it contains application specific
+     *            information. It will be used to print some details about the
+     *            user error to the log file (useful for debugging).
+     * @return A new QueryParameterExceptionResponse containing the given user
+     *         error message.
+     */
+    private QueryParameterExceptionResponse queryParameterException(String msg, Exception e) {
+        LOG.info("QueryParameterException: " + msg);
+        if (LOG.isTraceEnabled() && e != null) {
+            LOG.trace("Exception details: " + e.getMessage(), e);
+        }
+        QueryParameterException qpe = new QueryParameterException();
+        qpe.setReason(msg);
+        return new QueryParameterExceptionResponse(msg, qpe);
+    }
+
 }

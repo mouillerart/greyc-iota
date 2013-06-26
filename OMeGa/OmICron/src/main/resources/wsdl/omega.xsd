@@ -72,13 +72,13 @@
             <xs:element minOccurs="1" maxOccurs="1" name="identity" type="tau:Identity"/>
             <xs:element minOccurs="1" maxOccurs="1" name="epc" type="epc:EPC"/>
             <xs:element minOccurs="1" maxOccurs="1" name="DSAddress" type="xs:string"/>
-            <xs:element minOccurs="0" maxOccurs="1" name="serviceType" type="ds:tServiceType"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="serviceType" type="xs:token"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="QueryDSResponse">
         <xs:sequence>
-            <xs:element name="eventList" type="ds:tEventItemList"/>
+            <xs:element name="dsEventList" type="ds:DSEvent" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
 

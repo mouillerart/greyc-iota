@@ -62,7 +62,7 @@ public final class PEPRequester {
     public static int checkAccess(User user, String methodName) {
         ArrayList args = new ArrayList();
         args.add(user.getUserID());
-        args.add(user.getPartnerID());
+        args.add(user.getOwnerID());
         EPCISPEP epcispep = new EPCISPEP();
         return (Integer) runMethod(epcispep, args.toArray(), methodName);
     }

@@ -22,7 +22,7 @@ Installers:
   IoTa-Installer/      Installer for IoTa modules
 
 Server modules:
-  IoTa-DiscoveryWS/    Discovery Web Service
+  DS/    Discovery Service
   DSeTa/               Discovery SErvices Trusted Agent
   EpcILoN/             EPC Information Layer tO Naming layer WS
   ETa/                 Epcis Trusted Agent WS
@@ -39,3 +39,4 @@ End-User Applications:
   MuPHI/               MUltiple PSi Human Interface WS
   PSi/                 Petri net SImulator application
   OMeGa/OmiCron        OMeGa Internet Client
+  LaMBDa/              Luxe and Mark Beautiful Demo application

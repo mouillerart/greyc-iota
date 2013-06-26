@@ -23,90 +23,88 @@ package fr.unicaen.iota.xacml.pep;
  */
 public interface MethodNamesAdmin {
 
-    public int hello(String user, String partner);
+    public int hello(String user, String owner);
 
-    public int userLookup(String user, String partner);
+    public int userLookup(String user, String owner);
 
-    public int userCreate(String user, String partner);
+    public int userCreate(String user, String owner);
 
-    public int userInfo(String user, String partner);
+    public int userInfo(String user, String owner);
 
-    public int userUpdate(String user, String partner);
+    public int userUpdate(String user, String owner);
 
-    public int userDelete(String user, String partner);
+    public int userDelete(String user, String owner);
 
-    public int partnerInfo(String user, String partner);
+    public int ownerUpdate(String user, String owner);
 
-    public int partnerUpdate(String user, String partner);
+    public int ownerDelete(String user, String owner);
 
-    public int partnerDelete(String user, String partner);
+    public int createOwnerGroup(String user, String owner);
 
-    public int createPartnerGroup(String user, String partner);
+    public int deleteOwnerGroup(String user, String owner);
 
-    public int deletePartnerGroup(String user, String partner);
+    public int addOwnerToGroup(String user, String owner);
 
-    public int addPartnerToGroup(String user, String partner);
+    public int removeOwnerFromGroup(String user, String owner);
 
-    public int removePartnerFromGroup(String user, String partner);
+    public int addBizStepRestriction(String user, String owner);
 
-    public int addBizStepRestriction(String user, String partner);
+    public int removeBizStepRestriction(String user, String owner);
 
-    public int removeBizStepRestriction(String user, String partner);
+    public int addEPCRestriction(String user, String owner);
 
-    public int addEPCRestriction(String user, String partner);
+    public int removeEPCRestriction(String user, String owner);
 
-    public int removeEPCRestriction(String user, String partner);
+    public int addEventTypeRestriction(String user, String owner);
 
-    public int addEPCClassRestriction(String user, String partner);
+    public int removeEventTypeRestriction(String user, String owner);
 
-    public int removeEPCClassRestriction(String user, String partner);
+    public int addTimeRestriction(String user, String owner);
 
-    public int addTimeRestriction(String user, String partner);
+    public int removeTimeRestriction(String user, String owner);
 
-    public int removeTimeRestriction(String user, String partner);
+    public int switchBizStepPolicy(String user, String owner);
 
-    public int switchBizStepPolicy(String user, String partner);
+    public int switchEPCPolicy(String user, String owner);
 
-    public int switchEPCPolicy(String user, String partner);
+    public int switchEventTypePolicy(String user, String owner);
 
-    public int switchEPCClassPolicy(String user, String partner);
+    public int switchTimePolicy(String user, String owner);
 
-    public int switchTimePolicy(String user, String partner);
+    public int switchUserPermissionPolicy(String user, String owner);
 
-    public int switchUserPermissionPolicy(String user, String partner);
+    public int removeUserPermission(String user, String owner);
 
-    public int removeUserPermission(String user, String partner);
+    public int addUserPermission(String user, String owner);
 
-    public int addUserPermission(String user, String partner);
+    public int updateGroupName(String user, String owner);
 
-    public int updateGroupName(String user, String partner);
-
-    public int savePolicyPartner(String user, String partner);
+    public int savePolicyOwner(String user, String owner);
 
     //####################################################
     //############## Admin Module Section ################
     //####################################################
-//    public int superadmin(String user, String partner);
-//    public int allAdminMethods(String user, String partner);
+//    public int superadmin(String user, String owner);
+//    public int allAdminMethods(String user, String owner);
 //
-//    public int allQueryMethods(String user, String partner);
+//    public int allQueryMethods(String user, String owner);
 //
-//    public int allCaptureMethods(String user, String partner);
-    public int createAdminPartnerGroup(String user, String partner);
+//    public int allCaptureMethods(String user, String owner);
+    public int createAdminOwnerGroup(String user, String owner);
 
-    public int deleteAdminPartnerGroup(String user, String partner);
+    public int deleteAdminOwnerGroup(String user, String owner);
 
-    public int addAdminPartnerToGroup(String user, String partner);
+    public int addAdminOwnerToGroup(String user, String owner);
 
-    public int removeAdminPartnerFromGroup(String user, String partner);
+    public int removeAdminOwnerFromGroup(String user, String owner);
 
-    public int switchAdminUserPermissionPolicy(String user, String partner);
+    public int switchAdminUserPermissionPolicy(String user, String owner);
 
-    public int removeAdminUserPermission(String user, String partner);
+    public int removeAdminUserPermission(String user, String owner);
 
-    public int addAdminUserPermission(String user, String partner);
+    public int addAdminUserPermission(String user, String owner);
 
-    public int updateAdminGroupName(String user, String partner);
+    public int updateAdminGroupName(String user, String owner);
 
-    public int saveAdminPolicyPartner(String user, String partner);
+    public int saveAdminPolicyOwner(String user, String owner);
 }

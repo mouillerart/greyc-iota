@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tau="urn:fr:unicaen:iota:tau:xsd"
-           targetNamespace="urn:fr:unicaen:iota:tau:xsd"
+           xmlns:tau="urn:unicaen:iota:tau:xsd"
+           targetNamespace="urn:unicaen:iota:tau:xsd"
            elementFormDefault="unqualified" attributeFormDefault="unqualified">
 
   <xs:element name="identity" type="tau:Identity"/>

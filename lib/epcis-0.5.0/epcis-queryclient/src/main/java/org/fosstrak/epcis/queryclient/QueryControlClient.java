@@ -32,7 +32,7 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -47,14 +47,15 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.soap.SOAPBinding;
 
-import org.apache.cxf.Bus;
-import org.apache.cxf.bus.CXFBusFactory;
+//import org.apache.cxf.Bus;
+//import org.apache.cxf.bus.CXFBusFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.configuration.security.AuthorizationPolicy;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory;
+//import org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
+//import org.apache.cxf.transport.servlet.ServletTransportFactory;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.fosstrak.epcis.model.EmptyParms;
 import org.fosstrak.epcis.model.GetSubscriptionIDs;
@@ -243,7 +244,7 @@ public class QueryControlClient implements QueryControlInterface, X509TrustManag
         serviceConfigured = false;
 
         // setup the CXF bus
-        setUpBus();
+        //setUpBus();
 
         // instantiates a client proxy object from the EPCISServicePortType
         // interface using the JAX-WS API
@@ -330,7 +331,7 @@ public class QueryControlClient implements QueryControlInterface, X509TrustManag
         serviceConfigured = true;
     }
 
-    private void setUpBus() {
+    /*private void setUpBus() {
         Bus bus = CXFBusFactory.getDefaultBus();
         ClientOnlyHTTPTransportFactory httpTransport = new ClientOnlyHTTPTransportFactory();
         // httpTransport = new ServletTransportFactory();
@@ -342,7 +343,7 @@ public class QueryControlClient implements QueryControlInterface, X509TrustManag
         httpTransport.setTransportIds(transportIds);
         httpTransport.registerWithBindingManager();
         // httpTransport.register();
-    }
+    }*/
 
     // X509TrustManager methods: Note that this client will trust any server
     // you point it at. This is probably OK for the usage for which this program

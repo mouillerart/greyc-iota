@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,24 +18,28 @@
  */
 package fr.unicaen.iota.xacml.servlet;
 
-import fr.unicaen.iota.discovery.client.DsClient;
-import fr.unicaen.iota.discovery.client.model.Session;
-import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
+import fr.unicaen.iota.mu.Utils;
+import fr.unicaen.iota.utils.Constants;
 import fr.unicaen.iota.utils.MapSessions;
 import fr.unicaen.iota.utils.SessionLoader;
-import fr.unicaen.iota.xacml.conf.Configuration;
+import fr.unicaen.iota.ypsilon.client.YPSilonClient;
+import fr.unicaen.iota.ypsilon.client.model.UserLoginOut;
+import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  */
 public class RootAccountAuth extends HttpServlet {
 
+    private static final Log LOG = LogFactory.getLog(RootAccountAuth.class);
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -44,39 +48,45 @@ public class RootAccountAuth extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
-    public static final String PROP_FILE = "root-account.properties";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String message = "";
         if ("login".equals(request.getParameter("action"))) {
-            String login = (String) request.getParameter("login");
-            String pass = (String) request.getParameter("passwd");
-            DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
-            String SESSION_ID = null;
-            try {
-                Session session = dsClient.userLogin(fr.unicaen.iota.discovery.client.util.Configuration.DEFAULT_SESSION, login, pass);
-                SESSION_ID = session.getSessionId();
-                message = SessionLoader.loadSession(SESSION_ID, dsClient, login, request.getSession());
-            } catch (EnhancedProtocolException ex) {
-                message = "?message=" + ex.getMessage();
-            } catch (RemoteException e) {
-                message = "?message=" + "Internal server error";
+            String login = (request.getUserPrincipal() != null)? request.getUserPrincipal().getName() : null;
+            if (login == null || login.isEmpty()) {
+                message = "?message=You are not authenticated.";
+            } else {
+                login = Utils.formatId(login);
+                UserLoginOut userLoginOut;
+                try {
+                    YPSilonClient ypsilonClient = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+                    userLoginOut = ypsilonClient.userCertLogin(login);
+                    request.setAttribute("session-id", userLoginOut.getSid());
+                    message = SessionLoader.loadSession(userLoginOut.getSid(), ypsilonClient, login, request.getSession());
+                } catch (ImplementationExceptionResponse ex) {
+                    message = "?message=" + ex.getMessage();
+                    LOG.error("impl", ex);
+                } catch (SecurityExceptionResponse ex) {
+                    message = "?message=" + ex.getMessage();
+                    LOG.error("secur", ex);
+                }
             }
         } else if ("logout".equals(request.getParameter("action"))) {
-            DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
             String sessionId = (String) (request.getSession().getAttribute("session-id"));
             try {
-                dsClient.userLogout(sessionId);
+                YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+                client.userLogout(sessionId);
                 SessionLoader.clearSession(request.getSession());
                 MapSessions.releaseSession(sessionId);
-
-            } catch (EnhancedProtocolException ex) {
+            } catch (ImplementationExceptionResponse ex) {
                 message = "?message=" + ex.getMessage();
-            } catch (RemoteException e) {
-                message = "?message=Internal server error";
+            } catch (SecurityExceptionResponse ex) {
+                message = "?message=" + ex.getMessage();
             }
-            SessionLoader.clearSession(request.getSession());
+            request.getSession().setAttribute("session-id", null);
             MapSessions.releaseSession(sessionId);
         }
         //getServletContext().getRequestDispatcher("/test").forward(request, response);

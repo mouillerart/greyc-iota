@@ -64,10 +64,10 @@ public final class PEPRequester {
 
     public static int checkAccess(User user, String methodName) {
         String userS = user.getUserID();
-        String partner = user.getPartner().getPartnerID();
+        String owner = user.getOwnerID();
         ArrayList<String> args = new ArrayList<String>();
         args.add(userS);
-        args.add(partner);
+        args.add(owner);
         DSPEP dspep = new DSPEP();
         return (Integer) runMethod(dspep, args.toArray(), methodName);
     }

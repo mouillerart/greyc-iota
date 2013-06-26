@@ -18,8 +18,8 @@
  */
 package fr.unicaen.iota.lambda;
 
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.lambda.Utils.SignatureState;
-import fr.unicaen.iota.ds.model.TEventItem;
 import fr.unicaen.iota.nu.ONSEntryType;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class Views {
      */
     public String message(HttpServletRequest request, String message) {
         request.setAttribute("message", message);
-        return "/message.jsp";
+        return "/jsp/pages/displaymessage.jsp";
     }
 
     /**
@@ -52,7 +52,7 @@ public class Views {
         request.setAttribute("events", events);
         request.setAttribute("referentDS", referentDS);
         request.setAttribute("signatures", signatures);
-        return "/trace.jsp";
+        return "/jsp/pages/trace.jsp";
     }
 
     /**
@@ -66,7 +66,7 @@ public class Views {
             Map<EPCISEventType, SignatureState> signatures) {
         request.setAttribute("events", events);
         request.setAttribute("signatures", signatures);
-        return "/queryepcis.jsp";
+        return "/jsp/pages/queryepcis.jsp";
     }
 
     /**
@@ -75,9 +75,9 @@ public class Views {
      * @param events The DS events of the query.
      * @return The view associated to the "queryDS" request.
      */
-    public String queryDS(HttpServletRequest request, List<TEventItem> events) {
-        request.setAttribute("message", "queryDS not yet impleted");
-        return "/message.jsp";
+    public String queryDS(HttpServletRequest request, List<DSEvent> events) {
+        request.setAttribute("events", events);
+        return "/jsp/pages/queryds.jsp";
     }
 
     /**
@@ -88,7 +88,7 @@ public class Views {
      */
     public String queryONS(HttpServletRequest request, Map<ONSEntryType, String> entries) {
         request.setAttribute("entries", entries);
-        return "/queryons.jsp";
+        return "/jsp/pages/queryons.jsp";
     }
 
 }

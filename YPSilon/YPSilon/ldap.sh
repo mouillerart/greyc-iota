@@ -159,3 +159,8 @@ while true; do
         *) echo "Please answer yes or no.";;
     esac
 done
+
+echo "WARNING!"
+echo "Don't forget to add index on the alias attribute (DN of user certificate used when this DN is incompatible with the LDAP tree)."
+echo "In your actual configuration, this attribute is: $alias"
+echo "See the INSTALL file."

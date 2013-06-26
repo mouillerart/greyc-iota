@@ -92,8 +92,8 @@ public class MouseEventHandler extends MouseAdapter {
                 if (SCBizStepRule.RULEFILTER.equals(id)) {
                     FilterBizStepInterface dialog = new FilterBizStepInterface(root, true);
                     dialog.setVisible(true);
-                } else if (SCEPCClassRule.RULEFILTER.equals(id)) {
-                    FilterEpcClassInterface dialog = new FilterEpcClassInterface(root, true);
+                } else if (SCEventTypeRule.RULEFILTER.equals(id)) {
+                    FilterEventTypeInterface dialog = new FilterEventTypeInterface(root, true);
                     dialog.setVisible(true);
                 } else if (SCEPCsRule.RULEFILTER.equals(id)) {
                     FilterEpcInterface dialog = new FilterEpcInterface(root, true);

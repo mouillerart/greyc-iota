@@ -329,16 +329,16 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return getPolicies().saveAdminPolicies(identifier);
     }
 
-    public boolean updateQueryGroupName(String partnerID, String groupId, String value) {
-        return policies.updateQueryGroupName(partnerID, groupId, value);
+    public boolean updateQueryGroupName(String ownerID, String groupId, String value) {
+        return policies.updateQueryGroupName(ownerID, groupId, value);
     }
 
-    public boolean updateCaptureGroupName(String partnerID, String groupId, String value) {
-        return policies.updateCaptureGroupName(partnerID, groupId, value);
+    public boolean updateCaptureGroupName(String ownerID, String groupId, String value) {
+        return policies.updateCaptureGroupName(ownerID, groupId, value);
     }
 
-    public boolean updateAdminGroupName(String partnerID, String groupId, String value) {
-        return policies.updateAdminGroupName(partnerID, groupId, value);
+    public boolean updateAdminGroupName(String ownerID, String groupId, String value) {
+        return policies.updateAdminGroupName(ownerID, groupId, value);
     }
 
     //##################################################
@@ -384,8 +384,8 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return policies.addQueryFilter(identifier, groupName, epc, SCEPCsRule.RULEFILTER);
     }
 
-    public boolean addQueryEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return policies.addQueryFilter(identifier, groupName, epcClass, SCEPCClassRule.RULEFILTER);
+    public boolean addQueryEventTypeFilter(String identifier, String groupName, String eventType) {
+        return policies.addQueryFilter(identifier, groupName, eventType, SCEventTypeRule.RULEFILTER);
     }
 
     public boolean addQueryEventTimeFilter(String identifier, String groupName, List dates) {
@@ -404,8 +404,8 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return policies.removeQueryFilter(identifier, groupName, epc, SCEPCsRule.RULEFILTER);
     }
 
-    public boolean removeQueryEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return policies.removeQueryFilter(identifier, groupName, epcClass, SCEPCClassRule.RULEFILTER);
+    public boolean removeQueryEventTypeFilter(String identifier, String groupName, String eventType) {
+        return policies.removeQueryFilter(identifier, groupName, eventType, SCEventTypeRule.RULEFILTER);
     }
 
     public boolean removeQueryEventTimeFilter(String identifier, String groupName, List dates) {
@@ -432,8 +432,8 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return policies.switchQueryPermissionEpcs(identifier, policyId);
     }
 
-    public boolean switchQueryPermissionEpcClasses(String identifier, String policyId) {
-        return policies.switchQueryPermissionEpcClasses(identifier, policyId);
+    public boolean switchQueryPermissionEventTypes(String identifier, String policyId) {
+        return policies.switchQueryPermissionEventTypes(identifier, policyId);
     }
 
     public boolean switchQueryPermissionEventTimes(String identifier, String policyId) {
@@ -455,8 +455,8 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return policies.switchCapturePermissionEpcs(identifier, policyId);
     }
 
-    public boolean switchCapturePermissionEpcClasses(String identifier, String policyId) {
-        return policies.switchCapturePermissionEpcClasses(identifier, policyId);
+    public boolean switchCapturePermissionEventTypes(String identifier, String policyId) {
+        return policies.switchCapturePermissionEventTypes(identifier, policyId);
     }
 
     public boolean switchCapturePermissionEventTimes(String identifier, String policyId) {
@@ -503,8 +503,8 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return policies.addCaptureFilter(identifier, groupName, epc, SCEPCsRule.RULEFILTER);
     }
 
-    public boolean addCaptureEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return policies.addCaptureFilter(identifier, groupName, epcClass, SCEPCClassRule.RULEFILTER);
+    public boolean addCaptureEventTypeFilter(String identifier, String groupName, String eventType) {
+        return policies.addCaptureFilter(identifier, groupName, eventType, SCEventTypeRule.RULEFILTER);
     }
 
     public boolean addCaptureEventTimeFilter(String identifier, String groupName, List dates) {
@@ -523,8 +523,8 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return policies.removeCaptureFilter(identifier, groupName, epc, SCEPCsRule.RULEFILTER);
     }
 
-    public boolean removeCaptureEpcClassFilter(String identifier, String groupName, String epcClass) {
-        return policies.removeCaptureFilter(identifier, groupName, epcClass, SCEPCClassRule.RULEFILTER);
+    public boolean removeCaptureEventTypeFilter(String identifier, String groupName, String eventType) {
+        return policies.removeCaptureFilter(identifier, groupName, eventType, SCEventTypeRule.RULEFILTER);
     }
 
     public boolean removeCaptureEventTimeFilter(String identifier, String groupName, List dates) {
@@ -588,17 +588,17 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
     }
 
     public boolean updateAPMQuerySession(AccessPolicyManagerSession APMS, PolicyFinder policyFinder) {
-        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.QUERY_POLICIES_DIRECTORY + APMS.getPartner() + ".xml", policyFinder);
+        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.QUERY_POLICIES_DIRECTORY + APMS.getOwner() + ".xml", policyFinder);
         return policies.updateAPMQuerySession(APMS, ownerPolicies);
     }
 
     public boolean updateAPMCaptureSession(AccessPolicyManagerSession APMS, PolicyFinder policyFinder) {
-        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.CAPTURE_POLICIES_DIRECTORY + APMS.getPartner() + ".xml", policyFinder);
+        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.CAPTURE_POLICIES_DIRECTORY + APMS.getOwner() + ".xml", policyFinder);
         return policies.updateAPMCaptureSession(APMS, ownerPolicies);
     }
 
     public boolean updateAPMAdminSession(AccessPolicyManagerSession APMS, PolicyFinder policyFinder) {
-        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.ADMIN_POLICIES_DIRECTORY + APMS.getPartner() + ".xml", policyFinder);
+        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.ADMIN_POLICIES_DIRECTORY + APMS.getOwner() + ".xml", policyFinder);
         return policies.updateAPMAdminSession(APMS, ownerPolicies);
     }
 

@@ -43,28 +43,14 @@ public class DSPEP extends PEP implements MethodNamesQuery, MethodNamesCapture {
      * process access control policy for the Hello method.
      *
      * @param userId connected user
-     * @param partnerId corresponding partnerId
+     * @param ownerId corresponding ownerId
      * @param module Query, Capture or Admin
      * @return
      */
     @Override
-    public int hello(String userId, String partnerId, String module) {
+    public int hello(String userId, String ownerId, String module) {
         log.trace("process hello policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "hello", partnerId, module);
-        return processXACMLRequest(eventRequest);
-    }
-
-    /**
-     * process access control policy for the partnerInfo method.
-     *
-     * @param userId connected user
-     * @param partnerId partner concerned by the request
-     * @return
-     */
-    @Override
-    public int partnerInfo(String userId, String partnerId) {
-        log.trace("process partnerInfo policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "partnerInfo", partnerId, Module.queryModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "hello", ownerId, module);
         return processXACMLRequest(eventRequest);
     }
 
@@ -98,9 +84,9 @@ public class DSPEP extends PEP implements MethodNamesQuery, MethodNamesCapture {
     }
 
     @Override
-    public int canBe(String userId, String partnerId) {
+    public int canBe(String userId, String ownerId) {
         log.trace("process canBe policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "canBe", partnerId, Module.queryModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "canBe", ownerId, Module.queryModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
@@ -112,76 +98,69 @@ public class DSPEP extends PEP implements MethodNamesQuery, MethodNamesCapture {
     }
 
     @Override
-    public int voidEvent(String userId, XACMLDSEvent dsEvent) {
-        log.trace("process voidEvent policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "voidEvent", dsEvent, Module.captureModule.getValue());
-        return processXACMLRequest(eventRequest);
-    }
-
-    @Override
     public int multipleEventCreate(String userId, XACMLDSEvent dsEvent) {
         log.trace("process multipleEventCreate policy for user: " + userId);
         EventRequest eventRequest = new EventRequest(userId, "eventLookup", dsEvent, Module.captureModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int userLookup(String userId, String partner) {
+    public int userLookup(String userId, String owner) {
         log.trace("process userLookup policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "userLookup", partner, Module.administrationModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "userLookup", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int userCreate(String userId, String partner) {
+    public int userCreate(String userId, String owner) {
         log.trace("process userCreate policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "userCreate", partner, Module.administrationModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "userCreate", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int userInfo(String userId, String partner) {
+    public int userInfo(String userId, String owner) {
         log.trace("process userInfo policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "userInfo", partner, Module.administrationModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "userInfo", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int userUpdate(String userId, String partner) {
+    public int userUpdate(String userId, String owner) {
         log.trace("process userUpdate policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "userUpdate", partner, Module.administrationModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "userUpdate", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int userDelete(String userId, String partner) {
+    public int userDelete(String userId, String owner) {
         log.trace("process userDelete policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "userDelete", partner, Module.administrationModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "userDelete", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int partnerUpdate(String userId, String partner) {
-        log.trace("process partnerUpdate policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "partnerUpdate", partner, Module.administrationModule.getValue());
+    public int ownerUpdate(String userId, String owner) {
+        log.trace("process ownerUpdate policy for user: " + userId);
+        EventRequest eventRequest = new EventRequest(userId, "ownerUpdate", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int partnerLookup(String userId, String partner) {
-        log.trace("process partnerLookup policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "partnerLookup", partner, Module.administrationModule.getValue());
+    public int ownerLookup(String userId, String owner) {
+        log.trace("process ownerLookup policy for user: " + userId);
+        EventRequest eventRequest = new EventRequest(userId, "ownerLookup", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int partnerDelete(String userId, String partner) {
-        log.trace("process partnerDelete policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "partnerDelete", partner, Module.administrationModule.getValue());
+    public int ownerDelete(String userId, String owner) {
+        log.trace("process ownerDelete policy for user: " + userId);
+        EventRequest eventRequest = new EventRequest(userId, "ownerDelete", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public int partnerCreate(String userId, String partner) {
-        log.trace("process partnerCreate policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "partnerCreate", partner, Module.administrationModule.getValue());
+    public int ownerCreate(String userId, String owner) {
+        log.trace("process ownerCreate policy for user: " + userId);
+        EventRequest eventRequest = new EventRequest(userId, "ownerCreate", owner, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest);
     }
 
-    public boolean isRootAccess(String userId, String partnerId) {
+    public boolean isRootAccess(String userId, String ownerId) {
         log.trace("process checkRootAccess policy for user: " + userId);
-        EventRequest eventRequest = new EventRequest(userId, "superadmin", partnerId, Module.administrationModule.getValue());
+        EventRequest eventRequest = new EventRequest(userId, "superadmin", ownerId, Module.administrationModule.getValue());
         return processXACMLRequest(eventRequest) == Result.DECISION_PERMIT;
     }
 }

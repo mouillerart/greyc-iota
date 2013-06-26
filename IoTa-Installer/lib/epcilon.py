@@ -28,36 +28,41 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
         installer.DBWebAppInstaller.__init__(self, "EpcILoN web application", "epcilon", [
                 ("Enter the EpcILoN web application name", "epcilon", "name", {}),
                 ("Enter the archive file pathname", "epcilon", "repo", {"type": "file"}),
-                ("Enter this application’s identity", "epcilon", "identity", {}),
                 ("Enter the EpcILoN database name", "epcilon", "db_name", {}),
                 ("Enter the EpcILoN database login", "epcilon", "db_login", {}),
                 ("Enter the EpcILoN database password", "epcilon", "db_password", {}),
+                ("Use IoTa IDed (ETa and DSeTa) or not (Epcis and DS)?", "epcilon", "iota_ided", {"type": "YN"}),
                 ("Enter the URL to the Epcis (or ETa) Query service", "epcilon", "subscription_url", {}),
                 ("Enter the URL to the DS (or DSeTa)", "epcilon", "ds_url", {}),
-                ("Enter the keystore file name (PEM format)", "cert", "pem_keystore", {}),
-                ("Enter the keystore password", "cert", "password", {}),
-                ("Enter the truststore file name (PEM format)", "cert", "pem_truststore", {})
-                # EpcILoN is only a DSeTa client for now
-                # ("Enter the DS client login (not used by DSeTa)", "ds", "login", {}),
-                # ("Enter the DS client password (not used by DSeTa)", "ds", "password", {})
+                ("Enter this application’s identity", "epcilon", "identity",
+                 {"when": ("epcilon", "iota_ided")}),
+                ("Enter the keystore file name (PEM format)", "cert", "pem_keystore",
+                 {"when": ("epcilon", "iota_ided")}),
+                ("Enter the keystore password", "cert", "password",
+                 {"when": ("epcilon", "iota_ided")}),
+                ("Enter the truststore file name (PEM format)", "cert", "pem_truststore",
+                 {"when": ("epcilon", "iota_ided")}),
+                ("Enter the publisher frequency (time between each launch)", "epcilon", "publisher_frequency", {}),
+                ("Enter the time before another try to publish", "epcilon", "publisher_pending_republish", {})
                 ], [
                 ("application",
-                 { "query-callback-address": ("epcilon", "callback_url"),
+                 { "publish": "true",
+                   "query-callback-address": ("epcilon", "callback_url"),
+                   "query-client-address": ("epcilon", "subscription_url"),
+                   "discovery-service-address": ("epcilon", "ds_url"),
+                   "publisher-frequency" : ("epcilon", "publisher_frequency"),
+                   "publisher-pending-republish" : ("epcilon", "publisher_pending_republish"),
+                   "iota-ided" : ("epcilon", "iota_ided"),
                    "identity": ("epcilon", "identity"),
-                   "publish": "true",
                    "pks-filename": ("cert", "keystore"),
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
-                   "trust-pks-password": ("cert", "trustpassword"),
-                   "query-client-address": ("epcilon", "subscription_url"),
-                   "discovery-service-address": ("epcilon", "ds_url") })
-                   #"login": ("ds", "login"),
-                   #"password": ("ds", "password") })
+                   "trust-pks-password": ("cert", "trustpassword")})
                 ])
 
 
     def postConfigure(self):
-        if self.cget("subscription_url").startswith("https"):
+        if self.cisTrue("iota_ided"):
             self.setSecuredURL()
         else:
             self.setURL()
@@ -70,7 +75,7 @@ class EpcILoNInstaller(installer.DBWebAppInstaller):
         utils.putWait("Subscribing to the Epcis")
         url = self.cget("url") + "SubscribedServlet"
         cmd = "curl"
-        if url.startswith("https"):
+        if self.cisTrue("iota_ided"):
             keystore = CONFIG.get("cert", "pem_keystore")
             keystore_pwd = CONFIG.get("cert", "password")
             truststore = CONFIG.get("cert", "pem_truststore")

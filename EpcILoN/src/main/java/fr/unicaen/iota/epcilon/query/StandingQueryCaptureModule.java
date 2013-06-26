@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.apache.axis2.databinding.types.URI.MalformedURIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.QueryParams;
@@ -36,7 +35,7 @@ public class StandingQueryCaptureModule {
 
     private static final Log LOG = LogFactory.getLog(StandingQueryCaptureModule.class);
 
-    public static Subscribe createScheduleSubscribe(String name, String subID, String dest, int unitTime, String timeValue) throws DatatypeConfigurationException, MalformedURIException {
+    public static Subscribe createScheduleSubscribe(String name, String subID, String dest, int unitTime, String timeValue) throws DatatypeConfigurationException {
         Subscribe subscribe = new Subscribe();
         SubscriptionControls controls = new SubscriptionControls();
         controls.setReportIfEmpty(false);

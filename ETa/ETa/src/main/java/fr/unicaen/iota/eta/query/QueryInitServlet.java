@@ -65,7 +65,7 @@ public class QueryInitServlet extends CXFNonSpringServlet {
      * org.apache.cxf.transport.servlet.CXFNonSpringServlet#loadBus(javax.servlet.ServletConfig)
      */
     @Override
-    public void loadBus(ServletConfig servletConfig) throws ServletException {
+    public void loadBus(ServletConfig servletConfig) {
         super.loadBus(servletConfig);
         BusFactory.setDefaultBus(getBus());
         if (LOG.isDebugEnabled()) {

@@ -4,14 +4,14 @@
  *  Copyright © 2012  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *  <http://www.gnu.org/licenses/>
  *
  *  See AUTHORS for a list of contributors.
@@ -44,7 +44,7 @@ public final class Constants {
     static {
         try {
             Properties props = loadProperties();
-            ONS_HOSTS = props.getProperty("ons").split(",");
+            ONS_HOSTS = props.getProperty("ons-hosts").split(",");
             for (int i = 0; i < ONS_HOSTS.length; i++) {
                 ONS_HOSTS[i] = ONS_HOSTS[i].trim();
             }
@@ -54,9 +54,9 @@ public final class Constants {
             }
             ONS_SPEC_LEVEL = Double.parseDouble(props.getProperty("ons-spec-level", "2.0"));
             ONS_EPCIS_ENTRY = props.getProperty("ons-epcis-entry", "epc\\+epcis");
-            ONS_IDED_EPCIS_ENTRY = props.getProperty("ons-epcis-entry", "epc\\+ided_epcis");
+            ONS_IDED_EPCIS_ENTRY = props.getProperty("ons-ided-epcis-entry", "epc\\+ided_epcis");
             ONS_DS_ENTRY = props.getProperty("ons-ds-entry", "epc\\+ds");
-            ONS_IDED_DS_ENTRY = props.getProperty("ons-ds-entry", "epc\\+ided_ds");
+            ONS_IDED_DS_ENTRY = props.getProperty("ons-ided-ds-entry", "epc\\+ided_ds");
             ONS_HTML_ENTRY = props.getProperty("ons-html-entry", "epc\\+html");
             ONS_ENTRY_REGEX = props.getProperty("ons-entry-regex", "\\!\\^\\.\\*\\$\\!|\\!");
         } catch (IOException ex) {

@@ -224,10 +224,14 @@ public abstract class BaseEvent {
         }
         setExtensionsObjects(event, extensionsObjects);
 
-        try {
-            Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_OWNER_ID, Config.eventOwner);
-        } catch (ParserConfigurationException ex) {
-            log.error("An error during insertion of the owner of the event occurred", ex);
+        // Inserts the default owner if the extension is missing
+        List<String> owners = Utils.getExtension(event, Constants.URN_IOTA, Constants.EXTENSION_OWNER_ID);
+        if (owners == null || owners.isEmpty()) {
+            try {
+                Utils.insertExtension(event, Constants.URN_IOTA, Constants.EXTENSION_OWNER_ID, Config.eventOwner);
+            } catch (ParserConfigurationException ex) {
+                log.error("An error during insertion of the owner of the event occurred", ex);
+            }
         }
 
         if (Config.sign) {

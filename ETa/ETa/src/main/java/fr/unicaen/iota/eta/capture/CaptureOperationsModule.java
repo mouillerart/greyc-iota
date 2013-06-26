@@ -22,8 +22,12 @@ package fr.unicaen.iota.eta.capture;
 import fr.unicaen.iota.eta.utils.Constants;
 import fr.unicaen.iota.eta.utils.Utils;
 import fr.unicaen.iota.sigma.client.SigMaClient;
-import fr.unicaen.iota.sigma.xsd.Verification;
-import java.io.*;
+import fr.unicaen.iota.sigma.model.Verification;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +41,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -254,6 +262,11 @@ public class CaptureOperationsModule {
                 processMasterData(user, document, rsp);
             }
         } catch (SAXException ex) {
+            msg = "An error processing the XML document occurred";
+            LOG.error(msg, ex);
+            rsp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.println(msg);
+        } catch (JAXBException ex) {
             msg = "An error processing the XML document occurred";
             LOG.error(msg, ex);
             rsp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -482,7 +495,7 @@ public class CaptureOperationsModule {
                     || EpcisConstants.QUANTITY_EVENT.equals(nodeName)
                     || EpcisConstants.TRANSACTION_EVENT.equals(nodeName)) {
                 LOG.debug("processing event " + i + ": '" + nodeName + "'.");
-                EPCISEventType captureEvent = extractsCaptureEvent(eventNode, nodeName);
+                EPCISEventType captureEvent = Utils.extractsCaptureEvent(eventNode, nodeName);
                 if (captureEvent != null) {
                     captureEventList.add(captureEvent);
                 }
@@ -493,53 +506,14 @@ public class CaptureOperationsModule {
         return captureEventList;
     }
 
-    /**
-     * Parses the XML node and returns capture event.
-     *
-     * @param eventNode The XML node.
-     * @param eventType The type of the event.
-     * @return The capture event.
-     * @throws SAXException If an error parsing the XML document occurred.
-     * @throws JAXBException If an error parsing the XML document to object occurred.
-     * occurred.
-     */
-    private EPCISEventType extractsCaptureEvent(Node eventNode, String eventType) throws SAXException, JAXBException {
-        if (eventNode == null) {
-            // nothing to do
-            return null;
-        } else if (eventNode.getChildNodes().getLength() == 0) {
-            throw new SAXException("Event element '" + eventNode.getNodeName() + "' has no children elements.");
-        }
-        EPCISEventType captureEvent;
-        if (EpcisConstants.AGGREGATION_EVENT.equals(eventType)) {
-            JAXBContext context = JAXBContext.newInstance(AggregationEventType.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            JAXBElement<AggregationEventType> jElement = unmarshaller.unmarshal(eventNode, AggregationEventType.class);
-            captureEvent = jElement.getValue();
-        } else if (EpcisConstants.OBJECT_EVENT.equals(eventType)) {
-            JAXBContext context = JAXBContext.newInstance(ObjectEventType.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            JAXBElement<ObjectEventType> jElement = unmarshaller.unmarshal(eventNode, ObjectEventType.class);
-            captureEvent = jElement.getValue();
-        } else if (EpcisConstants.QUANTITY_EVENT.equals(eventType)) {
-            JAXBContext context = JAXBContext.newInstance(QuantityEventType.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            JAXBElement<QuantityEventType> jElement = unmarshaller.unmarshal(eventNode, QuantityEventType.class);
-            captureEvent = jElement.getValue();
-        } else if (EpcisConstants.TRANSACTION_EVENT.equals(eventType)) {
-            JAXBContext context = JAXBContext.newInstance(TransactionEventType.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            JAXBElement<TransactionEventType> jElement = unmarshaller.unmarshal(eventNode, TransactionEventType.class);
-            captureEvent = jElement.getValue();
-        } else {
-            throw new SAXException("Encountered unknown event element '" + eventType + "'.");
-        }
-        return captureEvent;
-    }
-
     private void processMasterData(String user, Document document, HttpServletResponse rsp) throws SAXException, IOException,
-            CaptureClientException, TransformerConfigurationException, TransformerException {
-        List<VocabularyType> vocList = extractsVocabularies(document);
+            CaptureClientException, TransformerConfigurationException, TransformerException, JAXBException {
+        EPCISMasterDataDocumentType epcisDoc = Utils.extractsEPCISMasterDataDocument(document);
+        if (epcisDoc.getEPCISBody() == null || epcisDoc.getEPCISBody().getVocabularyList() == null
+                || epcisDoc.getEPCISBody().getVocabularyList().getVocabulary() == null) {
+            return;
+        }
+        List<VocabularyType> vocList = epcisDoc.getEPCISBody().getVocabularyList().getVocabulary();
         PrintWriter out = rsp.getWriter();
         String msg;
 
@@ -599,93 +573,4 @@ public class CaptureOperationsModule {
         }
     }
 
-    /**
-     * Parses a XML document and returns associated Masterdatas list.
-     *
-     * @param document The XML document to parse.
-     * @return The list of Masterdata.
-     * @throws SAXException If a parsing error occurred.
-     */
-    private List<VocabularyType> extractsVocabularies(Document document) throws SAXException {
-        NodeList vocabularyList = document.getElementsByTagName("VocabularyList");
-        List<VocabularyType> vocTypeList = new ArrayList<VocabularyType>();
-        if (vocabularyList.item(0).hasChildNodes()) {
-            NodeList vocabularys = vocabularyList.item(0).getChildNodes();
-            for (int i = 0; i < vocabularys.getLength(); i++) {
-                Node vocabularyNode = vocabularys.item(i);
-                String nodeName = vocabularyNode.getNodeName();
-                if (nodeName.equals("Vocabulary")) {
-                    String vocabularyType = vocabularyNode.getAttributes().getNamedItem("type").getNodeValue();
-                    if (EpcisConstants.VOCABULARY_TYPES.contains(vocabularyType)) {
-                        LOG.debug("processing " + i + ": '" + nodeName + "':" + vocabularyType + ".");
-                        VocabularyType vocType = new VocabularyType();
-                        VocabularyElementListType vocElementListType = new VocabularyElementListType();
-                        List<VocabularyElementType> vocElementTypeList = vocElementListType.getVocabularyElement();
-                        vocElementTypeList = extractsVocabulary(vocabularyNode, vocabularyType);
-                        vocType.setVocabularyElementList(vocElementListType);
-                        vocTypeList.add(vocType);
-                    }
-                } else if (!nodeName.equals("#text") && !nodeName.equals("#comment")) {
-                    throw new SAXException("Encountered unknown vocabulary '" + nodeName + "'.");
-                }
-            }
-        }
-        return vocTypeList;
-    }
-
-    /**
-     * Parses the XML node and returns Masterdata.
-     *
-     * @param vocNode The XML node to parse.
-     * @param vocType The type of vocabulary element.
-     * @return Masterdata to capture.
-     * @throws SAXException If a parsing error occurred.
-     */
-    private List<VocabularyElementType> extractsVocabulary(final Node vocNode, final String vocType) throws SAXException {
-        if (vocNode == null) {
-            // nothing to do
-            return null;
-        } else if (vocNode.getChildNodes().getLength() == 0) {
-            throw new SAXException("Vocabulary element '" + vocNode.getNodeName() + "' has no children elements.");
-        }
-        List<VocabularyElementType> vocElementList = new ArrayList<VocabularyElementType>();
-        for (int i = 0; i < vocNode.getChildNodes().getLength(); i++) {
-            Node curVocNode = vocNode.getChildNodes().item(i);
-            if (isTextOrComment(curVocNode)) {
-                continue;
-            }
-            for (int j = 0; j < curVocNode.getChildNodes().getLength(); j++) {
-                Node curVocElemNode = curVocNode.getChildNodes().item(j);
-                if (isTextOrComment(curVocElemNode)) {
-                    continue;
-                }
-                LOG.debug("  processing vocabulary '" + curVocElemNode.getNodeName() + "'");
-                VocabularyElementType vocElementType = new VocabularyElementType();
-                String curVocElemId = curVocElemNode.getAttributes().getNamedItem("id").getNodeValue();
-                vocElementType.setId(curVocElemId);
-                /*
-                 * //vocabularyElementEditMode 1: insert((it can be anything
-                 * except 2,3,4)) 2: alterURI 3: singleDelete 4: //Delete
-                 * element with it's direct or indirect descendants
-                 *
-                 * String vocElemEditMode = "";
-                 *
-                 * if (!(curVocElemNode.getAttributes().getNamedItem("mode") ==
-                 * null)) { vocElemEditMode =
-                 * curVocElemNode.getAttributes().getNamedItem("mode").getNodeValue();
-                 * } else { vocElemEditMode = "1"; }
-                 */
-                vocElementList.add(vocElementType);
-            }
-        }
-        return vocElementList;
-    }
-
-    /**
-     * @return
-     * <code>true</code> if the given Node is a text or a comment.
-     */
-    private boolean isTextOrComment(Node node) {
-        return node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.COMMENT_NODE;
-    }
 }

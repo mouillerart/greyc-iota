@@ -33,8 +33,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class AccessControlPolicy extends HttpServlet {
+
+    private static final Log log = LogFactory.getLog(AccessControlPolicy.class);
 
     private Services services = new Services();
 
@@ -64,19 +68,6 @@ public class AccessControlPolicy extends HttpServlet {
                 if (userInfo == null) {
                     throw new ServiceException("User not well connected !", ServiceErrorType.epcis);
                 }
-                /*
-                 * TODO Partner? PartnerInfo partnerInfo = (PartnerInfo)
-                 * request.getSession().getAttribute("pInfo"); if (userInfo ==
-                 * null || partnerInfo == null) { throw new
-                 * ServiceException("User not well connected !",
-                 * ServiceErrorType.epcis); } Service service =
-                 * partnerInfo.getServiceList().get(0); Partner partner = new
-                 * Partner(partnerInfo.getUid(), true,
-                 * partnerInfo.getPartnerId(), new Date(), service.getId(),
-                 * service.getType(), service.getUri().toString()); User user =
-                 * new User(userInfo.getUid(), partner, "",
-                 * userInfo.getUserId(), userInfo.getUserId(), new Date());
-                 */
                 User user = new User(userInfo.getUserID(), userInfo.getOwnerID());
                 Module module = (request.getParameter("d") != null)? Module.valueOf(request.getParameter("d")) : null;
                 String objectId = request.getParameter("b");
@@ -85,14 +76,14 @@ public class AccessControlPolicy extends HttpServlet {
                 String sessionId = (String) request.getSession().getAttribute("session-id");
                 // **************************  CREATE *********************************
 
-                if ("createPartnerGroup".equals(methodName)) {
+                if ("createOwnerGroup".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    String resp = services.createPartnerGroup(sessionId, user, module, newValue);
+                    String resp = services.createOwnerGroup(sessionId, user, module, newValue);
                     TreeNode node = createEmptyPolicies(user, newValue, module, resp);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
-                } else if ("addPartnerToGroup".equals(methodName)) {
+                } else if ("addOwnerToGroup".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addPartnerToGroup(sessionId, user, module, objectId, groupId, newValue);
+                    services.addOwnerToGroup(sessionId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.userNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addBizStepRestriction".equals(methodName)) {
@@ -158,6 +149,11 @@ public class AccessControlPolicy extends HttpServlet {
                     services.addDispositionRestriction(sessionId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.dispositionFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
+                } else if ("addMasterDataIdRestriction".equals(methodName)) {
+                    String newValue = request.getParameter("c");
+                    services.addMasterDataIdRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    TreeNode node = new Node(newValue, NodeType.masterDataIdFilterNode, newValue, module, groupId);
+                    html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addUserPermission".equals(methodName)) {
                     String newValue = request.getParameter("c");
                     services.addUserPermission(sessionId, user, module, objectId, groupId, newValue);
@@ -188,6 +184,8 @@ public class AccessControlPolicy extends HttpServlet {
                     html.append(services.switchBizLocPolicy(sessionId, user, module, objectId, groupId));
                 } else if ("switchDispositionPolicy".equals(methodName)) {
                     html.append(services.switchDispositionPolicy(sessionId, user, module, objectId, groupId));
+                } else if ("switchMasterDataIdPolicy".equals(methodName)) {
+                    html.append(services.switchMasterDataIdPolicy(sessionId, user, module, objectId, groupId));
                 } else if ("switchPermissionPolicy".equals(methodName)) {
                     html.append(services.switchUserPermissionPolicy(sessionId, user, module, objectId, groupId));
                 } // **************************  REMOVE *********************************
@@ -215,19 +213,21 @@ public class AccessControlPolicy extends HttpServlet {
                     services.removeBizLocRestriction(sessionId, user, module, objectId, groupId);
                 } else if ("removeDispositionRestriction".equals(methodName)) {
                     services.removeDispositionRestriction(sessionId, user, module, objectId, groupId);
+                } else if ("removeMasterDataIdRestriction".equals(methodName)) {
+                    services.removeMasterDataIdRestriction(sessionId, user, module, objectId, groupId);
                 } else if ("removeUserPermission".equals(methodName)) {
                     services.removeUserPermission(sessionId, user, module, objectId, groupId);
-                } else if ("deletePartnerGroup".equals(methodName)) {
-                    services.deletePartnerGroup(sessionId, user, module, objectId, groupId);
-                } else if ("removePartnerFromGroup".equals(methodName)) {
-                    services.removePartnerFromGroup(sessionId, user, module, objectId, groupId);
+                } else if ("deleteOwnerGroup".equals(methodName)) {
+                    services.deleteOwnerGroup(sessionId, user, module, objectId, groupId);
+                } else if ("removeOwnerFromGroup".equals(methodName)) {
+                    services.removeOwnerFromGroup(sessionId, user, module, objectId, groupId);
                 } // *************************  EPCIS ADMIN ********************************
-                else if ("updatePartner".equals(methodName)) {
-                    String partnerID = request.getParameter("f");
+                else if ("updateOwner".equals(methodName)) {
+                    String ownerID = request.getParameter("f");
                     String serviceID = request.getParameter("g");
                     String serviceAddress = request.getParameter("h");
                     String serviceType = request.getParameter("i");
-                    //TODO services.updatePartner(sessionId, user,user.getPartnerID(), partnerID, serviceID, serviceAddress, serviceType);
+                    //TODO services.updateOwner(sessionId, user,user.getOwnerID(), ownerID, serviceID, serviceAddress, serviceType);
                 } else if ("createUser".equals(methodName)) {
                     String login = request.getParameter("f");
                     String userName = request.getParameter("g");
@@ -240,9 +240,9 @@ public class AccessControlPolicy extends HttpServlet {
                     services.deleteUser(sessionId, user, login);
                 } else if ("createAccount".equals(methodName)) {
                     String userDN = request.getParameter("f");
-                    String partnerId = request.getParameter("g");
+                    String ownerId = request.getParameter("g");
                     String userName = request.getParameter("h");
-                    boolean rtr = services.createAccount(sessionId, user, partnerId, userDN, userName);
+                    boolean rtr = services.createAccount(sessionId, user, ownerId, userDN, userName);
                     if (rtr) {
                         html.append("Account successfull created.");
                     }
@@ -252,19 +252,19 @@ public class AccessControlPolicy extends HttpServlet {
                     services.updateGroupName(sessionId, user, module, objectId, groupId, newValue);
 
                 } // **************************  SAVE  **********************************
-                else if ("saveOwnerPolicy".equals(methodName)) {
-                    services.savePolicyPartner(sessionId, user, module);
+                else if ("savePolicyOwner".equals(methodName)) {
+                    services.savePolicyOwner(sessionId, user, module);
 
                 } // **************************  CANCEL  **********************************
-                else if ("cancelPartnerPolicy".equals(methodName)) {
-                    services.cancelPartnerPolicy(user, module);
+                else if ("cancelOwnerPolicy".equals(methodName)) {
+                    services.cancelOwnerPolicy(user, module);
 
                 } // **************************  LOAD POLICIES  *************************
                 else if ("loadPolicyTree".equals(methodName)) {
                     services.loadPolicyTree(user, module);
-                    InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, user.getPartnerID());
+                    InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, user.getOwnerID());
                     interfaceHelper.reload();
-                    AccessPolicies policies = new AccessPolicies(sessionId, user.getPartnerID(), module);
+                    AccessPolicies policies = new AccessPolicies(sessionId, user.getOwnerID(), module);
                     switch (module) {
                         case adminModule:
                             html.append(new TreeFactory(Mode.Create_Mode).createTree(policies.getPoliciesAdmin().get(0)));
@@ -282,9 +282,11 @@ public class AccessControlPolicy extends HttpServlet {
                 out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_OK, "") + createXMLHTMLTag(html.toString())));
 
             } catch (ServiceException se) {
+                log.info("", se);
                 out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_ERROR, se.getMessage()) + createXMLHTMLTag(html.toString())));
                 return;
             } catch (Exception e) {
+                log.info("", e);
                 out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_ERROR, "INTERNAL ERROR: " + e.getMessage()) + createXMLHTMLTag(html.toString())));
                 return;
             }
@@ -306,7 +308,7 @@ public class AccessControlPolicy extends HttpServlet {
     }
 
     public TreeNode createEmptyPolicies(User user, String name, Module module, String groupId) {
-        GroupPolicy gpq = new GroupPolicy(name, user.getPartnerID());
+        GroupPolicy gpq = new GroupPolicy(name, user.getOwnerID());
         AccessPolicies accessPolicies = new AccessPolicies();
         return accessPolicies.createGroupPolicy(gpq, module);
     }

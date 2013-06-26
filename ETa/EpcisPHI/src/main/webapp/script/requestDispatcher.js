@@ -264,6 +264,23 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                 }
             });
             break;
+        case "masterDataIdFilterGroupNode":
+            $("#questionDialogMsg").html("Do you want to switch the MasterData ID policy Filter ?");
+            $("#questionDialog").dialog({
+                modal: true ,
+                draggable: false,
+                buttons: {
+                    "Validate" : function process(){
+                        $(this).dialog("close");
+                        switchMasterDataIdPolicy(groupId,objectId,nodeValue,module);
+                    } ,
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                        return 0;
+                    }
+                }
+            });
+            break;
         case "usersNode":
             $("#questionDialogMsg").html("Do you want to switch the users global policy ?");
             $("#questionDialog").dialog({
@@ -317,19 +334,19 @@ function processRequestSave(module){
     });
 }
 
-function processPartnerUpdate(){
-    $("#updatePartner").dialog({
+function processOwnerUpdate(){
+    $("#updateOwner").dialog({
         modal: true ,
         draggable: false,
         minWidth : 350,
         buttons: {
             "Validate" : function processDate(){
                 $(this).dialog("close");
-                var partnerID = $("#partnerID").attr("value");
+                var ownerID = $("#ownerID").attr("value");
                 var serviceID = $("#serviceID").attr("value");
                 var serviceAddress = $("#serviceAddress").attr("value");
                 var serviceType = $("#serviceType").attr("value");
-                updatePartner(partnerID,serviceID,serviceAddress,serviceType);
+                updateOwner(ownerID,serviceID,serviceAddress,serviceType);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -404,9 +421,9 @@ function processAccountCreate(){
             "Validate" : function processAccountCreate(){
                 $(this).dialog("close");
                 var login = $("#userLogin1").attr("value");
-                var partnerID = $("#partnerID1").attr("value");
+                var ownerID = $("#ownerID1").attr("value");
                 var userID = $("#userID1").attr("value");
-                createAccount(partnerID,login,userID);
+                createAccount(ownerID,login,userID);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -426,8 +443,8 @@ function processRequestCreate(type,groupId,objectId,treeNode,module){
                 buttons: {
                     "Validate" : function processDate(){
                         $(this).dialog("close");
-                        var partner = $("#groupPartnerName").attr("value");
-                        addPartnerToGroup(groupId,objectId,blockNode,module,partner);
+                        var owner = $("#groupOwnerName").attr("value");
+                        addOwnerToGroup(groupId,objectId,blockNode,module,owner);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -649,6 +666,22 @@ function processRequestCreate(type,groupId,objectId,treeNode,module){
                 }
             });
             break;
+        case "masterDataIdFilterGroupNode":
+            $("#masterDataIdFilterDialog").dialog({
+                modal: true ,
+                draggable: false,
+                buttons: {
+                    "Validate" : function processDate(){
+                        $(this).dialog("close");
+                        var masterDataId = $("#masterDataIdFilterName").attr("value");
+                        addMasterDataIdRestriction(groupId,objectId,blockNode,module,masterDataId);
+                    } ,
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            break;
         case "methodFilterGroupNode":
             var id="";
             switch(module){
@@ -696,7 +729,7 @@ function processRequestCreate(type,groupId,objectId,treeNode,module){
                     "Validate" : function processDate(){
                         $(this).dialog("close");
                         var groupName = $("#groupName").attr("value");
-                        createPartnerGroup(groupId,objectId,blockNode,module,groupName);
+                        createOwnerGroup(groupId,objectId,blockNode,module,groupName);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -920,6 +953,23 @@ function processRequestRemove(type,groupId,objectId,treeNode,module){
                 }
             });
             break;
+        case "masterDataIdFilterNode":
+            $("#questionDialogMsg").html("Do you want to remove this MasterData ID filter ?");
+            $("#questionDialog").dialog({
+                modal: true ,
+                draggable: false,
+                buttons: {
+                    "Validate" : function process(){
+                        $(this).dialog("close");
+                        removeMasterDataIdRestriction(groupId,objectId,blockNode,module);
+                    } ,
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                        return 0;
+                    }
+                }
+            });
+            break;
         case "methodFilterNode":
             $("#questionDialogMsg").html("Do you want to remove this method filter ?");
             $("#questionDialog").dialog({
@@ -945,7 +995,7 @@ function processRequestRemove(type,groupId,objectId,treeNode,module){
                 buttons: {
                     "Validate" : function process(){
                         $(this).dialog("close");
-                        deletePartnerGroup(groupId,objectId,blockNode,module);
+                        deleteOwnerGroup(groupId,objectId,blockNode,module);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -962,7 +1012,7 @@ function processRequestRemove(type,groupId,objectId,treeNode,module){
                 buttons: {
                     "Validate" : function process(){
                         $(this).dialog("close");
-                        removePartnerFromGroup(groupId,objectId,blockNode,module);
+                        removeOwnerFromGroup(groupId,objectId,blockNode,module);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -1010,9 +1060,9 @@ function addNode(html,blockNode){
 
 /* SERVICE METHODS */
 
-function createPartnerGroup(groupId,objectId,blockNode,module, groupName){
+function createOwnerGroup(groupId,objectId,blockNode,module, groupName){
     $.get('AccessControlPolicy', {
-        a:"createPartnerGroup",
+        a:"createOwnerGroup",
         b:objectId,
         c:groupName,
         e:groupId,
@@ -1028,9 +1078,9 @@ function createPartnerGroup(groupId,objectId,blockNode,module, groupName){
         }
     });
 }
-function deletePartnerGroup(groupId,objectId,blockNode,module){
+function deleteOwnerGroup(groupId,objectId,blockNode,module){
     $.get('AccessControlPolicy', {
-        a:"deletePartnerGroup",
+        a:"deleteOwnerGroup",
         e:groupId,
         b:objectId,
         d:module
@@ -1046,10 +1096,10 @@ function deletePartnerGroup(groupId,objectId,blockNode,module){
     });
 }
 
-function updatePartner(partnerID,serviceID,serviceAddress,serviceType){
+function updateOwner(ownerID,serviceID,serviceAddress,serviceType){
     $.get('AccessControlPolicy', {
-        a:"updatePartner",
-        f:partnerID,
+        a:"updateOwner",
+        f:ownerID,
         g:serviceID,
         h:serviceAddress,
         i:serviceType
@@ -1111,11 +1161,11 @@ function deleteUser(login){
     });
 }
 
-function createAccount(partnerID,login,userName){
+function createAccount(ownerID,login,userName){
     $.get('AccessControlPolicy', {
         a:"createAccount",
         f:login,
-        g:partnerID,
+        g:ownerID,
         h:userName
     },
     function(data){
@@ -1129,9 +1179,9 @@ function createAccount(partnerID,login,userName){
 }
 
 
-function addPartnerToGroup(groupId,objectId,blockNode,module,newName){
+function addOwnerToGroup(groupId,objectId,blockNode,module,newName){
     $.get('AccessControlPolicy', {
-        a:"addPartnerToGroup",
+        a:"addOwnerToGroup",
         b:objectId,
         c:newName,
         e:groupId,
@@ -1147,9 +1197,9 @@ function addPartnerToGroup(groupId,objectId,blockNode,module,newName){
         }
     });
 }
-function removePartnerFromGroup(groupId,objectId,blockNode,module){
+function removeOwnerFromGroup(groupId,objectId,blockNode,module){
     $.get('AccessControlPolicy', {
-        a:"removePartnerFromGroup",
+        a:"removeOwnerFromGroup",
         e:groupId,
         d:module,
         b:objectId
@@ -1587,6 +1637,41 @@ function removeDispositionRestriction(groupId,objectId,blockNode,module){
         }
     });
 }
+function addMasterDataIdRestriction(groupId,objectId,blockNode,module,newMasterDataId){
+    $.get('AccessControlPolicy', {
+        a:"addMasterDataIdRestriction",
+        b:objectId,
+        c:newMasterDataId,
+        e:groupId,
+        d:module
+    },
+    function(data){
+        if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
+            addNode(getHTML(data),blockNode);
+            setPolicyModified(module);
+        }
+        else{ // sinon
+            errorDialog(getRepsonseDescription(data));
+        }
+    });
+}
+function removeMasterDataIdRestriction(groupId,objectId,blockNode,module){
+    $.get('AccessControlPolicy', {
+        a:"removeMasterDataIdRestriction",
+        e:groupId,
+        d:module,
+        b:objectId
+    },
+    function(data){
+        if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
+            removeNode(blockNode);
+            setPolicyModified(module);
+        }
+        else{ // sinon
+            errorDialog(getRepsonseDescription(data));
+        }
+    });
+}
 function switchBizStepPolicy(groupId,objectId,elem,module){
     $.get('AccessControlPolicy', {
         a:"switchBizStepPolicy",
@@ -1791,6 +1876,23 @@ function switchDispositionPolicy(groupId,objectId,elem,module){
         }
     });
 }
+function switchMasterDataIdPolicy(groupId,objectId,elem,module){
+    $.get('AccessControlPolicy', {
+        a:"switchMasterDataIdPolicy",
+        e:groupId,
+        d:module,
+        b:objectId
+    },
+    function(data){
+        if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
+            changeContentText(elem,getHTML(data));
+            setPolicyModified(module);
+        }
+        else{ // sinon
+            errorDialog(getRepsonseDescription(data));
+        }
+    });
+}
 function switchPermissionPolicy(groupId,objectId,elem,module){
     $.get('AccessControlPolicy', {
         a:"switchPermissionPolicy",
@@ -1864,7 +1966,7 @@ function updateGroupName(groupId,objectId,element,module,newName){
 
 function validateOwnerPolicy(module){
     $.get('AccessControlPolicy', {
-        a:"saveOwnerPolicy",
+        a:"savePolicyOwner",
         e:null,
         d:module,
         b:null
@@ -1889,7 +1991,7 @@ function processRequestCancelPolicyChanges(module){
             "Validate" : function process(){
                 $(this).dialog("close");
                 $.get('AccessControlPolicy', {
-                    a:"cancelPartnerPolicy",
+                    a:"cancelOwnerPolicy",
                     e:null,
                     d:module,
                     b:null

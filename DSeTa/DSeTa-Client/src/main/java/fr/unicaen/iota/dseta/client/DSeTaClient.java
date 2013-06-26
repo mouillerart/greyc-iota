@@ -4,41 +4,44 @@
  *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *  <http://www.gnu.org/licenses/>
  *
  *  See AUTHORS for a list of contributors.
  */
 package fr.unicaen.iota.dseta.client;
 
-import fr.unicaen.iota.discovery.client.model.EventInfo;
-import fr.unicaen.iota.discovery.client.model.Service;
-import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
-import fr.unicaen.iota.discovery.client.util.StatusCodeHelper;
-import fr.unicaen.iota.ds.model.*;
-import fr.unicaen.iota.dseta.soap.IDedDSService;
-import fr.unicaen.iota.dseta.soap.IDedDSServicePortType;
+import fr.unicaen.iota.ds.model.DSEvent;
+import fr.unicaen.iota.ds.model.EventCreateResp;
+import fr.unicaen.iota.ds.model.EventLookupReq;
+import fr.unicaen.iota.ds.model.EventLookupResp;
+import fr.unicaen.iota.ds.model.MultipleEventCreateResp;
+import fr.unicaen.iota.ds.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ds.soap.InternalExceptionResponse;
+import fr.unicaen.iota.dseta.model.EventCreateReq;
+import fr.unicaen.iota.dseta.model.MultipleEventCreateReq;
+import fr.unicaen.iota.dseta.soap.DSeTaService;
+import fr.unicaen.iota.dseta.soap.DSeTaServicePortType;
+import fr.unicaen.iota.dseta.soap.SecurityExceptionResponse;
 import fr.unicaen.iota.tau.model.Identity;
 import java.io.File;
 import java.io.FileInputStream;
-import java.math.BigInteger;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.apache.axis2.databinding.types.URI.MalformedURIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -47,14 +50,10 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
-//import org.fosstrak.epcis.utils.AuthenticationType;
-/**
- *
- */
 public class DSeTaClient {
 
     private Identity identity;
-    private IDedDSServicePortType port;
+    private DSeTaServicePortType port;
     private static final Log log = LogFactory.getLog(DSeTaClient.class);
 
     public DSeTaClient(Identity id, String dsAddress) {
@@ -79,8 +78,8 @@ public class DSeTaClient {
             System.setProperty("javax.net.ssl.trustStorePassword", trustPksPassword);
         }
         URL wsdlUrl = new URL(address + "?wsdl");
-        IDedDSService service = new IDedDSService(wsdlUrl);
-        port = service.getPort(IDedDSServicePortType.class);
+        DSeTaService service = new DSeTaService(wsdlUrl);
+        port = service.getPort(DSeTaServicePortType.class);
 
         // turn off chunked transfer encoding
         Client client = ClientProxy.getClient(port);
@@ -123,142 +122,106 @@ public class DSeTaClient {
         this.identity = id;
     }
 
-    public List<TEventItem> eventLookup(String objectId, GregorianCalendar start, GregorianCalendar end, String BizStep)
-            throws EnhancedProtocolException, MalformedURIException {
-        EventLookupIn in = new EventLookupIn();
-        in.setSid("not_used"); // session ID, not used in DSeTa
-        in.setObjectID(objectId);
-        in.setLifeCycleStepID(BizStep);
-        try {
-            DatatypeFactory DF = DatatypeFactory.newInstance();
-            if (start != null) {
-                XMLGregorianCalendar xmlCal = DF.newXMLGregorianCalendar(start);
-                in.setStartingAt(xmlCal);
-            }
-            if (end != null) {
-                XMLGregorianCalendar xmlCal = DF.newXMLGregorianCalendar(end);
-                in.setEndingAt(xmlCal);
-            }
-        } catch (DatatypeConfigurationException ex) {
-            log.error("Impossible date conversion", ex);
-        }
-        EventLookupOut out = port.iDedEventLookup(in, identity);
-        int statusCode = out.getResult().getCode();
-        if (StatusCodeHelper.isErrorCode(statusCode)) {
-            throw new EnhancedProtocolException(statusCode, out.getResult().getDesc());
-        }
-        TEventItemList tEventList = out.getEventList();
-        return tEventList.getEvent();
+    /**
+     * Sends the given DS event to the DS.
+     * @param epc The EPC of the event.
+     * @param eventType The type of the event.
+     * @param bizStep The business step of the event.
+     * @param eventTime The creation time of the event.
+     * @param serviceAddress The service address of the event.
+     * @param serviceType The type of the service.
+     * @param owner The owner of the event.
+     * @return The response.
+     * @throws ImplementationExceptionResponse If this event could not be captured.
+     * @throws InternalExceptionResponse If a DSeTa error occurred.
+     * @throws SecurityExceptionResponse If the operation is denied.
+     */
+    public EventCreateResp eventCreate(String epc, String eventType, String bizStep, String serviceAddress, XMLGregorianCalendar eventTime,
+            String serviceType, String owner) throws ImplementationExceptionResponse, InternalExceptionResponse, SecurityExceptionResponse {
+        EventCreateReq createReq = new EventCreateReq();
+        DSEvent event = new DSEvent();
+        event.setEpc(epc);
+        event.setEventType(eventType);
+        event.setBizStep(bizStep);
+        event.setEventTime(eventTime);
+        event.setServiceAddress(serviceAddress);
+        event.setServiceType(serviceType);
+        createReq.setDsEvent(event);
+        Identity ownerId = new Identity();
+        ownerId.setAsString(owner);
+        createReq.setOwner(ownerId);
+        return port.iDedEventCreate(createReq, identity);
     }
 
-    public int eventCreate(String partnerId, String objectId, String bizStep, String eventClass,
-            GregorianCalendar sourceTimeStamp, int ttl, Collection<String> serviceIds, int priority, Map<String, String> extensions)
-            throws MalformedURIException, EnhancedProtocolException {
-        EventCreateIn in = new EventCreateIn();
-        in.setSid("not_used"); // session ID, not used in DSeTa
-        in.setEvent(createTObjectEventTypeChoice(objectId, bizStep, eventClass,
-                sourceTimeStamp, ttl, serviceIds, priority, extensions));
-        in.setSupplyChainID("not_used");
-        in.setProxyPartnerID(partnerId);
-        EventCreateOut out = port.iDedEventCreate(in, identity);
-        int statusCode = out.getResult().getCode();
-        if (StatusCodeHelper.isErrorCode(statusCode)) {
-            throw new EnhancedProtocolException(statusCode, out.getResult().getDesc());
-        }
-        return out.getEventID().intValue();
+    /**
+     * Sends the given DS event to DSeTa.
+     * @param dsEvent The DS event to send.
+     * @param owner The owner of the event.
+     * @return The response.
+     * @throws ImplementationExceptionResponse If this event could not be captured.
+     * @throws InternalExceptionResponse If a DSeTa error occurred.
+     * @throws SecurityExceptionResponse If the operation is denied.
+     */
+    public EventCreateResp eventCreate(DSEvent event, String owner)
+            throws ImplementationExceptionResponse, InternalExceptionResponse, SecurityExceptionResponse {
+        EventCreateReq createReq = new EventCreateReq();
+        createReq.setDsEvent(event);
+        Identity ownerId = new Identity();
+        ownerId.setAsString(owner);
+        createReq.setOwner(ownerId);
+        return port.iDedEventCreate(createReq, identity);
     }
 
-    public List<Integer> multipleEventCreate(String partnerId, Collection<EventInfo> eventList)
-            throws MalformedURIException, EnhancedProtocolException {
-        MultipleEventCreateIn in = new MultipleEventCreateIn();
-        in.setSid("not_used"); // session ID, not used in DSeTa
-        in.setProxyPartnerID(partnerId);
-        in.setSupplyChainID("not_used");
-        TObjectEventList objectEventList = new TObjectEventList();
-        for (EventInfo event : eventList) {
-            TObjectEvent tObjectEvent = createTObjectEventTypeChoice(event.getEvent().getObjectId(),
-                    event.getEvent().getBizStep(),
-                    event.getEvent().getEventClass(),
-                    event.getEvent().getSourceTimeStamp(),
-                    event.getTtl(),
-                    createServiceIds(event.getEvent().getServiceList()),
-                    event.getPriority(),
-                    event.getEvent().getExtensions()).getObjectEvent();
-            objectEventList.getObjectEvent().add(tObjectEvent);
+    /**
+     * Sends the given list of DS events to DSeTa.
+     * @param dsEventMap The Map of events with owner to add. The Map is linked to keep order in the response.
+     * @return The responses or null if the Map is <code>null</code>.
+     * @throws ImplementationExceptionResponse If these events could not be captured.
+     * @throws InternalExceptionResponse If a DSeTa error occurred.
+     * @throws SecurityExceptionResponse If the operation is denied.
+     */
+    public MultipleEventCreateResp multipleEventCreate(LinkedHashMap<DSEvent, String> dsetaEventMap)
+            throws ImplementationExceptionResponse, InternalExceptionResponse, SecurityExceptionResponse {
+        if (dsetaEventMap == null) {
+            return null;
         }
-        in.setEvents(objectEventList);
-        MultipleEventCreateOut out = port.iDedMultipleEventCreate(in, identity);
-        int statusCode = out.getResult().getCode();
-        if (StatusCodeHelper.isErrorCode(statusCode)) {
-            throw new EnhancedProtocolException(statusCode, out.getResult().getDesc());
+        MultipleEventCreateReq multipleCreateReq = new MultipleEventCreateReq();
+        for (Map.Entry<DSEvent, String> dsetaEvent : dsetaEventMap.entrySet()) {
+            EventCreateReq eventCreate = new EventCreateReq();
+            eventCreate.setDsEvent(dsetaEvent.getKey());
+            Identity ownerId = new Identity();
+            ownerId.setAsString(dsetaEvent.getValue());
+            eventCreate.setOwner(ownerId);
+            multipleCreateReq.getEventCreate().add(eventCreate);
         }
-
-        List<Integer> result = new ArrayList<Integer>();
-        if (out.getEventIDList().getEventID() == null) {
-            return result;
-        }
-        for (BigInteger tEventID : out.getEventIDList().getEventID()) {
-            result.add(tEventID.intValue());
-        }
-        return result;
+        return port.iDedMultipleEventCreate(multipleCreateReq, identity);
     }
 
-    private TEventTypeChoice createTObjectEventTypeChoice(String objectId, String bizStep, String eventClass,
-            Calendar sourceTimeStamp, int ttl, Collection<String> serviceIds, int priority, Map<String, String> extensions)
-            throws MalformedURIException {
-        TEventTypeChoice tEventTypeChoice = new TEventTypeChoice();
-        TObjectEvent tObjectEvent = new TObjectEvent();
-
-        TServiceIDList tServiceIDList = new TServiceIDList();
-        tServiceIDList.getId().addAll(serviceIds);
-        tObjectEvent.setServiceList(tServiceIDList);
-
-        tObjectEvent.setTtl(BigInteger.valueOf(ttl));
-
-        try {
-            DatatypeFactory DF = DatatypeFactory.newInstance();
-            GregorianCalendar gCal = new GregorianCalendar();
-            gCal.setTime(sourceTimeStamp.getTime());
-            XMLGregorianCalendar xmlCal = DF.newXMLGregorianCalendar(gCal);
-            tObjectEvent.setSourceTS(xmlCal);
-        } catch (DatatypeConfigurationException ex) {
-            log.error("Impossible date conversion", ex);
-        }
-
-        tObjectEvent.setPriority(priority);
-        tObjectEvent.setObjectID(objectId);
-        tObjectEvent.setLifeCycleStepID(bizStep);
-        tObjectEvent.setEventClass(eventClass);
-
-        // extensions:
-        if (extensions != null) {
-            TExtension exts = new TExtension();
-            for (Map.Entry<String, String> idval : extensions.entrySet()) {
-                /*
-                 * ESDS_ServiceStub.TExtension tExtension = new
-                 * ESDS_ServiceStub.TExtension(); OMFactory factory =
-                 * OMAbstractFactory.getOMFactory(); OMElement elemExtension =
-                 * factory.createOMElement(new QName("fr:unicaen:extension"));
-                 * OMElement key = factory.createOMElement(new
-                 * QName("fr:unicaen:key")); key.setText(idval.getKey());
-                 * OMElement value = factory.createOMElement(new
-                 * QName("fr:unicaen:value")); value.setText(idval.getValue());
-                 * elemExtension.addChild(key); elemExtension.addChild(value);
-                 * tExtension.addExtraElement(elemExtension);
-                 */
-            }
-            tObjectEvent.setExtension(exts);
-        }
-        tEventTypeChoice.setObjectEvent(tObjectEvent);
-        return tEventTypeChoice;
-    }
-
-    private List<String> createServiceIds(Collection<Service> serviceList) {
-        List<String> serviceIds = new ArrayList<String>();
-        for (Service s : serviceList) {
-            serviceIds.add(s.getId());
-        }
-        return serviceIds;
+    /**
+     * Performs a query to get DS events.
+     * @param epc The EPC to look up.
+     * @param eventType The event type to look up.
+     * @param bizStep The business step to look up.
+     * @param startingAt The lower time limit.
+     * @param endingAt The higher time limit.
+     * @param serviceType The type of the service.
+     * @return The list of DS events associated to the query.
+     * @throws ImplementationExceptionResponse If the query could not be performed.
+     * @throws InternalExceptionResponse If a DS error occurred.
+     * @throws SecurityExceptionResponse If the operation is denied.
+     */
+    public List<DSEvent> eventLookup(String epc, String eventType, String bizStep, XMLGregorianCalendar startingAt,
+            XMLGregorianCalendar endingAt, String serviceType) throws ImplementationExceptionResponse, InternalExceptionResponse,
+            SecurityExceptionResponse {
+        EventLookupReq lookupReq = new EventLookupReq();
+        lookupReq.setEpc(epc);
+        lookupReq.setEventType(eventType);
+        lookupReq.setBizStep(bizStep);
+        lookupReq.setStartingAt(startingAt);
+        lookupReq.setEndingAt(endingAt);
+        lookupReq.setServiceType(serviceType);
+        EventLookupResp lookupResp = port.iDedEventLookup(lookupReq, identity);
+        return lookupResp.getDsEventList();
     }
 
 }

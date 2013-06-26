@@ -82,7 +82,7 @@ class CertConfigurer(installer.Configurer):
             self.cset("pem_keystore", pemkeystore)
         if self.cisTrue("create_certfile"):
             typekeystore = "jks" if self.cget("keystore").endswith(".jks") else "pkcs12"
-            utils.execKeytool("Exporting certificate", "-exportcert", type,
+            utils.execKeytool("Exporting certificate", "-exportcert", typekeystore,
                               self.cget("keystore"), self.cget("password"),
                               self.cget("keyalias"), self.cget("keypassword"),
                               [("-file", self.cget("certfile"))])

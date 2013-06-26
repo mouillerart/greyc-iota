@@ -50,8 +50,8 @@ public class RuleTreeNode {
         StringBuilder representation = new StringBuilder();
         if (SCBizStepRule.RULEFILTER.equals(id)) {
             representation.append("BizStep ");
-        } else if (SCEPCClassRule.RULEFILTER.equals(id)) {
-            representation.append("EpcClass ");
+        } else if (SCEventTypeRule.RULEFILTER.equals(id)) {
+            representation.append("EventType ");
         } else if (SCEPCsRule.RULEFILTER.equals(id)) {
             representation.append("Epc ");
         } else if (SCEventTimeRule.RULEFILTER.equals(id)) {

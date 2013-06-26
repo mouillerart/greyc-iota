@@ -3,12 +3,7 @@
 <%@page import="fr.unicaen.iota.epcisphi.utils.HTMLUtilities"%>
 
 <%
-            /*String partnerId = ((PartnerInfo) session.getAttribute("pInfo")).getPartnerId();
-            String pServiceId = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getId();
-            String pServiceAddress = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getUri().toString();
-            String pServiceType = ((PartnerInfo) session.getAttribute("pInfo")).getServiceList().get(0).getType();
- *          */
-            String partnerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
+            String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
 %>
 
 <div id="createUser" title="Create User" class="modalDialog">
@@ -22,9 +17,9 @@
     <div class="dialog_options">Login : <input id="userId" type="text" value="" /></div>
 </div>
 
-<div id="updatePartner" title="Update Partner Informations" class="modalDialog">
-    <div class="dialog_message">Enter the new partner informations :</div>
-    <div class="dialog_options">Partner Id : <input disabled id="partnerID" type="text" value="<%=partnerId%>" /></div>
+<div id="updateOwner" title="Update Owner Informations" class="modalDialog">
+    <div class="dialog_message">Enter the new Owner informations :</div>
+    <div class="dialog_options">Owner Id : <input disabled id="ownerID" type="text" value="<%=ownerId%>" /></div>
 </div>
 
 <div id="GroupDialog" title="Group Name" class="modalDialog">
@@ -33,10 +28,8 @@
 </div>
 
 <div id="usersDialog" title="Add User" class="modalDialog">
-    <div class="dialog_message">Choose a new Partner you want to associate in this group :</div>
-    <div class="dialog_options">
-        Partner : <input type="text" value="" id="groupPartnerName" />
-    </div>
+    <div class="dialog_message">Choose a new user you want to associate in this group :</div>
+    <div class="dialog_options">User : <input type="text" value="" id="groupPartnerName" /></div>
 </div>
 
 <div id="userAdminPermissionDialog" title="Add user permissions" class="modalDialog">
@@ -131,6 +124,11 @@
 <div id="dispositionFilterDialog" title="Disposition Filter" class="modalDialog">
     <div class="dialog_message">Enter a Disposisition filter :</div>
     <div class="dialog_options">Name : <input id="dispositionFilterName" type="text" value="" /></div>
+</div>
+
+<div id="masterDataIdFilterDialog" title="MasterData ID Filter" class="modalDialog">
+    <div class="dialog_message">Enter a MasterData ID filter :</div>
+    <div class="dialog_options">Name : <input id="masterDataIdFilterName" type="text" value="" /></div>
 </div>
 
 <div id="errorDialog" title="Error !!!" class="modalDialog">

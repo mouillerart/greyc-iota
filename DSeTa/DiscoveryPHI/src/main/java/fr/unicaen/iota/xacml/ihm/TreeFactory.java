@@ -122,7 +122,7 @@ public class TreeFactory {
                 return "BizStep Filters / default policy: ";
             case epcFilterGroupNode:
                 return "EPC Filters / default policy: ";
-            case epcClassFilterGroupNode:
+            case eventTypeFilterGroupNode:
                 return "Event Class Filters / default policy: ";
             case eventTimeFilterGroupNode:
                 return "Event Time Filters / default policy: ";
@@ -140,7 +140,7 @@ public class TreeFactory {
                 return "bizStep filter: ";
             case eventTimeFilterNode:
                 return "period filter: ";
-            case epcClassFilterNode:
+            case eventTypeFilterNode:
                 return "Event class filter: ";
             case epcFilterNode:
                 return "EPC filter: ";

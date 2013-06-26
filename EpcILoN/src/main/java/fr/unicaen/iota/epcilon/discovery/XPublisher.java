@@ -19,14 +19,20 @@
  */
 package fr.unicaen.iota.epcilon.discovery;
 
-import fr.unicaen.iota.discovery.client.model.Event;
-import fr.unicaen.iota.discovery.client.model.EventInfo;
+import fr.unicaen.iota.ds.client.DSClient;
+import fr.unicaen.iota.ds.model.CreateResponseType;
+import fr.unicaen.iota.ds.model.DSEvent;
+import fr.unicaen.iota.ds.model.EventCreateResp;
+import fr.unicaen.iota.ds.model.MultipleEventCreateResp;
 import fr.unicaen.iota.dseta.client.DSeTaClient;
 import fr.unicaen.iota.epcilon.conf.Configuration;
 import fr.unicaen.iota.epcilon.model.EventToPublish;
 import fr.unicaen.iota.epcilon.util.SQLQueryModule;
+import fr.unicaen.iota.epcilon.util.Utils;
 import fr.unicaen.iota.tau.model.Identity;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,6 +44,7 @@ public class XPublisher extends Thread {
     private static final Log log = LogFactory.getLog(XPublisher.class);
     private SQLQueryModule queryOperationsModule;
     private DSeTaClient dsetaClient;
+    private DSClient dsClient;
     private Identity identity;
 
     public XPublisher() {
@@ -51,20 +58,21 @@ public class XPublisher extends Thread {
         log.info("Starting event publication thread");
         PublisherMonitor.notification();
         while (true) {
+            if (Configuration.IOTA_IDED) {
+                dsetaClient = new DSeTaClient(identity, Configuration.DISCOVERY_SERVICE_ADDRESS,
+                        Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD,
+                        Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
+            }
+            else {
+                dsClient = new DSClient(Configuration.DISCOVERY_SERVICE_ADDRESS);
+            }
             log.debug("publisher [RUNNING]");
             List<EventToPublish> events = queryOperationsModule.listEventToPublish(Configuration.EPCIS_TO_DS_POOL_EVENT);
             if (events != null && !events.isEmpty()) {
-                List<EventToPublish> blacklist = proceedEvents(events);
-                List<EventToPublish> whitelist = new ArrayList<EventToPublish>();
-                for (EventToPublish ev : events) {
-                    if (blacklist.contains(ev)) {
-                        continue;
-                    }
-                    whitelist.add(ev);
-                }
-                if (!whitelist.isEmpty()) {
-                    queryOperationsModule.deleteFromDB(whitelist);
-                    log.debug(whitelist.size() + " events deleted in the list of events to publish");
+                List<EventToPublish> eventsSent = proceedEvents(events);
+                if (!eventsSent.isEmpty()) {
+                    queryOperationsModule.deleteFromDB(eventsSent);
+                    log.debug(eventsSent.size() + " events deleted in the list of events to publish");
                 }
             }
             try {
@@ -78,50 +86,57 @@ public class XPublisher extends Thread {
         }
     }
 
+    /**
+     * Tries to send the events and returns the events sent.
+     * @param toPublishList The events to send.
+     * @return The events that could be sent.
+     */
     private List<EventToPublish> proceedEvents(List<EventToPublish> toPublishList) {
-        List<EventToPublish> blackList = new ArrayList<EventToPublish>();
+        List<EventToPublish> eventSentList = new ArrayList<EventToPublish>();
         String dsAddress = Configuration.DISCOVERY_SERVICE_ADDRESS;
         try {
-            log.debug("connected to " + dsAddress);
-            if (dsetaClient == null) {
-                dsetaClient = new DSeTaClient(identity, Configuration.DISCOVERY_SERVICE_ADDRESS,
-                        Configuration.PKS_FILENAME, Configuration.PKS_PASSWORD,
-                        Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
-            }
-            int tmp = 0;
-            while (tmp < toPublishList.size()) {
-                List<EventInfo> list = new ArrayList<EventInfo>();
-                for (int i = tmp; i < tmp + Configuration.SIMULTANEOUS_PUBLISH_LIMIT; i++) {
+            int rank = 0;
+            while (rank < toPublishList.size()) {
+                LinkedHashMap<DSEvent, String> events = new LinkedHashMap<DSEvent, String>();
+                for (int i = rank; i < rank + Configuration.SIMULTANEOUS_PUBLISH_LIMIT; i++) {
                     if (i > toPublishList.size() - 1) {
                         break;
                     }
                     EventToPublish e = toPublishList.get(i);
-                    Calendar ets = Calendar.getInstance();
-                    ets.setTime(e.getEventTime());
-                    Calendar sts = Calendar.getInstance();
-                    sts.setTime(new Date());
-                    Event event = new Event(0,
-                            e.getEpc(),
-                            null, // userInfo.partnerID, not used by server
-                            null, // userInfo.userID, not used by server
-                            e.getBizStep(),
-                            e.getEventType(),
-                            e.getEventClass(),
-                            ets,
-                            sts,
-                            new HashMap<String, String>());
-                    EventInfo eInfo = new EventInfo(event, 1, 30);
-                    list.add(eInfo);
+                    DSEvent event = new DSEvent();
+                    event.setEpc(e.getEpc());
+                    event.setEventType(e.getEventType());
+                    event.setBizStep(e.getBizStep());
+                    event.setEventTime(Utils.dateToXmlCalendar(e.getEventTime()));
+                    event.setServiceAddress(Configuration.DEFAULT_QUERY_CLIENT_ADDRESS);
+                    event.setServiceType(Configuration.QUERY_CLIENT_TYPE);
+                    events.put(event, e.getOwner());
                 }
-                tmp += Configuration.SIMULTANEOUS_PUBLISH_LIMIT;
-                dsetaClient.multipleEventCreate(identity.getAsString(), list);
-                log.info(list.size() + " events published at " + dsAddress);
+                MultipleEventCreateResp multipleResp;
+                if (Configuration.IOTA_IDED) {
+                    multipleResp = dsetaClient.multipleEventCreate(events);
+                }
+                else {
+                    multipleResp = dsClient.multipleEventCreate(new ArrayList<DSEvent>(events.keySet()));
+                }
+                int nbSuccess = 0;
+                if (multipleResp.getEventCreateResponses().size() == events.size()) {
+                    for (int idResp = 0; idResp < multipleResp.getEventCreateResponses().size(); idResp++) {
+                        EventCreateResp resp = multipleResp.getEventCreateResponses().get(idResp);
+                        if (CreateResponseType.CREATED_AND_PUBLISHED.equals(resp.getValue())
+                                || CreateResponseType.CREATED_NOT_PUBLISHED.equals(resp.getValue())) {
+                            eventSentList.add(toPublishList.get(rank + idResp));
+                            nbSuccess++;
+                        }
+                    }
+                }
+                rank += Configuration.SIMULTANEOUS_PUBLISH_LIMIT;
+                log.info(nbSuccess + " events published at " + dsAddress);
             }
         } catch (Exception ex) {
             log.error("Publisher thread interrupted", ex);
-            blackList.addAll(toPublishList);
         }
-        return blackList;
+        return eventSentList;
     }
 
     public String epcToEpcClass(String epc) {

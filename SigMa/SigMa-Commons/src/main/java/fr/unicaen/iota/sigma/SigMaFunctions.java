@@ -4,14 +4,14 @@
  *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *  <http://www.gnu.org/licenses/>
  *
  *  See AUTHORS for a list of contributors.
@@ -30,7 +30,10 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -414,107 +417,28 @@ public class SigMaFunctions {
     }
 
     private String getSignature(EPCISEventType event) {
-        String signature = "";
-        List<Object> extensions;
-
-        if (event instanceof ObjectEventType) {
-            extensions = ((ObjectEventType) event).getAny();
-        } else if (event instanceof AggregationEventType) {
-            extensions = ((AggregationEventType) event).getAny();
-        } else if (event instanceof QuantityEventType) {
-            extensions = ((QuantityEventType) event).getAny();
-        } else if (event instanceof TransactionEventType) {
-            extensions = ((TransactionEventType) event).getAny();
-        } else {
-            return null;
+        List<String> signatures = Utils.getExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE);
+        if (signatures != null && !signatures.isEmpty()) {
+            return signatures.get(0);
         }
-        for (Object object : extensions) {
-            Element elem = (Element) object;
-            if ((Constants.URN_IOTA.equals(elem.getNamespaceURI()) && Constants.EXTENSION_SIGNATURE.equals(elem.getLocalName()))) {
-                signature = elem.getTextContent().toString();
-            }
-        }
-        return signature;
+        return "";
     }
 
     private void deleteSignature(EPCISEventType event) {
-        List<Object> extensions;
-
-        if (event instanceof ObjectEventType) {
-            extensions = ((ObjectEventType) event).getAny();
-        } else if (event instanceof AggregationEventType) {
-            extensions = ((AggregationEventType) event).getAny();
-        } else if (event instanceof QuantityEventType) {
-            extensions = ((QuantityEventType) event).getAny();
-        } else if (event instanceof TransactionEventType) {
-            extensions = ((TransactionEventType) event).getAny();
-        } else {
-            return;
-        }
-
-        Element elem = null;
-        for (Object object : extensions) {
-            Element elemTmp = (Element) object;
-            if ((Constants.URN_IOTA.equals(elemTmp.getNamespaceURI()) && Constants.EXTENSION_SIGNATURE.equals(elemTmp.getLocalName()))) {
-                elem = elemTmp;
-                break;
-            }
-        }
-        if (elem != null) {
-            extensions.remove(elem);
-        }
+        Utils.removesExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNATURE);
     }
 
     private String getSignerId(EPCISEventType event) {
-        String signId = "";
-        List<Object> extensions;
-
-        if (event instanceof ObjectEventType) {
-            extensions = ((ObjectEventType) event).getAny();
-        } else if (event instanceof AggregationEventType) {
-            extensions = ((AggregationEventType) event).getAny();
-        } else if (event instanceof QuantityEventType) {
-            extensions = ((QuantityEventType) event).getAny();
-        } else if (event instanceof TransactionEventType) {
-            extensions = ((TransactionEventType) event).getAny();
-        } else {
-            return null;
+        List<String> signerIds = fr.unicaen.iota.mu.Utils.getExtension(event,
+                Constants.URN_IOTA, Constants.EXTENSION_SIGNER_ID);
+        if (signerIds != null && !signerIds.isEmpty()) {
+            return signerIds.get(0);
         }
-        for (Object object : extensions) {
-            Element elem = (Element) object;
-            if ((Constants.URN_IOTA.equals(elem.getNamespaceURI()) && Constants.EXTENSION_SIGNER_ID.equals(elem.getLocalName()))) {
-                signId = elem.getTextContent().toString();
-            }
-        }
-        return signId;
+        return "";
     }
 
     private void deleteSignerId(EPCISEventType event) {
-        List<Object> extensions;
-
-        if (event instanceof ObjectEventType) {
-            extensions = ((ObjectEventType) event).getAny();
-        } else if (event instanceof AggregationEventType) {
-            extensions = ((AggregationEventType) event).getAny();
-        } else if (event instanceof QuantityEventType) {
-            extensions = ((QuantityEventType) event).getAny();
-        } else if (event instanceof TransactionEventType) {
-            extensions = ((TransactionEventType) event).getAny();
-        } else {
-            return;
-        }
-
-        Element elem = null;
-        for (Object object : extensions) {
-            Element elemTmp = (Element) object;
-            if ((Constants.URN_IOTA.equals(elemTmp.getNamespaceURI()) && Constants.EXTENSION_SIGNER_ID.equals(elemTmp.getLocalName()))) {
-                elem = elemTmp;
-                break;
-            }
-        }
-        if (elem != null) {
-            extensions.remove(elem);
-        }
+        Utils.removesExtension(event, Constants.URN_IOTA, Constants.EXTENSION_SIGNER_ID);
     }
 
 }

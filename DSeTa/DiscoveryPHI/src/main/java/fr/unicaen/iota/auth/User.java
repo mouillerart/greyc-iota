@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,105 +18,33 @@
  */
 package fr.unicaen.iota.auth;
 
-import java.util.Date;
-
 public class User {
 
-    public static String PROP_LOGIN = "Login";
-    public static String PROP_DATE = "Date";
-    public static String PROP_USER_I_D = "UserID";
-    public static String PROP_ID = "Id";
-    public static String PROP_PARTNER = "Partner";
-    public static String PROP_PASSWD = "Passwd";
-    // primary key
-    private Integer _id;
-    // fields
-    private String _passwd;
-    private String _userID;
-    private String _login;
-    private Date _date;
-    // many to one
-    private Partner _partner;
+    private String userID;
+    private String ownerID;
 
-    // constructors
     public User() {
-        initialize();
     }
 
-    /**
-     * Constructor for primary key
-     */
-    public User(Integer _id) {
-        this.setId(_id);
-        initialize();
+    public User(String userID, String ownerID) {
+        this.userID = userID;
+        this.ownerID = ownerID;
     }
 
-    /**
-     * Constructor for required fields
-     */
-    public User(Integer _id, Partner _partner, String _passwd, String _userID, String _login, Date _date) {
-        this.setId(_id);
-        this.setPartner(_partner);
-        this.setPasswd(_passwd);
-        this.setUserID(_userID);
-        this.setLogin(_login);
-        this.setDate(_date);
-        initialize();
+    public String getOwnerID() {
+        return ownerID;
     }
 
-    protected void initialize() {
-    }
-
-    public Integer getId() {
-        return _id;
-    }
-
-    public void setId(Integer _id) {
-        this._id = _id;
-    }
-
-    public String getPasswd() {
-        return _passwd;
-    }
-
-    public void setPasswd(String _passwd) {
-        this._passwd = _passwd;
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 
     public String getUserID() {
-        return _userID;
+        return userID;
     }
 
-    public void setUserID(String _userID) {
-        this._userID = _userID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public String getLogin() {
-        return _login;
-    }
-
-    public void setLogin(String _login) {
-        this._login = _login;
-    }
-
-    public java.util.Date getDate() {
-        return _date;
-    }
-
-    public void setDate(java.util.Date _date) {
-        this._date = _date;
-    }
-
-    public Partner getPartner() {
-        return this._partner;
-    }
-
-    public void setPartner(Partner _partner) {
-        this._partner = _partner;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

@@ -8,8 +8,8 @@
 </div>
 
 <div id="createAccount" title="Create Account" class="modalDialog">
-    <div class="dialog_message_category">Enter the new partner informations :</div>
-    <div class="dialog_options">Partner Id : <input id="partnerID1" type="text" value="" /></div>
+    <div class="dialog_message_category">Enter the new owner informations :</div>
+    <div class="dialog_options">Owner Id : <input id="ownerID1" type="text" value="" /></div>
     <div class="dialog_message_category">Enter the root user informations :</div>
     <div class="dialog_options">User's certificate DN used to connect: <input id="userLogin1" type="text" value="" /></div>
     <div class="dialog_options">User name (empty if the DN is compatible with the LDAP directory) : <input id="userID1" type="text" value="" /></div>

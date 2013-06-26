@@ -30,14 +30,12 @@ public final class Constants {
     private static final Log log = LogFactory.getLog(Constants.class);
     public static final String PROP_SESSION_TIME_LEASE = "session-time-lease";
     public static final String PROP_XACML_URL = "xacml-url";
-    public static final String PROP_XACML_IHM_URL = "xacml-ihm-url";
     public static final String PROP_LDAP_URL = "ldap-url";
     public static final String PROP_LDAP_BASE_DN = "ldap-basedn";
     public static final String PROP_LDAP_USER = "ldap-user";
     public static final String PROP_LDAP_PASSWORD = "ldap-password";
     public static final int SESSION_TIME_LEASE;
     public static final String XACML_URL;
-    public static final String XACML_IHM_URL;
     public static final String LDAP_URL;
     public static final String LDAP_BASE_DN;
     public static final String LDAP_USER;
@@ -66,7 +64,6 @@ public final class Constants {
         }
         SESSION_TIME_LEASE = Integer.parseInt(properties.getProperty(PROP_SESSION_TIME_LEASE));
         XACML_URL = properties.getProperty(PROP_XACML_URL);
-        XACML_IHM_URL = properties.getProperty(PROP_XACML_IHM_URL);
         LDAP_URL = properties.getProperty(PROP_LDAP_URL);
         LDAP_BASE_DN = properties.getProperty(PROP_LDAP_BASE_DN);
         LDAP_USER = properties.getProperty(PROP_LDAP_USER);

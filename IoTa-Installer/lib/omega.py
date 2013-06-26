@@ -36,7 +36,7 @@ class OMeGaInstaller(installer.WebAppInstaller):
                    "pks-password": ("cert", "password"),
                    "trust-pks-filename": ("cert", "truststore"),
                    "trust-pks-password": ("cert", "trustpassword"),
-                   "ons": ("ons", "server"),
+                   "ons-hosts": ("ons", "server"),
                    "ons-domain-prefix": ("ons", "domain_prefix"),
                    "default-identity": ("global", "anonymous_user") })
                 ] )

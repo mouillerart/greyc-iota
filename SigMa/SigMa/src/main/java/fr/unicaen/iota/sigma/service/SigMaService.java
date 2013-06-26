@@ -19,10 +19,10 @@
 package fr.unicaen.iota.sigma.service;
 
 import fr.unicaen.iota.sigma.SigMaFunctions;
-import fr.unicaen.iota.sigma.wsdl.SigMaServicePortType;
-import fr.unicaen.iota.sigma.xsd.Principal;
-import fr.unicaen.iota.sigma.xsd.Verification;
-import fr.unicaen.iota.sigma.xsd.VerifyResponse;
+import fr.unicaen.iota.sigma.model.Principal;
+import fr.unicaen.iota.sigma.model.Verification;
+import fr.unicaen.iota.sigma.model.VerifyResponse;
+import fr.unicaen.iota.sigma.soap.SigMaServicePortType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fosstrak.epcis.model.EPCISEventType;

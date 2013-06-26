@@ -51,7 +51,6 @@ class ETaInstaller(installer.DBWebAppInstaller):
                    "xacml-anonymous-user": ("global", "anonymous_user"),
                    "epcis-query-url": ("epcis", "query_url"),
                    "epcis-capture-url": ("epcis", "capture_url"),
-                   "eta-userservice-url": ("user", "url"),
                    "eta-callback-url": ("eta_callback_receiver", "callback_url"),
                    "ldap-url": ("ldap", "url"),
                    "ldap-basedn": ("ldap", "base_dn"),
@@ -66,12 +65,16 @@ class ETaInstaller(installer.DBWebAppInstaller):
         self.setSecuredURL()
         self.cset("db_jndi", "ETADB")
         url = self.cget("url")
-        CONFIG.set("ds", "epcis_type", "ided_epcis")
-        CONFIG.set("ds", "epcis_query_url", url + "ided_query")
-        CONFIG.set("epcilon", "subscription_url", url + "query")
         # configure database connection for callbacks
         murl = "jdbc:mysql://" + CONFIG.get("db", "host") + ":" + CONFIG.get("db", "port") + "/" + self.cget("db_name") + "?autoReconnect=true"
         self.cset("callback_db_url", murl)
+        epcis_url = CONFIG.get("epcis", "url")
+        if not epcis_url.endswith("/"):
+            epcis_url += "/"
+        CONFIG.set("epcis", "query_url", epcis_url + "query")
+        CONFIG.set("epcis", "capture_url", epcis_url + "capture")
+        CONFIG.set("epcilon", "subscription_url", url + "ided_query")
+        CONFIG.set("epcilon", "iota_ided", "True")
 
 
     def postInstall(self):

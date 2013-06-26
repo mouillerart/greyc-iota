@@ -23,14 +23,12 @@ package fr.unicaen.iota.xacml.pep;
  */
 public interface MethodNamesQuery {
 
-    public int hello(String user, String partner, String module);
-
-    public int partnerInfo(String user, String partner);
+    public int hello(String user, String owner, String module);
 
     public int eventLookup(String user, XACMLDSEvent dsEvent);
 
     public int eventInfo(String user, XACMLDSEvent dsEvent);
 
-    public int canBe(String user, String partner);
+    public int canBe(String user, String owner);
 
 }

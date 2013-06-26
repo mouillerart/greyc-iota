@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:model="urn:fr:unicaen:iota:sigma:xsd"
+           xmlns:model="urn:unicaen:iota:sigma:xsd"
            xmlns:epcis="urn:epcglobal:epcis:xsd:1"
-           targetNamespace="urn:fr:unicaen:iota:sigma:xsd"
+           targetNamespace="urn:unicaen:iota:sigma:xsd"
            elementFormDefault="unqualified" attributeFormDefault="unqualified">
 
     <xs:import namespace="urn:epcglobal:epcis:xsd:1" schemaLocation="./EPCglobal-epcis-1_0.xsd"/>

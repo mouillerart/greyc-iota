@@ -5,9 +5,12 @@ Interface entre les événements EPC (couche information) et les événements DS
 
 Dépendances:
   modules IoTa:
+    - DS-Client
     - DSeTa-Client
     - ETa-Query-Client
     - TAu
+    - Nu-PI
+    - Mu
   bibliothèques:
     - epcis-commons
     - epcis-query-client
@@ -26,6 +29,10 @@ Installation et Configuration:
 Dépendances d’utilisation:
   - un serveur MySQL
   - un Epcis ou ETa
-  - un DWS
+  - un DS ou DSeTa
 
-Utilisation: aucune
+Utilisation:
+  EpcILoN s'utilise avec EPCIS et DS ou bien ETa et DSeTa.
+  EpcILoN s'abonne à EPCIS (ou ETa) par un appel à la servlet SubscribedServlet.
+  Si EpcILoN s'abonne à ETa, utiliser le service IDed.
+    Exemple: https://localhost;8443/eta/ided_query

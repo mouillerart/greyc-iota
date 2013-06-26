@@ -290,6 +290,17 @@ On Debian and Debian-derived systems, you just need to install the packages
 `slapd` and `ldap-utils`. You have to execute `dpkg-reconfigure slapd` in
 order to complete the configuration.
 
+To add index on attributes (like the DN of user certificate used when this DN is
+incompatible with the LDAP tree, "aliasdn" by default), you can use the
+ldapmodify command with this properties:
+
+    dn: olcDatabase={1}hdb,cn=config
+    changetype: modify
+    add: olcDbIndex
+    olcDbIndex: aliasdn eq
+
+where "olcDatabase={1}hdb" is the used base.
+
 
 ### ActiveMQ
 

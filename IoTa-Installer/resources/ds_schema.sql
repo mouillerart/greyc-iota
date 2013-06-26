@@ -1,1 +1,1 @@
-../../IoTa-DiscoveryWS/IoTa-DiscoveryWS/src/main/resources/sql/ds_schema.sql
+../../DS/DS/ds_schema.sql

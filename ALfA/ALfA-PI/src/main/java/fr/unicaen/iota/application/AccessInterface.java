@@ -5,14 +5,14 @@
  *  Copyright © 2008-2012  Orange Labs
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *  <http://www.gnu.org/licenses/>
  *
  *  See AUTHORS for a list of contributors.
@@ -20,8 +20,7 @@
 package fr.unicaen.iota.application;
 
 import fr.unicaen.iota.application.rmi.CallbackClient;
-import fr.unicaen.iota.ds.model.TEventItem;
-import fr.unicaen.iota.ds.model.TServiceType;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
@@ -72,7 +71,7 @@ public interface AccessInterface {
      * @return a list of DS events
      * @throws RemoteException
      */
-    public List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException;
+    public List<DSEvent> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException;
 
     /**
      * Queries a given Discovery Service for all events concerning a given EPC
@@ -85,7 +84,7 @@ public interface AccessInterface {
      * @return a list of DS events
      * @throws RemoteException
      */
-    public List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress, TServiceType serviceType) throws RemoteException;
+    public List<DSEvent> queryDS(Identity identity, String EPC, String DSAddress, ONSEntryType serviceType) throws RemoteException;
 
     /**
      * Gets all the EPCIS events concerning a given EPC code.

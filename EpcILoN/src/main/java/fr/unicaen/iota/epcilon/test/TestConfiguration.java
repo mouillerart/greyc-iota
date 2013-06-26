@@ -19,8 +19,6 @@
  */
 package fr.unicaen.iota.epcilon.test;
 
-import fr.unicaen.iota.discovery.client.DsClient;
-import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
 import fr.unicaen.iota.epcilon.conf.Configuration;
 import fr.unicaen.iota.epcilon.model.EventToPublish;
 import fr.unicaen.iota.epcilon.query.StandingQueryCaptureModule;
@@ -101,13 +99,6 @@ public class TestConfiguration extends HttpServlet {
             out.println("<iframe name=\"subframe\" ></iframe>");
 
             out.println("<h2>Default parameters: </h2>");
-            out.println("<div><span class=\"name\">Business step: </span><span class=\"param\">" + Configuration.DEFAULT_EVENT_BUSINESS_STEP + "</span></div>");
-            out.println("<div><span class=\"name\">Class: </span><span class=\"param\">" + Configuration.DEFAULT_EVENT_CLASS + "</span></div>");
-            out.println("<div><span class=\"name\">EPC: </span><span class=\"param\">" + Configuration.DEFAULT_EVENT_EPC + "</span></div>");
-            out.println("<div><span class=\"name\">ID: </span><span class=\"param\">" + Configuration.DEFAULT_EVENT_ID + "</span></div>");
-            out.println("<div><span class=\"name\">Priority: " + Configuration.DEFAULT_EVENT_PRIORITY + "</span></div>");
-            out.println("<div><span class=\"name\">Sc: </span><span class=\"param\">" + Configuration.DEFAULT_EVENT_SC + "</span></div>");
-            out.println("<div><span class=\"name\">TTL: </span><span class=\"param\">" + Configuration.DEFAULT_EVENT_TTL + "</span></div>");
 
             out.println("<h2>Publisher parameters: </h2>");
             out.println("<div><span class=\"name\">publisher frequency: </span><span class=\"param\">" + Configuration.PUBLISHER_FREQUENCY + "ms</span></div>");
@@ -154,7 +145,7 @@ public class TestConfiguration extends HttpServlet {
 
             String action = request.getParameter("action");
             if ("serviceaddress".equals(action)) {
-                try {
+                /*try {
                     out.println("start test service address !");
                     out.println("<br/>");
                     out.println("<span class=\"name\">executing Hello operation ...</span> ");
@@ -180,7 +171,7 @@ public class TestConfiguration extends HttpServlet {
                     out.println("<br/>");
                     out.println("<span class=\"error\">finished: [ ERROR ]</span>");
                     out.flush();
-                }
+                }*/
             } else if ("db".equals(action)) {
                 out.println("start test DB connection !");
                 out.flush();

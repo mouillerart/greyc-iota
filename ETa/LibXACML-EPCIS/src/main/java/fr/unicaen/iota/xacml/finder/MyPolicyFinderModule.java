@@ -327,16 +327,16 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
         return getPolicies().saveAdminPolicies(identifier);
     }
 
-    public boolean updateQueryGroupName(String partnerID, String groupId, String value) {
-        return policies.updateQueryGroupName(partnerID, groupId, value);
+    public boolean updateQueryGroupName(String ownerID, String groupId, String value) {
+        return policies.updateQueryGroupName(ownerID, groupId, value);
     }
 
-    public boolean updateCaptureGroupName(String partnerID, String groupId, String value) {
-        return policies.updateCaptureGroupName(partnerID, groupId, value);
+    public boolean updateCaptureGroupName(String ownerID, String groupId, String value) {
+        return policies.updateCaptureGroupName(ownerID, groupId, value);
     }
 
-    public boolean updateAdminGroupName(String partnerID, String groupId, String value) {
-        return policies.updateAdminGroupName(partnerID, groupId, value);
+    public boolean updateAdminGroupName(String ownerID, String groupId, String value) {
+        return policies.updateAdminGroupName(ownerID, groupId, value);
     }
 
     //##################################################
@@ -866,17 +866,17 @@ public class MyPolicyFinderModule extends PolicyFinderModule {
     }
 
     public boolean updateAPMQuerySession(AccessPolicyManagerSession APMS, PolicyFinder policyFinder) {
-        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.QUERY_POLICIES_DIRECTORY + APMS.getPartner() + ".xml", policyFinder);
+        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.QUERY_POLICIES_DIRECTORY + APMS.getOwner() + ".xml", policyFinder);
         return policies.updateAPMQuerySession(APMS, ownerPolicies);
     }
 
     public boolean updateAPMCaptureSession(AccessPolicyManagerSession APMS, PolicyFinder policyFinder) {
-        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.CAPTURE_POLICIES_DIRECTORY + APMS.getPartner() + ".xml", policyFinder);
+        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.CAPTURE_POLICIES_DIRECTORY + APMS.getOwner() + ".xml", policyFinder);
         return policies.updateAPMCaptureSession(APMS, ownerPolicies);
     }
 
     public boolean updateAPMAdminSession(AccessPolicyManagerSession APMS, PolicyFinder policyFinder) {
-        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.ADMIN_POLICIES_DIRECTORY + APMS.getPartner() + ".xml", policyFinder);
+        OwnerPolicies ownerPolicies = reloadPolicy(Configuration.ADMIN_POLICIES_DIRECTORY + APMS.getOwner() + ".xml", policyFinder);
         return policies.updateAPMAdminSession(APMS, ownerPolicies);
     }
 

@@ -36,10 +36,10 @@ import org.apache.commons.logging.LogFactory;
 public class CaptureModuleClient extends javax.swing.JFrame {
 
     private static final Log log = LogFactory.getLog(CaptureModuleClient.class);
-    private String partnerName;
+    private String ownerName;
 
-    public CaptureModuleClient(String partnerName) {
-        this.partnerName = partnerName;
+    public CaptureModuleClient(String ownerName) {
+        this.ownerName = ownerName;
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -61,7 +61,7 @@ public class CaptureModuleClient extends javax.swing.JFrame {
         sendButton = new javax.swing.JButton();
         actionComboBox = new javax.swing.JComboBox();
         userField = new javax.swing.JTextField();
-        partnerField = new javax.swing.JTextField();
+        ownerField = new javax.swing.JTextField();
         epcField = new javax.swing.JTextField();
         eventTypeField = new javax.swing.JTextField();
         bizStepField = new javax.swing.JTextField();
@@ -73,7 +73,7 @@ public class CaptureModuleClient extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jLabel1.setText("Capture Module");
         jLabel2.setText("User: ");
-        jLabel3.setText("Partner: ");
+        jLabel3.setText("Owner: ");
         jLabel4.setText("EPC: ");
         jLabel5.setText("Event Type: ");
         jLabel6.setText("BizStep: ");
@@ -84,7 +84,7 @@ public class CaptureModuleClient extends javax.swing.JFrame {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                InterfaceHelper IH = new InterfaceHelper(partnerName);
+                InterfaceHelper IH = new InterfaceHelper(ownerName);
                 IH.reload();
                 sendButtonActionPerformed(evt);
             }
@@ -117,9 +117,9 @@ public class CaptureModuleClient extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel2).addComponent(jLabel3).addComponent(jLabel8).addComponent(jLabel4).addComponent(jLabel5).addComponent(jLabel6).addComponent(jLabel7)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(eventTimeDayBox, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(eventTimeMonthBox, 0, 51, Short.MAX_VALUE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(eventTimeYearBox, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)).addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(partnerField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(actionComboBox, 0, 212, Short.MAX_VALUE).addComponent(epcField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(eventTypeField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(bizStepField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(jLabel1))).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap(254, Short.MAX_VALUE).addComponent(sendButton))).addContainerGap()));
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel2).addComponent(jLabel3).addComponent(jLabel8).addComponent(jLabel4).addComponent(jLabel5).addComponent(jLabel6).addComponent(jLabel7)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(eventTimeDayBox, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(eventTimeMonthBox, 0, 51, Short.MAX_VALUE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(eventTimeYearBox, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)).addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(ownerField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(actionComboBox, 0, 212, Short.MAX_VALUE).addComponent(epcField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(eventTypeField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(bizStepField, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE).addComponent(jLabel1))).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap(254, Short.MAX_VALUE).addComponent(sendButton))).addContainerGap()));
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(jLabel1).addGap(12, 12, 12).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel2).addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(partnerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel3)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(actionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel8)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(epcField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel4)).addGap(7, 7, 7).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(eventTypeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel5)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(bizStepField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel6)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel7).addComponent(eventTimeDayBox, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(eventTimeYearBox, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(eventTimeMonthBox, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(sendButton).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(jLabel1).addGap(12, 12, 12).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel2).addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(ownerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel3)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(actionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel8)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(epcField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel4)).addGap(7, 7, 7).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(eventTypeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel5)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(bizStepField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel6)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel7).addComponent(eventTimeDayBox, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(eventTimeYearBox, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(eventTimeMonthBox, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(sendButton).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
     }
@@ -148,9 +148,9 @@ public class CaptureModuleClient extends javax.swing.JFrame {
         ArrayList args = new ArrayList();
         args.add(MapSessions.APM);
         args.add(userField.getText());
-        args.add(partnerField.getText());
+        args.add(ownerField.getText());
         if (!("hello".equals(action))) {
-            XACMLEPCISEvent xacmldse = new XACMLEPCISEvent(partnerField.getText(), bizStepField.getText(), epcField.getText(), eventTime, eventTime, eventTypeField.getText(), "add", "parentId", "childEpc", new Long(1), "readPoint", "bizLoc", "bizTrans", "disposition", null);
+            XACMLEPCISEvent xacmldse = new XACMLEPCISEvent(ownerField.getText(), bizStepField.getText(), epcField.getText(), eventTime, eventTime, eventTypeField.getText(), "add", "parentId", "childEpc", new Long(1), "readPoint", "bizLoc", "bizTrans", "disposition", null);
             args.add(xacmldse);
         }
         args.add(fr.unicaen.iota.xacml.policy.Module.captureModule.getValue());
@@ -185,8 +185,8 @@ public class CaptureModuleClient extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                String partner = "partnerDeTest";
-                new CaptureModuleClient(partner).setVisible(true);
+                String owner = "ownerDeTest";
+                new CaptureModuleClient(owner).setVisible(true);
             }
         });
     }
@@ -206,7 +206,7 @@ public class CaptureModuleClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField partnerField;
+    private javax.swing.JTextField ownerField;
     private javax.swing.JButton sendButton;
     private javax.swing.JTextField userField;
     // End of variables declaration

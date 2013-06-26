@@ -4,7 +4,7 @@ Sending module of events sent by an EPCIS (callbacks).
 
 Dependencies:
   libraries:
-    - activemq-core
+    - activemq-client
     - commons-io
     - commons-logging
     - log4j

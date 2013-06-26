@@ -21,7 +21,7 @@ package fr.unicaen.iota.sigma.test;
 import fr.unicaen.iota.eta.capture.ETaCaptureClient;
 import fr.unicaen.iota.sigma.SigMaFunctions;
 import fr.unicaen.iota.sigma.client.SigMaClient;
-import fr.unicaen.iota.sigma.xsd.VerifyResponse;
+import fr.unicaen.iota.sigma.model.VerifyResponse;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.GregorianCalendar;

@@ -152,18 +152,18 @@ public class CallbackOperationsModule {
      */
     public void send(String msg) throws JMSException, Exception {
         ActiveMQConnectionFactory factory;
-        if (Constants.ACTIVEMQ_LOGIN != null && Constants.ACTIVEMQ_PASSWORD != null
-                && !Constants.ACTIVEMQ_LOGIN.isEmpty() && !Constants.ACTIVEMQ_PASSWORD.isEmpty()) {
-            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_LOGIN, Constants.ACTIVEMQ_PASSWORD, Constants.ACTIVEMQ_URL);
+        if (Constants.JMS_LOGIN != null && Constants.JMS_PASSWORD != null
+                && !Constants.JMS_LOGIN.isEmpty() && !Constants.JMS_PASSWORD.isEmpty()) {
+            factory = new ActiveMQConnectionFactory(Constants.JMS_LOGIN, Constants.JMS_PASSWORD, Constants.JMS_URL);
         } else {
-            factory = new ActiveMQConnectionFactory(Constants.ACTIVEMQ_URL);
+            factory = new ActiveMQConnectionFactory(Constants.JMS_URL);
         }
         Connection connection = factory.createConnection();
         connection.start();
         try {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             try {
-                Destination destination = session.createQueue(Constants.ACTIVEMQ_QUEUE_NAME);
+                Destination destination = session.createQueue(Constants.JMS_QUEUE_NAME);
                 MessageProducer producer = session.createProducer(destination);
                 TextMessage message = session.createTextMessage();
                 message.setText(msg);

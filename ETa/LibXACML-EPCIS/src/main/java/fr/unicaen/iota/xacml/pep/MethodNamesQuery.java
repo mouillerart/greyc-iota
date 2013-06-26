@@ -21,16 +21,12 @@ package fr.unicaen.iota.xacml.pep;
 
 public interface MethodNamesQuery {
 
-    public int hello(String user, String partner, String module);
+    public int hello(String user, String owner, String module);
 
     public int queryEvent(String user, XACMLEPCISEvent epcisEvent);
 
     public int queryMasterData(String user, XACMLEPCISMasterData epcisMasterData);
 
-    public int subscribe(String user, String partner);
-
-    public int unsubscribe(String user, String partner);
-
-    public int canBe(String user, String partner);
+    public int canBe(String user, String owner);
 
 }

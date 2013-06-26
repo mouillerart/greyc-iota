@@ -22,22 +22,22 @@ package fr.unicaen.iota.epcisphi.utils;
 public class User {
 
     private String userID;
-    private String partnerID;
+    private String ownerID;
 
     public User() {
     }
 
-    public User(String userID, String partnerID) {
+    public User(String userID, String ownerID) {
         this.userID = userID;
-        this.partnerID = partnerID;
+        this.ownerID = ownerID;
     }
 
-    public String getPartnerID() {
-        return partnerID;
+    public String getOwnerID() {
+        return ownerID;
     }
 
-    public void setPartnerID(String partnerID) {
-        this.partnerID = partnerID;
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 
     public String getUserID() {

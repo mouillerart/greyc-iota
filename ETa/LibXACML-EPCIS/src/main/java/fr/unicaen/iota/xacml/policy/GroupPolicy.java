@@ -708,7 +708,7 @@ public class GroupPolicy extends AbstractPolicy {
             } else if (ruleid != null && !ruleid.isEmpty()) {
                 ExtensionRuleContent extension = new ExtensionRuleContent(getFiltersValues(rule), function);
                 if (extensionsAndFilterFunction == null) {
-                    extensionsAndFilterFunction = new HashMap();
+                    extensionsAndFilterFunction = new HashMap<String, ExtensionRuleContent>();
                 }
                 extensionsAndFilterFunction.put(ruleid, extension);
             }
@@ -1823,6 +1823,9 @@ public class GroupPolicy extends AbstractPolicy {
     }
 
     public boolean extensionsContains(String extensionId) {
+        if (extensionsAndFilterFunction == null) {
+            return false;
+        }
         return extensionsAndFilterFunction.containsKey(extensionId);
     }
 }

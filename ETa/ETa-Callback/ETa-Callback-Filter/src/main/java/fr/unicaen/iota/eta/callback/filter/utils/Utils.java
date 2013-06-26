@@ -19,12 +19,7 @@
 package fr.unicaen.iota.eta.callback.filter.utils;
 
 import java.util.List;
-import org.fosstrak.epcis.model.AggregationEventType;
 import org.fosstrak.epcis.model.EPCISEventType;
-import org.fosstrak.epcis.model.ObjectEventType;
-import org.fosstrak.epcis.model.QuantityEventType;
-import org.fosstrak.epcis.model.TransactionEventType;
-import org.w3c.dom.Element;
 
 public class Utils {
 
@@ -34,24 +29,10 @@ public class Utils {
      * @return The event owner.
      */
     public static String getEventOwner(EPCISEventType event) {
-        List<Object> extensions;
-        if (event instanceof ObjectEventType) {
-            extensions = ((ObjectEventType) event).getAny();
-        } else if (event instanceof AggregationEventType) {
-            extensions = ((AggregationEventType) event).getAny();
-        } else if (event instanceof QuantityEventType) {
-            extensions = ((QuantityEventType) event).getAny();
-        } else if (event instanceof TransactionEventType) {
-            extensions = ((TransactionEventType) event).getAny();
-        } else {
-            return null;
-        }
-        for (Object object : extensions) {
-            Element element = (Element) object;
-            if (fr.unicaen.iota.mu.Constants.URN_IOTA.equals(element.getNamespaceURI()) &&
-                    fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID.equals(element.getLocalName())) {
-                return element.getTextContent();
-            }
+        List<String> owners = fr.unicaen.iota.mu.Utils.getExtension(event,
+                fr.unicaen.iota.mu.Constants.URN_IOTA, fr.unicaen.iota.mu.Constants.EXTENSION_OWNER_ID);
+        if (owners != null && !owners.isEmpty()) {
+            return owners.get(0);
         }
         return null;
     }

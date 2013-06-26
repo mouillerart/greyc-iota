@@ -4,14 +4,14 @@
  *  Copyright © 2012-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *  <http://www.gnu.org/licenses/>
  *
  *  See AUTHORS for a list of contributors.
@@ -22,9 +22,7 @@ import fr.unicaen.iota.application.model.*;
 import fr.unicaen.iota.application.soap.IoTaException;
 import fr.unicaen.iota.application.soap.IoTaService;
 import fr.unicaen.iota.application.soap.IoTaServicePortType;
-import fr.unicaen.iota.ds.model.TEventItem;
-import fr.unicaen.iota.ds.model.TServiceItem;
-import fr.unicaen.iota.ds.model.TServiceType;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.mu.EPCISEventTypeHelper;
 import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.tau.model.Identity;
@@ -303,7 +301,7 @@ public class OmICron {
      * @return a list of DS events
      * @throws RemoteException
      */
-    public List<TEventItem> queryDS(String epc, String DSAddress) throws IoTaException {
+    public List<DSEvent> queryDS(String epc, String DSAddress) throws IoTaException {
         QueryDSRequest in = new QueryDSRequest();
         EPC tepc = new EPC();
         tepc.setValue(epc);
@@ -311,7 +309,7 @@ public class OmICron {
         in.setIdentity(identity);
         in.setDSAddress(DSAddress);
         QueryDSResponse out = port.queryDS(in);
-        return out.getEventList().getEvent();
+        return out.getDsEventList();
     }
 
     /**
@@ -324,16 +322,16 @@ public class OmICron {
      * @return a list of DS events
      * @throws RemoteException
      */
-    public List<TEventItem> queryDS(String epc, String DSAddress, TServiceType serviceType) throws IoTaException {
+    public List<DSEvent> queryDS(String epc, String DSAddress, ONSEntryType serviceType) throws IoTaException {
         QueryDSRequest in = new QueryDSRequest();
         EPC tepc = new EPC();
         tepc.setValue(epc);
         in.setEpc(tepc);
         in.setIdentity(identity);
         in.setDSAddress(DSAddress);
-        in.setServiceType(serviceType);
+        in.setServiceType(serviceType.name());
         QueryDSResponse out = port.queryDS(in);
-        return out.getEventList().getEvent();
+        return out.getDsEventList();
     }
 
     public static void main(String args[]) throws Exception {
@@ -373,7 +371,7 @@ public class OmICron {
         id.setAsString(sid);
 
         List<EPCISEventType> eventList = null;
-        List<TEventItem> dsEventList = null;
+        List<DSEvent> dsEventList = null;
         if ("traceEPC".equals(service)) {
             System.out.println("Processing traceEPC ...");
             OmICron client = new OmICron(id, serviceURL, ksFile, ksPass, tsFile, tsPass);
@@ -405,13 +403,14 @@ public class OmICron {
             }
         }
         else if (dsEventList != null && !dsEventList.isEmpty()) {
-            for (TEventItem event : dsEventList) {
+            for (DSEvent event : dsEventList) {
                 System.out.println("Event found: ");
-                for (TServiceItem serviceItem : event.getServiceList().getService()) {
-                    System.out.println("   | OwnerID: " + event.getP());
-                    System.out.println("   | service type: " + serviceItem.getType());
-                    System.out.println("   | service address: " + serviceItem.getUri());
-                }
+                System.out.println("   | EPC: " + event.getEpc());
+                System.out.println("   | Event type: " + event.getEventType());
+                System.out.println("   | Business Step: " + event.getBizStep());
+                System.out.println("   | Event time: " + event.getEventTime().toXMLFormat());
+                System.out.println("   | Service type: " + event.getServiceType());
+                System.out.println("   | Service address: " + event.getServiceAddress());
             }
         }
         else {

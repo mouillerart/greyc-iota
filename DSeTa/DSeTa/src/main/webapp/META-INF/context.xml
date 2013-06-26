@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/dseta" reloadable="true">
+  <Resource
+      auth="Container"
+      defaultAutoCommit="false"
+      driverClassName="com.mysql.jdbc.Driver"
+      name="jdbc/DSETADB"
+      username="dseta_usr"
+      password="dseta_pwd"
+      type="javax.sql.DataSource"
+      url="jdbc:mysql://localhost:3306/dseta_db?autoReconnect=true" />
+</Context>

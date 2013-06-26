@@ -1,23 +1,27 @@
 DSeTa - Discovery SErvices Trusted Agent
 
-Mock version.
+Secured Discovery Service for EPCIS events.
 
 Dependencies:
   IoTa modules:
     - DSeTa-Client
-    - IoTa-DiscoveryWS-Client
+    - DS-Commons
+    - DS-Xi-Client
     - TAu
+    - Mu
   libraries:
-    - Apache cxf
     - spring
+    - servlet-api
     - commons-logging
     - log4j
 
 Installation and Configuration:
   IoTa-Installer installs and configures DSeTa.
+  (application.properties for this application,
+   commons-logging.properties and log4j.properties for the logs)
+  Modify the tomcat-users.xml file of Tomcat to manage identity
+   with TLS. See the INSTALL file.
 
 Usage Dependencies:
-  - a DS
-
-Usage:
-  .
+  - an EPCIS
+  - an ETa

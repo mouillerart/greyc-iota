@@ -57,11 +57,11 @@ public final class MapSessions {
         return res.toString();
     }
 
-    public static synchronized InterfaceHelper getAPMSession(String sessionId, String partnerId) {
+    public static synchronized InterfaceHelper getAPMSession(String sessionId, String ownerId) {
         if (APMSessions.containsKey(sessionId)) {
             return APMSessions.get(sessionId);
         } else {
-            InterfaceHelper IH = new InterfaceHelper(partnerId);
+            InterfaceHelper IH = new InterfaceHelper(ownerId);
             APMSessions.put(sessionId, IH);
             return IH;
         }

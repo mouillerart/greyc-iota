@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="urn:unicaen:iota:dseta:wsdl"
+                  xmlns:wsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:ds="urn:unicaen:iota:ds:xsd"
+                  xmlns:dsw="urn:unicaen:iota:ds:wsdl"
+                  xmlns:dseta="urn:unicaen:iota:dseta:xsd"
+                  xmlns:dsetaw="urn:unicaen:iota:dseta:wsdl"
+                  xmlns:tau="urn:unicaen:iota:tau:xsd">
+
+    <wsdl:import namespace="urn:unicaen:iota:ds:wsdl" location="ds.wsdl" />
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+            <xs:import namespace="urn:unicaen:iota:tau:xsd" schemaLocation="tau.xsd"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+            <xs:import namespace="urn:unicaen:iota:dseta:xsd" schemaLocation="dseta.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="IDed_eventCreateRequest">
+        <wsdl:part name="eventCreateReq" element="dseta:eventCreateReq"/>
+        <wsdl:part name="identity" element="tau:identity"/>
+    </wsdl:message>
+
+    <wsdl:message name="IDed_multipleEventCreateRequest">
+        <wsdl:part name="multipleEventCreateReq" element="dseta:multipleEventCreateReq"/>
+        <wsdl:part name="identity" element="tau:identity"/>
+    </wsdl:message>
+
+    <wsdl:message name="IDed_eventLookupRequest">
+        <wsdl:part name="eventLookupReq" element="ds:eventLookupReq"/>
+        <wsdl:part name="identity" element="tau:identity"/>
+    </wsdl:message>
+
+    <wsdl:message name="SecurityExceptionResponse">
+        <wsdl:part name="fault" element="dseta:SecurityException"/>
+    </wsdl:message>
+
+    <wsdl:portType name="DSeTaServicePortType">
+        <wsdl:operation name="IDed_eventCreate">
+            <wsdl:input name="IDed_eventCreateRequest" message="dsetaw:IDed_eventCreateRequest"/>
+            <wsdl:output name="eventCreateResponse" message="dsw:eventCreateResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="dsw:ImplementationExceptionResponse"/>
+            <wsdl:fault name="InternalExceptionFault" message="dsw:InternalExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="dsetaw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_multipleEventCreate">
+            <wsdl:input name="IDed_multipleEventCreateRequest" message="dsetaw:IDed_multipleEventCreateRequest"/>
+            <wsdl:output name="multipleEventCreateResponse" message="dsw:multipleEventCreateResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="dsw:ImplementationExceptionResponse"/>
+            <wsdl:fault name="InternalExceptionFault" message="dsw:InternalExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="dsetaw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="IDed_eventLookup">
+            <wsdl:input name="IDed_eventLookupRequest" message="dsetaw:IDed_eventLookupRequest"/>
+            <wsdl:output name="eventLookupResponse" message="dsw:eventLookupResponse"/>
+            <wsdl:fault name="ImplementationExceptionFault" message="dsw:ImplementationExceptionResponse"/>
+            <wsdl:fault name="InternalExceptionFault" message="dsw:InternalExceptionResponse"/>
+            <wsdl:fault name="SecurityExceptionFault" message="dsetaw:SecurityExceptionResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="DSeTaBinding" type="dsetaw:DSeTaServicePortType">
+        <wsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <wsdl:operation name="IDed_eventCreate">
+            <wsoap:operation/>
+            <wsdl:input>
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="InternalExceptionFault">
+                <wsoap:fault name="InternalExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="IDed_multipleEventCreate">
+            <wsoap:operation/>
+            <wsdl:input>
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="InternalExceptionFault">
+                <wsoap:fault name="InternalExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="IDed_eventLookup">
+            <wsoap:operation/>
+            <wsdl:input>
+                <wsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <wsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImplementationExceptionFault">
+                <wsoap:fault name="ImplementationExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="InternalExceptionFault">
+                <wsoap:fault name="InternalExceptionFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SecurityExceptionFault">
+                <wsoap:fault name="SecurityExceptionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+    </wsdl:binding>
+
+    <wsdl:service name="DSeTaService">
+        <wsdl:port name="DSeTaServicePort" binding="dsetaw:DSeTaBinding">
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

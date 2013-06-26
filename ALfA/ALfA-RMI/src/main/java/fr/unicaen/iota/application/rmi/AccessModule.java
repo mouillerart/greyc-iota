@@ -20,8 +20,7 @@
 package fr.unicaen.iota.application.rmi;
 
 import fr.unicaen.iota.application.ALfA;
-import fr.unicaen.iota.ds.model.TEventItem;
-import fr.unicaen.iota.ds.model.TServiceType;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.tau.model.Identity;
 import java.rmi.RemoteException;
@@ -88,12 +87,12 @@ public class AccessModule implements RMIAccessInterface {
     }
 
     @Override
-    public synchronized List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException {
+    public synchronized List<DSEvent> queryDS(Identity identity, String EPC, String DSAddress) throws RemoteException {
         return controler.queryDS(identity, EPC, DSAddress);
     }
 
     @Override
-    public synchronized List<TEventItem> queryDS(Identity identity, String EPC, String DSAddress, TServiceType serviceType) throws RemoteException {
+    public synchronized List<DSEvent> queryDS(Identity identity, String EPC, String DSAddress, ONSEntryType serviceType) throws RemoteException {
         return controler.queryDS(identity, EPC, DSAddress, serviceType);
     }
 

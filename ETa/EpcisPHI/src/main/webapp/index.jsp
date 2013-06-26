@@ -38,7 +38,7 @@
         <title>Policy Manager</title>
         <script type="text/javascript" src="script/tree.js"></script>
         <script type="text/javascript" src="script/requestDispatcher.js"></script>
-        <script type="text/javascript" src="script/jquery.js"></script>
+        <script type="text/javascript" src="script/jquery-min.js"></script>
         <script type="text/javascript" src="script/jquery-ui.min.js"></script>
         <link rel="stylesheet" type="text/css" href="style/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" href="style/style.css" />
@@ -68,15 +68,15 @@
                     }
 
                     String userId = ((UserInfoOut) session.getAttribute("uInfo")).getUserID();
-                    String partnerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
+                    String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
 
         %>
         <div class="account">
             <div class="logout"><a href="RootAccountAuth?action=logout">[ logout ]</a></div>
-            <div class="logout"><a href="#" onclick="processPartnerUpdate()" >[ Update My Account ]</a></div>
+            <div class="logout"><a href="#" onclick="processOwnerUpdate()" >[ Update My Account ]</a></div>
             <div class="logout"><a href="#" onclick="processUserCreate()" >[ Create User ]</a></div>
             <div class="logout"><a href="#" onclick="processUserDelete()" >[ Delete User ]</a></div>
-            <div style="width : 300px;"><span>*</span> User : <span class="accountDetails"><%=userId%></span> / Partner profile : <span class="accountDetails"><%=partnerId%></span></div>
+            <div style="width : 300px;"><span>*</span> User : <span class="accountDetails"><%=userId%></span> / Owner profile : <span class="accountDetails"><%=ownerId%></span></div>
         </div>
 
     </body>

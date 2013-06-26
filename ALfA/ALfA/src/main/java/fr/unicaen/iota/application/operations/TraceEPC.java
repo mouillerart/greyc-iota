@@ -121,23 +121,23 @@ public class TraceEPC {
             log.trace("nbr epc events: " + list.size());
             Collection<EPCISEventType> children = epcisOperation.getAggregationEventFromEPC(EPC, filters);
             eventList.addAll(children);
-            log.trace("nbr child events: " + children.size());
+            /*log.trace("nbr child events: " + children.size());
             for (EPCISEventType o : children) {
                 AggregationEventType event = (AggregationEventType) o;
                 for (EPC childEpc : event.getChildEPCs().getEpc()) {
                     log.trace("new traceEPC: " + childEpc.getValue());
                     eventList.addAll(traceEPCAux(childEpc.getValue(), filters));
                 }
-            }
+            }*/
             Collection<EPCISEventType> trans = epcisOperation.getTransactionEventFromEPC(EPC, filters);
             eventList.addAll(trans);
-            for (EPCISEventType o : trans) {
+            /*for (EPCISEventType o : trans) {
                 TransactionEventType event = (TransactionEventType) o;
                 for (EPC childEpc : event.getEpcList().getEpc()) {
                     log.trace("new traceEPC: " + childEpc.getValue());
                     eventList.addAll(traceEPCAux(childEpc.getValue(), filters));
                 }
-            }
+            }*/
         }
         return eventList;
     }
@@ -161,24 +161,24 @@ public class TraceEPC {
             List<EPCISEventType> children = epcisOperation.getAggregationEventFromEPC(EPC, filters);
             addToMap(eventListByEPCIS, EPCIS_SERVICE_ADDRESS, children);
             log.trace("nbr child events: " + children.size());
-            for (EPCISEventType o : children) {
+            /*for (EPCISEventType o : children) {
                 AggregationEventType event = (AggregationEventType) o;
                 for (EPC childEpc : event.getChildEPCs().getEpc()) {
                     log.trace("new traceEPC: " + childEpc.getValue());
                     Map<String, List<EPCISEventType>> agEventMap = traceEPCAuxByEPCIS(childEpc.getValue(), filters);
                     addToMap(eventListByEPCIS, agEventMap);
                 }
-            }
+            }*/
             List<EPCISEventType> trans = epcisOperation.getTransactionEventFromEPC(EPC, filters);
             addToMap(eventListByEPCIS, EPCIS_SERVICE_ADDRESS, trans);
-            for (EPCISEventType o : trans) {
+            /*for (EPCISEventType o : trans) {
                 TransactionEventType event = (TransactionEventType) o;
                 for (EPC childEpc : event.getEpcList().getEpc()) {
                     log.trace("new traceEPC: " + childEpc.getValue());
                     Map<String, List<EPCISEventType>> transEventMap = traceEPCAuxByEPCIS(childEpc.getValue(), filters);
                     addToMap(eventListByEPCIS, transEventMap);
                 }
-            }
+            }*/
         }
         return eventListByEPCIS;
     }

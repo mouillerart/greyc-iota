@@ -32,13 +32,13 @@ import org.apache.commons.logging.LogFactory;
 public class AdminModuleClient extends javax.swing.JFrame {
 
     private static final Log log = LogFactory.getLog(AdminModuleClient.class);
-    private String partnerName;
+    private String ownerName;
 
     /**
      * Creates new form CaptureModule
      */
-    public AdminModuleClient(String partnerName) {
-        this.partnerName = partnerName;
+    public AdminModuleClient(String ownerName) {
+        this.ownerName = ownerName;
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -56,19 +56,19 @@ public class AdminModuleClient extends javax.swing.JFrame {
         sendButton = new javax.swing.JButton();
         actionComboBox = new javax.swing.JComboBox();
         userField = new javax.swing.JTextField();
-        partnerField = new javax.swing.JTextField();
+        ownerField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jLabel1.setText("Admin Module");
         jLabel2.setText("User: ");
-        jLabel3.setText("Partner: ");
+        jLabel3.setText("Owner: ");
         jLabel8.setText("Action: ");
         sendButton.setText("Send");
         sendButton.addActionListener(new java.awt.event.ActionListener() {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                InterfaceHelper IH = new InterfaceHelper(partnerName);
+                InterfaceHelper IH = new InterfaceHelper(ownerName);
                 IH.reload();
                 sendButtonActionPerformed(evt);
             }
@@ -83,9 +83,9 @@ public class AdminModuleClient extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel3)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel2)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel8))).addGap(20, 20, 20).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE).addComponent(partnerField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE).addComponent(actionComboBox, 0, 231, Short.MAX_VALUE).addComponent(jLabel1))).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap(273, Short.MAX_VALUE).addComponent(sendButton))).addContainerGap()));
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel3)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel2)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel8))).addGap(20, 20, 20).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE).addComponent(ownerField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE).addComponent(actionComboBox, 0, 231, Short.MAX_VALUE).addComponent(jLabel1))).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap(273, Short.MAX_VALUE).addComponent(sendButton))).addContainerGap()));
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(jLabel1).addGap(12, 12, 12).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel2)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(partnerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel3)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(actionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel8)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(sendButton).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(jLabel1).addGap(12, 12, 12).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel2)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(ownerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel3)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(actionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel8)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(sendButton).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         pack();
     }
 
@@ -105,7 +105,7 @@ public class AdminModuleClient extends javax.swing.JFrame {
         String action = (String) actionComboBox.getSelectedItem();
         ArrayList args = new ArrayList();
         args.add(userField.getText());
-        args.add(partnerField.getText());
+        args.add(ownerField.getText());
         args.add(fr.unicaen.iota.xacml.policy.Module.administrationModule.getValue());
         try {
             EPCISPEP dspep = new EPCISPEP();
@@ -138,8 +138,8 @@ public class AdminModuleClient extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                String partner = "anonymous";
-                new AdminModuleClient(partner).setVisible(true);
+                String owner = "anonymous";
+                new AdminModuleClient(owner).setVisible(true);
             }
         });
     }
@@ -148,7 +148,7 @@ public class AdminModuleClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField partnerField;
+    private javax.swing.JTextField ownerField;
     private javax.swing.JButton sendButton;
     private javax.swing.JTextField userField;
 }

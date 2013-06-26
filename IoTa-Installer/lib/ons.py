@@ -36,6 +36,8 @@ class ONSConfigurer(installer.Configurer):
                  {"when": ("ons", "create_file")}),
                 ("Enter the serving DS URL", "ds", "url",
                  {"when": ("ons", "create_file")}),
+                ("Enter the serving DSeTa URL", "dseta", "url",
+                 {"when": ("ons", "create_file")}),
                 ("Enter the company’s home page URL", "ons", "home_page",
                  {"when": ("ons", "create_file")}),
                 ("Enter the output file name", "ons", "filename",

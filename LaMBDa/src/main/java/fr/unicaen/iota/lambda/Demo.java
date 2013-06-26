@@ -21,10 +21,10 @@ package fr.unicaen.iota.lambda;
 import fr.unicaen.iota.lambda.Utils.SignatureState;
 import fr.unicaen.iota.lambda.Utils.EventsHandler;
 import fr.unicaen.iota.application.soap.IoTaException;
-import fr.unicaen.iota.ds.model.TEventItem;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.lambda.Utils.Utils;
 import fr.unicaen.iota.nu.ONSEntryType;
-import fr.unicaen.iota.sigma.xsd.Verification;
+import fr.unicaen.iota.sigma.model.Verification;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -144,9 +144,6 @@ public class Demo extends HttpServlet {
                 Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
         String referentDS = eventsHandler.getReferentDS(epc);
         Map<String, List<EPCISEventType>> eventsByEPCIS = eventsHandler.traceEPCByEPCIS(epc);
-        for (List<EPCISEventType> eventList : eventsByEPCIS.values()) {
-            Utils.sortEPCISEventList(eventList);
-        }
         Map<EPCISEventType, SignatureState> signatures = null;
         if (useSignature && eventsByEPCIS != null) {
             eventsHandler.initSigmaClient();
@@ -221,7 +218,7 @@ public class Demo extends HttpServlet {
         }
         EventsHandler eventsHandler = new EventsHandler(login, Configuration.OMEGA_URL, Configuration.PKS_FILENAME,
                 Configuration.PKS_PASSWORD, Configuration.TRUST_PKS_FILENAME, Configuration.TRUST_PKS_PASSWORD);
-        List<TEventItem> events = eventsHandler.queryDS(epc, ds);
+        List<DSEvent> events = eventsHandler.queryDS(epc, ds);
         return views.queryDS(request, events);
     }
 

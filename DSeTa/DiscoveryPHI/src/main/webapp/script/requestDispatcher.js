@@ -74,7 +74,7 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                     }
                 }
             });
-            
+
             break;
         case "epcFilterGroupNode":
             $("#questionDialogMsg").html("Do you want to switch the EPC policy Filter ?");
@@ -93,15 +93,15 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                 }
             });
             break;
-        case "epcClassFilterGroupNode":
-            $("#questionDialogMsg").html("Do you want to switch the EPC Class policy Filter ?");
+        case "eventTypeFilterGroupNode":
+            $("#questionDialogMsg").html("Do you want to switch the Event type policy Filter ?");
             $("#questionDialog").dialog({
                 modal: true ,
                 draggable: false,
                 buttons: {
                     "Validate" : function process(){
                         $(this).dialog("close");
-                        switchEPCClassPolicy(groupId,objectId,nodeValue,module);
+                        switchEventTypePolicy(groupId,objectId,nodeValue,module);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -109,7 +109,7 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                     }
                 }
             });
-            
+
             break;
         case "eventTimeFilterGroupNode":
             $("#questionDialogMsg").html("Do you want to switch the Event Time Class policy Filter ?");
@@ -126,7 +126,7 @@ function processSwitchPolicy(type,groupId,objectId,treeNode,module){
                         return 0;
                     }
                 }
-            });                
+            });
             break;
         case "usersNode":
             $("#questionDialogMsg").html("Do you want to switch the users global policy ?");
@@ -171,7 +171,7 @@ function processRequestSave(module){
         buttons: {
             "Validate" : function process(){
                 $(this).dialog("close");
-                validatePartnerPolicy(module);
+                validateOwnerPolicy(module);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -181,19 +181,19 @@ function processRequestSave(module){
     });
 }
 
-function processPartnerUpdate(){
-    $("#updatePartner").dialog({
+function processOwnerUpdate(){
+    $("#updateOwner").dialog({
         modal: true ,
         draggable: false,
         minWidth : 350,
         buttons: {
             "Validate" : function processDate(){
                 $(this).dialog("close");
-                var partnerID = $("#partnerID").attr("value");
+                var ownerID = $("#ownerID").attr("value");
                 var serviceID = $("#serviceID").attr("value");
                 var serviceAddress = $("#serviceAddress").attr("value");
                 var serviceType = $("#serviceType").attr("value");
-                updatePartner(partnerID,serviceID,serviceAddress,serviceType);
+                updateOwner(ownerID,serviceID,serviceAddress,serviceType);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -221,6 +221,23 @@ function processUserCreate(){
     });
 }
 
+function processUserDelete(){
+    $("#deleteUser").dialog({
+        modal: true ,
+        draggable: false,
+        minWidth : 360,
+        buttons: {
+            "Validate" : function processDate(){
+                $(this).dialog("close");
+                var login = $("#userId").attr("value");
+                deleteUser(login);
+            } ,
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+}
 
 function processUpdateRootUser(){
     $("#updateRootUser").dialog({
@@ -251,12 +268,9 @@ function processAccountCreate(){
             "Validate" : function processAccountCreate(){
                 $(this).dialog("close");
                 var login = $("#userLogin1").attr("value");
-                var password = $("#userPassword1").attr("value");
-                var partnerID = $("#partnerID1").attr("value");
-                var serviceID = $("#serviceID1").attr("value");
-                var serviceAddress = $("#serviceAddress1").attr("value");
-                var serviceType = $("#serviceType1").attr("value");
-                createAccount(partnerID,serviceID,serviceType,serviceAddress,login,password);
+                var ownerID = $("#ownerID1").attr("value");
+                var userID = $("#userID1").attr("value");
+                createAccount(ownerID,login,userID);
             } ,
             "Cancel": function() {
                 $(this).dialog("close");
@@ -276,8 +290,8 @@ function processRequestCreate(type,groupId,objectId,treeNode,module){
                 buttons: {
                     "Validate" : function processDate(){
                         $(this).dialog("close");
-                        var partner = $("#groupPartnerName").attr("value");
-                        addPartnerToGroup(groupId,objectId,blockNode,module,partner);
+                        var owner = $("#groupOwnerName").attr("value");
+                        addOwnerToGroup(groupId,objectId,blockNode,module,owner);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -317,15 +331,15 @@ function processRequestCreate(type,groupId,objectId,treeNode,module){
                 }
             });
             break;
-        case "epcClassFilterGroupNode":
-            $("#epcClassFilterDialog").dialog({
+        case "eventTypeFilterGroupNode":
+            $("#eventTypeFilterDialog").dialog({
                 modal: true ,
                 draggable: false,
                 buttons: {
                     "Validate" : function processDate(){
                         $(this).dialog("close");
-                        var classR = $("#epcClassFilterName").attr("value");
-                        addEPCClassRestriction(groupId,objectId,blockNode,module,classR);
+                        var classR = $("#eventTypeFilterName").attr("value");
+                        addEventTypeRestriction(groupId,objectId,blockNode,module,classR);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -399,7 +413,7 @@ function processRequestCreate(type,groupId,objectId,treeNode,module){
                     "Validate" : function processDate(){
                         $(this).dialog("close");
                         var groupName = $("#groupName").attr("value");
-                        createPartnerGroup(groupId,objectId,blockNode,module,groupName);
+                        createOwnerGroup(groupId,objectId,blockNode,module,groupName);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -453,15 +467,15 @@ function processRequestRemove(type,groupId,objectId,treeNode,module){
                 }
             });
             break;
-        case "epcClassFilterNode":
-            $("#questionDialogMsg").html("Do you want to remove this EPC Class filter ?");
+        case "eventTypeFilterNode":
+            $("#questionDialogMsg").html("Do you want to remove this Event Type filter ?");
             $("#questionDialog").dialog({
                 modal: true ,
                 draggable: false,
                 buttons: {
                     "Validate" : function process(){
                         $(this).dialog("close");
-                        removeEPCClassRestriction(groupId,objectId,blockNode,module);
+                        removeEventTypeRestriction(groupId,objectId,blockNode,module);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -512,7 +526,7 @@ function processRequestRemove(type,groupId,objectId,treeNode,module){
                 buttons: {
                     "Validate" : function process(){
                         $(this).dialog("close");
-                        deletePartnerGroup(groupId,objectId,blockNode,module);
+                        deleteOwnerGroup(groupId,objectId,blockNode,module);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -529,7 +543,7 @@ function processRequestRemove(type,groupId,objectId,treeNode,module){
                 buttons: {
                     "Validate" : function process(){
                         $(this).dialog("close");
-                        removePartnerFromGroup(groupId,objectId,blockNode,module);
+                        removeOwnerFromGroup(groupId,objectId,blockNode,module);
                     } ,
                     "Cancel": function() {
                         $(this).dialog("close");
@@ -577,9 +591,9 @@ function addNode(html,blockNode){
 
 /* SERVICE METHODS */
 
-function createPartnerGroup(groupId,objectId,blockNode,module, groupName){
+function createOwnerGroup(groupId,objectId,blockNode,module, groupName){
     $.get('AccessControlPolicy', {
-        a:"createPartnerGroup",
+        a:"createOwnerGroup",
         b:objectId,
         c:groupName,
         e:groupId,
@@ -595,9 +609,9 @@ function createPartnerGroup(groupId,objectId,blockNode,module, groupName){
         }
     });
 }
-function deletePartnerGroup(groupId,objectId,blockNode,module){
+function deleteOwnerGroup(groupId,objectId,blockNode,module){
     $.get('AccessControlPolicy', {
-        a:"deletePartnerGroup",
+        a:"deleteOwnerGroup",
         e:groupId,
         b:objectId,
         d:module
@@ -613,10 +627,10 @@ function deletePartnerGroup(groupId,objectId,blockNode,module){
     });
 }
 
-function updatePartner(partnerID,serviceID,serviceAddress,serviceType){
+function updateOwner(ownerID,serviceID,serviceAddress,serviceType){
     $.get('AccessControlPolicy', {
-        a:"updatePartner",
-        f:partnerID,
+        a:"updateOwner",
+        f:ownerID,
         g:serviceID,
         h:serviceAddress,
         i:serviceType
@@ -664,15 +678,27 @@ function updateUser(login,password){
     });
 }
 
-function createAccount(partnerID,serviceID,serviceType,serviceAddress,login,password){
+function deleteUser(login){
+    $.get('AccessControlPolicy', {
+        a:"deleteUser",
+        f:login
+    },
+    function(data){
+        if (isRequestSuccessfull(data)) {
+            successDialog("SUCESSFULL EXECUTED !");
+        }
+        else{
+            errorDialog(getRepsonseDescription(data));
+        }
+    });
+}
+
+function createAccount(ownerID,login,userName){
     $.get('AccessControlPolicy', {
         a:"createAccount",
-        f:partnerID,
-        g:serviceID,
-        h:serviceType,
-        i:serviceAddress,
-        j:login,
-        k:password
+        f:login,
+        g:ownerID,
+        h:userName
     },
     function(data){
         if (isRequestSuccessfull(data)) { //si la requête s'est bien déroulée
@@ -685,9 +711,9 @@ function createAccount(partnerID,serviceID,serviceType,serviceAddress,login,pass
 }
 
 
-function addPartnerToGroup(groupId,objectId,blockNode,module,newName){
+function addOwnerToGroup(groupId,objectId,blockNode,module,newName){
     $.get('AccessControlPolicy', {
-        a:"addPartnerToGroup",
+        a:"addOwnerToGroup",
         b:objectId,
         c:newName,
         e:groupId,
@@ -700,12 +726,12 @@ function addPartnerToGroup(groupId,objectId,blockNode,module,newName){
         }
         else{ // sinon
             errorDialog(getRepsonseDescription(data));
-        }    
+        }
     });
 }
-function removePartnerFromGroup(groupId,objectId,blockNode,module){
+function removeOwnerFromGroup(groupId,objectId,blockNode,module){
     $.get('AccessControlPolicy', {
-        a:"removePartnerFromGroup",
+        a:"removeOwnerFromGroup",
         e:groupId,
         d:module,
         b:objectId
@@ -790,11 +816,11 @@ function removeEPCRestriction(groupId,objectId,blockNode,module){
         }
     });
 }
-function addEPCClassRestriction(groupId,objectId,blockNode,module,newEPCClass){
+function addEventTypeRestriction(groupId,objectId,blockNode,module,newEventType){
     $.get('AccessControlPolicy', {
-        a:"addEPCClassRestriction",
+        a:"addEventTypeRestriction",
         b:objectId,
-        c:newEPCClass,
+        c:newEventType,
         e:groupId,
         d:module
     },
@@ -808,9 +834,9 @@ function addEPCClassRestriction(groupId,objectId,blockNode,module,newEPCClass){
         }
     });
 }
-function removeEPCClassRestriction(groupId,objectId,blockNode,module){
+function removeEventTypeRestriction(groupId,objectId,blockNode,module){
     $.get('AccessControlPolicy', {
-        a:"removeEPCClassRestriction",
+        a:"removeEventTypeRestriction",
         e:groupId,
         d:module,
         b:objectId
@@ -895,9 +921,9 @@ function switchEPCPolicy(groupId,objectId,elem,module){
         }
     });
 }
-function switchEPCClassPolicy(groupId,objectId,elem,module){
+function switchEventTypePolicy(groupId,objectId,elem,module){
     $.get('AccessControlPolicy', {
-        a:"switchEPCClassPolicy",
+        a:"switchEventTypePolicy",
         e:groupId,
         d:module,
         b:objectId
@@ -1000,9 +1026,9 @@ function updateGroupName(groupId,objectId,element,module,newName){
     });
 }
 
-function validatePartnerPolicy(module){
+function validateOwnerPolicy(module){
     $.get('AccessControlPolicy', {
-        a:"savePartnerPolicy",
+        a:"savePolicyOwner",
         e:null,
         d:module,
         b:null
@@ -1015,7 +1041,7 @@ function validatePartnerPolicy(module){
         else{ // sinon
             errorDialog(getRepsonseDescription(data));
         }
-    });    
+    });
 }
 
 function processRequestCancelPolicyChanges(module){
@@ -1027,7 +1053,7 @@ function processRequestCancelPolicyChanges(module){
             "Validate" : function process(){
                 $(this).dialog("close");
                 $.get('AccessControlPolicy', {
-                    a:"cancelPartnerPolicy",
+                    a:"cancelOwnerPolicy",
                     e:null,
                     d:module,
                     b:null

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,25 +20,22 @@ package fr.unicaen.iota.xacml.servlet;
 
 import com.sun.xacml.ctx.Result;
 import fr.unicaen.iota.auth.User;
-import fr.unicaen.iota.discovery.client.DsClient;
-import fr.unicaen.iota.discovery.client.model.Service;
-import fr.unicaen.iota.discovery.client.util.EnhancedProtocolException;
+import fr.unicaen.iota.utils.Constants;
 import fr.unicaen.iota.utils.InterfaceHelper;
 import fr.unicaen.iota.utils.MapSessions;
 import fr.unicaen.iota.utils.PEPRequester;
-import fr.unicaen.iota.xacml.conf.Configuration;
 import fr.unicaen.iota.xacml.ihm.Module;
 import fr.unicaen.iota.xacml.pep.MethodNamesAdmin;
 import fr.unicaen.iota.xacml.policy.GroupPolicy;
 import fr.unicaen.iota.xacml.policy.OwnerPolicies;
+import fr.unicaen.iota.ypsilon.client.YPSilonClient;
+import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
+import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.apache.axis2.databinding.types.URI;
-import org.apache.axis2.databinding.types.URI.MalformedURIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -55,23 +52,23 @@ public class Services {
         }
     }
 
-    public String createPartnerGroup(String sessionId, User user, Module module, String value)
+    public String createOwnerGroup(String sessionId, User user, Module module, String value)
             throws ServiceException {
-        String method = module == Module.adminModule ? "createAdminPartnerGroup" : "createPartnerGroup";
+        String method = module == Module.adminModule ? "createAdminOwnerGroup" : "createOwnerGroup";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
-        GroupPolicy gpol = new GroupPolicy(value, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
+        GroupPolicy gpol = new GroupPolicy(value, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryGroupPolicy(partner, gpol);
+                resp = interfaceHelper.APMSession.addQueryGroupPolicy(owner, gpol);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureGroupPolicy(partner, gpol);
+                resp = interfaceHelper.APMSession.addCaptureGroupPolicy(owner, gpol);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.addAdminGroupPolicy(partner, gpol);
+                resp = interfaceHelper.APMSession.addAdminGroupPolicy(owner, gpol);
                 break;
         }
         if (!resp) {
@@ -80,22 +77,22 @@ public class Services {
         return value;
     }
 
-    public void deletePartnerGroup(String sessionId, User user, Module module,
+    public void deleteOwnerGroup(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
-        String method = module == Module.adminModule ? "deleteAdminPartnerGroup" : "deletePartnerGroup";
+        String method = module == Module.adminModule ? "deleteAdminOwnerGroup" : "deleteOwnerGroup";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.deleteQueryGroupPolicy(partner, objectId);
+                resp = interfaceHelper.APMSession.deleteQueryGroupPolicy(owner, objectId);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.deleteCaptureGroupPolicy(partner, objectId);
+                resp = interfaceHelper.APMSession.deleteCaptureGroupPolicy(owner, objectId);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.deleteAdminGroupPolicy(partner, objectId);
+                resp = interfaceHelper.APMSession.deleteAdminGroupPolicy(owner, objectId);
                 break;
         }
         if (!resp) {
@@ -103,22 +100,22 @@ public class Services {
         }
     }
 
-    public void addPartnerToGroup(String sessionId, User user, Module module,
+    public void addOwnerToGroup(String sessionId, User user, Module module,
             String objectId, String groupId, String value) throws ServiceException {
-        String method = module == Module.adminModule ? "addAdminPartnerToGroup" : "addPartnerToGroup";
+        String method = module == Module.adminModule ? "addAdminOwnerToGroup" : "addOwnerToGroup";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryUserFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addQueryUserFilter(owner, groupId, value);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureUserFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addCaptureUserFilter(owner, groupId, value);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.addAdminUserFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addAdminUserFilter(owner, groupId, value);
                 break;
         }
         if (!resp) {
@@ -126,22 +123,22 @@ public class Services {
         }
     }
 
-    public void removePartnerFromGroup(String sessionId, User user, Module module,
+    public void removeOwnerFromGroup(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
-        String method = module == Module.adminModule ? "removeAdminPartnerFromGroup" : "removePartnerFromGroup";
+        String method = module == Module.adminModule ? "removeAdminOwnerFromGroup" : "removeOwnerFromGroup";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeQueryUserFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeQueryUserFilter(owner, groupId, objectId);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.removeCaptureUserFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeCaptureUserFilter(owner, groupId, objectId);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.removeAdminUserFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeAdminUserFilter(owner, groupId, objectId);
                 break;
         }
         if (!resp) {
@@ -152,15 +149,15 @@ public class Services {
     public void addBizStepRestriction(String sessionId, User user, Module module,
             String objectId, String groupId, String value) throws ServiceException {
         checkAccess(user, module, "addBizStepRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryBizStepFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addQueryBizStepFilter(owner, groupId, value);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureBizStepFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addCaptureBizStepFilter(owner, groupId, value);
                 break;
             case adminModule:
                 break;
@@ -173,15 +170,15 @@ public class Services {
     public void removeBizStepRestriction(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
         checkAccess(user, module, "removeBizStepRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeQueryBizStepFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeQueryBizStepFilter(owner, groupId, objectId);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.removeCaptureBizStepFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeCaptureBizStepFilter(owner, groupId, objectId);
                 break;
             case adminModule:
                 break;
@@ -194,15 +191,15 @@ public class Services {
     public void addEPCRestriction(String sessionId, User user, Module module,
             String objectId, String groupId, String value) throws ServiceException {
         checkAccess(user, module, "addRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryEpcFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addQueryEpcFilter(owner, groupId, value);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureEpcFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addCaptureEpcFilter(owner, groupId, value);
                 break;
             case adminModule:
                 break;
@@ -215,15 +212,15 @@ public class Services {
     public void removeEPCRestriction(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
         checkAccess(user, module, "removeEPCRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeQueryEpcFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeQueryEpcFilter(owner, groupId, objectId);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.removeCaptureEpcFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeCaptureEpcFilter(owner, groupId, objectId);
                 break;
             case adminModule:
                 break;
@@ -233,61 +230,61 @@ public class Services {
         }
     }
 
-    public void addEPCClassRestriction(String sessionId, User user, Module module,
+    public void addEventTypeRestriction(String sessionId, User user, Module module,
             String objectId, String groupId, String value) throws ServiceException {
-        checkAccess(user, module, "addEPCClassRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        checkAccess(user, module, "addEventTypeRestriction");
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryEpcClassFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addQueryEventTypeFilter(owner, groupId, value);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureEpcClassFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addCaptureEventTypeFilter(owner, groupId, value);
                 break;
             case adminModule:
                 break;
         }
         if (!resp) {
-            throw new ServiceException("addEPCClassRestriction: internal error in module: " + module, ServiceErrorType.xacml);
+            throw new ServiceException("addEventTypeRestriction: internal error in module: " + module, ServiceErrorType.xacml);
         }
     }
 
-    public void removeEPCClassRestriction(String sessionId, User user, Module module,
+    public void removeEventTypeRestriction(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
-        checkAccess(user, module, "removeEPCClassRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        checkAccess(user, module, "removeEventTypeRestriction");
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeQueryEpcClassFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeQueryEventTypeFilter(owner, groupId, objectId);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.removeCaptureEpcClassFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeCaptureEventTypeFilter(owner, groupId, objectId);
                 break;
             case adminModule:
                 break;
         }
         if (!resp) {
-            throw new ServiceException("removeEPCClassRestriction: internal error in module: " + module, ServiceErrorType.xacml);
+            throw new ServiceException("removeEventTypeRestriction: internal error in module: " + module, ServiceErrorType.xacml);
         }
     }
 
     public void addTimeRestriction(String sessionId, User user, Module module,
             String objectId, String groupId, String valueMin, String valueMax) throws ServiceException {
         checkAccess(user, module, "addTimeRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryEventTimeFilter(partner,
+                resp = interfaceHelper.APMSession.addQueryEventTimeFilter(owner,
                         groupId, convertStringToDate(valueMin, valueMax));
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureEventTimeFilter(partner,
+                resp = interfaceHelper.APMSession.addCaptureEventTimeFilter(owner,
                         groupId, convertStringToDate(valueMin, valueMax));
                 break;
             case adminModule:
@@ -301,15 +298,15 @@ public class Services {
     public void removeTimeRestriction(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
         checkAccess(user, module, "removeTimeRestriction");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeQueryEventTimeFilter(partner, groupId, convertStringToDate((String) objectId));
+                resp = interfaceHelper.APMSession.removeQueryEventTimeFilter(owner, groupId, convertStringToDate((String) objectId));
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.removeCaptureEventTimeFilter(partner, groupId, convertStringToDate((String) objectId));
+                resp = interfaceHelper.APMSession.removeCaptureEventTimeFilter(owner, groupId, convertStringToDate((String) objectId));
                 break;
             case adminModule:
                 break;
@@ -322,18 +319,18 @@ public class Services {
     public String switchBizStepPolicy(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
         checkAccess(user, module, "switchBizStepPolicy");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         String value = "";
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.switchQueryPermissionBizSteps(partner, groupId);
-                value = (interfaceHelper.APMSession.getQueryPolicy(partner)).getGroupPolicy(groupId).getBizStepsFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchQueryPermissionBizSteps(owner, groupId);
+                value = (interfaceHelper.APMSession.getQueryPolicy(owner)).getGroupPolicy(groupId).getBizStepsFilterFunction().getValue();
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.switchCapturePermissionBizSteps(partner, groupId);
-                value = (interfaceHelper.APMSession.getCapturePolicy(partner)).getGroupPolicy(groupId).getBizStepsFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchCapturePermissionBizSteps(owner, groupId);
+                value = (interfaceHelper.APMSession.getCapturePolicy(owner)).getGroupPolicy(groupId).getBizStepsFilterFunction().getValue();
                 break;
             case adminModule:
                 break;
@@ -347,20 +344,20 @@ public class Services {
     public String switchEPCPolicy(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
         checkAccess(user, module, "switchEPCPolicy");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         String value = "";
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.switchQueryPermissionEpcs(partner, groupId);
-                value = (interfaceHelper.APMSession.getQueryPolicy(partner)).getGroupPolicy(groupId).getEpcsFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchQueryPermissionEpcs(owner, groupId);
+                value = (interfaceHelper.APMSession.getQueryPolicy(owner)).getGroupPolicy(groupId).getEpcsFilterFunction().getValue();
                 break;
             case captureModule:
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.switchCapturePermissionEpcs(partner, groupId);
-                value = (interfaceHelper.APMSession.getCapturePolicy(partner)).getGroupPolicy(groupId).getEpcsFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchCapturePermissionEpcs(owner, groupId);
+                value = (interfaceHelper.APMSession.getCapturePolicy(owner)).getGroupPolicy(groupId).getEpcsFilterFunction().getValue();
                 break;
         }
         if (!resp) {
@@ -369,27 +366,27 @@ public class Services {
         return value;
     }
 
-    public String switchEPCClassPolicy(String sessionId, User user, Module module,
+    public String switchEventTypePolicy(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
-        checkAccess(user, module, "switchEPCClassPolicy");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        checkAccess(user, module, "switchEventTypePolicy");
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         String value = "";
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.switchQueryPermissionEpcClasses(partner, groupId);
-                value = (interfaceHelper.APMSession.getQueryPolicy(partner)).getGroupPolicy(groupId).getEpcClassesFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchQueryPermissionEventTypes(owner, groupId);
+                value = (interfaceHelper.APMSession.getQueryPolicy(owner)).getGroupPolicy(groupId).getEventTypesFilterFunction().getValue();
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.switchCapturePermissionEpcClasses(partner, groupId);
-                value = (interfaceHelper.APMSession.getCapturePolicy(partner)).getGroupPolicy(groupId).getEpcClassesFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchCapturePermissionEventTypes(owner, groupId);
+                value = (interfaceHelper.APMSession.getCapturePolicy(owner)).getGroupPolicy(groupId).getEventTypesFilterFunction().getValue();
                 break;
             case adminModule:
                 break;
         }
         if (!resp) {
-            throw new ServiceException("switchEPCClassPolicy: internal error in module: " + module, ServiceErrorType.xacml);
+            throw new ServiceException("switchEventTypePolicy: internal error in module: " + module, ServiceErrorType.xacml);
         }
         return value;
     }
@@ -397,18 +394,18 @@ public class Services {
     public String switchTimePolicy(String sessionId, User user, Module module,
             String objectId, String groupId) throws ServiceException {
         checkAccess(user, module, "switchTimePolicy");
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         String value = "";
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.switchQueryPermissionEventTimes(partner, groupId);
-                value = (interfaceHelper.APMSession.getQueryPolicy(partner)).getGroupPolicy(groupId).getEventTimesFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchQueryPermissionEventTimes(owner, groupId);
+                value = (interfaceHelper.APMSession.getQueryPolicy(owner)).getGroupPolicy(groupId).getEventTimesFilterFunction().getValue();
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.switchCapturePermissionEventTimes(partner, groupId);
-                value = (interfaceHelper.APMSession.getCapturePolicy(partner)).getGroupPolicy(groupId).getEventTimesFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchCapturePermissionEventTimes(owner, groupId);
+                value = (interfaceHelper.APMSession.getCapturePolicy(owner)).getGroupPolicy(groupId).getEventTimesFilterFunction().getValue();
                 break;
             case adminModule:
                 break;
@@ -423,22 +420,22 @@ public class Services {
             String objectId, String groupId) throws ServiceException {
         String method = module == Module.adminModule ? "switchAdminUserPermissionPolicy" : "switchUserPermissionPolicy";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         String value = "";
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.switchQueryPermissionUsers(partner, groupId);
-                value = (interfaceHelper.APMSession.getQueryPolicy(partner)).getGroupPolicy(groupId).getUsersFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchQueryPermissionUsers(owner, groupId);
+                value = (interfaceHelper.APMSession.getQueryPolicy(owner)).getGroupPolicy(groupId).getUsersFilterFunction().getValue();
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.switchCapturePermissionUsers(partner, groupId);
-                value = (interfaceHelper.APMSession.getCapturePolicy(partner)).getGroupPolicy(groupId).getUsersFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchCapturePermissionUsers(owner, groupId);
+                value = (interfaceHelper.APMSession.getCapturePolicy(owner)).getGroupPolicy(groupId).getUsersFilterFunction().getValue();
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.switchAdminPermissionUsers(partner, groupId);
-                value = (interfaceHelper.APMSession.getAdminPolicy(partner)).getGroupPolicy(groupId).getUsersFilterFunction().getValue();
+                resp = interfaceHelper.APMSession.switchAdminPermissionUsers(owner, groupId);
+                value = (interfaceHelper.APMSession.getAdminPolicy(owner)).getGroupPolicy(groupId).getUsersFilterFunction().getValue();
                 break;
         }
         if (!resp) {
@@ -451,18 +448,18 @@ public class Services {
             String objectId, String groupId) throws ServiceException {
         String method = module == Module.adminModule ? "removeAdminUserPermission" : "removeUserPermission";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.removeQueryActionFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeQueryActionFilter(owner, groupId, objectId);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.removeCaptureActionFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeCaptureActionFilter(owner, groupId, objectId);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.removeAdminActionFilter(partner, groupId, objectId);
+                resp = interfaceHelper.APMSession.removeAdminActionFilter(owner, groupId, objectId);
                 break;
         }
         if (!resp) {
@@ -474,18 +471,18 @@ public class Services {
             String objectId, String groupId, String value) throws ServiceException {
         String method = module == Module.adminModule ? "addAdminUserPermission" : "addUserPermission";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.addQueryActionFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addQueryActionFilter(owner, groupId, value);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.addCaptureActionFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addCaptureActionFilter(owner, groupId, value);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.addAdminActionFilter(partner, groupId, value);
+                resp = interfaceHelper.APMSession.addAdminActionFilter(owner, groupId, value);
                 break;
         }
         if (!resp) {
@@ -497,18 +494,18 @@ public class Services {
             String objectId, String groupId, String value) throws ServiceException {
         String method = module == Module.adminModule ? "updateAdminGroupName" : "updateGroupName";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.updateQueryGroupName(partner, objectId, value);
+                resp = interfaceHelper.APMSession.updateQueryGroupName(owner, objectId, value);
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.updateCaptureGroupName(partner, objectId, value);
+                resp = interfaceHelper.APMSession.updateCaptureGroupName(owner, objectId, value);
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.updateAdminGroupName(partner, objectId, value);
+                resp = interfaceHelper.APMSession.updateAdminGroupName(owner, objectId, value);
                 break;
             default:
                 break;
@@ -518,23 +515,23 @@ public class Services {
         }
     }
 
-    public void savePolicyPartner(String sessionId, User user, Module module) throws ServiceException {
-        String method = module == Module.adminModule ? "saveAdminPolicyPartner" : "savePolicyPartner";
+    public void savePolicyOwner(String sessionId, User user, Module module) throws ServiceException {
+        String method = module == Module.adminModule ? "saveAdminPolicyOwner" : "savePolicyOwner";
         checkAccess(user, module, method);
-        String partner = user.getPartner().getPartnerID();
-        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, partner);
+        String owner = user.getOwnerID();
+        InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, owner);
         boolean resp = false;
         switch (module) {
             case queryModule:
-                resp = interfaceHelper.APMSession.saveQueryPolicies(partner);
+                resp = interfaceHelper.APMSession.saveQueryPolicies(owner);
                 interfaceHelper.updateQueryAPM();
                 break;
             case captureModule:
-                resp = interfaceHelper.APMSession.saveCapturePolicies(partner);
+                resp = interfaceHelper.APMSession.saveCapturePolicies(owner);
                 interfaceHelper.updateCaptureAPM();
                 break;
             case adminModule:
-                resp = interfaceHelper.APMSession.saveAdminPolicies(partner);
+                resp = interfaceHelper.APMSession.saveAdminPolicies(owner);
                 interfaceHelper.updateAdminAPM();
                 break;
             default:
@@ -545,100 +542,106 @@ public class Services {
         }
     }
 
-    public void updatePartner(String sessionId, User user, int partnerUID, String partnerID,
-            String serviceID, String serviceAddress, String serviceType) throws ServiceException {
-        checkAccess(user, Module.adminModule, "partnerUpdate");
-        DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
-        Service service;
-        try {
-            service = new Service(serviceID, serviceType, new URI(serviceAddress));
-        } catch (MalformedURIException ex) {
-            throw new ServiceException("Service URL malformed!", ServiceErrorType.unknown);
-        }
-        List<Service> lService = new ArrayList<Service>();
-        lService.add(service);
-        try {
-            dsClient.partnerUpdate(sessionId, partnerUID, partnerID, lService);
-        } catch (RemoteException ex) {
-            throw new ServiceException("DS Communication Failure: internal protocol error!", ServiceErrorType.unknown);
-        } catch (EnhancedProtocolException ex) {
-            throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
-        }
-    }
-
-    public void createUser(String sessionId, User user, String login, String pass) throws ServiceException {
+    public void createUser(String sessionId, User user, String userDN, String userName) throws ServiceException {
         checkAccess(user, Module.adminModule, "userCreate");
-        DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
-        String partner = user.getPartner().getPartnerID();
         try {
-            dsClient.userCreate(sessionId, partner, login, pass, 30);
-        } catch (RemoteException ex) {
-            throw new ServiceException("DS Communication Failure: internal protocol error!", ServiceErrorType.unknown);
-        } catch (EnhancedProtocolException ex) {
+            String owner = user.getOwnerID();
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+            if (userName != null && !userName.isEmpty()) {
+                client.userCreate(sessionId, userDN, owner, userName, 30);
+            }
+            else {
+                client.userCreate(sessionId, userDN, owner, 30);
+            }
+        } catch (ImplementationExceptionResponse ex) {
+            log.error("Internal error", ex);
+            throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
+        } catch (SecurityExceptionResponse ex) {
+            log.error("Security error", ex);
             throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
         }
     }
 
-    public void updateUser(String sessionId, User user, String login, String pass) throws ServiceException {
+    public void deleteUser(String sessionId, User user, String login) throws ServiceException {
+        checkAccess(user, Module.adminModule, "userDelete");
+        try {
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+            client.userDelete(sessionId, login);
+        } catch (ImplementationExceptionResponse ex) {
+            log.error("Internal error", ex);
+            throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
+        } catch (SecurityExceptionResponse ex) {
+            log.error("Security error", ex);
+            throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
+        }
+    }
+
+    /*public void updateUser(String sessionId, User user, String login, String pass) throws ServiceException {
         checkAccess(user, Module.adminModule, "userUpdate");
-        DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
-        String partner = user.getPartner().getPartnerID();
+        YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
+        String owner = user.getOwnerID();
         try {
-            dsClient.userUpdate(sessionId, user.getId(), partner, login, pass, 30);
-        } catch (RemoteException ex) {
-            throw new ServiceException("DS Communication Failure: internal protocol error!", ServiceErrorType.unknown);
-        } catch (EnhancedProtocolException ex) {
+            client.userUpdate(sessionId, user.getId(), owner, login, pass, 30);
+        } catch (ImplementationExceptionResponse ex) {
+            log.error("Internal error", ex);
+            throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
+        } catch (SecurityExceptionResponse ex) {
+            log.error("Security error", ex);
             throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
         }
-    }
+    }*/
 
-    public void createRootPartnerPolicy(String sessionId, String userId, String partnerId) {
+    public void createRootOwnerPolicy(String sessionId, String userId, String ownerId) {
         String gpName = "admin";
-        InterfaceHelper ih = new InterfaceHelper(partnerId);
-        OwnerPolicies ownerPolicies = new OwnerPolicies(partnerId, fr.unicaen.iota.xacml.policy.Module.administrationModule);
+        InterfaceHelper ih = new InterfaceHelper(ownerId);
+        OwnerPolicies ownerPolicies = new OwnerPolicies(ownerId, fr.unicaen.iota.xacml.policy.Module.administrationModule);
         ih.APMSession.addAdminPolicy(ownerPolicies);
-        GroupPolicy gp = new GroupPolicy(gpName, partnerId);
-        ih.APMSession.addAdminGroupPolicy(partnerId, gp);
-        ih.APMSession.addAdminUserFilter(partnerId, gpName, userId);
+        GroupPolicy gp = new GroupPolicy(gpName, ownerId);
+        ih.APMSession.addAdminGroupPolicy(ownerId, gp);
+        ih.APMSession.addAdminUserFilter(ownerId, gpName, userId);
         for (Method m : MethodNamesAdmin.class.getMethods()) {
             String n = m.getName();
-            ih.APMSession.addAdminActionFilter(partnerId, gpName, n);
+            ih.APMSession.addAdminActionFilter(ownerId, gpName, n);
         }
-        ih.APMSession.saveAdminPolicies(partnerId);
+        ih.APMSession.saveAdminPolicies(ownerId);
         ih.updateAPM();
         log.debug(MapSessions.AdminAPMtoString());
     }
 
-    public boolean createAccount(String sessionId, User user, String partnerId, String serviceId,
-            String serviceType, String serviceAddress, String login, String pass) throws ServiceException {
+    public boolean createAccount(String sessionId, User user, String ownerId, String userDN, String userName) throws ServiceException {
         checkAccess(user, Module.adminModule, "superadmin");
-        DsClient dsClient = new DsClient(Configuration.DS_ADDRESS);
         try {
-            Service service = new Service(serviceId, serviceType, new URI(serviceAddress));
-            List<Service> sList = new ArrayList<Service>();
-            sList.add(service);
+            String userId = (userName != null && !userName.isEmpty())? userName : userDN;
+            YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
             boolean found = false;
             try {
-                dsClient.partnerInfo(sessionId, partnerId);
+                client.userInfo(sessionId, userId);
                 found = true;
-            } catch (EnhancedProtocolException ex) {
-            }
-            try {
-                dsClient.userInfo(sessionId, login);
-                found = true;
-            } catch (EnhancedProtocolException ex) {
+            } catch (ImplementationExceptionResponse ex) {
+                log.trace(null, ex);
+            } catch (SecurityExceptionResponse ex) {
+                log.trace(null, ex);
             }
             if (found) {
-                throw new ServiceException("User or Partner exists", ServiceErrorType.unknown);
+                throw new ServiceException("User exists", ServiceErrorType.unknown);
             }
-            dsClient.partnerCreate(sessionId, partnerId, sList);
-            dsClient.userCreate(sessionId, partnerId, login, pass, 30);
-            createRootPartnerPolicy(sessionId, login, partnerId);
-        } catch (MalformedURIException ex) {
-            log.fatal(null, ex);
-        } catch (RemoteException ex) {
-            throw new ServiceException("DS Communication Failure: internal protocol error!", ServiceErrorType.unknown);
-        } catch (EnhancedProtocolException ex) {
+            if (userName != null && !userName.isEmpty()) {
+                client.userCreate(sessionId, userDN, ownerId, userName, 30);
+                createRootOwnerPolicy(sessionId, userName, ownerId);
+            }
+            else {
+                client.userCreate(sessionId, userDN, ownerId, 30);
+                createRootOwnerPolicy(sessionId, userDN, ownerId);
+            }
+        } catch (ImplementationExceptionResponse ex) {
+            log.error("Internal error", ex);
+            throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
+        } catch (SecurityExceptionResponse ex) {
+            log.error("Security error", ex);
             throw new ServiceException(ex.getMessage(), ServiceErrorType.unknown);
         }
         return true;
@@ -647,7 +650,7 @@ public class Services {
     public void loadPolicyTree(User user, Module module) {
     }
 
-    public void cancelPartnerPolicy(User user, Module module) {
+    public void cancelOwnerPolicy(User user, Module module) {
     }
 
     private List<Date> convertStringToDate(String dateInString) {

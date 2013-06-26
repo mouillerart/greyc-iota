@@ -579,9 +579,9 @@ public class OwnerPolicies extends AbstractPolicy {
     public static void main(String[] args) {
 
         AccessPolicyManager apm = new AccessPolicyManager();//!!!!!!!!!! Très important pour importer les nouvelles méthodes !!!!!!!!!
-        OwnerPolicies op = new OwnerPolicies("PartnerDeTest", Module.queryModule);
+        OwnerPolicies op = new OwnerPolicies("OwnerDeTest", Module.queryModule);
         String name = "groupTest";
-        String owner = "PartnerDeTest";
+        String owner = "OwnerDeTest";
         GroupPolicy gp = new GroupPolicy(name, owner);
         List<String> users = new ArrayList<String>();
         for (int i = 2; i < 5; i++) {

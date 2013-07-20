@@ -28,14 +28,10 @@ import org.apache.commons.logging.LogFactory;
 public final class Constants {
 
     private static final Log log = LogFactory.getLog(Constants.class);
-    public static final String PROP_SESSION_TIME_LEASE = "session-time-lease";
-    public static final String PROP_XACML_URL = "xacml-url";
     public static final String PROP_LDAP_URL = "ldap-url";
     public static final String PROP_LDAP_BASE_DN = "ldap-basedn";
     public static final String PROP_LDAP_USER = "ldap-user";
     public static final String PROP_LDAP_PASSWORD = "ldap-password";
-    public static final int SESSION_TIME_LEASE;
-    public static final String XACML_URL;
     public static final String LDAP_URL;
     public static final String LDAP_BASE_DN;
     public static final String LDAP_USER;
@@ -44,10 +40,6 @@ public final class Constants {
     public static final String LDAP_USER_ID;
     public static final String LDAP_ATTRIBUTE_ALIAS;
     public static final String LDAP_ATTRIBUTE_OWNER;
-    public static final String PKS_FILENAME;
-    public static final String PKS_PASSWORD;
-    public static final String TRUST_PKS_FILENAME;
-    public static final String TRUST_PKS_PASSWORD;
 
     private Constants() {
     }
@@ -62,8 +54,6 @@ public final class Constants {
         } catch (IOException ex) {
             log.fatal(null, ex);
         }
-        SESSION_TIME_LEASE = Integer.parseInt(properties.getProperty(PROP_SESSION_TIME_LEASE));
-        XACML_URL = properties.getProperty(PROP_XACML_URL);
         LDAP_URL = properties.getProperty(PROP_LDAP_URL);
         LDAP_BASE_DN = properties.getProperty(PROP_LDAP_BASE_DN);
         LDAP_USER = properties.getProperty(PROP_LDAP_USER);
@@ -72,9 +62,5 @@ public final class Constants {
         LDAP_USER_ID = properties.getProperty("ldap-user-id");
         LDAP_ATTRIBUTE_ALIAS = properties.getProperty("ldap-attribute-alias", "aliasdn");
         LDAP_ATTRIBUTE_OWNER = properties.getProperty("ldap-attribute-owner", "owner");
-        PKS_FILENAME = properties.getProperty("pks-filename", "privatekeys.jks");
-        PKS_PASSWORD = properties.getProperty("pks-password", "changeit");
-        TRUST_PKS_FILENAME = properties.getProperty("trust-pks-filename", "publickeys.jks");
-        TRUST_PKS_PASSWORD = properties.getProperty("trust-pks-password", "changeit");
     }
 }

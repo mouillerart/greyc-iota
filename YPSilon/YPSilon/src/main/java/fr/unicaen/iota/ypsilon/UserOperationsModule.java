@@ -19,53 +19,33 @@
  */
 package fr.unicaen.iota.ypsilon;
 
-import fr.unicaen.iota.xi.client.UserPEP;
-import fr.unicaen.iota.xi.utils.Utils;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationException;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationExceptionSeverity;
-import fr.unicaen.iota.ypsilon.client.model.SecurityException;
+import fr.unicaen.iota.ypsilon.client.model.User;
 import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
-import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
-import fr.unicaen.iota.ypsilon.constants.Constants;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class UserOperationsModule {
 
-    private UserPEP userPep;
     private static final Log LOG = LogFactory.getLog(UserOperationsModule.class);
     private UserOperations backend;
 
     public UserOperationsModule() {
         this.backend = new UserOperations();
-        this.userPep = new UserPEP(Constants.XACML_URL, Constants.PKS_FILENAME, Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
     }
 
     /**
      * Creates a new user in the base.
      *
-     * @param sessionId The session ID corresponding to the connection.
      * @param login The login of the new user.
      * @param owner The owner of the new user.
      * @param alias The alias DN of the new user. Can be null.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public void userCreate(String sessionId, String login, String owner, String alias)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        String userId = Session.getUser(sessionId).getUserID();
-        int resp = userPep.userCreate(userId, owner);
-        if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
-            String msg = "Acces denied.";
-            SecurityException se = new SecurityException();
-            se.setReason(msg);
-            se.setQueryName("userCreate");
-            SecurityExceptionResponse ser = new SecurityExceptionResponse(msg, se);
-            LOG.error(msg, ser);
-            throw ser;
-        }
+    public void userCreate(String login, String owner, String alias)
+            throws ImplementationExceptionResponse {
         String userToCheck = (alias != null && !alias.isEmpty())? alias : login;
         if (!backend.userLookup(userToCheck).isEmpty()) {
             String msg = "User already exists.";
@@ -83,14 +63,11 @@ public class UserOperationsModule {
     /**
      * Deletes user from the base.
      *
-     * @param sessionId The session ID corresponding to the connection.
      * @param user The user to delete.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public void userDelete(String sessionId, String user)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        List<User> userList = userLookup(sessionId, user);
+    public void userDelete(String user) throws ImplementationExceptionResponse {
+        List<User> userList = userLookup(user);
         if (userList == null || userList.isEmpty()) {
             String msg = "User is not found.";
             ImplementationException ie = new ImplementationException();
@@ -101,97 +78,19 @@ public class UserOperationsModule {
             LOG.error(msg, ier);
             throw ier;
         }
-        String userId = Session.getUser(sessionId).getUserID();
-        for (User u : userList) {
-            int resp = userPep.userDelete(userId, u.getOwnerID());
-            if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
-                String msg = "Acces denied.";
-                SecurityException se = new SecurityException();
-                se.setReason(msg);
-                se.setQueryName("userDelete");
-                SecurityExceptionResponse ser = new SecurityExceptionResponse(msg, se);
-                LOG.error(msg, ser);
-                throw ser;
-            }
-            backend.userDelete(user);
-        }
+        backend.userDelete(user);
     }
 
     /**
-     * Fetchs <code>User</code> corresponding to login.
+     * Fetchs list of <code>User</code> corresponding to user ID from the base.
      *
-     * @param login The user login.
-     * @return The user corresponding to the login.
-     * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If login or password is incorrect.
-     */
-    public User userCertLogin(String login)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        try {
-            /*
-             * Context newCtx = new InitialContext(); Context envCtx = (Context)
-             * newCtx.lookup("java:comp/env"); DirContext dirCtxt = (DirContext)
-             * envCtx.lookup("ldap/gatewayldap");
-             */
-            List<User> userList = backend.userCertLogin(login);
-            if (userList.isEmpty()) {
-                String msg = "A LDAP error occurred: login is incorrect.";
-                SecurityException se = new SecurityException();
-                se.setReason(msg);
-                se.setQueryName("userLogin");
-                SecurityExceptionResponse ser = new SecurityExceptionResponse(msg, se);
-                LOG.error(msg, ser);
-                throw ser;
-            }
-            return userList.get(0);
-        } catch (SecurityExceptionResponse ser) {
-            throw ser;
-        } catch (ImplementationExceptionResponse ier) {
-            throw ier;
-        } catch (Exception ex) {
-            String msg = "An unexpected error occurred.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLogin");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-    }
-
-    /**
-     * Fetchs list of <code>User</code> corresponding to user ID from the base, if the session
-     * ID is root access or userLookup is permitted to the user associated to the session.
-     *
-     * @param sessionId The session ID.
      * @param userId The user ID to fetch.
      * @return The list of users corresponding to the user ID.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public List<User> userLookup(String sessionId, String userId)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public List<User> userLookup(String userId) throws ImplementationExceptionResponse {
         try {
-            User u = Session.getUser(sessionId);
-            List<User> userList = backend.userLookup(userId);
-            Iterator<User> iterUser = userList.iterator();
-            while (iterUser.hasNext()) {
-                User user = iterUser.next();
-                int resp = userPep.userLookup(u.getUserID(), user.getOwnerID());
-                if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
-                    String msg = "Acces denied.";
-                    SecurityException se = new SecurityException();
-                    se.setReason(msg);
-                    se.setQueryName("userLookup");
-                    SecurityExceptionResponse ser = new SecurityExceptionResponse(msg, se);
-                    LOG.error(msg, ser);
-                    throw ser;
-                }
-            }
-            return userList;
-        } catch (SecurityExceptionResponse ser) {
-            throw ser;
+            return backend.userLookup(userId);
         } catch (ImplementationExceptionResponse ier) {
             throw ier;
         } catch (Exception ex) {
@@ -207,45 +106,17 @@ public class UserOperationsModule {
     }
 
     /**
-     * Fetchs <code>User</code> corresponding to user ID, if the session ID is root access
-     * or userInfo is permitted to the user associated to the session.
+     * Fetchs <code>User</code> corresponding to user DN.
      *
-     * @param sessionId The session ID.
-     * @param userId The user ID to fetch.
+     * @param userDN The user DN to fetch.
      * @return The <code>User</code> corresponding to the user ID.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public User userInfo(String sessionId, String userId)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public User userInfo(String userDN) throws ImplementationExceptionResponse {
         try {
-            List<User> uList = backend.userLookup(userId);
-            if (uList.isEmpty()) {
-                String msg = "User not found.";
-                ImplementationException ie = new ImplementationException();
-                ie.setReason(msg);
-                ie.setQueryName("userInfo");
-                ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-                ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-                LOG.error(msg, ier);
-                throw ier;
-            }
-            User u = Session.getUser(sessionId);
-            int resp = userPep.userInfo(u.getUserID(), uList.get(0).getOwnerID());
-            if (!Utils.responseIsPermit(resp) && !isRootAccess(sessionId)) {
-                String msg = "Acces denied.";
-                SecurityException se = new SecurityException();
-                se.setReason(msg);
-                se.setQueryName("userInfo");
-                SecurityExceptionResponse ser = new SecurityExceptionResponse(msg, se);
-                LOG.error(msg, ser);
-                throw ser;
-            }
-            return uList.get(0);
+            return backend.userInfo(userDN);
         } catch (ImplementationExceptionResponse ier) {
             throw ier;
-        } catch (SecurityExceptionResponse ser) {
-            throw ser;
         } catch (Exception ex) {
             String msg = "An unexpected error occurred.";
             ImplementationException ie = new ImplementationException();
@@ -258,8 +129,4 @@ public class UserOperationsModule {
         }
     }
 
-    public boolean isRootAccess(String sessionId) {
-        User u = Session.getUser(sessionId);
-        return userPep.isRootAccess(u.getUserID(), u.getOwnerID());
-    }
 }

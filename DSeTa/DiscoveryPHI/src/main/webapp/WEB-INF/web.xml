@@ -4,7 +4,7 @@
 
     <servlet>
         <servlet-name>AccessControlPolicy</servlet-name>
-        <servlet-class>fr.unicaen.iota.xacml.servlet.AccessControlPolicy</servlet-class>
+        <servlet-class>fr.unicaen.iota.dphi.xacml.servlet.AccessControlPolicy</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AccessControlPolicy</servlet-name>
@@ -13,7 +13,7 @@
 
     <servlet>
         <servlet-name>RootAccountAuth</servlet-name>
-        <servlet-class>fr.unicaen.iota.xacml.servlet.RootAccountAuth</servlet-class>
+        <servlet-class>fr.unicaen.iota.dphi.xacml.servlet.RootAccountAuth</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RootAccountAuth</servlet-name>
@@ -22,7 +22,7 @@
 
     <servlet>
         <servlet-name>XACMLInterface</servlet-name>
-        <servlet-class>fr.unicaen.iota.xacml.servlet.XiServlet</servlet-class>
+        <servlet-class>fr.unicaen.iota.dphi.xacml.servlet.XiServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -35,6 +35,7 @@
             30
         </session-timeout>
     </session-config>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -42,7 +43,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>DPHiSecure</web-resource-name>
-            <url-pattern>/RootAccountAuth</url-pattern>
+            <url-pattern>/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>

@@ -1,10 +1,5 @@
-<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.Module"%>
-<%@page import="fr.unicaen.iota.utils.HTMLUtilities"%>
-
-<%
-    String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
-%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.Module"%>
+<%@page import="fr.unicaen.iota.dphi.utils.HTMLUtilities"%>
 
 <div id="createUser" title="Create User" class="modalDialog">
     <div class="dialog_message">Enter user informations :</div>
@@ -19,7 +14,7 @@
 
 <div id="updateOwner" title="Update Owner Informations" class="modalDialog">
     <div class="dialog_message">Enter the new owner informations :</div>
-    <div class="dialog_options">Owner Id : <input disabled id="ownerID" type="text" value="<%=ownerId%>" /></div>
+    <div class="dialog_options">Owner Id : <input disabled id="ownerID" type="text" value="" /></div>
 </div>
 
 <div id="TimeDialog" title="Event Time Filter" class="modalDialog">

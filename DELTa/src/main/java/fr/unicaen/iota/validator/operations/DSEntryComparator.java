@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@
  */
 package fr.unicaen.iota.validator.operations;
 
-import fr.unicaen.iota.application.model.DSEvent;
-import fr.unicaen.iota.application.rmi.AccessInterface;
+import fr.unicaen.iota.application.AccessInterface;
+import fr.unicaen.iota.ds.model.DSEvent;
+import fr.unicaen.iota.nu.ONSEntryType;
 import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.IOTA;
@@ -85,8 +86,8 @@ public class DSEntryComparator {
             }
             tmp.add(link.getDsAddress());
             Date d1 = new Date();
-            eventList.addAll(applicationLevelInterface.queryDS(container.getEpc(),
-                    link.getDsAddress(), identity, Configuration.DS_SERVICE_TYPE_FOR_EPCIS));
+            eventList.addAll(applicationLevelInterface.queryDS(identity, container.getEpc(),
+                    link.getDsAddress(), ONSEntryType.epcis));
             Date d2 = new Date();
             link.addTimeResponse(d2.getTime() - d1.getTime());
         }
@@ -133,12 +134,13 @@ public class DSEntryComparator {
             }
             if (link.getDsAddress().equals(referentDS)) {
                 Date d1 = new Date();
-                List<DSEvent> list = applicationLevelInterface.queryDS(container.getEpc(), link.getDsAddress(), identity, Configuration.DS_SERVICE_TYPE_FOR_DS);
+                List<DSEvent> list = applicationLevelInterface.queryDS(identity, container.getEpc(),
+                    link.getDsAddress(), ONSEntryType.ds);
                 Date d2 = new Date();
                 link.addTimeResponse(d2.getTime() - d1.getTime());
                 for (DSEvent dSEvent : list) {
                     if (Configuration.DEBUG) {
-                        log.debug("found address: " + dSEvent.getReferenceAddress());
+                        log.debug("found address: " + dSEvent.getServiceAddress());
                     }
                     if (dsEventList.contains(dSEvent)) {
                         continue;
@@ -155,7 +157,7 @@ public class DSEntryComparator {
         }
 
         for (DSEvent dSEvent : dsEventList) {
-            if (!dsLinks.contains(dSEvent.getReferenceAddress())) {
+            if (!dsLinks.contains(dSEvent.getServiceAddress())) {
                 res.add(dSEvent);
             }
         }

@@ -178,8 +178,7 @@ p_info "\n"
 
 p_bold "Applications (β, ψ, μφ, λ)\n"
 do_compile_pack BETa BETa
-# DELTa needs DS
-#do_compile_pack DELTa DELTa
+do_compile_pack DELTa DELTa
 do_compile_pack PSi PSi
 do_compile MuPHI MuPHI
 do_compile_pack SigMa-Test SigMa/SigMa-Test

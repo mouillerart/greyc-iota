@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
  */
 package fr.unicaen.iota.validator.operations;
 
-import fr.unicaen.iota.application.model.DSEvent;
-import fr.unicaen.iota.application.rmi.AccessInterface;
+import fr.unicaen.iota.application.AccessInterface;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.tau.model.Identity;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.Controler;
@@ -49,7 +49,7 @@ public class Analyser extends Thread implements Runnable {
     private final Identity identity;
     private ThreadManager threadManager;
     private final AnalyserStatus analyserStatus;
-    
+
     private static final Log log = LogFactory.getLog(Analyser.class);
 
     public Analyser(String XMLPath, Identity identity, IOTA iota, AnalyserStatus analyserStatus) {

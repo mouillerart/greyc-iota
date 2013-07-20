@@ -78,8 +78,7 @@ function gamma_init() {
 }
 
 function addPoint(layer, loc, ids) {
-    var ll = loc.split(",");
-    var p = new OpenLayers.Geometry.Point(parseInt(ll[0], 10), parseInt(ll[1], 10));
+    var p = newPoint(loc);
     p.transform(pEPSG4326, pEPSG900913);
     var feature = new OpenLayers.Feature.Vector(p);
     feature.attributes.id = ids;
@@ -175,10 +174,7 @@ function initShowOnMap(className) {
     var points = [];
     var bounds = null;
     for (var k = 0; k < locationsAndIds.length; ++k) {
-        var ll = locationsAndIds[k].loc.split(",");
-        var lon = parseInt(ll[0], 10);
-        var lat = parseInt(ll[1], 10);
-        var p = new OpenLayers.Geometry.Point(lon, lat);
+        var p = newPoint(locationsAndIds[k].loc);
         if (bounds == null)
             bounds = new OpenLayers.Bounds(p.x, p.y, p.x, p.y);
         else
@@ -243,4 +239,11 @@ function showOnMap(evtElem) {
         return;
     select.unselectAll();
     select.select(feature);
+}
+
+function newPoint(loc) {
+    var ll = loc.split(",");
+    var lat = parseInt(ll[0], 10);
+    var lon = parseInt(ll[1], 10);
+    return new OpenLayers.Geometry.Point(lon, lat);
 }

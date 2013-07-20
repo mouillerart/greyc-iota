@@ -39,28 +39,28 @@ public class AccessPolicies {
     public AccessPolicies() {
     }
 
-    public AccessPolicies(String sessionId, String owner) {
-        this.createQueryPolicies(sessionId, owner);
-        this.createCapturePolicies(sessionId, owner);
-        this.createAdminPolicies(sessionId, owner);
+    public AccessPolicies(String userId, String owner) {
+        this.createQueryPolicies(userId, owner);
+        this.createCapturePolicies(userId, owner);
+        this.createAdminPolicies(userId, owner);
     }
 
-    public AccessPolicies(String sessionId, String owner, Module module) {
+    public AccessPolicies(String userId, String owner, Module module) {
         switch (module) {
             case adminModule:
-                this.createAdminPolicies(sessionId, owner);
+                this.createAdminPolicies(userId, owner);
                 break;
             case queryModule:
-                this.createQueryPolicies(sessionId, owner);
+                this.createQueryPolicies(userId, owner);
                 break;
             case captureModule:
-                this.createCapturePolicies(sessionId, owner);
+                this.createCapturePolicies(userId, owner);
                 break;
         }
     }
 
-    private synchronized void createQueryPolicies(String sessionId, String owner) {
-        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, owner).APMSession.getQueryPolicy(owner);
+    private synchronized void createQueryPolicies(String userId, String owner) {
+        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(userId, owner).APMSession.getQueryPolicy(owner);
         Node policies = new Node("", NodeType.policiesNode, null, Module.queryModule, null);
         if (ownerPolicies != null) {
             for (Object ogp : ownerPolicies.getPolicies()) {
@@ -195,7 +195,7 @@ public class AccessPolicies {
                 }
             }
         } else {
-            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, owner);
+            InterfaceHelper ih = MapSessions.getAPMSession(userId, owner);
             ownerPolicies = new OwnerPolicies(owner, fr.unicaen.iota.xacml.policy.Module.queryModule);
             ih.APMSession.addQueryPolicy(ownerPolicies);
             ih.APMSession.saveQueryPolicies(owner);
@@ -204,8 +204,8 @@ public class AccessPolicies {
         getPoliciesQuery().add(policies);
     }
 
-    private synchronized void createCapturePolicies(String sessionId, String owner) {
-        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, owner).APMSession.getCapturePolicy(owner);
+    private synchronized void createCapturePolicies(String userId, String owner) {
+        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(userId, owner).APMSession.getCapturePolicy(owner);
         Node policies = new Node("", NodeType.policiesNode, null, Module.captureModule, null);
 
         if (ownerPolicies != null) {
@@ -341,7 +341,7 @@ public class AccessPolicies {
                 }
             }
         } else {
-            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, owner);
+            InterfaceHelper ih = MapSessions.getAPMSession(userId, owner);
             ownerPolicies = new OwnerPolicies(owner, fr.unicaen.iota.xacml.policy.Module.captureModule);
             ih.APMSession.addCapturePolicy(ownerPolicies);
 //            createCapturePolicies(sessionId, owner);
@@ -351,8 +351,8 @@ public class AccessPolicies {
         getPoliciesCapture().add(policies);
     }
 
-    private synchronized void createAdminPolicies(String sessionId, String owner) {
-        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(sessionId, owner).APMSession.getAdminPolicy(owner);
+    private synchronized void createAdminPolicies(String userId, String owner) {
+        OwnerPolicies ownerPolicies = MapSessions.getAPMSession(userId, owner).APMSession.getAdminPolicy(owner);
         Node policies = new Node("", NodeType.policiesNode, null, Module.adminModule, null);
 
         if (ownerPolicies != null) {
@@ -381,7 +381,7 @@ public class AccessPolicies {
                 }
             }
         } else {
-            InterfaceHelper ih = MapSessions.getAPMSession(sessionId, owner);
+            InterfaceHelper ih = MapSessions.getAPMSession(userId, owner);
             ownerPolicies = new OwnerPolicies(owner, fr.unicaen.iota.xacml.policy.Module.administrationModule);
             ih.APMSession.addAdminPolicy(ownerPolicies);
             ih.APMSession.saveAdminPolicies(owner);

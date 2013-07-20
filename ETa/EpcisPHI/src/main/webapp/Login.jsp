@@ -11,9 +11,12 @@
     <body>
         <h2>EPCIS ACCESS CONTROL CENTER</h2>
         <%
-            if (request.getParameter("message") != null) {
+            if (request.getAttribute("message") != null) {
+                String message = (String) request.getAttribute("message");
+                message = message.replaceAll("<", "&#60;");
+                message = message.replaceAll(">", "&#62;");
         %>
-        <div style="color:red;text-align:center;font-weight:bold;"><%=request.getParameter("message")%></div>
+        <div style="color:red;text-align:center;font-weight:bold;"><%= message %></div>
         <%
             }
         %>

@@ -1,10 +1,5 @@
-<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
 <%@page import="fr.unicaen.iota.epcisphi.xacml.ihm.Module"%>
 <%@page import="fr.unicaen.iota.epcisphi.utils.HTMLUtilities"%>
-
-<%
-            String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
-%>
 
 <div id="createUser" title="Create User" class="modalDialog">
     <div class="dialog_message">Enter user informations :</div>
@@ -19,7 +14,7 @@
 
 <div id="updateOwner" title="Update Owner Informations" class="modalDialog">
     <div class="dialog_message">Enter the new Owner informations :</div>
-    <div class="dialog_options">Owner Id : <input disabled id="ownerID" type="text" value="<%=ownerId%>" /></div>
+    <div class="dialog_options">Owner Id : <input disabled id="ownerID" type="text" /></div>
 </div>
 
 <div id="GroupDialog" title="Group Name" class="modalDialog">
@@ -29,7 +24,7 @@
 
 <div id="usersDialog" title="Add User" class="modalDialog">
     <div class="dialog_message">Choose a new user you want to associate in this group :</div>
-    <div class="dialog_options">User : <input type="text" value="" id="groupPartnerName" /></div>
+    <div class="dialog_options">User : <input type="text" value="" id="groupOwnerName" /></div>
 </div>
 
 <div id="userAdminPermissionDialog" title="Add user permissions" class="modalDialog">

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  */
 package fr.unicaen.iota.validator.listener;
 
-import fr.unicaen.iota.application.model.DSEvent;
+import fr.unicaen.iota.ds.model.DSEvent;
 import fr.unicaen.iota.validator.model.BaseEvent;
 import fr.unicaen.iota.validator.model.EPC;
 import java.util.List;

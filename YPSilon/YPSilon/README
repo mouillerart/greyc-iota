@@ -4,7 +4,6 @@ Web service for the user management.
 
 Dependencies:
   IoTa modules:
-    - EPCIS-Xi-Client
     - YPSilon-Client
   libraries:
     - spring

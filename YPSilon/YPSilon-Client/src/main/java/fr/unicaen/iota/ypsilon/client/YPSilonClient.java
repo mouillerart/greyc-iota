@@ -19,20 +19,16 @@
  */
 package fr.unicaen.iota.ypsilon.client;
 
-import fr.unicaen.iota.ypsilon.client.model.UserCertLoginIn;
+import fr.unicaen.iota.ypsilon.client.model.User;
 import fr.unicaen.iota.ypsilon.client.model.UserCreateIn;
 import fr.unicaen.iota.ypsilon.client.model.UserCreateOut;
 import fr.unicaen.iota.ypsilon.client.model.UserDeleteIn;
 import fr.unicaen.iota.ypsilon.client.model.UserDeleteOut;
 import fr.unicaen.iota.ypsilon.client.model.UserInfoIn;
 import fr.unicaen.iota.ypsilon.client.model.UserInfoOut;
-import fr.unicaen.iota.ypsilon.client.model.UserLoginOut;
-import fr.unicaen.iota.ypsilon.client.model.UserLogoutIn;
-import fr.unicaen.iota.ypsilon.client.model.UserLogoutOut;
 import fr.unicaen.iota.ypsilon.client.model.UserLookupIn;
 import fr.unicaen.iota.ypsilon.client.model.UserLookupOut;
 import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
-import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import fr.unicaen.iota.ypsilon.client.soap.YPSilonService;
 import fr.unicaen.iota.ypsilon.client.soap.YPSilonServicePortType;
 import java.io.File;
@@ -118,120 +114,91 @@ public class YPSilonClient {
     }
 
     /**
-     * Logs out the user corresponding to the session ID.
-     * @param sessionID The user's session ID.
-     * @return The result of the log out.
-     * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If an access error occurred.
-     */
-    public UserLogoutOut userLogout(String sessionID) throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        UserLogoutIn userLogoutIn = new UserLogoutIn();
-        userLogoutIn.setSid(sessionID);
-        return port.userLogout(userLogoutIn);
-    }
-
-    /**
-     * Logs a user by his DN or his user name.
+     * Fetchs user corresponding to user DN.
      *
-     * @param user The user id (DN).
-     * @return The login object created for the user.
+     * @param userDN The user to fetch.
+     * @return The user corresponding to the user DN.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If an access error occurred.
      */
-    public UserLoginOut userCertLogin(String user) throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        UserCertLoginIn userCertLoginIn = new UserCertLoginIn();
-        userCertLoginIn.setUserID(user);
-        return port.userCertLogin(userCertLoginIn);
-    }
-
-    /**
-     * Fetchs user corresponding to user ID, if the session ID is root access
-     * or userInfo is permitted to the user associated to the session.
-     *
-     * @param sessionId The session ID.
-     * @param user The user ID to fetch.
-     * @return The user corresponding to the user ID.
-     * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
-     */
-    public UserInfoOut userInfo(String sid, String user) throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public UserInfoOut userInfo(String userDN) throws ImplementationExceptionResponse {
         UserInfoIn userInfoIn = new UserInfoIn();
-        userInfoIn.setUserID(user);
-        userInfoIn.setSid(sid);
+        userInfoIn.setUserDN(userDN);
         return port.userInfo(userInfoIn);
     }
 
     /**
-     * Fetchs list of users corresponding to user ID from the base, if the session
-     * ID is root access or userLookup is permitted to the user associated to the session.
+     * Fetchs list of users corresponding to user ID from the base.
      *
-     * @param sessionId The session ID.
-     * @param userId The user ID to fetch.
+     * @param userID The user to fetch.
      * @return The list of users corresponding to the user ID.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public UserLookupOut userLookup(String sid, String user) throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public UserLookupOut userLookup(String userID) throws ImplementationExceptionResponse {
         UserLookupIn userLookupIn = new UserLookupIn();
-        userLookupIn.setUserID(user);
-        userLookupIn.setSid(sid);
+        userLookupIn.setUserID(userID);
         return port.userLookup(userLookupIn);
     }
 
     /**
      * Creates a new user in the base.
      *
-     * @param sessionId The session ID corresponding to the connection.
-     * @param user The user id of the new user.
+     * @param userID The user ID of the new user.
      * @param owner The owner of the new user.
      * @param alias The alias DN of the new user. Can be null.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public UserCreateOut userCreate(String sid, String user, String owner, String alias, int time)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public UserCreateOut userCreate(String userID, String owner, String alias)
+            throws ImplementationExceptionResponse {
         UserCreateIn userCreateIn = new UserCreateIn();
-        userCreateIn.setUserID(user);
-        userCreateIn.setSid(sid);
-        userCreateIn.setOwnerID(owner);
-        userCreateIn.setAlias(alias);
-        userCreateIn.setSessionLease(time);
+        User user = new User();
+        user.setUserDN(userID);
+        user.setOwner(owner);
+        user.setAlias(alias);
+        userCreateIn.setUser(user);
         return port.userCreate(userCreateIn);
     }
 
     /**
      * Creates a new user in the base. It is equivalent to supplying null as the alias parameter to
-     * the method <code>userCreate(String, String, String, String, int)</code>.
-     * See {@link #userCreate(String, String, String, String, int)} for a full description.
+     * the method <code>userCreate(String, String, String)</code>.
+     * See {@link #userCreate(String, String, String)} for a full description.
      *
-     * @param sessionId The session ID corresponding to the connection.
-     * @param user The user id of the new user.
+     * @param userID The user id of the new user.
      * @param owner The owner of the new user.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
-     * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public UserCreateOut userCreate(String sid, String user, String owner, int time)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public UserCreateOut userCreate(String userID, String owner) throws ImplementationExceptionResponse {
         UserCreateIn userCreateIn = new UserCreateIn();
-        userCreateIn.setUserID(user);
-        userCreateIn.setSid(sid);
-        userCreateIn.setOwnerID(owner);
-        userCreateIn.setAlias(null);
-        userCreateIn.setSessionLease(time);
+        User userToCreate = new User();
+        userToCreate.setUserDN(userID);
+        userToCreate.setOwner(owner);
+        userToCreate.setAlias(null);
+        userCreateIn.setUser(userToCreate);
+        return port.userCreate(userCreateIn);
+    }
+
+    /**
+     * Creates a new user in the base.
+     *
+     * @param user The user to add.
+     * @throws ImplementationExceptionResponse If an error involving the base occurred.
+     */
+    public UserCreateOut userCreate(User user)
+            throws ImplementationExceptionResponse {
+        UserCreateIn userCreateIn = new UserCreateIn();
+        userCreateIn.setUser(user);
         return port.userCreate(userCreateIn);
     }
 
     /**
      * Deletes user from the base.
      *
-     * @param sessionId The session ID corresponding to the connection.
      * @param user The user to delete.
      * @throws ImplementationExceptionResponse If an error involving the base occurred.
      * @throws SecurityExceptionResponse If the access is denied to the user.
      */
-    public UserDeleteOut userDelete(String sid, String user) throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public UserDeleteOut userDelete(String user) throws ImplementationExceptionResponse {
         UserDeleteIn userDeleteIn = new UserDeleteIn();
-        userDeleteIn.setSid(sid);
         userDeleteIn.setUserID(user);
         return port.userDelete(userDeleteIn);
     }

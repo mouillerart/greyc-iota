@@ -2127,11 +2127,13 @@ function checkDates(date1, date2) {
     var date1s = date1.split('/');
     var date2s = date2.split('/');
     var day1 = parseInt(date1s[1]);
+    // Javascript begins month to 0
     var month1 = parseInt(date1s[0]) - 1;
     var year1 = parseInt(date1s[2]);
     var dateobj1 = new Date(year1, month1, day1);
 
     var day2 = parseInt(date2s[1]);
+    // Javascript begins month to 0
     var month2 = parseInt(date2s[0]) - 1;
     var year2 = parseInt(date2s[2]);
     var dateobj2 = new Date(year2, month2, day2);

@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 package fr.unicaen.iota.validator.model;
 
 import fr.unicaen.iota.mu.EPCISEventTypeHelper;
-import org.fosstrak.epcis.model.EPCISEventType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.fosstrak.epcis.model.ActionType;
+import org.fosstrak.epcis.model.EPCISEventType;
 import org.jdom.Element;
 
 /**
@@ -86,7 +86,7 @@ public class ObjectEvent extends BaseEvent {
     public boolean isContainedIn(Collection<EPCISEventType> list) {
         for (EPCISEventType evt : list) {
             EPCISEventTypeHelper event = new EPCISEventTypeHelper(evt);
-            for (String epc : event.getEpcs()) {
+            for (String epc : event.getEpcList()) {
                 if (!getEpcList().contains(epc)) {
                     return false;
                 }

@@ -1,1 +1,1 @@
-../../EpcILoN/src/main/resources/sql/epcilon_schema.sql
+../../EpcILoN/epcilon_schema.sql

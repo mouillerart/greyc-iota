@@ -21,12 +21,11 @@ package fr.unicaen.iota.epcisphi.xacml.servlet;
 
 import fr.unicaen.iota.epcisphi.utils.Constants;
 import fr.unicaen.iota.epcisphi.utils.MapSessions;
-import fr.unicaen.iota.epcisphi.utils.SessionLoader;
-import fr.unicaen.iota.ypsilon.client.YPSilonClient;
+import fr.unicaen.iota.epcisphi.utils.User;
 import fr.unicaen.iota.mu.Utils;
-import fr.unicaen.iota.ypsilon.client.model.UserLoginOut;
+import fr.unicaen.iota.ypsilon.client.YPSilonClient;
+import fr.unicaen.iota.ypsilon.client.model.UserLookupOut;
 import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
-import fr.unicaen.iota.ypsilon.client.soap.SecurityExceptionResponse;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,45 +46,37 @@ public class RootAccountAuth extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String message = "";
         if ("login".equals(request.getParameter("action"))) {
             String login = (request.getUserPrincipal() != null)? request.getUserPrincipal().getName() : null;
             if (login == null || login.isEmpty()) {
-                message = "?message=You are not authenticated.";
+                request.setAttribute("message", "You are not authenticated.");
             } else {
                 login = Utils.formatId(login);
-                UserLoginOut userLoginOut;
                 try {
-                    YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
+                    YPSilonClient ypsilonClient = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
                             Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
-                    userLoginOut = client.userCertLogin(login);
-                    request.setAttribute("session-id", userLoginOut.getSid());
-                    message = SessionLoader.loadSession(userLoginOut.getSid(), login, request.getSession());
+                    UserLookupOut userLookupOut = ypsilonClient.userLookup(login);
+                    if (userLookupOut.getUserList().isEmpty()) {
+                        throw new ImplementationExceptionResponse("User not found");
+                    }
+                    User user = new User();
+                    user.setUserID(login);
+                    user.setOwnerID(userLookupOut.getUserList().get(0).getOwner());
+                    request.getSession().setAttribute("user", user);
+                    request.getSession().setAttribute("cert", login);
                 } catch (ImplementationExceptionResponse ex) {
-                    message = "?message=" + ex.getMessage();
+                    request.setAttribute("message", ex.getMessage());
                     LOG.error("impl", ex);
-                } catch (SecurityExceptionResponse ex) {
-                    message = "?message=" + ex.getMessage();
-                    LOG.error("secur", ex);
                 }
             }
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         } else if ("logout".equals(request.getParameter("action"))) {
-            String sessionId = (String) (request.getSession().getAttribute("session-id"));
-            try {
-                YPSilonClient client = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
-                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
-                client.userLogout(sessionId);
-                SessionLoader.clearSession(request.getSession());
-                MapSessions.releaseSession(sessionId);
-            } catch (ImplementationExceptionResponse ex) {
-                message = "?message=" + ex.getMessage();
-            } catch (SecurityExceptionResponse ex) {
-                message = "?message=" + ex.getMessage();
-            }
-            request.getSession().setAttribute("session-id", null);
-            MapSessions.releaseSession(sessionId);
+            String cert = (String) (request.getSession().getAttribute("cert"));
+            MapSessions.releaseSession(cert);
+            request.getSession().setAttribute("user", null);
+            request.getSession().setAttribute("cert", null);
+            response.sendRedirect("index.jsp");
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/index.jsp" + message);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

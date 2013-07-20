@@ -42,7 +42,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>EpcisPHiSecure</web-resource-name>
-            <url-pattern>/RootAccountAuth</url-pattern>
+            <url-pattern>/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>

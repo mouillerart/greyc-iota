@@ -19,7 +19,6 @@
  */
 package fr.unicaen.iota.ypsilon;
 
-import fr.unicaen.iota.ypsilon.constants.Constants;
 import fr.unicaen.iota.ypsilon.client.model.*;
 import fr.unicaen.iota.ypsilon.client.soap.*;
 import java.util.List;
@@ -36,14 +35,8 @@ public class YPSilonWebService implements YPSilonServicePortType {
     }
 
     @Override
-    public HelloOut hello(HelloIn parms) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public UserLookupOut userLookup(UserLookupIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        if (parms.getUserID() == null || parms.getSid() == null) {
+    public UserLookupOut userLookup(UserLookupIn parms) throws ImplementationExceptionResponse {
+        if (parms.getUserID() == null) {
             String msg = "A parameter is missing.";
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
@@ -54,46 +47,15 @@ public class YPSilonWebService implements YPSilonServicePortType {
             throw ier;
         }
         UserLookupOut out = new UserLookupOut();
-        if (!Session.isValidSession(parms.getSid())) {
-            String msg = "It is not a valid session.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLookup");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-        List<User> userList = userModule.userLookup(parms.getSid(), parms.getUserID());
-        TUserItemList userItemList = new TUserItemList();
-        for (User u : userList) {
-            TUserItem uItem = new TUserItem();
-            uItem.setId(u.getUserID());
-            userItemList.getUser().add(uItem);
-        }
-        out.setUserList(userItemList);
-        TResult tresult = new TResult();
-        tresult.setDesc("userLookup command successfull.");
-        out.setResult(tresult);
+        List<User> userList = userModule.userLookup(parms.getUserID());
+        out.getUserList().addAll(userList);
         return out;
     }
 
     @Override
-    public UserCreateOut userCreate(UserCreateIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        if (parms.getUserID() == null || parms.getOwnerID() == null || parms.getSid() == null) {
+    public UserCreateOut userCreate(UserCreateIn parms) throws ImplementationExceptionResponse {
+        if (parms.getUser() == null) {
             String msg = "A parameter is missing.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userCreate");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-        String sessionId = parms.getSid();
-        if (!Session.isValidSession(sessionId)) {
-            String msg = "It is not a valid session.";
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
             ie.setQueryName("userCreate");
@@ -103,29 +65,14 @@ public class YPSilonWebService implements YPSilonServicePortType {
             throw ier;
         }
         UserCreateOut out = new UserCreateOut();
-        userModule.userCreate(sessionId, parms.getUserID(), parms.getOwnerID(), parms.getAlias());
-        TResult tresult = new TResult();
-        tresult.setDesc("userCreate command successfull.");
-        out.setResult(tresult);
+        userModule.userCreate(parms.getUser().getUserDN(), parms.getUser().getOwner(), parms.getUser().getAlias());
         return out;
     }
 
     @Override
-    public UserDeleteOut userDelete(UserDeleteIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        if (parms.getUserID() == null || parms.getSid() == null) {
+    public UserDeleteOut userDelete(UserDeleteIn parms) throws ImplementationExceptionResponse {
+        if (parms.getUserID() == null) {
             String msg = "A parameter is missing.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userDelete");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-        String sessionId = parms.getSid();
-        if (!Session.isValidSession(sessionId)) {
-            String msg = "It is not a valid session.";
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
             ie.setQueryName("userDelete");
@@ -135,86 +82,18 @@ public class YPSilonWebService implements YPSilonServicePortType {
             throw ier;
         }
         UserDeleteOut out = new UserDeleteOut();
-        userModule.userDelete(sessionId, parms.getUserID());
-        TResult tresult = new TResult();
-        tresult.setDesc("userDelete command successfull.");
-        out.setResult(tresult);
+        userModule.userDelete(parms.getUserID());
         return out;
     }
 
     @Override
-    public UserUpdateOut userUpdate(UserUpdateIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
+    public UserUpdateOut userUpdate(UserUpdateIn parms) throws ImplementationExceptionResponse {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public UserLogoutOut userLogout(UserLogoutIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        if (parms.getSid() == null) {
-            String msg = "A parameter is missing.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLogout");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-        try {
-            UserLogoutOut out = new UserLogoutOut();
-            if (!Session.isValidSession(parms.getSid())) {
-                String msg = "It is not a valid session.";
-                ImplementationException ie = new ImplementationException();
-                ie.setReason(msg);
-                ie.setQueryName("userLogout");
-                ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-                ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-                LOG.error(msg, ier);
-                throw ier;
-            }
-            Session.closeSession(parms.getSid());
-            TResult tresult = new TResult();
-            tresult.setDesc("Session closed.");
-            out.setResult(tresult);
-            return out;
-        } catch (Exception e) {
-            String msg = "An unexpected error occurred while closing session.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLogout");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, e);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-    }
-
-    @Override
-    public UserLoginOut userCertLogin(UserCertLoginIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        if (parms.getUserID() == null) {
-            String msg = "A parameter is missing.";
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLogin");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-            LOG.error(msg, ier);
-            throw ier;
-        }
-        UserLoginOut out = new UserLoginOut();
-        User user = userModule.userCertLogin(parms.getUserID());
-        out.setSessionLease(Constants.SESSION_TIME_LEASE);
-        String sessionId = Session.openSession(user);
-        out.setSid(sessionId);
-        return out;
-    }
-
-    @Override
-    public UserInfoOut userInfo(UserInfoIn parms)
-            throws ImplementationExceptionResponse, SecurityExceptionResponse {
-        if (parms.getUserID() == null || parms.getSid() == null) {
+    public UserInfoOut userInfo(UserInfoIn parms) throws ImplementationExceptionResponse {
+        if (parms.getUserDN() == null) {
             String msg = "A parameter is missing.";
             ImplementationException ie = new ImplementationException();
             ie.setReason(msg);
@@ -226,29 +105,11 @@ public class YPSilonWebService implements YPSilonServicePortType {
         }
         UserInfoOut out = new UserInfoOut();
         try {
-            String sessionId = parms.getSid();
-            if (!Session.isValidSession(sessionId)) {
-                String msg = "It is not a valid session.";
-                ImplementationException ie = new ImplementationException();
-                ie.setReason(msg);
-                ie.setQueryName("userInfo");
-                ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-                ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie);
-                LOG.error(msg, ier);
-                throw ier;
-            }
-            User user = userModule.userInfo(sessionId, parms.getUserID());
-            out.setSessionLease(Constants.SESSION_TIME_LEASE);
-            out.setOwnerID(user.getOwnerID());
-            out.setUserID(user.getUserID());
-            TResult tresult = new TResult();
-            tresult.setDesc("Command userInfo successfull.");
-            out.setResult(tresult);
+            User user = userModule.userInfo(parms.getUserDN());
+            out.setUser(user);
             return out;
         } catch (ImplementationExceptionResponse ier) {
             throw ier;
-        } catch (SecurityExceptionResponse ser) {
-            throw ser;
         } catch (Exception ex) {
             String msg = "An unexpected error occurred while closing session.";
             ImplementationException ie = new ImplementationException();

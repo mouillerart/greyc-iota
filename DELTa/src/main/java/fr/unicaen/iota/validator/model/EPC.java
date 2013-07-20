@@ -1,7 +1,7 @@
 /*
  *  This program is a part of the IoTa project.
  *
- *  Copyright © 2008-2012  Université de Caen Basse-Normandie, GREYC
+ *  Copyright © 2008-2013  Université de Caen Basse-Normandie, GREYC
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 package fr.unicaen.iota.validator.model;
 
 import fr.unicaen.iota.ds.model.*;
-import org.fosstrak.epcis.model.EPCISEventType;
 import fr.unicaen.iota.validator.Configuration;
 import fr.unicaen.iota.validator.IOTA;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.fosstrak.epcis.model.EPCISEventType;
 
 /**
  *
@@ -35,7 +35,7 @@ public class EPC {
     private static final Log log = LogFactory.getLog(EPC.class);
     private String epc;
     private List<BaseEvent> eventList;
-    private List<TEventItem> dsToDsReferentList;
+    private List<DSEvent> dsToDsReferentList;
     private String parentId;
 
     public EPC(String epc) {
@@ -59,33 +59,25 @@ public class EPC {
         return res;
     }
 
-    public List<TEventItem> getDSEvents(List<EPC> containerList) throws Exception {
+    public List<DSEvent> getDSEvents(List<EPC> containerList) throws Exception {
         List<BaseEvent> eventListClone = new ArrayList<BaseEvent>();
         eventListClone.addAll(this.eventList);
         if (this.parentId != null) {
             BaseEvent parentEvent = getParentEvent(parentId, containerList);
             eventListClone.add(parentEvent);
         }
-        List<TEventItem> events = new ArrayList<TEventItem>();
+        List<DSEvent> events = new ArrayList<DSEvent>();
         for (BaseEvent be : eventListClone) {
-            TEventItem evt = new TEventItem();
-            TServiceItemList serviceList = new TServiceItemList();
-            TServiceItem service = new TServiceItem();
-            service.setUri(be.getInfrastructure().getServiceAddress());
-            serviceList.getService().add(service);
-            evt.setServiceList(serviceList);
-            evt.setC(epc);
-            evt.setLcs(be.getBizStep());
+            DSEvent evt = new DSEvent();
+            evt.setEpc(this.epc);
+            evt.setServiceAddress(be.getInfrastructure().getServiceAddress());
+            evt.setBizStep(be.getBizStep());
             events.add(evt);
-            //new DSEvent(this.epc,
-            //        be.getInfrastructure().getServiceAddress(), 
-             //       be.getBizStep(), 
-               //     null));
         }
         return events;
     }
 
-    public Iterable<TEventItem> getDSToDSEvents(List<EPC> containerList) {
+    public Iterable<DSEvent> getDSToDSEvents(List<EPC> containerList) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -142,14 +134,18 @@ public class EPC {
             boolean found = false;
             for (DSEvent dsEvent : list) {
                 if (dsEvent.getBizStep().equals(be.getBizStep())
-                        && dsEvent.getEPC().equals(this.epc)
-                        && dsEvent.getReferenceAddress().equals(formatAddress(be.getInfrastructure().getServiceAddress()))) {
+                        && dsEvent.getEpc().equals(this.epc)
+                        && dsEvent.getServiceAddress().equals(formatAddress(be.getInfrastructure().getServiceAddress()))) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                events.add(new DSEvent(this.epc, be.getInfrastructure().getServiceAddress(), be.getBizStep(), null));
+                DSEvent evt = new DSEvent();
+                evt.setEpc(epc);
+                evt.setBizStep(be.getBizStep());
+                evt.setServiceAddress(be.getInfrastructure().getServiceAddress());
+                events.add(evt);
             }
         }
         if (Configuration.DEBUG) {
@@ -171,7 +167,7 @@ public class EPC {
         return res;
     }
 
-    public List<BaseEvent> reverseVerifyEPCISEvents(List<EPCISEvent> list) {
+    public List<BaseEvent> reverseVerifyEPCISEvents(List<EPCISEventType> list) {
         List<BaseEvent> res = new ArrayList<BaseEvent>();
         for (BaseEvent be : this.eventList) {
             if (!be.isContainedIn(list)) {
@@ -206,8 +202,8 @@ public class EPC {
         log.debug("#");
         for (DSEvent dsEvent : list) {
             log.debug("#  " + dsEvent.getBizStep());
-            log.debug("#  " + dsEvent.getEPC());
-            log.debug("#  " + dsEvent.getReferenceAddress());
+            log.debug("#  " + dsEvent.getEpc());
+            log.debug("#  " + dsEvent.getServiceAddress());
             log.debug("#");
         }
         log.debug("# # # # # # # Event found in the XML file # # # # # # #");
@@ -247,7 +243,11 @@ public class EPC {
     public List<DSEvent> getDsToEPCISReferentList(List<EPC> containerList) {
         List<DSEvent> result = new ArrayList<DSEvent>();
         for (BaseEvent event : eventList) {
-            result.add(new DSEvent(epc, event.getInfrastructure().getServiceAddress(), event.getBizStep(), null));
+            DSEvent evt = new DSEvent();
+            evt.setEpc(this.epc);
+            evt.setServiceAddress(event.getInfrastructure().getServiceAddress());
+            evt.setBizStep(event.getBizStep());
+            result.add(evt);
         }
         if (this.parentId != null) {
             BaseEvent parentEvent = null;
@@ -256,7 +256,11 @@ public class EPC {
             } catch (Exception ex) {
                 log.fatal(null, ex);
             }
-            result.add(new DSEvent(epc, parentEvent.getInfrastructure().getServiceAddress(), parentEvent.getBizStep(), null));
+            DSEvent evt = new DSEvent();
+            evt.setEpc(this.epc);
+            evt.setServiceAddress(parentEvent.getInfrastructure().getServiceAddress());
+            evt.setBizStep(parentEvent.getBizStep());
+            result.add(evt);
         }
         return result;
     }

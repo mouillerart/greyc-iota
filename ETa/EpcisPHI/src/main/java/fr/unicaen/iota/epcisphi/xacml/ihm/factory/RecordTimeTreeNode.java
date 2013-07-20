@@ -63,40 +63,11 @@ public class RecordTimeTreeNode implements TreeNode {
 
     @Override
     public String getLabel() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(minDate);
-        StringBuilder res = new StringBuilder();
-        int m = cal.get(Calendar.MONTH);
-        if (m < 10) {
-            res.append("0");
-        }
-        res.append(m);
-        res.append("/");
-        int d = cal.get(Calendar.DAY_OF_MONTH);
-        if (d < 10) {
-            res.append("0");
-        }
-        res.append(d);
-        res.append("/");
-        res.append(cal.get(Calendar.YEAR));
-
-        res.append(" -> ");
-
-        cal.setTime(maxDate);
-        m = cal.get(Calendar.MONTH);
-        if (m < 10) {
-            res.append("0");
-        }
-        res.append(m);
-        res.append("/");
-        d = cal.get(Calendar.DAY_OF_MONTH);
-        if (d < 10) {
-            res.append("0");
-        }
-        res.append(d);
-        res.append("/");
-        res.append(cal.get(Calendar.YEAR));
-        return res.toString();
+        Calendar calMin = Calendar.getInstance();
+        calMin.setTime(minDate);
+        Calendar calMax = Calendar.getInstance();
+        calMax.setTime(maxDate);
+        return String.format("%1$tm/%1$td/%1$tY -> %2$tm/%2$td/%2$tY", calMin, calMax);
     }
 
     @Override

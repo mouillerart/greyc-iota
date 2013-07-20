@@ -4,7 +4,7 @@
 
     <groupId>fr.unicaen.iota</groupId>
     <artifactId>epcilon</artifactId>
-    <version>2.0</version>
+    <version>2.1</version>
     <packaging>war</packaging>
 
     <name>EpcILoN</name>
@@ -157,7 +157,7 @@
                         </goals>
                         <configuration>
                             <componentProperties>
-                                <outputfilename>epcilon-schema.sql</outputfilename>
+                                <outputfilename>epcilon_schema.sql</outputfilename>
                                 <configurationfile>src/main/resources/hibernate.cfg.xml</configurationfile>
                                 <drop>false</drop>
                                 <create>true</create>
@@ -212,6 +212,7 @@
         </plugins>
     </build>
 
+    <!--
     <repositories>
         <repository>
             <id>fosstrak</id>
@@ -219,5 +220,6 @@
             <url>https://oss.sonatype.org/content/repositories/public</url>
         </repository>
     </repositories>
+    -->
 
 </project>

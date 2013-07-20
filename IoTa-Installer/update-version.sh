@@ -36,7 +36,7 @@ repo = resources/mysql-connector-java-5.1.25.jar
 jar_install = true
 
 [tomcat]
-repo = resources/apache-tomcat-7.0.41.tar.gz
+repo = resources/apache-tomcat-7.0.42.tar.gz
 name = apache-tomcat
 directory = /srv/
 catalina_home = /srv/apache-tomcat/

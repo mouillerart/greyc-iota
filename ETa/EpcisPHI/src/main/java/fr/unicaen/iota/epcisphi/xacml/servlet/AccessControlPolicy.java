@@ -25,8 +25,8 @@ import fr.unicaen.iota.epcisphi.utils.User;
 import fr.unicaen.iota.epcisphi.xacml.ihm.*;
 import fr.unicaen.iota.epcisphi.xacml.ihm.factory.AccessPolicies;
 import fr.unicaen.iota.epcisphi.xacml.ihm.factory.Node;
+import fr.unicaen.iota.mu.Utils;
 import fr.unicaen.iota.xacml.policy.GroupPolicy;
-import fr.unicaen.iota.ypsilon.client.model.UserInfoOut;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -61,166 +61,169 @@ public class AccessControlPolicy extends HttpServlet {
 
             // **************************  CREATE *********************************
             try {
-                if (request.getSession().getAttribute("session-id") == null) {
+                if (request.getSession().getAttribute("user") == null || request.getSession().getAttribute("cert") == null) {
                     throw new ServiceException("Session expired you have to reconnect !", ServiceErrorType.epcis);
                 }
-                UserInfoOut userInfo = (UserInfoOut) request.getSession().getAttribute("uInfo");
-                if (userInfo == null) {
-                    throw new ServiceException("User not well connected !", ServiceErrorType.epcis);
+                String dn = (request.getUserPrincipal() != null) ? request.getUserPrincipal().getName() : null;
+                if (request.getSession().getAttribute("cert") != null) {
+                    String cert = (String) request.getSession().getAttribute("cert");
+                    if (!cert.equals(Utils.formatId(dn))) {
+                        throw new ServiceException("Don't change your certificate!", ServiceErrorType.Unknown);
+                    }
                 }
-                User user = new User(userInfo.getUserID(), userInfo.getOwnerID());
+                User user = (User) request.getSession().getAttribute("user");
                 Module module = (request.getParameter("d") != null)? Module.valueOf(request.getParameter("d")) : null;
                 String objectId = request.getParameter("b");
                 String groupId = request.getParameter("e");
                 String methodName = request.getParameter("a");
-                String sessionId = (String) request.getSession().getAttribute("session-id");
+                String userId = user.getUserID();
                 // **************************  CREATE *********************************
 
                 if ("createOwnerGroup".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    String resp = services.createOwnerGroup(sessionId, user, module, newValue);
+                    String resp = services.createOwnerGroup(userId, user, module, newValue);
                     TreeNode node = createEmptyPolicies(user, newValue, module, resp);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addOwnerToGroup".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addOwnerToGroup(sessionId, user, module, objectId, groupId, newValue);
+                    services.addOwnerToGroup(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.userNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addBizStepRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addBizStepRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addBizStepRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.bizStepFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addEpcRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addEpcRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addEpcRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.epcFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addEventTimeRestriction".equals(methodName)) {
                     String d1 = request.getParameter("d1");
                     String d2 = request.getParameter("d2");
-                    services.addEventTimeRestriction(sessionId, user, module, objectId, groupId, d1, d2);
+                    services.addEventTimeRestriction(userId, user, module, objectId, groupId, d1, d2);
                     TreeNode node = new Node(d1 + " -> " + d2, NodeType.eventTimeFilterNode, d1 + " -> " + d2, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addRecordTimeRestriction".equals(methodName)) {
                     String d1 = request.getParameter("d1");
                     String d2 = request.getParameter("d2");
-                    services.addRecordTimeRestriction(sessionId, user, module, objectId, groupId, d1, d2);
+                    services.addRecordTimeRestriction(userId, user, module, objectId, groupId, d1, d2);
                     TreeNode node = new Node(d1 + " -> " + d2, NodeType.recordTimeFilterNode, d1 + " -> " + d2, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addOperationRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addOperationRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addOperationRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.operationFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addEventTypeRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addEventTypeRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addEventTypeRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.eventTypeFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addParentIdRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addParentIdRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addParentIdRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.parentIdFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addChildEpcRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addChildEpcRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addChildEpcRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.childEpcFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addQuantityRestriction".equals(methodName)) {
                     String d1 = request.getParameter("d1");
                     String d2 = request.getParameter("d2");
-                    services.addQuantityRestriction(sessionId, user, module, objectId, groupId, d1, d2);
+                    services.addQuantityRestriction(userId, user, module, objectId, groupId, d1, d2);
                     TreeNode node = new Node(d1 + " -> " + d2, NodeType.quantityFilterNode, d1 + " -> " + d2, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addReadPointRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addReadPointRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addReadPointRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.readPointFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addBizLocRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addBizLocRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addBizLocRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.bizLocFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addDispositionRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addDispositionRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addDispositionRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.dispositionFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addMasterDataIdRestriction".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addMasterDataIdRestriction(sessionId, user, module, objectId, groupId, newValue);
+                    services.addMasterDataIdRestriction(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.masterDataIdFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } else if ("addUserPermission".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.addUserPermission(sessionId, user, module, objectId, groupId, newValue);
+                    services.addUserPermission(userId, user, module, objectId, groupId, newValue);
                     TreeNode node = new Node(newValue, NodeType.methodFilterNode, newValue, module, groupId);
                     html.append(new TreeFactory(Mode.Assert_Mode).createTree(node));
                 } // **************************  SWITCH *********************************
                 else if ("switchBizStepPolicy".equals(methodName)) {
-                    html.append(services.switchBizStepPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchBizStepPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchEpcPolicy".equals(request.getParameter("a"))) {
-                    html.append(services.switchEpcPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchEpcPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchEventTimePolicy".equals(methodName)) {
-                    html.append(services.switchEventTimePolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchEventTimePolicy(userId, user, module, objectId, groupId));
                 } else if ("switchRecordTimePolicy".equals(methodName)) {
-                    html.append(services.switchRecordTimePolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchRecordTimePolicy(userId, user, module, objectId, groupId));
                 } else if ("switchOperationPolicy".equals(methodName)) {
-                    html.append(services.switchOperationPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchOperationPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchEventTypePolicy".equals(methodName)) {
-                    html.append(services.switchEventTypePolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchEventTypePolicy(userId, user, module, objectId, groupId));
                 } else if ("switchParentIdPolicy".equals(methodName)) {
-                    html.append(services.switchParentIdPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchParentIdPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchChildEpcPolicy".equals(methodName)) {
-                    html.append(services.switchChildEpcPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchChildEpcPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchQuantityPolicy".equals(methodName)) {
-                    html.append(services.switchQuantityPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchQuantityPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchReadPointPolicy".equals(methodName)) {
-                    html.append(services.switchReadPointPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchReadPointPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchBizLocPolicy".equals(methodName)) {
-                    html.append(services.switchBizLocPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchBizLocPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchDispositionPolicy".equals(methodName)) {
-                    html.append(services.switchDispositionPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchDispositionPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchMasterDataIdPolicy".equals(methodName)) {
-                    html.append(services.switchMasterDataIdPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchMasterDataIdPolicy(userId, user, module, objectId, groupId));
                 } else if ("switchPermissionPolicy".equals(methodName)) {
-                    html.append(services.switchUserPermissionPolicy(sessionId, user, module, objectId, groupId));
+                    html.append(services.switchUserPermissionPolicy(userId, user, module, objectId, groupId));
                 } // **************************  REMOVE *********************************
                 else if ("removeBizStepRestriction".equals(methodName)) {
-                    services.removeBizStepRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeBizStepRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeEpcRestriction".equals(methodName)) {
-                    services.removeEpcRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeEpcRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeEventTimeRestriction".equals(methodName)) {
-                    services.removeEventTimeRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeEventTimeRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeRecordTimeRestriction".equals(methodName)) {
-                    services.removeRecordTimeRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeRecordTimeRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeOperationRestriction".equals(methodName)) {
-                    services.removeOperationRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeOperationRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeEventTypeRestriction".equals(methodName)) {
-                    services.removeEventTypeRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeEventTypeRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeParentIdRestriction".equals(methodName)) {
-                    services.removeParentIdRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeParentIdRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeChildEpcRestriction".equals(methodName)) {
-                    services.removeChildEpcRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeChildEpcRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeQuantityRestriction".equals(methodName)) {
-                    services.removeQuantityRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeQuantityRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeReadPointRestriction".equals(methodName)) {
-                    services.removeReadPointRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeReadPointRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeBizLocRestriction".equals(methodName)) {
-                    services.removeBizLocRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeBizLocRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeDispositionRestriction".equals(methodName)) {
-                    services.removeDispositionRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeDispositionRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeMasterDataIdRestriction".equals(methodName)) {
-                    services.removeMasterDataIdRestriction(sessionId, user, module, objectId, groupId);
+                    services.removeMasterDataIdRestriction(userId, user, module, objectId, groupId);
                 } else if ("removeUserPermission".equals(methodName)) {
-                    services.removeUserPermission(sessionId, user, module, objectId, groupId);
+                    services.removeUserPermission(userId, user, module, objectId, groupId);
                 } else if ("deleteOwnerGroup".equals(methodName)) {
-                    services.deleteOwnerGroup(sessionId, user, module, objectId, groupId);
+                    services.deleteOwnerGroup(userId, user, module, objectId, groupId);
                 } else if ("removeOwnerFromGroup".equals(methodName)) {
-                    services.removeOwnerFromGroup(sessionId, user, module, objectId, groupId);
+                    services.removeOwnerFromGroup(userId, user, module, objectId, groupId);
                 } // *************************  EPCIS ADMIN ********************************
                 else if ("updateOwner".equals(methodName)) {
                     String ownerID = request.getParameter("f");
@@ -231,29 +234,29 @@ public class AccessControlPolicy extends HttpServlet {
                 } else if ("createUser".equals(methodName)) {
                     String login = request.getParameter("f");
                     String userName = request.getParameter("g");
-                    services.createUser(sessionId, user, login, userName);
+                    services.createUser(user, login, userName);
                 } else if ("updateUser".equals(methodName)) {
                     String login = request.getParameter("f");
                     //TODO services.updateUser(sessionId, user, login, pass);
                 } else if ("deleteUser".equals(methodName)) {
                     String login = request.getParameter("f");
-                    services.deleteUser(sessionId, user, login);
+                    services.deleteUser(user, login);
                 } else if ("createAccount".equals(methodName)) {
                     String userDN = request.getParameter("f");
                     String ownerId = request.getParameter("g");
                     String userName = request.getParameter("h");
-                    boolean rtr = services.createAccount(sessionId, user, ownerId, userDN, userName);
+                    boolean rtr = services.createAccount(user, ownerId, userDN, userName);
                     if (rtr) {
                         html.append("Account successfull created.");
                     }
                 } // **************************  UPDATE *********************************
                 else if ("updateGroupName".equals(methodName)) {
                     String newValue = request.getParameter("c");
-                    services.updateGroupName(sessionId, user, module, objectId, groupId, newValue);
+                    services.updateGroupName(userId, user, module, objectId, groupId, newValue);
 
                 } // **************************  SAVE  **********************************
                 else if ("savePolicyOwner".equals(methodName)) {
-                    services.savePolicyOwner(sessionId, user, module);
+                    services.savePolicyOwner(userId, user, module);
 
                 } // **************************  CANCEL  **********************************
                 else if ("cancelOwnerPolicy".equals(methodName)) {
@@ -262,9 +265,9 @@ public class AccessControlPolicy extends HttpServlet {
                 } // **************************  LOAD POLICIES  *************************
                 else if ("loadPolicyTree".equals(methodName)) {
                     services.loadPolicyTree(user, module);
-                    InterfaceHelper interfaceHelper = MapSessions.getAPMSession(sessionId, user.getOwnerID());
+                    InterfaceHelper interfaceHelper = MapSessions.getAPMSession(userId, user.getOwnerID());
                     interfaceHelper.reload();
-                    AccessPolicies policies = new AccessPolicies(sessionId, user.getOwnerID(), module);
+                    AccessPolicies policies = new AccessPolicies(userId, user.getOwnerID(), module);
                     switch (module) {
                         case adminModule:
                             html.append(new TreeFactory(Mode.Create_Mode).createTree(policies.getPoliciesAdmin().get(0)));
@@ -276,19 +279,19 @@ public class AccessControlPolicy extends HttpServlet {
                             html.append(new TreeFactory(Mode.Create_Mode).createTree(policies.getPoliciesCapture().get(0)));
                             break;
                     }
-                } else {
+                }
+                else {
                     throw new ServiceException("service method " + methodName + " not found !", ServiceErrorType.Unknown);
                 }
                 out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_OK, "") + createXMLHTMLTag(html.toString())));
-
             } catch (ServiceException se) {
                 log.info("", se);
-                out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_ERROR, se.getMessage()) + createXMLHTMLTag(html.toString())));
-                return;
+                out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_ERROR, se.getMessage())
+                        + createXMLHTMLTag(html.toString())));
             } catch (Exception e) {
                 log.info("", e);
-                out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_ERROR, "INTERNAL ERROR: " + e.getMessage()) + createXMLHTMLTag(html.toString())));
-                return;
+                out.print(createXMLEnvelop(createXMLRespondeHeader(Response.RESPONSE_ERROR, "INTERNAL ERROR: "
+                        + e.getMessage()) + createXMLHTMLTag(html.toString())));
             }
         } finally {
             out.close();

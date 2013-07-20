@@ -21,6 +21,7 @@ package fr.unicaen.iota.ypsilon;
 
 import fr.unicaen.iota.ypsilon.client.model.ImplementationException;
 import fr.unicaen.iota.ypsilon.client.model.ImplementationExceptionSeverity;
+import fr.unicaen.iota.ypsilon.client.model.User;
 import fr.unicaen.iota.ypsilon.client.soap.ImplementationExceptionResponse;
 import fr.unicaen.iota.ypsilon.constants.Constants;
 import java.util.ArrayList;
@@ -69,24 +70,33 @@ public class UserOperations {
     }
 
     /**
-     * Fetchs a list of <code>User</code> corresponding to user certificate DN from the LDAP base.
+     * Fetchs <code>User</code> corresponding to user DN from the LDAP base.
      *
-     * @param userDN The user certificate DN.
-     * @return The list of users corresponding to the DN.
+     * @param userDN The user DN.
+     * @return The user corresponding to the user DN.
      * @throws ImplementationExceptionResponse If an error involving the LDAP base occurred.
      */
-    public List<User> userCertLogin(String userDN) throws ImplementationExceptionResponse {
-        try {
-            return getUserByDN(userDN);
-        } catch (NamingException ex) {
-            String msg = "An error occurred during the user login: " + ex.toString();
-            ImplementationException ie = new ImplementationException();
-            ie.setReason(msg);
-            ie.setQueryName("userLogin");
-            ie.setSeverity(ImplementationExceptionSeverity.ERROR);
-            ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
-            LOG.info(msg, ier);
-            throw ier;
+    public User userInfo(String userDN) throws ImplementationExceptionResponse {
+        String userId;
+            if (userDN.contains("=")) {
+                userId = userDN;
+            }
+            else {
+                userId = Constants.LDAP_USER_ID + "=" + userDN;
+                userId += (Constants.LDAP_USER_GROUP != null && !Constants.LDAP_USER_GROUP.isEmpty()) ? "," + Constants.LDAP_USER_GROUP : "";
+                userId += "," + Constants.LDAP_BASE_DN;
+            }
+            try {
+                return getUserByDN(userId);
+            } catch (NamingException ex) {
+                String msg = "An error occurred during the user info: " + ex.toString();
+                ImplementationException ie = new ImplementationException();
+                ie.setReason(msg);
+                ie.setQueryName("userInfo");
+                ie.setSeverity(ImplementationExceptionSeverity.ERROR);
+                ImplementationExceptionResponse ier = new ImplementationExceptionResponse(msg, ie, ex);
+                LOG.info(msg, ier);
+                throw ier;
         }
     }
 
@@ -108,7 +118,15 @@ public class UserOperations {
                 userDN += (Constants.LDAP_USER_GROUP != null && !Constants.LDAP_USER_GROUP.isEmpty()) ? "," + Constants.LDAP_USER_GROUP : "";
                 userDN += "," + Constants.LDAP_BASE_DN;
             }
-            return getUserByDN(userDN);
+            List<User> userList = new ArrayList<User>();
+            User user = getUserByDN(userDN);
+            if (user != null) {
+                userList.add(user);
+            }
+            else {
+                userList.addAll(getUserByAlias(userDN));
+            }
+            return userList;
         } catch (NamingException ex) {
             String msg = "An error occurred during the user lookup: " + ex.toString();
             ImplementationException ie = new ImplementationException();
@@ -222,52 +240,68 @@ public class UserOperations {
     }
 
     /**
-     * Gets a list of <code>User</code> corresponding to a DN from the LDAP base.
-     * @param userDN The user DN. Can be an "alias".
-     * @return The list of users corresponding to the DN.
+     * Gets <code>User</code> corresponding to a DN from the LDAP base.
+     * @param userDN The user DN.
+     * @return The user corresponding to the DN or null if the DN is not found.
      * @throws NamingException
      * @throws Exception
      */
-    private List<User> getUserByDN(String userDN) throws NamingException {
+    private User getUserByDN(String userDN) throws NamingException {
+        DirContext dirCtxt = getContext();
+        User user = null;
+        try {
+            String formatedDN = formatDN(userDN);
+            LOG.debug("Tries to find " + formatedDN);
+            try {
+                Attributes attrs = dirCtxt.getAttributes(formatedDN);
+                if (attrs != null && attrs.size() > 0) {
+                    user = new User();
+                    user.setUserDN(userDN);
+                    String owner = (attrs.get(Constants.LDAP_ATTRIBUTE_OWNER) != null)?
+                            attrs.get(Constants.LDAP_ATTRIBUTE_OWNER).get().toString() : null;
+                    user.setOwner(owner);
+                }
+            } catch (NamingException ex) {
+                //user not found.
+            }
+        } finally {
+            dirCtxt.close();
+        }
+        return user;
+    }
+
+    /**
+     * Gets a list of <code>User</code> corresponding to an alias from the LDAP base.
+     * @param user The user alias.
+     * @return The list of users corresponding to the alias.
+     * @throws NamingException
+     * @throws Exception
+     */
+    private List<User> getUserByAlias(String userAlias) throws NamingException {
         DirContext dirCtxt = getContext();
         try {
             List<User> userList = new ArrayList<User>();
-            String formatedDN = formatDN(userDN);
-            boolean found = false;
-            try {
-                LOG.debug("Tries to find " + formatedDN);
-                Attributes attrs = dirCtxt.getAttributes(formatedDN);
-                if (attrs != null && attrs.size() > 0) {
-                    found = true;
-                    User user = new User();
-                    user.setUserID(userDN);
-                    String owner = (attrs.get(Constants.LDAP_ATTRIBUTE_OWNER) != null) ? attrs.get(Constants.LDAP_ATTRIBUTE_OWNER).get().toString() : null;
-                    user.setOwnerID(owner);
-                    userList.add(user);
-                }
-            } catch (NamingException ex) {
-                // DN not found.
-            }
-            if (!found) {
-                LOG.debug("Tries to find [" + formatedDN + "] in the attribute: " + Constants.LDAP_ATTRIBUTE_ALIAS);
-                String filter = Constants.LDAP_ATTRIBUTE_ALIAS + "=" + formatedDN;
-                SearchControls constraints = new SearchControls();
-                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                NamingEnumeration answer = dirCtxt.search(Constants.LDAP_BASE_DN, filter, constraints);
-                while (answer.hasMore()) {
-                    SearchResult result = (SearchResult) answer.next();
-                    Attributes attrsRes = result.getAttributes();
-                    User user = new User();
-                    user.setUserID((String) attrsRes.get(Constants.LDAP_ATTRIBUTE_ALIAS).get());
-                    String owner = (attrsRes.get(Constants.LDAP_ATTRIBUTE_OWNER) != null) ? attrsRes.get(Constants.LDAP_ATTRIBUTE_OWNER).get().toString() : null;
-                    user.setOwnerID(owner);
-                    userList.add(user);
-                }
+            String formatedDN = formatDN(userAlias);
+            LOG.debug("Tries to find [" + formatedDN + "] in the attribute: " + Constants.LDAP_ATTRIBUTE_ALIAS);
+            String filter = Constants.LDAP_ATTRIBUTE_ALIAS + "=" + formatedDN;
+            SearchControls constraints = new SearchControls();
+            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            NamingEnumeration answer = dirCtxt.search(Constants.LDAP_BASE_DN, filter, constraints);
+            while (answer.hasMore()) {
+                SearchResult result = (SearchResult) answer.next();
+                Attributes attrsRes = result.getAttributes();
+                User user = new User();
+                user.setAlias((String) attrsRes.get(Constants.LDAP_ATTRIBUTE_ALIAS).get());
+                String owner = (attrsRes.get(Constants.LDAP_ATTRIBUTE_OWNER) != null) ?
+                        attrsRes.get(Constants.LDAP_ATTRIBUTE_OWNER).get().toString() : null;
+                user.setOwner(owner);
+                user.setUserDN(result.getName());
+                userList.add(user);
             }
             for (User u : userList) {
                 LOG.debug("User found:");
-                LOG.debug("user ID: " + u.getUserID());
-                LOG.debug("owner ID: " + u.getOwnerID());
+                LOG.debug("user DN: " + u.getUserDN());
+                LOG.debug("owner ID: " + u.getOwner());
             }
             return userList;
         } finally {

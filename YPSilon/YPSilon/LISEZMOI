@@ -4,7 +4,6 @@ Service web de gestion des utilisateurs.
 
 Dépendances:
   modules IoTa:
-    - EPCIS-Xi-Client
     - YPSilon-Client
   bibliothèques:
     - spring

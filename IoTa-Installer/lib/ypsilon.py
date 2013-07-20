@@ -27,15 +27,9 @@ class YPSilonInstaller(installer.WebAppInstaller):
         installer.WebAppInstaller.__init__(self, "YPSilon web application", "ypsilon", [
                 ("Enter the YPSilon web application name", "ypsilon", "name", {}),
                 ("Enter the archive file pathname", "ypsilon", "repo", {"type": "file"}),
-                ("Enter the URL to the XACML module (EXi or DXi)", "ypsilon", "xacml_url", {})
                 ], [
                 ("application",
-                 { "xacml-url": ("ypsilon", "xacml_url"),
-                   "pks-filename": ("cert", "keystore"),
-                   "pks-password": ("cert", "password"),
-                   "trust-pks-filename": ("cert", "truststore"),
-                   "trust-pks-password": ("cert", "trustpassword"),
-                   "ldap-url": ("ldap", "url"),
+                 { "ldap-url": ("ldap", "url"),
                    "ldap-basedn": ("ldap", "base_dn"),
                    "ldap-user": ("ldap", "login"),
                    "ldap-password": ("ldap", "password"),

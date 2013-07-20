@@ -1,36 +1,18 @@
-<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
-<%@page import="fr.unicaen.iota.utils.Constants"%>
-<%@page import="fr.unicaen.iota.ypsilon.client.YPSilonClient"%>
-<%@page import="fr.unicaen.iota.utils.SessionLoader"%>
 <%@page import="com.sun.xacml.ctx.Result"%>
-<%@page import="fr.unicaen.iota.utils.PEPRequester"%>
+<%@page import="fr.unicaen.iota.dphi.utils.PEPRequester"%>
 <%
-    String sessionId = (String) session.getAttribute("session-id");
-    String sid = (String) request.getParameter("sid");
-    String uid = (String) request.getParameter("uid");
-    if (sid != null) {
-        YPSilonClient ypsilonClient = new YPSilonClient(Constants.YPSILON_ADDRESS, Constants.PKS_FILENAME,
-                            Constants.PKS_PASSWORD, Constants.TRUST_PKS_FILENAME, Constants.TRUST_PKS_PASSWORD);
-        String message = SessionLoader.loadSession(sid, ypsilonClient, uid, session);
-        if (!message.isEmpty()) {
-            request.setAttribute("message", message);
-%>
-<jsp:include page="Login.jsp" />
-<%
-          return;
-        }
-    } else if (sessionId == null) {
+    String cert = (session.getAttribute("cert") != null)? (String) session.getAttribute("cert") : null;
+    if (cert == null) {
 %>
 <jsp:include page="Login.jsp" />
 <%
         return;
     }
 %>
-<!-- SLS: c’est-il pas un peu crade ? -->
-<%@page import="fr.unicaen.iota.xacml.ihm.Module"%>
-<%@page import="fr.unicaen.iota.utils.HTMLUtilities"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.Module"%>
+<%@page import="fr.unicaen.iota.dphi.utils.HTMLUtilities"%>
 <%@page import="java.util.Date"%>
-<%@page import="fr.unicaen.iota.auth.User"%>
+<%@page import="fr.unicaen.iota.dphi.auth.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -49,20 +31,20 @@
         <div class="treeTitle">&nbsp;</div>
         <jsp:include page="dialogs.jsp" />
         <%
-            UserInfoOut uInfo = (UserInfoOut) session.getAttribute("uInfo");
-            User u = new User(uInfo.getUserID(), uInfo.getOwnerID());
-            if (PEPRequester.checkAccess(u, "superadmin") != Result.DECISION_PERMIT) {
+            User user = (User) session.getAttribute("user");
+            if (PEPRequester.checkAccess(user, "superadmin") != Result.DECISION_PERMIT) {
         %>
         <jsp:include page="policyList.jsp" />
         <%
-            } else {
+            }
+            else {
         %>
         <jsp:include page="rootMenu.jsp" />
         <%
                 return;
             }
-            String userId = ((UserInfoOut) session.getAttribute("uInfo")).getUserID();
-            String ownerId = ((UserInfoOut) session.getAttribute("uInfo")).getOwnerID();
+            String userId = user.getUserID();
+            String ownerId = user.getOwnerID();
         %>
         <div class="account">
             <div class="logout"><a href="RootAccountAuth?action=logout">[ logout ]</a></div>

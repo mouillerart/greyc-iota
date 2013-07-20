@@ -1,6 +1,4 @@
-<%@page import="fr.unicaen.iota.epcisphi.utils.HTMLUtilities"%>
-<%@page import="fr.unicaen.iota.ypsilon.client.model.UserInfoOut"%>
-
+<%@page import="fr.unicaen.iota.epcisphi.utils.User"%>
 <div class="rootMenu">
     <div class="rootMenuItem"><a href="#" onclick="processAccountCreate()" >Create Account</a></div>
     <div class="rootMenuItem"><a href="#" onclick="processUpdateRootUser()" >Update root Account</a></div>
@@ -17,5 +15,5 @@
 
 <div id="updateRootUser" title="Update User" class="modalDialog">
     <div class="dialog_message">Enter user informations :</div>
-    <div class="dialog_options">Login : <input disabled id="userLogin2" type="text" value="<%=((UserInfoOut) session.getAttribute("uInfo")).getOwnerID()%>" /></div>
+    <div class="dialog_options">Login : <input disabled id="userLogin2" type="text" value="<%=((User) session.getAttribute("user")).getOwnerID()%>" /></div>
 </div>

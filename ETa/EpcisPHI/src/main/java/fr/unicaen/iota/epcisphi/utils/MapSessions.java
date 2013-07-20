@@ -57,18 +57,18 @@ public final class MapSessions {
     }
     public static HashMap<String, InterfaceHelper> APMSessions = new HashMap<String, InterfaceHelper>();
 
-    public static synchronized InterfaceHelper getAPMSession(String sessionId, String ownerId) {
-        if (APMSessions.containsKey(sessionId)) {
-            return APMSessions.get(sessionId);
+    public static synchronized InterfaceHelper getAPMSession(String userId, String ownerId) {
+        if (APMSessions.containsKey(userId)) {
+            return APMSessions.get(userId);
         } else {
             InterfaceHelper IH = new InterfaceHelper(ownerId);
-            APMSessions.put(sessionId, IH);
+            APMSessions.put(userId, IH);
             return IH;
         }
     }
 
-    public static synchronized void releaseSession(String sessionId) {
-        APMSessions.remove(sessionId);
+    public static synchronized void releaseSession(String userId) {
+        APMSessions.remove(userId);
     }
 
     public static synchronized void init() {

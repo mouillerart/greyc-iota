@@ -1,12 +1,12 @@
-<%@page import="fr.unicaen.iota.xacml.ihm.Module"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.factory.AccessPolicies"%>
-<%@page import="fr.unicaen.iota.auth.User"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.Mode"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.TreeFactory"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.factory.Policies"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.NodeType"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.factory.Node"%>
-<%@page import="fr.unicaen.iota.xacml.ihm.TreeNode"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.Module"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.factory.AccessPolicies"%>
+<%@page import="fr.unicaen.iota.dphi.auth.User"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.Mode"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.TreeFactory"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.factory.Policies"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.NodeType"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.factory.Node"%>
+<%@page import="fr.unicaen.iota.dphi.xacml.ihm.TreeNode"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <script language="javascript">

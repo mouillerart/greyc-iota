@@ -218,7 +218,7 @@ public class QueryOperationsModule {
                 String msg = "Paramters 'maxEventCount' and 'eventCountLimit' are mutually exclusive";
                 throw queryParameterException(msg, null);
             }
-            if (paramOrderByIsPresent && eventCountLimit > -1) {
+            if (!paramOrderByIsPresent && eventCountLimit > -1) {
                 String msg = "'eventCountLimit' may only be used when 'orderBy' is specified";
                 throw queryParameterException(msg, null);
             }
